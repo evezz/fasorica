@@ -1,0 +1,64 @@
+:root {
+	--sl-color-white: #ffffff;
+	--sl-color-black: #000000;
+
+	--sl-color-gray-1: #111111;
+	--sl-color-gray-2: #222222;
+	--sl-color-gray-3: #444444;
+	--sl-color-gray-4: #777777;
+	--sl-color-gray-5: #aaaaaa;
+	--sl-color-gray-6: #dddddd;
+	--sl-color-gray-7: #f2f2f2;
+
+	--sl-color-accent-low: #f2f2f2;
+	--sl-color-accent: #000000;
+	--sl-color-accent-high: #111111;
+
+	--sl-font: Arial, Helvetica, sans-serif;
+}
+
+body {
+	background: #ffffff;
+}
+
+a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+	color: #000000;
+}
+
+.calculator {
+	border: 1px solid #000000;
+	padding: 1.5rem;
+	margin: 2rem 0;
+	background: #ffffff;
+}
+
+.calculator-row {
+	margin: 1.5rem 0;
+}
+
+.calculator-row label {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+}
+
+.calculator input[type="range"] {
+	width: 100%;
+	accent-color: #000000;
+}
+
+.calculator-result {
+	margin-top: 2rem;
+	padding-top: 1rem;
+	border-top: 1px solid #000000;
+	font-size: 1.5rem;
+	font-weight: 600;
+}

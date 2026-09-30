@@ -1,0 +1,62 @@
+<div class="calculator">
+	<div class="calculator-row">
+		<label>
+			<span>Tensione</span>
+			<span><span id="voltage-value">5</span> V</span>
+		</label>
+
+		<input
+			id="voltage"
+			type="range"
+			min="0"
+			max="20"
+			step="0.1"
+			value="5"
+		/>
+	</div>
+
+	<div class="calculator-row">
+		<label>
+			<span>Resistenza</span>
+			<span><span id="resistance-value">100</span> Ω</span>
+		</label>
+
+		<input
+			id="resistance"
+			type="range"
+			min="1"
+			max="1000"
+			step="1"
+			value="100"
+		/>
+	</div>
+
+	<div class="calculator-result">
+		Corrente:
+		<span id="current-value">0.05</span> A
+	</div>
+</div>
+
+<script>
+	const voltage = document.querySelector('#voltage') as HTMLInputElement;
+	const resistance = document.querySelector('#resistance') as HTMLInputElement;
+
+	const voltageValue = document.querySelector('#voltage-value')!;
+	const resistanceValue = document.querySelector('#resistance-value')!;
+	const currentValue = document.querySelector('#current-value')!;
+
+	function update() {
+		const V = Number(voltage.value);
+		const R = Number(resistance.value);
+		const I = V / R;
+
+		voltageValue.textContent = V.toFixed(1);
+		resistanceValue.textContent = R.toFixed(0);
+		currentValue.textContent = I.toFixed(4);
+	}
+
+	voltage.addEventListener('input', update);
+	resistance.addEventListener('input', update);
+
+	update();
+</script>

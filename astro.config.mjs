@@ -1,26 +1,38 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import starlight from '@astrojs/starlight';
+import cloudflare from '@astrojs/cloudflare';
 
-// https://astro.build/config
 export default defineConfig({
+	markdown: {
+		processor: unified({
+			remarkPlugins: [remarkMath],
+			rehypePlugins: [rehypeKatex],
+		}),
+	},
+
+	adapter: cloudflare({
+		prerenderEnvironment: 'node',
+	}),
+
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					items: [{ autogenerate: { directory: 'reference' } }],
-				},
+			title: 'Fasorica',
+
+			customCss: [
+				'katex/dist/katex.min.css',
+				'./src/styles/custom.css',
 			],
+
+			defaultLocale: 'it',
+
+			locales: {
+				it: { label: 'Italiano' },
+				en: { label: 'English' },
+			},
 		}),
 	],
 });
