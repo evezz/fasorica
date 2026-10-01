@@ -1,0 +1,184 @@
+<div class="electronics-background" aria-hidden="true">
+  <svg
+    viewBox="0 0 1600 900"
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Circuit traces -->
+
+    <g class="traces">
+      <path d="M0 180 H180 V110 H360" />
+      <path d="M1600 210 H1410 V130 H1220" />
+
+      <path d="M0 690 H230 V770 H420" />
+      <path d="M1600 670 H1370 V760 H1180" />
+
+      <path d="M270 0 V160 H390 V250" />
+      <path d="M1330 0 V150 H1210 V240" />
+
+      <path d="M70 430 H250 V350 H370" />
+      <path d="M1530 450 H1350 V360 H1230" />
+
+      <path d="M500 0 V120 H570" />
+      <path d="M1100 900 V780 H1030" />
+    </g>
+
+    <!-- Circuit nodes -->
+
+    <g class="nodes">
+      <circle cx="180" cy="180" r="4" />
+      <circle cx="360" cy="110" r="4" />
+
+      <circle cx="1410" cy="210" r="4" />
+      <circle cx="1220" cy="130" r="4" />
+
+      <circle cx="230" cy="690" r="4" />
+      <circle cx="420" cy="770" r="4" />
+
+      <circle cx="1370" cy="670" r="4" />
+      <circle cx="1180" cy="760" r="4" />
+
+      <circle cx="270" cy="160" r="4" />
+      <circle cx="390" cy="250" r="4" />
+
+      <circle cx="1330" cy="150" r="4" />
+      <circle cx="1210" cy="240" r="4" />
+    </g>
+
+    <!-- Moving signal paths -->
+
+    <g class="signals">
+      <circle r="5">
+        <animateMotion
+          dur="7s"
+          repeatCount="indefinite"
+          path="M0 180 H180 V110 H360"
+        />
+      </circle>
+
+      <circle r="5">
+        <animateMotion
+          dur="9s"
+          begin="2s"
+          repeatCount="indefinite"
+          path="M1600 210 H1410 V130 H1220"
+        />
+      </circle>
+
+      <circle r="5">
+        <animateMotion
+          dur="8s"
+          begin="1s"
+          repeatCount="indefinite"
+          path="M0 690 H230 V770 H420"
+        />
+      </circle>
+
+      <circle r="5">
+        <animateMotion
+          dur="10s"
+          begin="3s"
+          repeatCount="indefinite"
+          path="M1600 670 H1370 V760 H1180"
+        />
+      </circle>
+    </g>
+
+    <!-- Oscilloscope waveforms -->
+
+    <g class="waves">
+      <path
+        d="M0 450
+           C50 390 100 390 150 450
+           S250 510 300 450
+           S400 390 450 450
+           S550 510 600 450"
+      />
+
+      <path
+        d="M1000 450
+           C1050 390 1100 390 1150 450
+           S1250 510 1300 450
+           S1400 390 1450 450
+           S1550 510 1600 450"
+      />
+    </g>
+
+    <!-- Small electronic marks -->
+
+    <g class="marks">
+      <path d="M470 180 h45 m-22 -22 v45" />
+      <path d="M1130 680 h45 m-22 -22 v45" />
+
+      <rect x="600" y="90" width="22" height="22" />
+      <rect x="978" y="788" width="22" height="22" />
+
+      <circle cx="80" cy="820" r="9" />
+      <circle cx="1520" cy="90" r="9" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .electronics-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .traces {
+    fill: none;
+    stroke: #e4e4e4;
+    stroke-width: 1.5;
+  }
+
+  .nodes {
+    fill: #d2d2d2;
+  }
+
+  .signals {
+    fill: #888;
+    opacity: 0.65;
+    filter: url(#glow);
+  }
+
+  .waves {
+    fill: none;
+    stroke: #ededed;
+    stroke-width: 2;
+  }
+
+  .marks {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 1.5;
+  }
+
+  .marks rect {
+    fill: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signals {
+      display: none;
+    }
+  }
+</style>
