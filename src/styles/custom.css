@@ -394,3 +394,22 @@ dialog input,
     grid-template-columns: 1fr;
   }
 }
+
+/* Spazio ai lati dell'header: evita che il logo venga tagliato */
+header.header {
+  padding-inline: 1.25rem;
+}
+
+/* Logo / titolo sito: allineato e non tagliato */
+header .site-title {
+  padding-inline-start: 0.25rem;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* Icone a destra: allinea i due bottoni (tema + menu mobile) */
+header .right-group,
+header .sl-flex.right-group {
+  gap: 0.5rem;
+  align-items: center;
+}
