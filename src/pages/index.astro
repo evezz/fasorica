@@ -1,6 +1,5 @@
 ---
 import '../styles/home.css';
-import ElectronicsBackground from '../components/ElectronicsBackground.astro';
 ---
 
 <html lang="it">
@@ -42,21 +41,26 @@ import ElectronicsBackground from '../components/ElectronicsBackground.astro';
     </header>
 
     <main class="hero">
-        <ElectronicsBackground />
+        <img
+            class="hero-background"
+            src="/images/landingPage_background.jpg"
+            alt=""
+            aria-hidden="true"
+        />
 
         <div class="hero-content">
-        <h1>Una base di conoscenza<br />di elettronica ed elettrotecnica.</h1>
+            <h1>Una base di conoscenza<br />di elettronica ed elettrotecnica.</h1>
 
-        <p class="subtitle">
-          Lezioni, appunti e strumenti interattivi per capire
-          l'elettronica e le materie affini.
-        </p>
+            <p class="subtitle">
+            Lezioni, appunti e strumenti interattivi per capire
+            l'elettronica e le materie affini.
+            </p>
 
-        <a href="/it/" class="cta">
-          Esplora le lezioni
-          <span>→</span>
-        </a>
-      </div>
-    </main>
+            <a href="/it/" class="cta">
+            Esplora le lezioni
+            <span>→</span>
+            </a>
+        </div>
+        </main>
   </body>
 </html>
