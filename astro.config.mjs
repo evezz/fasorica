@@ -30,6 +30,11 @@ export default defineConfig({
                     },
                 },
             ],
+
+            components: {
+                Header: './src/components/CustomHeader.astro',
+            },
+
             customCss: [
                 'katex/dist/katex.min.css',
                 './src/styles/custom.css',
