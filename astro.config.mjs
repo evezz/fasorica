@@ -20,6 +20,16 @@ export default defineConfig({
     integrations: [
         starlight({
             title: 'Fasorica',
+            description: 'Lezioni, appunti e strumenti interattivi per capire l’elettronica e le materie affini.',
+            head: [
+                {
+                    tag: 'link',
+                    attrs: {
+                        rel: 'icon',
+                        href: '/favicon.svg',
+                    },
+                },
+            ],
             customCss: [
                 'katex/dist/katex.min.css',
                 './src/styles/custom.css',
