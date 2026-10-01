@@ -1,0 +1,143 @@
+---
+import { argomenti } from '../data/lezioni';
+
+// Le lezioni diventano cliccabili solo se esiste il file corrispondente in src/content/docs/it/.
+const prefisso = '/src/content/docs/it/';
+const esistenti = new Set(
+  Object.keys(import.meta.glob('/src/content/docs/it/**/*.{md,mdx}')).map((p) =>
+    p.slice(prefisso.length).replace(/\.mdx?$/, '').replace(/\/?index$/, '')
+  )
+);
+const etichetta = { superiori: 'Superiori', universita: 'Università' };
+---
+
+<div class="lz">
+  <div class="lz-controlli">
+    <input class="lz-cerca" type="search" placeholder="Cerca una lezione" aria-label="Cerca una lezione" />
+    <div class="lz-filtri" role="group" aria-label="Livello">
+      <button type="button" data-livello="tutti" aria-pressed="true">Tutti</button>
+      <button type="button" data-livello="superiori" aria-pressed="false">Superiori</button>
+      <button type="button" data-livello="universita" aria-pressed="false">Università</button>
+    </div>
+    <p class="lz-conteggio" aria-live="polite"></p>
+  </div>
+
+  <div class="lz-griglia">
+    {argomenti.map((a, n) => (
+      <section class="lz-argomento">
+        <header class="lz-testata">
+          <span class="lz-num">{String(n + 1).padStart(2, '0')}</span>
+          <div>
+            <h2>{a.titolo}</h2>
+            <p>{a.descrizione}</p>
+          </div>
+        </header>
+        <ul class="lz-lista">
+          {a.lezioni.map((l) => {
+            const pronta = esistenti.has(l.slug);
+            return (
+              <li class="lz-voce" data-livelli={l.livello.join(' ')}>
+                <div>
+                  {pronta ? (
+                    <a class="lz-titolo" href={`/it/${l.slug}/`}>{l.titolo}</a>
+                  ) : (
+                    <span class="lz-titolo lz-spento">{l.titolo}</span>
+                  )}
+                  <p class="lz-desc">{l.descrizione}</p>
+                </div>
+                <div class="lz-meta">
+                  {l.livello.map((x) => <span class="lz-tag">{etichetta[x]}</span>)}
+                  {!pronta && <span class="lz-tag lz-arrivo">In arrivo</span>}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+  </div>
+  <p class="lz-vuoto" hidden>Nessuna lezione trovata. Prova con un'altra parola.</p>
+</div>
+
+<style is:global>
+  .lz [hidden] { display: none !important; }
+  .lz-controlli { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 2rem; }
+  .lz-cerca {
+    flex: 1 1 18rem; padding: 0.7rem 1rem; font: inherit; color: var(--sl-color-text);
+    background: var(--sl-color-bg); border: 1px solid var(--sl-color-hairline); border-radius: 999px;
+  }
+  .lz-cerca:focus { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+  .lz-filtri { display: flex; gap: 0.5rem; }
+  .lz-filtri button {
+    padding: 0.45rem 0.95rem; font: inherit; font-size: 0.9rem; cursor: pointer; color: var(--sl-color-text);
+    background: none; border: 1px solid var(--sl-color-hairline); border-radius: 999px;
+  }
+  .lz-filtri button[aria-pressed='true'] { color: var(--sl-color-black); background: var(--sl-color-accent-high); border-color: transparent; }
+  .lz-conteggio { margin: 0; margin-inline-start: auto; font-size: 0.9rem; color: var(--sl-color-gray-3); }
+
+  .lz-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr)); gap: 2.5rem 3rem; }
+  .lz-testata { display: flex; gap: 1rem; align-items: baseline; padding-bottom: 0.75rem; border-bottom: 2px solid var(--sl-color-accent); }
+  .lz-num { font-size: 1.5rem; font-weight: 600; color: var(--sl-color-accent-high); font-variant-numeric: tabular-nums; }
+  .lz-testata h2 { margin: 0; font-size: 1.25rem; border: 0; padding: 0; }
+  .lz-testata p { margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--sl-color-gray-3); }
+
+  .lz-lista { list-style: none; margin: 0; padding: 0; }
+  .lz-voce {
+    display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0.5rem;
+    border-bottom: 1px solid var(--sl-color-hairline); border-radius: 6px;
+  }
+  .lz-voce:hover { background: var(--sl-color-accent-low); }
+  .lz-titolo { font-weight: 600; color: var(--sl-color-white); text-decoration: none; }
+  a.lz-titolo:hover { color: var(--sl-color-text-accent); text-decoration: underline; }
+  .lz-spento { color: var(--sl-color-gray-3); }
+  .lz-desc { margin: 0.15rem 0 0; font-size: 0.88rem; color: var(--sl-color-gray-3); }
+  .lz-meta { display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: flex-end; gap: 0.35rem; flex: none; max-width: 9rem; }
+  .lz-tag { padding: 0.1rem 0.55rem; font-size: 0.72rem; border: 1px solid var(--sl-color-hairline); border-radius: 999px; color: var(--sl-color-gray-2); white-space: nowrap; }
+  .lz-arrivo { border-style: dashed; color: var(--sl-color-gray-3); }
+  .lz-vuoto { margin-top: 2rem; color: var(--sl-color-gray-3); }
+
+  @media (max-width: 40rem) {
+    .lz-voce { flex-direction: column; gap: 0.4rem; }
+    .lz-meta { justify-content: flex-start; max-width: none; }
+    .lz-conteggio { margin-inline-start: 0; flex-basis: 100%; }
+  }
+</style>
+
+<script>
+  const radice = document.querySelector('.lz');
+  if (radice) {
+    const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const campo = radice.querySelector('.lz-cerca');
+    const bottoni = [...radice.querySelectorAll('[data-livello]')];
+    const voci = [...radice.querySelectorAll('.lz-voce')];
+    const sezioni = [...radice.querySelectorAll('.lz-argomento')];
+    const conteggio = radice.querySelector('.lz-conteggio');
+    const vuoto = radice.querySelector('.lz-vuoto');
+    const testi = voci.map((v) => norm(v.textContent));
+    let livello = 'tutti';
+
+    const filtra = () => {
+      const parole = norm(campo.value).split(/\s+/).filter(Boolean);
+      let visibili = 0;
+      voci.forEach((v, i) => {
+        const okLivello = livello === 'tutti' || v.dataset.livelli.split(' ').includes(livello);
+        const ok = okLivello && parole.every((p) => testi[i].includes(p));
+        v.hidden = !ok;
+        if (ok) visibili++;
+      });
+      sezioni.forEach((s) => { s.hidden = !s.querySelector('.lz-voce:not([hidden])'); });
+      conteggio.textContent = visibili === voci.length ? `${visibili} lezioni` : `${visibili} di ${voci.length} lezioni`;
+      vuoto.hidden = visibili > 0;
+    };
+
+    campo.addEventListener('input', filtra);
+    bottoni.forEach((b) =>
+      b.addEventListener('click', () => {
+        livello = b.dataset.livello;
+        bottoni.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        filtra();
+      })
+    );
+    filtra();
+  }
+</script>
