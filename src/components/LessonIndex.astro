@@ -1,290 +1,678 @@
 ---
 import { argomenti } from '../data/lezioni';
 
-// Le lezioni diventano cliccabili solo se esiste il file corrispondente in src/content/docs/it/.
 const prefisso = '/src/content/docs/it/';
+
 const esistenti = new Set(
   Object.keys(import.meta.glob('/src/content/docs/it/**/*.{md,mdx}')).map((p) =>
     p.slice(prefisso.length).replace(/\.mdx?$/, '').replace(/\/?index$/, '')
   )
 );
-const etichetta = { superiori: 'Superiori', universita: 'Università' };
+
+const etichetta = {
+  superiori: 'Superiori',
+  universita: 'Università',
+};
 ---
 
 <div class="lz">
+
   <div class="lz-controlli">
-    <input class="lz-cerca" type="search" placeholder="Cerca una lezione…" aria-label="Cerca una lezione" />
+    <input
+      class="lz-cerca"
+      type="search"
+      placeholder="Cerca una lezione…"
+      aria-label="Cerca una lezione"
+    />
+
     <div class="lz-filtri" role="group" aria-label="Filtra per livello">
-      <button type="button" data-livello="tutti" aria-pressed="true">Tutti</button>
-      <button type="button" data-livello="superiori" aria-pressed="false">Superiori</button>
-      <button type="button" data-livello="universita" aria-pressed="false">Università</button>
+      <button type="button" data-livello="tutti" aria-pressed="true">
+        Tutti
+      </button>
+
+      <button type="button" data-livello="superiori" aria-pressed="false">
+        Superiori
+      </button>
+
+      <button type="button" data-livello="universita" aria-pressed="false">
+        Università
+      </button>
     </div>
+
     <p class="lz-conteggio" aria-live="polite"></p>
   </div>
 
+
   <div class="lz-griglia">
+
     {argomenti.map((a, n) => (
       <section class="lz-argomento">
+
         <header class="lz-testata">
-          <span class="lz-num">{String(n + 1).padStart(2, '0')}</span>
-          <div>
+          <span class="lz-num">
+            {String(n + 1).padStart(2, '0')}
+          </span>
+
+          <div class="lz-testata-testo">
             <h2>{a.titolo}</h2>
             <p>{a.descrizione}</p>
           </div>
         </header>
+
+
         <ul class="lz-lista">
+
           {a.lezioni.map((l) => {
             const pronta = esistenti.has(l.slug);
+
             return (
-              <li class="lz-voce" data-livelli={l.livello.join(' ')}>
+              <li
+                class="lz-voce"
+                data-livelli={l.livello.join(' ')}
+              >
+
                 <div class="lz-info">
+
                   {pronta ? (
-                    <a class="lz-titolo" href={`/it/${l.slug}/`}>{l.titolo}</a>
+                    <a
+                      class="lz-titolo"
+                      href={`/it/${l.slug}/`}
+                    >
+                      {l.titolo}
+                    </a>
                   ) : (
-                    <span class="lz-titolo lz-spento">{l.titolo}</span>
+                    <span class="lz-titolo lz-spento">
+                      {l.titolo}
+                    </span>
                   )}
-                  <p class="lz-desc">{l.descrizione}</p>
+
+                  <p class="lz-desc">
+                    {l.descrizione}
+                  </p>
+
                 </div>
+
+
                 <div class="lz-meta">
-                  {l.livello.map((x) => <span class="lz-tag">{etichetta[x]}</span>)}
-                  {!pronta && <span class="lz-tag lz-arrivo">In arrivo</span>}
+
+                  {l.livello.map((x) => (
+                    <span class="lz-tag">
+                      {etichetta[x]}
+                    </span>
+                  ))}
+
+                  {!pronta && (
+                    <span class="lz-tag lz-arrivo">
+                      In arrivo
+                    </span>
+                  )}
+
                 </div>
+
               </li>
             );
           })}
+
         </ul>
+
       </section>
     ))}
+
   </div>
-  <p class="lz-vuoto" hidden>Nessuna lezione trovata. Prova con un'altra parola.</p>
+
+
+  <p class="lz-vuoto" hidden>
+    Nessuna lezione trovata. Prova con un'altra parola.
+  </p>
+
 </div>
 
-<style is:global>
-  .lz { --lz-radius: 10px; }
-  .lz [hidden] { display: none !important; }
 
-  /* ---------- Controlli ---------- */
+<style is:global>
+
+  /* =========================================================
+     BASE
+     ========================================================= */
+
+  .lz {
+    --lz-text: #252525;
+    --lz-muted: #686661;
+    --lz-light: #8a8882;
+    --lz-border: #dedbd4;
+    --lz-border-light: #e8e5df;
+    --lz-surface: #f8f7f3;
+    --lz-surface-hover: #eeece7;
+
+    width: 100%;
+    color: var(--lz-text);
+  }
+
+  .lz *,
+  .lz *::before,
+  .lz *::after {
+    box-sizing: border-box;
+  }
+
+  .lz [hidden] {
+    display: none !important;
+  }
+
+
+  /* =========================================================
+     CONTROLLI
+     ========================================================= */
+
   .lz-controlli {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
+    flex-wrap: wrap;
+
     gap: 0.75rem 1rem;
-    margin: 0 0 2.5rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--sl-color-hairline);
+
+    margin: 0 0 2.75rem;
+    padding: 0 0 1.5rem;
+
+    border-bottom: 1px solid var(--lz-border);
   }
 
   .lz-cerca {
     flex: 1 1 20rem;
+
     min-width: 0;
-    padding: 0.65rem 1.1rem;
+
+    height: 42px;
+
+    padding: 0 1rem;
+
     font: inherit;
-    font-size: 0.95rem;
-    color: var(--sl-color-text);
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 999px;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  .lz-cerca::placeholder { color: var(--sl-color-gray-4); }
-  .lz-cerca:hover { border-color: var(--sl-color-gray-4); }
-  .lz-cerca:focus {
+    font-size: 0.9rem;
+
+    color: var(--lz-text) !important;
+    background: #faf9f6 !important;
+
+    border: 1px solid var(--lz-border) !important;
+    border-radius: 8px !important;
+
     outline: none;
-    border-color: var(--sl-color-accent);
-    box-shadow: 0 0 0 3px var(--sl-color-accent-low);
+
+    box-shadow: none !important;
   }
+
+  .lz-cerca::placeholder {
+    color: var(--lz-light);
+  }
+
+  .lz-cerca:focus {
+    border-color: #aaa69e !important;
+    box-shadow: 0 0 0 3px #e9e6df !important;
+  }
+
+
+  /* =========================================================
+     FILTRI
+     ========================================================= */
 
   .lz-filtri {
     display: flex;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
-    border-radius: 999px;
+    align-items: center;
+
+    gap: 2px;
+
+    padding: 3px;
+
+    background: var(--lz-surface);
+
+    border: 1px solid var(--lz-border);
+    border-radius: 8px;
   }
+
   .lz-filtri button {
-    padding: 0.35rem 0.9rem;
+    height: 34px;
+
+    padding: 0 0.85rem;
+
     font: inherit;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 500;
+
+    color: #686661 !important;
+    background: transparent !important;
+
+    border: 0 !important;
+    border-radius: 6px;
+
     cursor: pointer;
-    color: var(--sl-color-gray-2);
-    background: none;
-    border: 0;
-    border-radius: 999px;
-    transition: color 0.15s ease, background 0.15s ease;
+
+    box-shadow: none !important;
   }
-  .lz-filtri button:hover { color: var(--sl-color-text); }
+
+  .lz-filtri button:hover {
+    color: #252525 !important;
+    background: #eeece7 !important;
+  }
+
   .lz-filtri button[aria-pressed='true'] {
-    color: var(--sl-color-white);
-    background: var(--sl-color-accent);
+    color: #f3f1ec !important;
+    background: #45443f !important;
   }
+
+
+  /* =========================================================
+     CONTEGGIO
+     ========================================================= */
 
   .lz-conteggio {
-    margin: 0;
-    margin-inline-start: auto;
-    font-size: 0.85rem;
-    color: var(--sl-color-gray-3);
+    margin: 0 0 0 auto;
+
+    font-size: 0.82rem;
+
+    color: var(--lz-light);
+
     font-variant-numeric: tabular-nums;
   }
 
-  /* ---------- Griglia argomenti ---------- */
+
+  /* =========================================================
+     GRIGLIA
+     ========================================================= */
+
   .lz-griglia {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 28rem), 1fr));
-    gap: 3rem;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    column-gap: 4rem;
+    row-gap: 4rem;
+
+    align-items: start;
   }
-  .lz-argomento { min-width: 0; }
+
+  .lz-argomento {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+
+    align-self: start;
+  }
+
+
+  /* =========================================================
+     TESTATA
+     ========================================================= */
 
   .lz-testata {
-    display: flex;
-    gap: 0.9rem;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding-bottom: 0.9rem;
-    border-bottom: 1px solid var(--sl-color-hairline);
-  }
-  .lz-num {
-    flex: none;
-    padding-top: 0.35rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--sl-color-accent-high);
-    font-variant-numeric: tabular-nums;
-  }
-  .lz-testata h2 {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--sl-color-white);
-  }
-  .lz-testata p {
-    margin: 0.25rem 0 0;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--sl-color-gray-3);
+    display: grid;
+
+    grid-template-columns: auto 1fr;
+
+    align-items: start;
+
+    column-gap: 0.9rem;
+
+    margin: 0 0 1rem;
+    padding: 0 0 0.9rem;
+
+    border: 0 !important;
+    border-bottom: 1px solid var(--lz-border) !important;
   }
 
-  /* ---------- Voci lezione ---------- */
-  .lz-lista {
-    list-style: none;
+  .lz-num {
+    padding-top: 0.2rem;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    letter-spacing: 0.05em;
+
+    color: #77746e !important;
+
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lz-testata-testo {
+    min-width: 0;
     margin: 0;
     padding: 0;
+  }
+
+  .lz-testata h2 {
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+
+    font-size: 1.18rem !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+
+    letter-spacing: -0.01em;
+
+    color: #252525 !important;
+  }
+
+  .lz-testata p {
+    margin: 0.3rem 0 0 !important;
+    padding: 0 !important;
+
+    font-size: 0.86rem;
+    line-height: 1.5;
+
+    color: #686661 !important;
+  }
+
+
+  /* =========================================================
+     LISTA
+     ========================================================= */
+
+  .lz-lista {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+
+    gap: 2px;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    list-style: none !important;
   }
+
+
+  /* =========================================================
+     SINGOLA LEZIONE
+     ========================================================= */
+
   .lz-voce {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
     gap: 1rem;
-    padding: 0.75rem 0.85rem;
-    border-radius: var(--lz-radius);
+
+    margin: 0;
+    padding: 0.7rem 0.75rem;
+
+    border-radius: 7px;
+
+    list-style: none;
+
     transition: background 0.15s ease;
   }
-  .lz-voce:hover { background: var(--sl-color-accent-low); }
 
-  .lz-info { flex: 1 1 auto; min-width: 0; }
+  .lz-voce:hover {
+    background: var(--lz-surface-hover);
+  }
+
+  .lz-info {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+  }
+
   .lz-titolo {
     display: inline-block;
-    font-size: 0.98rem;
-    font-weight: 600;
+
+    margin: 0;
+    padding: 0;
+
+    font-size: 0.96rem;
     line-height: 1.4;
-    color: var(--sl-color-white);
-    text-decoration: none;
-    transition: color 0.15s ease;
+    font-weight: 600;
+
+    color: #252525 !important;
+
+    text-decoration: none !important;
   }
-  a.lz-titolo:hover { color: var(--sl-color-text-accent); }
-  .lz-spento { color: var(--sl-color-gray-3); font-weight: 500; }
+
+  .lz-titolo:hover {
+    color: #55534f !important;
+  }
+
+  .lz-spento {
+    color: #77746e !important;
+    font-weight: 500;
+  }
 
   .lz-desc {
-    margin: 0.2rem 0 0;
-    font-size: 0.85rem;
-    line-height: 1.5;
-    color: var(--sl-color-gray-3);
+    margin: 0.2rem 0 0 !important;
+    padding: 0 !important;
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+
+    color: #686661 !important;
   }
 
+
+  /* =========================================================
+     TAG
+     ========================================================= */
+
   .lz-meta {
-    flex: none;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+
+    flex: none;
+
     gap: 0.3rem;
+
     max-width: 10rem;
-    padding-top: 0.15rem;
+
+    margin: 0;
+    padding: 0.1rem 0 0;
   }
+
   .lz-tag {
-    padding: 0.1rem 0.55rem;
-    font-size: 0.7rem;
+    display: inline-block;
+
+    padding: 0.12rem 0.5rem;
+
+    font-size: 0.68rem;
+    line-height: 1.4;
     font-weight: 500;
-    letter-spacing: 0.02em;
-    color: var(--sl-color-gray-2);
-    background: var(--sl-color-bg-nav);
-    border: 1px solid var(--sl-color-hairline);
+
+    color: #686661 !important;
+    background: var(--lz-surface) !important;
+
+    border: 1px solid var(--lz-border) !important;
     border-radius: 999px;
+
     white-space: nowrap;
   }
+
   .lz-arrivo {
-    color: var(--sl-color-gray-3);
-    background: none;
-    border-style: dashed;
+    color: #77746e !important;
+
+    background: transparent !important;
+
+    border-style: dashed !important;
   }
+
+
+  /* =========================================================
+     VUOTO
+     ========================================================= */
 
   .lz-vuoto {
     margin: 2.5rem 0 0;
+
     text-align: center;
-    font-size: 0.95rem;
-    color: var(--sl-color-gray-3);
+
+    font-size: 0.9rem;
+
+    color: var(--lz-muted);
+  }
+
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+
+  @media (max-width: 50rem) {
+
+    .lz-griglia {
+      grid-template-columns: 1fr;
+
+      gap: 2.75rem;
+    }
+
   }
 
   @media (max-width: 40rem) {
-    .lz-voce { flex-direction: column; gap: 0.5rem; padding: 0.85rem 0.9rem; }
-    .lz-meta { justify-content: flex-start; max-width: none; padding-top: 0; }
-    .lz-conteggio { flex-basis: 100%; margin-inline-start: 0; }
+
+    .lz-controlli {
+      align-items: stretch;
+    }
+
+    .lz-cerca {
+      flex-basis: 100%;
+    }
+
+    .lz-filtri {
+      flex: 1;
+    }
+
+    .lz-filtri button {
+      flex: 1;
+    }
+
+    .lz-conteggio {
+      flex-basis: 100%;
+      margin: 0;
+    }
+
+    .lz-voce {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .lz-meta {
+      justify-content: flex-start;
+      max-width: none;
+    }
+
   }
+
 </style>
+
 
 <script>
   const radice = document.querySelector('.lz');
+
   if (radice) {
-    const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    const norm = (s) =>
+      s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
     const campo = radice.querySelector('.lz-cerca');
-    const bottoni = [...radice.querySelectorAll('[data-livello]')];
-    const voci = [...radice.querySelectorAll('.lz-voce')];
-    const sezioni = [...radice.querySelectorAll('.lz-argomento')];
-    const conteggio = radice.querySelector('.lz-conteggio');
-    const vuoto = radice.querySelector('.lz-vuoto');
-    const testi = voci.map((v) => norm(v.textContent));
+
+    const bottoni = [
+      ...radice.querySelectorAll('[data-livello]')
+    ];
+
+    const voci = [
+      ...radice.querySelectorAll('.lz-voce')
+    ];
+
+    const sezioni = [
+      ...radice.querySelectorAll('.lz-argomento')
+    ];
+
+    const conteggio =
+      radice.querySelector('.lz-conteggio');
+
+    const vuoto =
+      radice.querySelector('.lz-vuoto');
+
+    const testi =
+      voci.map((v) => norm(v.textContent));
+
     let livello = 'tutti';
 
+
     const filtra = () => {
-      const parole = norm(campo.value).split(/\s+/).filter(Boolean);
+
+      const parole = norm(campo.value)
+        .split(/\s+/)
+        .filter(Boolean);
+
       let visibili = 0;
+
       voci.forEach((v, i) => {
-        const okLivello = livello === 'tutti' || v.dataset.livelli.split(' ').includes(livello);
-        const ok = okLivello && parole.every((p) => testi[i].includes(p));
+
+        const okLivello =
+          livello === 'tutti' ||
+          v.dataset.livelli
+            .split(' ')
+            .includes(livello);
+
+        const ok =
+          okLivello &&
+          parole.every((p) => testi[i].includes(p));
+
         v.hidden = !ok;
-        if (ok) visibili++;
+
+        if (ok) {
+          visibili++;
+        }
+
       });
-      sezioni.forEach((s) => { s.hidden = !s.querySelector('.lz-voce:not([hidden])'); });
-      conteggio.textContent = visibili === voci.length ? `${visibili} lezioni` : `${visibili} di ${voci.length} lezioni`;
+
+
+      sezioni.forEach((s) => {
+
+        s.hidden =
+          !s.querySelector(
+            '.lz-voce:not([hidden])'
+          );
+
+      });
+
+
+      conteggio.textContent =
+        visibili === voci.length
+          ? `${visibili} lezioni`
+          : `${visibili} di ${voci.length} lezioni`;
+
       vuoto.hidden = visibili > 0;
+
     };
 
-    campo.addEventListener('input', filtra);
-    bottoni.forEach((b) =>
-      b.addEventListener('click', () => {
-        livello = b.dataset.livello;
-        bottoni.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-        filtra();
-      })
+
+    campo.addEventListener(
+      'input',
+      filtra
     );
+
+
+    bottoni.forEach((b) => {
+
+      b.addEventListener('click', () => {
+
+        livello = b.dataset.livello;
+
+        bottoni.forEach((x) => {
+          x.setAttribute(
+            'aria-pressed',
+            String(x === b)
+          );
+        });
+
+        filtra();
+
+      });
+
+    });
+
+
     filtra();
+
   }
 </script>
