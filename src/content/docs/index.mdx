@@ -1,35 +1,32 @@
 ---
 title: Fasorica
-description: Dispense, esercizi interattivi e appunti di Elettronica per le scuole superiori e l'università.
+description: Elettronica ed elettrotecnica spiegate passo passo, con simulazioni da muovere con le mani.
 template: splash
 hero:
-  tagline: La piattaforma per capire l'elettronica, le reti logiche e l'analisi dei segnali. Dalla teoria alla pratica, con esempi interattivi.
+  title: Elettronica ed elettrotecnica, spiegate davvero
+  tagline: Lezioni chiare, esempi svolti e simulazioni interattive, per le superiori e per l'università.
   actions:
-    - text: Inizia a studiare
-      link: /it/intro/
-      icon: right-arrow
-      variant: primary
-    - text: Scopri i calcolatori
-      link: /it/tools/
-      icon: setting
+    - text: Inizia dai fasori
+      link: /it/fasori/
+    - text: Tutte le lezioni
+      link: /it/fondamenti/
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-## Cosa troverai su Fasorica
+## Le aree
 
-<CardGrid stagger>
-  <Card title="Teoria Spiegata Bene" icon="open-book">
-    Dalle leggi di Kirchhoff fino alle architetture CMOS e ai sensori risonanti. Tutto spiegato passo passo.
-  </Card>
-  <Card title="Esercizi Interattivi" icon="puzzle">
-    Non solo testo: modifica i valori di resistenze e condensatori e vedi come cambiano i diagrammi di Bode in tempo reale.
-  </Card>
-  <Card title="Codice e VHDL" icon="laptop">
-    Moduli pronti e testati per reti logiche, da semplici antirimbalzo (debouncer) a moltiplicatori Radix-4.
-  </Card>
-  <Card title="Analisi Dati (MATLAB/Python)" icon="seti:python">
-    Script e metodi per analizzare segnali reali, dal fitting di circonferenze nei plot di Nyquist all'analisi di biosegnali.
-  </Card>
+<CardGrid>
+  <Card title="Fondamenti">Legge di Ohm, leggi di Kirchhoff, Thevenin e Norton.</Card>
+  <Card title="Corrente alternata e fasori">Numeri complessi, impedenza e potenza.</Card>
+  <Card title="Filtri e risposta in frequenza">Circuiti RC, RL e RLC, diagrammi di Bode.</Card>
+  <Card title="Semiconduttori">Diodi, BJT e MOSFET.</Card>
+</CardGrid>
+
+## Da dove parti?
+
+<CardGrid>
+  <LinkCard title="Superiori" description="Le basi, senza saltare passaggi." href="/it/fondamenti/" />
+  <LinkCard title="Università" description="Analisi dei circuiti, segnali e sistemi." href="/it/fasori/" />
 </CardGrid>

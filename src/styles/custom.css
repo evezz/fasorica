@@ -1,61 +1,103 @@
-/* Importiamo Inter (per l'interfaccia/titoli) e Lora (per i testi) da Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+/* Fasorica: stile globale. Per cambiare l'aspetto basta modificare le variabili qui sotto. */
 
 :root {
-  /* ======================================================
-     1. FONT E COLORI BASE (Stile minimalista)
-     ====================================================== */
-  --sl-font: 'Inter', system-ui, sans-serif;
-  --sl-color-text: #2d3748; /* Grigio scuro per il testo, meno affaticante del nero puro */
-  --sl-color-white: #ffffff;
-  --sl-color-gray-1: #e2e8f0;
-  
-  /* Colore di accento (es. un blu accademico) */
-  --sl-color-accent: #2563eb;
-  --sl-color-accent-high: #1d4ed8;
+  --sl-content-width: 78rem;   /* larghezza massima del foglio */
+  --fa-measure: 68ch;          /* larghezza massima dei paragrafi di testo */
+  --fa-radius: 8px;
+  --sl-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --sl-text-body: 1.0625rem;
 
-  /* Sfondi: diamo uno sfondo grigio chiarissimo all'app per far risaltare il contenuto bianco */
-  --sl-color-bg: #f8fafc;
+  /* tema scuro */
+  --fa-page: #0d1210;
+  --fa-sheet: #151c19;
+  --sl-color-bg-nav: #0d1210;
+  --sl-color-bg-sidebar: #0d1210;
+  --sl-color-accent-low: #11291f;
+  --sl-color-accent: #1f9d6b;
+  --sl-color-accent-high: #7ee0b2;
+}
+
+:root[data-theme='light'] {
+  --fa-page: #ecefed;
+  --fa-sheet: #ffffff;
   --sl-color-bg-nav: #ffffff;
-  --sl-color-bg-sidebar: #ffffff;
-
-  /* ======================================================
-     2. LARGHEZZA DELLA PAGINA
-     ====================================================== */
-  /* Aumentiamo drasticamente la larghezza del contenuto (default è ~72rem/65ch) */
-  --sl-content-width: 90rem;
+  --sl-color-bg-sidebar: #ecefed;
+  --sl-color-accent-low: #dff3e9;
+  --sl-color-accent: #0b6e4f;
+  --sl-color-accent-high: #064432;
 }
 
-/* ======================================================
-   3. SEPARAZIONE DEL CONTENUTO (L'effetto "Foglio")
-   ====================================================== */
-/* Targettizziamo il contenitore principale del Markdown */
-.sl-markdown-content {
-  background-color: #ffffff;
-  padding: 3rem 4rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
-  
-  /* Usiamo un font Serif per il corpo del testo, ottimo per la lettura di dispense */
-  font-family: 'Lora', serif;
-  font-size: 1.15rem;
-  line-height: 1.75;
+/* Il contenuto della lezione è un "foglio" chiaro; menu, indice e intestazione restano sullo sfondo. */
+body {
+  background: var(--fa-page);
 }
 
-/* Manteniamo i titoli in Sans-Serif per contrasto visivo */
-.sl-markdown-content h1,
-.sl-markdown-content h2,
-.sl-markdown-content h3,
-.sl-markdown-content h4 {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1a202c;
-  margin-top: 2em;
+main {
+  background: var(--fa-sheet);
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: var(--fa-radius);
+  margin: 1rem;
 }
 
-/* Assicuriamoci che i blocchi matematici (KaTeX) possano scorrere se sono troppo larghi */
+/* La home non ha il foglio. */
+[data-has-hero] main {
+  background: none;
+  border: 0;
+  margin: 0;
+}
+
+/* Il testo mantiene una lunghezza di riga leggibile; formule, tabelle e laboratori usano tutta la larghezza. */
+.sl-markdown-content > :where(p, ul, ol, blockquote) {
+  max-width: var(--fa-measure);
+}
+
+.sl-markdown-content h2 {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+.sl-markdown-content table {
+  width: 100%;
+}
+
+.katex {
+  font-size: 1.08em;
+}
+
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 1rem 0;
+  padding-block: 0.4rem;
+}
+
+/* Blocco per le parti interattive: comandi a sinistra, grafico o circuito a destra.
+   Uso nelle pagine: <div class="lab"> ... </div> */
+.lab {
+  display: grid;
+  grid-template-columns: minmax(14rem, 20rem) 1fr;
+  gap: 1.25rem;
+  margin-block: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-left: 4px solid var(--sl-color-accent);
+  border-radius: var(--fa-radius);
+  background: var(--sl-color-accent-low);
+}
+
+.lab > * {
+  margin: 0;
+}
+
+.lab input[type='range'] {
+  width: 100%;
+  accent-color: var(--sl-color-accent);
+}
+
+@media (max-width: 50rem) {
+  .lab {
+    grid-template-columns: 1fr;
+  }
+  main {
+    margin: 0.5rem;
+  }
 }
