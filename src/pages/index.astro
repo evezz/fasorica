@@ -1,5 +1,6 @@
 ---
 import '../styles/home.css';
+import Navbar from '../components/Navbar.astro';
 ---
 
 <html lang="it">
@@ -7,6 +8,7 @@ import '../styles/home.css';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Fasorica</title>
+
     <meta
       name="description"
       content="Lezioni, appunti e strumenti interattivi per studiare elettronica e materie affini."
@@ -16,53 +18,29 @@ import '../styles/home.css';
   </head>
 
   <body>
-    <header class="navbar">
-      <a href="/" class="logo">FASORICA</a>
-
-      <nav class="nav-links">
-        <a href="/chi-sono/">Chi sono</a>
-        <a href="/contatti/">Contatti</a>
-        <a href="/privacy/">Privacy</a>
-      </nav>
-
-      <a href="/it/" class="search" aria-label="Cerca">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m20 20-4-4"></path>
-        </svg>
-      </a>
-    </header>
+    <Navbar />
 
     <main class="hero">
-        <img
-            class="hero-background"
-            src="/images/landingPage_background.jpg"
-            alt=""
-            aria-hidden="true"
-        />
+      <img
+        class="hero-background"
+        src="/images/landingPage_background.jpg"
+        alt=""
+        aria-hidden="true"
+      />
 
-        <div class="hero-content">
-            <h1>Una base di conoscenza<br />di elettronica ed elettrotecnica.</h1>
+      <div class="hero-content">
+        <h1>Biblioteca digitale<br />di elettronica ed elettrotecnica.</h1>
 
-            <p class="subtitle">
-            Lezioni, appunti e strumenti interattivi per capire
-            l'elettronica e le materie affini.
-            </p>
+        <p class="subtitle">
+          Lezioni, appunti e strumenti interattivi per capire
+          l'elettronica e le materie affini.
+        </p>
 
-            <a href="/it/lezioni/" class="cta">
-            Esplora le lezioni
-            <span>→</span>
-            </a>
-        </div>
-        </main>
+        <a href="/it/lezioni/" class="cta">
+          Esplora le lezioni
+          <span>→</span>
+        </a>
+      </div>
+    </main>
   </body>
 </html>

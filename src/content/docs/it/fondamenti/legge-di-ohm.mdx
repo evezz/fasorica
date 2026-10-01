@@ -1,24 +1,314 @@
 ---
 title: Legge di Ohm
+description: La relazione tra tensione, corrente e resistenza in un circuito elettrico.
 ---
 
-import LeggeDiOhm from '../../../../components/LeggeDiOhm.astro';
+La legge di Ohm descrive la relazione tra **tensione**, **corrente** e **resistenza** in un circuito elettrico.
 
-# Legge di Ohm
+<div class="lezione-meta">
+  <span>Fondamentali</span>
+  <span>Circuiti</span>
+  <span>Corrente continua</span>
+</div>
 
-La legge di Ohm mette in relazione tensione, corrente e resistenza:
+## L'idea chiave
 
-$$
-V = R \cdot I
-$$
+<div class="lezione-hero">
 
-Dove V è la tensione, R è la resistenza e I è la corrente.
-Da questa relazione possiamo ricavare la corrente:
+<div class="lezione-hero-text">
+
+La corrente che attraversa una resistenza dipende da due fattori:
+
+- dalla **tensione** applicata;
+- dal valore della **resistenza**.
+
+La relazione fondamentale è:
 
 $$
 I = \frac{V}{R}
 $$
 
-## Calcolatore
+A parità di resistenza, aumentando la tensione aumenta la corrente.
 
-<LeggeDiOhm />
+A parità di tensione, aumentando la resistenza diminuisce la corrente.
+
+</div>
+
+</div>
+
+## Le tre grandezze
+
+<div class="grandezze">
+
+<div class="grandezza">
+
+### Tensione
+**$V$**
+
+La tensione rappresenta la differenza di potenziale elettrico tra due punti del circuito.
+
+Si misura in **volt (V)**.
+
+</div>
+
+<div class="grandezza">
+
+### Corrente
+
+**$I$**
+
+La corrente indica quanta carica elettrica attraversa una sezione del circuito nell'unità di tempo.
+
+Si misura in **ampere (A)**.
+
+</div>
+
+<div class="grandezza">
+
+### Resistenza
+
+**$R$**
+
+La resistenza descrive quanto un componente si oppone al passaggio della corrente.
+
+Si misura in **ohm (Ω)**.
+
+</div>
+
+</div>
+
+## Come funziona
+
+La legge di Ohm permette di capire come cambia una grandezza quando ne modifichiamo un'altra.
+
+<div class="relazioni">
+
+<div class="relazione">
+
+### Se $R$ rimane costante
+
+$$
+V \uparrow
+\quad\Rightarrow\quad
+I \uparrow
+$$
+
+Aumentando la tensione, aumenta la corrente.
+
+</div>
+
+<div class="relazione">
+
+### Se $V$ rimane costante
+
+$$
+R \uparrow
+\quad\Rightarrow\quad
+I \downarrow
+$$
+
+Aumentando la resistenza, diminuisce la corrente.
+
+</div>
+
+</div>
+
+## Le tre forme della legge
+
+A seconda della grandezza che vogliamo trovare possiamo riscrivere la stessa relazione in tre modi.
+
+<div class="formule">
+
+<div class="formula-box">
+
+$$
+\boxed{V = R \cdot I}
+$$
+
+**Per trovare la tensione**
+
+</div>
+
+<div class="formula-box">
+
+$$
+\boxed{I = \frac{V}{R}}
+$$
+
+**Per trovare la corrente**
+
+</div>
+
+<div class="formula-box">
+
+$$
+\boxed{R = \frac{V}{I}}
+$$
+
+**Per trovare la resistenza**
+
+</div>
+
+</div>
+
+## Esempio guidato
+
+Consideriamo una resistenza da **100 Ω** collegata a una tensione di **5 V**.
+
+Quale corrente la attraversa?
+
+<div class="esempio">
+
+### 1. Dati
+
+$$
+V = 5\text{ V}
+$$
+
+$$
+R = 100\text{ Ω}
+$$
+
+$$
+I = ?
+$$
+
+### 2. Formula
+
+Dobbiamo trovare la corrente:
+
+$$
+I = \frac{V}{R}
+$$
+
+### 3. Sostituzione
+
+$$
+I = \frac{5}{100}
+$$
+
+$$
+I = 0.05\text{ A}
+$$
+
+### 4. Conversione
+
+$$
+0.05\text{ A} = 50\text{ mA}
+$$
+
+### Risultato
+
+**La corrente è 50 mA.**
+
+</div>
+
+## Prova tu
+
+Una resistenza da **220 Ω** è collegata a una tensione di **11 V**.
+
+Quanto vale la corrente che la attraversa?
+
+<div class="esercizio">
+
+$$
+I = \frac{V}{R}
+$$
+
+**Prova a calcolarla prima di guardare la soluzione.**
+
+<details>
+<summary>Mostra la soluzione</summary>
+
+$$
+I = \frac{11}{220}
+$$
+
+$$
+I = 0.05\text{ A}
+$$
+
+Quindi:
+
+$$
+\boxed{I = 50\text{ mA}}
+$$
+
+</details>
+
+</div>
+
+## Attenzione alle unità
+
+Quando utilizzi la legge di Ohm, le unità devono essere coerenti.
+
+Per esempio:
+
+$$
+1\text{ kΩ} = 1000\text{ Ω}
+$$
+
+e:
+
+$$
+1\text{ A} = 1000\text{ mA}
+$$
+
+Quindi, se hai una resistenza espressa in kΩ e una corrente in mA, presta attenzione ai fattori di conversione.
+
+## Cosa succede fisicamente?
+
+La legge di Ohm non è soltanto una formula.
+
+In una resistenza, gli elettroni vengono ostacolati dal materiale. Applicando una tensione maggiore, il campo elettrico all'interno del componente aumenta e, per un componente ohmico, aumenta anche la corrente.
+
+La resistenza rappresenta quindi quanto il componente limita il passaggio della corrente.
+
+## Errori comuni
+
+<div class="errori">
+
+- Confondere **tensione** e **corrente**.
+- Dimenticare di convertire **mA in A** oppure **kΩ in Ω**.
+- Utilizzare la formula sbagliata per la grandezza che si vuole calcolare.
+- Pensare che aumentando la resistenza aumenti anche la corrente a tensione costante.
+- Applicare la legge di Ohm indistintamente a qualsiasi componente senza considerare il suo comportamento.
+
+</div>
+
+## In sintesi
+
+<div class="sintesi">
+
+La legge di Ohm mette in relazione tensione, corrente e resistenza:
+
+$$
+\boxed{V = R \cdot I}
+$$
+
+e può essere riscritta come:
+
+$$
+\boxed{I = \frac{V}{R}}
+\qquad
+\boxed{R = \frac{V}{I}}
+$$
+
+Ricorda:
+
+$$
+V \uparrow \Rightarrow I \uparrow
+\qquad
+R \uparrow \Rightarrow I \downarrow
+$$
+
+quando rispettivamente $R$ e $V$ rimangono costanti.
+
+</div>
+
+## Continua a studiare
+
+- **Resistenza elettrica**
+- **Circuiti in serie**
+- **Circuiti in parallelo**
+- **Potenza elettrica**
