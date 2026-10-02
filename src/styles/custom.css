@@ -191,6 +191,91 @@ body .page nav a {
   color: var(--fa-text) !important;
 }
 
+/* =========================================================
+   FILTRI LEZIONI
+   ========================================================= */
+
+/* Contenitore dei filtri */
+body .page .lz .lz-filtri {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 2px !important;
+
+  width: fit-content !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 3px !important;
+
+  background: #f8f7f3 !important;
+
+  border: 1px solid #dedbd4 !important;
+  border-radius: 8px !important;
+
+  box-shadow: none !important;
+}
+
+/* Singoli pulsanti */
+body .page .lz .lz-filtri button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 32px !important;
+
+  margin: 0 !important;
+  padding: 0 0.9rem !important;
+
+  font-family: inherit !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+
+  color: #686661 !important;
+  background: transparent !important;
+
+  border: 0 !important;
+  border-radius: 6px !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+/* Hover */
+body .page .lz .lz-filtri button:hover {
+  color: #252525 !important;
+  background: #eeece7 !important;
+}
+
+/* Pulsante selezionato */
+body .page .lz .lz-filtri button[aria-pressed='true'] {
+  color: #f3f1ec !important;
+  background: #45443f !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+
+/* =========================================================
+   RICERCA — NASCONDI "COMMAND K"
+   ========================================================= */
+
+/*
+ * Starlight inserisce questo <kbd> dentro il pulsante
+ * di ricerca. Noi vogliamo soltanto l'icona.
+ */
+
+body .page .custom-actions site-search kbd {
+  display: none !important;
+}
+
 
 /* =========================================================
    PAGINAZIONE STARLIGHT
@@ -522,4 +607,11 @@ body .page main .content-panel .sl-container footer div.pagination-links {
 
 .ohm-circuit {
   overflow: hidden;
+}
+
+body .page .lz .lz-controlli input.lz-cerca {
+  width: 1553px !important;
+  min-width: 1553px !important;
+  max-width: 1553px !important;
+  box-sizing: border-box !important;
 }
