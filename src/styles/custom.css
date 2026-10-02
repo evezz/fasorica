@@ -32,8 +32,6 @@
 
   --sl-text-body: 1.0625rem;
 
-  /* Starlight */
-
   --sl-color-bg: var(--fa-page);
   --sl-color-bg-nav: var(--fa-surface);
   --sl-color-bg-sidebar: var(--fa-page);
@@ -76,6 +74,9 @@ body .page > header.header {
 
   border: 0 !important;
   box-shadow: none !important;
+
+  position: sticky !important;
+  top: 0 !important;
 }
 
 
@@ -119,6 +120,8 @@ body .page .sl-container {
   padding-top: 0 !important;
 
   color: var(--fa-text);
+
+  max-width: none !important;
 }
 
 
@@ -191,11 +194,29 @@ body .page nav a {
   color: var(--fa-text) !important;
 }
 
+
+/* =========================================================
+   RICERCA STARLIGHT
+   ========================================================= */
+
+body .page .custom-actions site-search kbd {
+  display: none !important;
+}
+
+
+/* =========================================================
+   PAGINAZIONE STARLIGHT
+   ========================================================= */
+
+body .page main .content-panel .sl-container footer div.pagination-links {
+  display: none !important;
+}
+
+
 /* =========================================================
    FILTRI LEZIONI
    ========================================================= */
 
-/* Contenitore dei filtri */
 body .page .lz .lz-filtri {
   display: flex !important;
   align-items: center !important;
@@ -217,7 +238,6 @@ body .page .lz .lz-filtri {
   box-shadow: none !important;
 }
 
-/* Singoli pulsanti */
 body .page .lz .lz-filtri button {
   display: flex !important;
   align-items: center !important;
@@ -247,13 +267,11 @@ body .page .lz .lz-filtri button {
   white-space: nowrap;
 }
 
-/* Hover */
 body .page .lz .lz-filtri button:hover {
   color: #252525 !important;
   background: #eeece7 !important;
 }
 
-/* Pulsante selezionato */
 body .page .lz .lz-filtri button[aria-pressed='true'] {
   color: #f3f1ec !important;
   background: #45443f !important;
@@ -264,314 +282,15 @@ body .page .lz .lz-filtri button[aria-pressed='true'] {
 
 
 /* =========================================================
-   RICERCA — NASCONDI "COMMAND K"
+   RICERCA LEZIONI
    ========================================================= */
 
-/*
- * Starlight inserisce questo <kbd> dentro il pulsante
- * di ricerca. Noi vogliamo soltanto l'icona.
- */
-
-body .page .custom-actions site-search kbd {
-  display: none !important;
-}
-
-
-/* =========================================================
-   PAGINAZIONE STARLIGHT
-   ========================================================= */
-
-body .page main .content-panel .sl-container footer div.pagination-links {
-  display: none !important;
-}
-
-
-/* =========================================================
-   LEZIONE — TABELLA UNITÀ
-   ========================================================= */
-
-.unita-tabella {
-  display: grid;
-  grid-template-columns: repeat(3, 11rem);
-
-  width: max-content;
-  max-width: 100%;
-
-  margin: auto;
-
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius);
-  background: var(--fa-surface);
-
-  overflow: hidden;
-}
-
-.unita-colonna {
-  width: 11rem;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.unita-colonna + .unita-colonna {
-  border-left: 1px solid var(--fa-border);
-}
-
-.unita-titolo {
-  height: 2.5rem !important;
-  min-height: 0 !important;
-
-  margin: 0 !important;
-  padding: 0 0.8rem !important;
-
-  display: flex;
-  align-items: center;
-
-  box-sizing: border-box;
-
-  color: var(--fa-text);
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 650;
-  line-height: 1 !important;
-
-  border-bottom: 1px solid var(--fa-border);
-}
-
-.unita-riga {
-  height: 2.6rem;
-
-  margin: 0 !important;
-  padding: 0.35rem 0.8rem;
-
-  box-sizing: border-box;
-
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: 1fr 1fr;
-
-  border-bottom: 1px solid var(--fa-border-light);
-}
-
-.unita-riga span {
-  grid-column: 1;
-  grid-row: 1;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  color: var(--fa-text);
-  font-size: 0.78rem;
-  line-height: 1.1;
-
-  white-space: nowrap;
-}
-
-.unita-riga strong {
-  grid-column: 2;
-  grid-row: 1 / 3;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  align-self: center;
-
-  color: var(--fa-text);
-  font-size: 0.82rem;
-  font-weight: 650;
-  line-height: 1;
-
-  white-space: nowrap;
-}
-
-.unita-riga small {
-  grid-column: 1;
-  grid-row: 2;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  color: var(--fa-text-light);
-  font-size: 0.68rem;
-  line-height: 1;
-}
-
-.unita-colonna .unita-riga:last-child {
-  border-bottom: 0;
-}
-
-.unita-vuota {
-  visibility: hidden;
-}
-
-@media (max-width: 700px) {
-  .unita-tabella {
-    width: 100%;
-    grid-template-columns: 1fr;
-  }
-
-  .unita-colonna {
-    width: 100%;
-  }
-
-  .unita-colonna + .unita-colonna {
-    border-left: 0;
-    border-top: 1px solid var(--fa-border);
-  }
-}
-
-
-/* =========================================================
-   LEZIONE — GRAFICO / SIMULAZIONI
-   ========================================================= */
-
-.ohm-widget {
-  width: 100%;
-
-  margin: 2rem 0 3rem;
-  padding: 1.25rem;
-
-  box-sizing: border-box;
-
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius);
-
-  background: var(--fa-surface);
-}
-
-.ohm-widget-title {
-  margin: 0 0 1rem;
-
-  color: var(--fa-text);
-
-  font-size: 1rem;
-  font-weight: 650;
-}
-
-.ohm-widget-description {
-  margin: -0.5rem 0 1.25rem;
-
-  color: var(--fa-text-muted);
-
-  font-size: 0.92rem;
-}
-
-
-/* =========================================================
-   LEZIONE — CONTROLLI
-   ========================================================= */
-
-.ohm-control {
-  margin-top: 1rem;
-}
-
-.ohm-control label {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-
-  margin-bottom: 0.4rem;
-
-  color: var(--fa-text);
-
-  font-size: 0.9rem;
-}
-
-.ohm-control input[type="range"] {
-  width: 100%;
-
-  accent-color: var(--sl-color-accent);
-}
-
-
-/* =========================================================
-   LEZIONE — RISULTATO
-   ========================================================= */
-
-.ohm-result {
-  margin-top: 1rem;
-
-  color: var(--fa-text);
-
-  font-size: 0.95rem;
-}
-
-.ohm-result strong {
-  font-weight: 650;
-}
-
-
-/* =========================================================
-   LEZIONE — ESERCIZIO
-   ========================================================= */
-
-.esercizio {
-  margin: 1.5rem 0 3rem;
-  padding: 1.5rem;
-
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius);
-
-  background: var(--fa-surface);
-}
-
-.esercizio details {
-  margin-top: 1.25rem;
-}
-
-.esercizio summary {
-  cursor: pointer;
-
-  color: var(--fa-text);
-
-  font-weight: 600;
-}
-
-
-/* =========================================================
-   KATEX
-   ========================================================= */
-
-.katex {
-  font-size: 1.08em;
-}
-
-.katex-display {
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  padding-block: 0.4rem;
-}
-
-
-/* =========================================================
-   LABORATORI — MANTIENI SOLO SE USATI ALTROVE
-   ========================================================= */
-
-.lab {
-  display: grid;
-  grid-template-columns: minmax(14rem, 20rem) 1fr;
-
-  gap: 1.25rem;
-
-  margin-block: 1.5rem;
-  padding: 1.25rem;
-
-  border: 1px solid var(--fa-border);
-  border-left: 4px solid var(--sl-color-accent);
-
-  border-radius: var(--fa-radius);
-
-  background: var(--sl-color-accent-low);
-}
-
-.lab > * {
-  margin: 0;
-}
-
-.lab input[type="range"] {
-  width: 100%;
-
-  accent-color: var(--sl-color-accent);
+body .page .lz .lz-controlli input.lz-cerca {
+  width: 1553px !important;
+  min-width: 1553px !important;
+  max-width: 1553px !important;
+
+  box-sizing: border-box !important;
 }
 
 
@@ -580,38 +299,12 @@ body .page main .content-panel .sl-container footer div.pagination-links {
    ========================================================= */
 
 @media (max-width: 700px) {
-
-  .unita-layout {
-    grid-template-columns: 1fr;
-
-    gap: 1.5rem;
+  body .page .content-panel + .content-panel {
+    padding-top: 0.5rem;
   }
 
-  .unita-tabella {
-    font-size: 0.9rem;
+  body .page .content-panel:first-child {
+    padding-top: 1.25rem;
+    padding-bottom: 0;
   }
-
-  .ohm-widget {
-    padding: 1rem;
-  }
-
-  .esercizio {
-    padding: 1.25rem;
-  }
-
-  .lab {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-.ohm-circuit {
-  overflow: hidden;
-}
-
-body .page .lz .lz-controlli input.lz-cerca {
-  width: 1553px !important;
-  min-width: 1553px !important;
-  max-width: 1553px !important;
-  box-sizing: border-box !important;
 }

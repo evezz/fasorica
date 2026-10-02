@@ -1,4 +1,6 @@
-/* Pagine di lezione. Usa le variabili --fa-* definite in custom.css. */
+/* =========================================================
+   FASORICA — PAGINE DI LEZIONE
+   ========================================================= */
 
 :root {
   --fa-accent: #45443f;
@@ -6,139 +8,104 @@
   --fa-card: #ffffff;
   --fa-warn-soft: #f7eddf;
   --fa-warn-border: #e3cfae;
+
+  --sl-content-width: 100%;
+  --sl-content-pad-x: clamp(1.25rem, 4vw, 3.5rem);
 }
 
-/* Una sola barra laterale: a destra non c'è più niente. */
+
+/* =========================================================
+   SIDEBAR DESTRO
+   ========================================================= */
+
 .right-sidebar-container {
   display: none;
 }
 
-/* Barra sinistra: indice della lezione */
+
+/* =========================================================
+   SIDEBAR SINISTRO — INDICE LEZIONE
+   ========================================================= */
+
 .fa-torna {
   display: block;
+
   margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
+
   border-bottom: 1px solid var(--fa-border);
+
   font-size: 0.9rem;
   font-weight: 600;
+
   color: var(--fa-text);
   text-decoration: none;
 }
-.fa-torna:hover { text-decoration: underline; }
+
+.fa-torna:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   INDICE "ON THIS PAGE"
+   ========================================================= */
 
 starlight-toc h2,
 #starlight__on-this-page {
   margin-bottom: 0.5rem;
+
   font-size: 1rem;
+
   color: var(--fa-text);
 }
-starlight-toc a { color: var(--fa-text-muted); }
-starlight-toc a:hover { color: var(--fa-text); }
-starlight-toc a[aria-current='true'] { color: var(--fa-text); font-weight: 600; }
 
-/* Capitolo sopra il titolo */
+starlight-toc a {
+  color: var(--fa-text-muted);
+}
+
+starlight-toc a:hover {
+  color: var(--fa-text);
+}
+
+starlight-toc a[aria-current='true'] {
+  color: var(--fa-text);
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   CAPITOLO
+   ========================================================= */
+
 .fa-capitolo {
   display: inline-block;
+
   margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
   padding: 0.2rem 0.8rem;
+
   font-size: 0.88rem;
   font-weight: 600;
+
   color: var(--fa-text-muted);
   background: var(--fa-surface);
+
   border: 1px solid var(--fa-border);
   border-radius: 999px;
+
   text-decoration: none;
 }
-.fa-capitolo:hover { color: var(--fa-text); background: var(--fa-surface-hover); }
 
-/* Formule */
-.sl-markdown-content .katex { font-size: 1.15em; }
-.sl-markdown-content .katex-display { margin: 1.25rem 0; }
-.sl-markdown-content .katex-display > .katex { font-size: 1.6em; }
-
-.sl-markdown-content .sl-heading-wrapper.level-h2 { margin-top: 3.25rem; }
-
-/* Riquadri */
-.sl-markdown-content :is(.grandezza, .relazione, .formula-box, .esempio, .esercizio, .errori, .sintesi, .lezione-hero) {
-  display: block;
-  margin: 0;
-  padding: 1.5rem 1.75rem;
-  background: var(--fa-card);
-  border: 1px solid var(--fa-border);
-  border-radius: 10px;
-}
-.sl-markdown-content :is(.grandezza, .relazione, .formula-box, .esempio, .esercizio, .errori, .sintesi, .lezione-hero) .sl-heading-wrapper {
-  margin-top: 0;
-}
-.sl-markdown-content :is(.grandezza, .relazione, .formula-box) h3 { margin: 0; font-size: 1.25rem; }
-
-.sl-markdown-content :is(.grandezze, .relazioni, .formule) {
-  display: grid;
-  gap: 1rem;
-  margin: 1.5rem 0 2rem;
-}
-.sl-markdown-content .grandezze { grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
-.sl-markdown-content .relazioni { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
-.sl-markdown-content .formule { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-
-.sl-markdown-content :is(.esempio, .esercizio, .errori, .sintesi, .lezione-hero) { margin: 1.5rem 0 2rem; }
-
-/* Idea chiave */
-.sl-markdown-content .lezione-hero {
-  padding: 2rem 2.25rem;
-  font-size: 1.2rem;
-  background: var(--fa-accent-soft);
-  border: 0;
-  border-left: 6px solid var(--fa-accent);
-}
-
-/* Le tre grandezze: il simbolo in grande */
-.sl-markdown-content .grandezza .sl-heading-wrapper + p,
-.sl-markdown-content .grandezza h3 + p {
-  margin: 0.25rem 0 0.75rem;
-  font-size: 2.6rem;
-  line-height: 1.1;
+.fa-capitolo:hover {
   color: var(--fa-text);
+  background: var(--fa-surface-hover);
 }
 
-/* Le tre forme della legge */
-.sl-markdown-content .formula-box { text-align: center; border-top: 4px solid var(--fa-accent); }
-.sl-markdown-content .formula-box .katex-display > .katex { font-size: 1.5em; }
 
-/* Esempio guidato */
-.sl-markdown-content .esempio { border-left: 6px solid var(--fa-accent); }
-.sl-markdown-content .esempio h3 { font-size: 1rem; color: var(--fa-text-muted); }
-
-/* Prova tu */
-.sl-markdown-content .esercizio { background: var(--fa-surface); border-style: dashed; border-width: 2px; }
-.sl-markdown-content .esercizio summary { cursor: pointer; font-weight: 600; }
-.sl-markdown-content .esercizio details[open] > summary { margin-bottom: 0.75rem; }
-
-/* Errori comuni */
-.sl-markdown-content .errori { background: var(--fa-warn-soft); border-color: var(--fa-warn-border); }
-
-/* In sintesi */
-.sl-markdown-content .sintesi {
-  color: #f3f1ec;
-  background: var(--fa-accent);
-  border: 0;
-  text-align: center;
-}
-
-@media (max-width: 700px) {
-  .sl-markdown-content :is(.grandezza, .relazione, .formula-box, .esempio, .esercizio, .errori, .sintesi) { padding: 1.25rem; }
-  .sl-markdown-content .lezione-hero { padding: 1.5rem; font-size: 1.1rem; }
-  .sl-markdown-content .katex-display > .katex { font-size: 1.3em; }
-  .sl-markdown-content .grandezze,
-  .sl-markdown-content .relazioni,
-  .sl-markdown-content .formule { grid-template-columns: 1fr; }
-}
-
-/* ===== Testo e linee a tutta larghezza ===== */
-:root {
-  --sl-content-width: 100%;
-  --sl-content-pad-x: clamp(1.25rem, 4vw, 3.5rem);
-}
+/* =========================================================
+   LAYOUT DEL CONTENUTO DELLA LEZIONE
+   ========================================================= */
 
 body .page .sl-container {
   max-width: none !important;
@@ -148,20 +115,595 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
   max-width: none !important;
 }
 
-/* La linea sotto i titoli h2 va sul contenitore, così occupa tutta la riga */
+
+/* =========================================================
+   SPAZIATURA DELLE SEZIONI
+   ========================================================= */
+
 .sl-markdown-content .sl-heading-wrapper.level-h2 {
+  margin-top: 3.25rem;
+
   padding-bottom: 0.35rem;
+
   border-bottom: 1px solid var(--fa-border);
 }
+
 .sl-markdown-content .sl-heading-wrapper.level-h2 h2 {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
-/* ===== Navbar sempre in alto, barra laterale subito sotto ===== */
-body .page > header.header {
-  position: sticky !important;
-  top: 0 !important;
+
+/* =========================================================
+   FORMULE
+   ========================================================= */
+
+.sl-markdown-content .katex {
+  font-size: 1.15em;
+}
+
+.sl-markdown-content .katex-display {
+  margin: 1.25rem 0;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.sl-markdown-content .katex-display > .katex {
+  font-size: 1.6em;
+}
+
+
+/* =========================================================
+   RIQUADRI GENERICI DELLE LEZIONI
+   ========================================================= */
+
+.sl-markdown-content :is(
+  .grandezza,
+  .relazione,
+  .formula-box,
+  .esempio,
+  .esercizio,
+  .errori,
+  .sintesi,
+  .lezione-hero
+) {
+  display: block;
+
+  margin: 0;
+  padding: 1.5rem 1.75rem;
+
+  background: var(--fa-card);
+
+  border: 1px solid var(--fa-border);
+  border-radius: 10px;
+}
+
+.sl-markdown-content :is(
+  .grandezza,
+  .relazione,
+  .formula-box,
+  .esempio,
+  .esercizio,
+  .errori,
+  .sintesi,
+  .lezione-hero
+) .sl-heading-wrapper {
+  margin-top: 0;
+}
+
+.sl-markdown-content :is(
+  .grandezza,
+  .relazione,
+  .formula-box
+) h3 {
+  margin: 0;
+
+  font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   GRIGLIE
+   ========================================================= */
+
+.sl-markdown-content :is(
+  .grandezze,
+  .relazioni,
+  .formule
+) {
+  display: grid;
+
+  gap: 1rem;
+
+  margin: 1.5rem 0 2rem;
+}
+
+.sl-markdown-content .grandezze {
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.sl-markdown-content .relazioni {
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.sl-markdown-content .formule {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+
+/* =========================================================
+   IDEA CHIAVE / RELAZIONE FONDAMENTALE
+   ========================================================= */
+
+.sl-markdown-content .lezione-hero {
+  margin: 1.5rem 0 2rem;
+
+  padding: 2rem 2.25rem;
+
+  font-size: 1.2rem;
+
+  background: var(--fa-accent-soft);
+
+  border: 0;
+  border-left: 6px solid var(--fa-accent);
+}
+
+
+/* =========================================================
+   GRANDEZZE
+   ========================================================= */
+
+.sl-markdown-content .grandezza .sl-heading-wrapper + p,
+.sl-markdown-content .grandezza h3 + p {
+  margin: 0.25rem 0 0.75rem;
+
+  font-size: 2.6rem;
+  line-height: 1.1;
+
+  color: var(--fa-text);
+}
+
+
+/* =========================================================
+   FORMULE
+   ========================================================= */
+
+.sl-markdown-content .formula-box {
+  text-align: center;
+
+  border-top: 4px solid var(--fa-accent);
+}
+
+.sl-markdown-content .formula-box .katex-display > .katex {
+  font-size: 1.5em;
+}
+
+
+/* =========================================================
+   ESEMPIO GUIDATO
+   ========================================================= */
+
+.sl-markdown-content .esempio {
+  margin: 1.5rem 0 2rem;
+
+  border-left: 6px solid var(--fa-accent);
+}
+
+.sl-markdown-content .esempio h3 {
+  font-size: 1rem;
+  color: var(--fa-text-muted);
+}
+
+
+/* =========================================================
+   ESERCIZIO
+   ========================================================= */
+
+.sl-markdown-content .esercizio {
+  margin: 1.5rem 0 2rem;
+
+  background: var(--fa-surface);
+
+  border-style: dashed;
+  border-width: 2px;
+}
+
+.sl-markdown-content .esercizio summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sl-markdown-content .esercizio details[open] > summary {
+  margin-bottom: 0.75rem;
+}
+
+
+/* =========================================================
+   ERRORI COMUNI
+   ========================================================= */
+
+.sl-markdown-content .errori {
+  margin: 1.5rem 0 2rem;
+
+  background: var(--fa-warn-soft);
+  border-color: var(--fa-warn-border);
+}
+
+
+/* =========================================================
+   IN SINTESI
+   ========================================================= */
+
+.sl-markdown-content .sintesi {
+  margin: 1.5rem 0 2rem;
+
+  color: #f3f1ec;
+
+  background: var(--fa-accent);
+
+  border: 0;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   TABELLA UNITÀ
+   ========================================================= */
+
+.unita-tabella {
+  display: grid;
+  grid-template-columns: repeat(3, 11rem);
+
+  width: max-content;
+  max-width: 100%;
+
+  margin: auto ;
+
+  border: 1px solid var(--fa-border);
+  border-radius: var(--fa-radius);
+
+  background: var(--fa-surface);
+
+  overflow: hidden;
+}
+
+.unita-colonna {
+  width: 11rem;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.unita-colonna + .unita-colonna {
+  border-left: 1px solid var(--fa-border);
+}
+
+.unita-titolo {
+  height: 2.5rem !important;
+  min-height: 0 !important;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  margin: 0 !important;
+  padding: 0 0.8rem !important;
+
+  color: var(--fa-text);
+
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+
+  line-height: 1 !important;
+
+  border-bottom: 1px solid var(--fa-border);
+}
+
+.unita-riga {
+  height: 2.6rem;
+
+  display: grid;
+
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr 1fr;
+
+  box-sizing: border-box;
+
+  margin: 0 !important;
+  padding: 0.35rem 0.8rem;
+
+  border-bottom: 1px solid var(--fa-border-light);
+}
+
+.unita-riga span {
+  grid-column: 1;
+  grid-row: 1;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: var(--fa-text);
+
+  font-size: 0.78rem;
+  line-height: 1.1;
+
+  white-space: nowrap;
+}
+
+.unita-riga strong {
+  grid-column: 2;
+  grid-row: 1 / 3;
+
+  align-self: center;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: var(--fa-text);
+
+  font-size: 0.82rem;
+  font-weight: 650;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.unita-riga small {
+  grid-column: 1;
+  grid-row: 2;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: var(--fa-text-light);
+
+  font-size: 0.68rem;
+  line-height: 1;
+}
+
+.unita-colonna .unita-riga:last-child {
+  border-bottom: 0;
+}
+
+.unita-vuota {
+  visibility: hidden;
+}
+
+
+/* =========================================================
+   WIDGET OHM
+   ========================================================= */
+
+.ohm-widget {
+  width: 100%;
+
+  margin: 2rem 0 3rem;
+  padding: 1.25rem;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--fa-border);
+  border-radius: var(--fa-radius);
+
+  background: var(--fa-surface);
+}
+
+.ohm-widget-title {
+  margin: 0 0 1rem;
+
+  color: var(--fa-text);
+
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.ohm-widget-description {
+  margin: -0.5rem 0 1.25rem;
+
+  color: var(--fa-text-muted);
+
+  font-size: 0.92rem;
+}
+
+
+/* =========================================================
+   CONTROLLI OHM
+   ========================================================= */
+
+.ohm-control {
+  margin-top: 0.85rem;
+}
+
+.ohm-control label {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: baseline;
+
+  gap: 1rem;
+
+  margin-bottom: 0.4rem;
+
+  color: var(--fa-text);
+
+  font-size: 1.0625rem;
+}
+
+.ohm-control input[type="range"] {
+  width: 100%;
+
+  accent-color: var(--sl-color-accent);
+}
+
+
+/* =========================================================
+   RISULTATO OHM
+   ========================================================= */
+
+.ohm-result {
+  margin-top: 1rem;
+
+  color: var(--fa-text);
+
+  font-size: 0.95rem;
+}
+
+.ohm-result strong {
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   CIRCUITO
+   ========================================================= */
+
+.ohm-circuit {
+  overflow: hidden;
+}
+
+.circuit-container {
+  width: 100%;
+  padding: 0;
+}
+
+.circuit-svg {
+  display: block;
+
+  width: 92%;
+  height: auto;
+
+  margin: 0 auto;
+}
+
+.circuit-wire {
+  fill: none;
+
+  stroke: #55534f;
+  stroke-width: 4;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.circuit-resistor {
+  fill: none;
+
+  stroke: #252525;
+  stroke-width: 4;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.battery-line {
+  stroke: #252525;
+  stroke-linecap: round;
+}
+
+.battery-long {
+  stroke-width: 6;
+}
+
+.battery-short {
+  stroke-width: 3;
+}
+
+.circuit-label {
+  fill: #686661;
+
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.electron {
+  fill: #00a8ff;
+}
+
+.circuit-current {
+  display: flex;
+
+  align-items: baseline;
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+
+  color: var(--fa-text-muted);
+
+  font-size: 1.0625rem;
+}
+
+.circuit-current strong {
+  color: var(--fa-text);
+
+  font-size: 1.0625rem;
+  font-weight: 650;
+}
+
+.particle-note {
+  margin: 0.75rem 0 0;
+
+  color: var(--fa-text-light);
+
+  font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   LABORATORI
+   ========================================================= */
+
+.lab {
+  display: grid;
+
+  grid-template-columns: minmax(14rem, 20rem) 1fr;
+
+  gap: 1.25rem;
+
+  margin-block: 1.5rem;
+  padding: 1.25rem;
+
+  border: 1px solid var(--fa-border);
+  border-left: 4px solid var(--sl-color-accent);
+
+  border-radius: var(--fa-radius);
+
+  background: var(--sl-color-accent-low);
+}
+
+.lab > * {
+  margin: 0;
+}
+
+.lab input[type="range"] {
+  width: 100%;
+
+  accent-color: var(--sl-color-accent);
+}
+
+
+/* =========================================================
+   NAVBAR / SIDEBAR
+   ========================================================= */
+
+:root {
+  --sl-nav-height: 72px;
 }
 
 @media (min-width: 50rem) {
@@ -170,29 +712,87 @@ body .page > header.header {
   }
 }
 
-/* ===== Meno spazio in alto, niente linea sotto il titolo ===== */
-:root {
-  --sl-nav-height: 72px; /* altezza della tua navbar */
-}
-@media (max-width: 700px) {
-  :root {
-    --sl-nav-height: 64px;
-  }
-}
 
-/* Starlight lascia in alto lo spazio per una navbar fissa; la tua invece occupa già il suo posto */
+/* =========================================================
+   LAYOUT VERTICALE
+   ========================================================= */
+
 body .page .main-frame {
   padding-top: 0 !important;
 }
 
-/* Linea tra titolo e contenuto: via. Spazi più stretti */
 body .page .content-panel + .content-panel {
   border-top: 0 !important;
   padding-top: 0.5rem;
 }
+
 body .page .content-panel:first-child {
   padding-top: 1.25rem;
   padding-bottom: 0;
 }
 
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  :root {
+    --sl-nav-height: 64px;
+  }
+
+  .sl-markdown-content :is(
+    .grandezza,
+    .relazione,
+    .formula-box,
+    .esempio,
+    .esercizio,
+    .errori,
+    .sintesi
+  ) {
+    padding: 1.25rem;
+  }
+
+  .sl-markdown-content .lezione-hero {
+    padding: 1.5rem;
+
+    font-size: 1.1rem;
+  }
+
+  .sl-markdown-content .katex-display > .katex {
+    font-size: 1.3em;
+  }
+
+  .sl-markdown-content .grandezze,
+  .sl-markdown-content .relazioni,
+  .sl-markdown-content .formule {
+    grid-template-columns: 1fr;
+  }
+
+  .unita-tabella {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .unita-colonna {
+    width: 100%;
+  }
+
+  .unita-colonna + .unita-colonna {
+    border-left: 0;
+    border-top: 1px solid var(--fa-border);
+  }
+
+  .ohm-widget {
+    padding: 1rem;
+  }
+
+  .circuit-svg {
+    width: 100%;
+  }
+
+  .lab {
+    grid-template-columns: 1fr;
+  }
+}
