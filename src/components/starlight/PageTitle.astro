@@ -1,0 +1,15 @@
+---
+// Il capitolo si ricava dalla cartella della lezione (es. /it/fondamenti/legge-di-ohm/)
+// e dall'elenco in src/data/lezioni.ts.
+import { argomenti } from '../../data/lezioni';
+
+const [lingua, cartella, ...resto] = Astro.url.pathname.split('/').filter(Boolean);
+const indice = argomenti.findIndex((a) => a.lezioni.some((l) => l.slug.startsWith(`${cartella}/`)));
+const nome = indice >= 0 ? argomenti[indice].titolo : (cartella ?? '').replace(/-/g, ' ');
+const etichetta = indice >= 0 ? `Capitolo ${indice + 1} · ${nome}` : nome;
+const mostra = Boolean(cartella) && resto.length > 0;
+const titolo = Astro.locals.starlightRoute.entry.data.title;
+---
+
+{mostra && <a class="fa-capitolo" href={`/${lingua}/lezioni/`}>{etichetta}</a>}
+<h1 id="_top">{titolo}</h1>

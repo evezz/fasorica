@@ -33,11 +33,15 @@ export default defineConfig({
 
             components: {
                 Header: './src/components/CustomHeader.astro',
+                Sidebar: './src/components/starlight/Sidebar.astro',
+                PageSidebar: './src/components/starlight/PageSidebar.astro',
+                PageTitle: './src/components/starlight/PageTitle.astro',
             },
 
             customCss: [
                 'katex/dist/katex.min.css',
                 './src/styles/custom.css',
+                './src/styles/lezione.css',
             ],
             defaultLocale: 'it',
             locales: {

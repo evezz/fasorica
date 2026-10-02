@@ -1,0 +1,9 @@
+---
+// Al posto del menu del sito, a sinistra c'è l'indice dei paragrafi della lezione.
+import TableOfContents from '@astrojs/starlight/components/TableOfContents.astro';
+
+const lingua = Astro.url.pathname.split('/').filter(Boolean)[0] ?? 'it';
+---
+
+<a class="fa-torna" href={`/${lingua}/lezioni/`}>Tutte le lezioni</a>
+<TableOfContents />

@@ -1,0 +1,418 @@
+---
+---
+
+<div class="ohm-widget ohm-circuit">
+  <h3 class="ohm-widget-title">La corrente in un circuito</h3>
+
+  <p class="ohm-widget-description">
+    Modifica tensione e resistenza e osserva come cambia la corrente.
+  </p>
+
+  <div class="circuit-container">
+
+    <svg
+      class="circuit-svg"
+      viewBox="0 0 800 340"
+      role="img"
+      aria-label="Circuito elettrico con batteria, resistore e corrente animata"
+    >
+      <!-- Filo superiore prima della resistenza -->
+      <path
+        class="circuit-wire"
+        d="M 120 80 H 285"
+      />
+
+      <!-- Resistenza -->
+      <path
+        class="circuit-resistor"
+        d="
+          M 285 80
+          L 305 60
+          L 335 100
+          L 365 60
+          L 395 100
+          L 425 60
+          L 455 100
+          L 485 60
+          L 505 80
+        "
+      />
+
+      <!-- Filo dopo la resistenza -->
+      <path
+        class="circuit-wire"
+        d="M 505 80 H 680 V 260 H 120 V 205"
+      />
+
+      <!-- Batteria: piastre orizzontali -->
+      <line
+        class="battery-line battery-long"
+        x1="100"
+        y1="160"
+        x2="140"
+        y2="160"
+      />
+
+      <line
+        class="battery-line battery-short"
+        x1="110"
+        y1="175"
+        x2="130"
+        y2="175"
+      />
+
+      <!-- Collegamenti verticali alla batteria -->
+      <path
+        class="circuit-wire"
+        d="M 120 80 V 160 M 120 205 V 175"
+      />
+
+      <!-- Etichette -->
+      <text
+        class="circuit-label"
+        x="145"
+        y="165"
+      >
+        V
+      </text>
+
+      <text
+        class="circuit-label"
+        x="395"
+        y="40"
+        text-anchor="middle"
+      >
+        R
+      </text>
+
+      <!-- Elettroni -->
+      <g class="electrons">
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+        <circle class="electron" r="5" />
+      </g>
+    </svg>
+
+    <div class="circuit-current">
+      <span>Corrente</span>
+      <strong>
+        <span class="particle-current">5.0</span> mA
+      </strong>
+    </div>
+
+  </div>
+
+  <div class="ohm-control">
+    <label>
+      <span>Tensione</span>
+      <strong>
+        <span class="particle-voltage">5.0</span> V
+      </strong>
+    </label>
+
+    <input
+      class="particle-voltage-slider"
+      type="range"
+      min="0"
+      max="10"
+      step="0.1"
+      value="5"
+    />
+  </div>
+
+  <div class="ohm-control">
+    <label>
+      <span>Resistenza</span>
+      <strong>
+        <span class="particle-resistance">1.0</span> kΩ
+      </strong>
+    </label>
+
+    <input
+      class="particle-resistance-slider"
+      type="range"
+      min="0.1"
+      max="2"
+      step="0.1"
+      value="1"
+    />
+  </div>
+
+  <p class="particle-note">
+    L'animazione rappresenta qualitativamente il passaggio della corrente.
+    Non rappresenta la reale velocità di deriva degli elettroni.
+  </p>
+</div>
+
+<script>
+  const widgets = document.querySelectorAll('.ohm-circuit');
+
+  widgets.forEach((widget) => {
+    const voltageSlider =
+      widget.querySelector('.particle-voltage-slider') as HTMLInputElement;
+
+    const resistanceSlider =
+      widget.querySelector('.particle-resistance-slider') as HTMLInputElement;
+
+    const voltageValue =
+      widget.querySelector('.particle-voltage') as HTMLElement;
+
+    const resistanceValue =
+      widget.querySelector('.particle-resistance') as HTMLElement;
+
+    const currentValue =
+      widget.querySelector('.particle-current') as HTMLElement;
+
+    const electrons =
+      Array.from(widget.querySelectorAll('.electron')) as SVGCircleElement[];
+
+    const positions = electrons.map((_, i) => i / electrons.length);
+
+    /*
+     * Percorso reale del circuito.
+     *
+     * Ogni tratto corrisponde esattamente alla geometria
+     * disegnata nell'SVG, compreso lo zigzag della resistenza.
+     */
+    const path = [
+      { x: 120, y: 80 },
+      { x: 285, y: 80 },
+
+      { x: 305, y: 60 },
+      { x: 335, y: 100 },
+      { x: 365, y: 60 },
+      { x: 395, y: 100 },
+      { x: 425, y: 60 },
+      { x: 455, y: 100 },
+      { x: 485, y: 60 },
+      { x: 505, y: 80 },
+
+      { x: 680, y: 80 },
+      { x: 680, y: 260 },
+      { x: 120, y: 260 },
+      { x: 120, y: 205 }
+    ];
+
+    const segments = [];
+
+    let totalLength = 0;
+
+    for (let i = 0; i < path.length - 1; i++) {
+      const a = path[i];
+      const b = path[i + 1];
+
+      const length = Math.hypot(
+        b.x - a.x,
+        b.y - a.y
+      );
+
+      segments.push({
+        a,
+        b,
+        length,
+        start: totalLength
+      });
+
+      totalLength += length;
+    }
+
+    function getPoint(t: number) {
+      let distance = (t % 1) * totalLength;
+
+      for (const segment of segments) {
+        if (distance <= segment.start + segment.length) {
+          const local =
+            (distance - segment.start) / segment.length;
+
+          return {
+            x:
+              segment.a.x +
+              (segment.b.x - segment.a.x) * local,
+
+            y:
+              segment.a.y +
+              (segment.b.y - segment.a.y) * local
+          };
+        }
+      }
+
+      return path[path.length - 1];
+    }
+
+    function updateValues() {
+      const voltage = Number(voltageSlider.value);
+      const resistance = Number(resistanceSlider.value);
+
+      const current = voltage / resistance;
+
+      voltageValue.textContent = voltage.toFixed(1);
+      resistanceValue.textContent = resistance.toFixed(1);
+      currentValue.textContent = current.toFixed(1);
+    }
+
+    let lastTime = performance.now();
+
+    function animate(time: number) {
+      const delta =
+        Math.min(time - lastTime, 50) / 1000;
+
+      lastTime = time;
+
+      const voltage = Number(voltageSlider.value);
+      const resistance = Number(resistanceSlider.value);
+
+      const current = voltage / resistance;
+
+      /*
+       * La velocità degli elettroni cresce con la corrente.
+       */
+      const speed = current * 0.035;
+
+      positions.forEach((position, index) => {
+        positions[index] =
+          (position + speed * delta) % 1;
+
+        const point = getPoint(positions[index]);
+
+        electrons[index].setAttribute(
+          'cx',
+          point.x.toString()
+        );
+
+        electrons[index].setAttribute(
+          'cy',
+          point.y.toString()
+        );
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    voltageSlider.addEventListener(
+      'input',
+      updateValues
+    );
+
+    resistanceSlider.addEventListener(
+      'input',
+      updateValues
+    );
+
+    updateValues();
+
+    requestAnimationFrame(animate);
+  });
+</script>
+
+<style>
+  .circuit-container {
+    width: 100%;
+    padding: 0;
+  }
+
+  .circuit-svg {
+    display: block;
+    width: 92%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .circuit-wire {
+    fill: none;
+    stroke: #55534f;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .circuit-resistor {
+    fill: none;
+    stroke: #252525;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .battery-line {
+    stroke: #252525;
+    stroke-linecap: round;
+  }
+
+  .battery-long {
+    stroke-width: 6;
+  }
+
+  .battery-short {
+    stroke-width: 3;
+  }
+
+  .circuit-label {
+    fill: #686661;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .electron {
+    fill: #00a8ff;
+  }
+
+  .circuit-current {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+
+    color: var(--fa-text-muted);
+    font-size: 1.0625rem;
+  }
+
+  .circuit-current strong {
+    color: var(--fa-text);
+    font-size: 1.0625rem;
+    font-weight: 650;
+  }
+
+  .particle-note {
+    margin: 0.75rem 0 0;
+    color: var(--fa-text-light);
+    font-size: 0.9rem;
+  }
+
+  .ohm-control {
+    margin-top: 0.85rem;
+  }
+
+  .ohm-control label {
+    font-size: 1.0625rem;
+  }
+
+  @media (max-width: 700px) {
+    .circuit-svg {
+      width: 100%;
+    }
+
+    .circuit-current {
+      margin-top: 0;
+    }
+  }
+</style>
