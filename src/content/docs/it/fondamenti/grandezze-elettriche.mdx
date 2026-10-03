@@ -3,13 +3,10 @@ title: Grandezze elettriche
 description: Corrente, tensione e potenza nei circuiti elettrici - definizioni pratiche e simboli.
 ---
 
-Per comprendere il funzionamento di un circuito elettrico occorre prendere confidenza con le due grandezze fondamentali che ne governano il comportamento: la **tensione** e la **corrente**.
+Per poter comprendere e risolvere i circuiti elettrici occorre prendere confidenza con le due grandezze principali: la **tensione** e la **corrente**. Ogni componente elettronico lega queste due grandezze secondo la propria legge.\
+Andiamo quindi a capire come interpretarle e utilizzarle all'interno di un circuito elettrico.
 
 ## Tensione e Corrente
-
-Un'analogia pratica molto usata per visualizzare queste due grandezze è quella **idraulica**:
-- La **tensione** è l'equivalente della *pressione dell'acqua* o del dislivello generato da una pompa.
-- La **corrente** è il *flusso d'acqua* vero e proprio che scorre nei tubi.
 
 <div class="relazioni">
   <div class="relazione">
@@ -28,7 +25,7 @@ Un'analogia pratica molto usata per visualizzare queste due grandezze è quella 
       Rappresenta la quantità di carica elettrica che attraversa la sezione di un conduttore nell'unità di tempo. Si misura in <strong>Ampere (A)</strong>.
     </p>
     <p>
-      La corrente scorre <em>attraverso</em> un componente. Per convenzione storica, il verso del flusso va dal punto a potenziale più alto (<strong>+</strong>) a quello più basso (<strong>-</strong>).
+      Il verso della corrente è spesso convenzionale: i circuiti elettrici possono essere risolti a prescindere del verso della corrente scelto.
     </p>
   </div>
 </div>
@@ -65,7 +62,7 @@ Nei circuiti elettrici la tensione viene erogata da **generatori**, mentre la co
         </g>
       </svg>
     </div>
-    <p><strong>Generatori di Tensione</strong><br />A sinistra la batteria reale/DC (polo + barra lunga, polo − barra corta ravvicinata). A destra il generatore ideale con polarità (+/−) interne.</p>
+    <p><strong>Generatore di tensione ideale</strong><br />Questo componente impone che fra i suoi due terminali ci sia una **differenza di potenziale** pari al valore del generatore. Nel dispositivo ideale, la corrente che ci passa attraverso può essere **qualunque**, anche nulla, ed è imposta dal circuito. Realmente, questi componenti sono le batterie. </p>
   </div>
 
   <div class="relazione" style="text-align: center;">
@@ -82,32 +79,31 @@ Nei circuiti elettrici la tensione viene erogata da **generatori**, mentre la co
         </g>
       </svg>
     </div>
-    <p><strong>Generatore di Corrente</strong><br />Simbolo del generatore ideale di corrente: la freccia interna indica il verso impresso al flusso di cariche.</p>
+    <p><strong>Generatore di corrente ideale</strong><br />Questo componente impone che nel ramo in cui è inserito scorra una corrente pari al suo valore. Nel dispositivo ideale, la tensione ai suoi capi può essere **qualunque**, anche nulla, ed è imposta dal circuito. Realmente, questi dispotivi non esistono.</p>
   </div>
 </div>
 
-## Misurare Tensione e Corrente: Voltmetro e Amperometro
+## Tensione nulla e corrente nulla
 
-Nella pratica di laboratorio, le due grandezze si misurano in modo molto diverso a causa della loro natura:
 
-- **Tensione ($V$):** Si misura **in parallelo** ai capi del componente di cui si vuole conoscere il "dislivello" elettrico, senza interrompere il circuito.
-- **Corrente ($I$):** Si misura **in serie**, cioè aprendo il circuito e facendo passare la corrente *all'interno* dello strumento di misura.
+
+## Misurare tensione e corrente: voltmetro e amperometro
+
+Le due grandezze si misurano in modo molto diverso a causa della loro natura:
+
+- **Tensione ($V$):** Si misura con uno strumento detto "**voltmetro**" **in parallelo** ai capi del componente di cui si vuole conoscere la differenza di potenziale, senza interrompere il circuito.
+- **Corrente ($I$):** Si misura con uno strumento detto "**amperometro**" **in serie**, cioè aprendo il circuito e facendo passare la corrente *all'interno* dello strumento di misura.
 
 ---
 
-## La Potenza Elettrica ($P$)
+## La potenza elettrica (<i>P</i>)
 
 La **potenza elettrica** esprime la velocità con cui l'energia viene trasformata o dissipata in un circuito. Si misura in **Watt (W)** ed è legata a tensione e corrente dalla relazione:
-
-<div class="lezione-hero">
-<div class="lezione-hero-text">
 
 $$
 P = V \cdot I
 $$
 
-</div>
-</div>
 
 Se il componente è un **resistore**, possiamo combinare la potenza con la [Legge di Ohm](/lezioni/elettrotecnica/legge-di-ohm) ($V = R \cdot I$) per ottenere le forme equivalenti della potenza dissipata per effetto Joule:
 
