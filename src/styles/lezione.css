@@ -347,7 +347,6 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
   text-align: center;
 }
 
-
 /* =========================================================
    TABELLA UNITÀ
    ========================================================= */
@@ -359,10 +358,10 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
   width: max-content;
   max-width: 100%;
 
-  margin: auto ;
+  margin: 1.5rem auto;
 
   border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius);
+  border-radius: var(--fa-radius, 10px);
 
   background: var(--fa-surface);
 
@@ -401,45 +400,43 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
   line-height: 1 !important;
 
   border-bottom: 1px solid var(--fa-border);
+  background: var(--fa-card);
 }
 
 .unita-riga {
-  height: 2.6rem;
+  height: 2.8rem;
 
-  display: grid;
-
-  grid-template-columns: 1fr auto;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   box-sizing: border-box;
 
   margin: 0 !important;
   padding: 0.35rem 0.8rem;
 
-  border-bottom: 1px solid var(--fa-border-light);
+  border-bottom: 1px solid var(--fa-border-light, #f0efe9);
+}
+
+.unita-riga-testo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .unita-riga span {
-  grid-column: 1;
-  grid-row: 1;
-
   margin: 0 !important;
   padding: 0 !important;
 
   color: var(--fa-text);
 
   font-size: 0.78rem;
-  line-height: 1.1;
+  line-height: 1.25;
 
   white-space: nowrap;
 }
 
 .unita-riga strong {
-  grid-column: 2;
-  grid-row: 1 / 3;
-
-  align-self: center;
-
   margin: 0 !important;
   padding: 0 !important;
 
@@ -454,16 +451,13 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
 }
 
 .unita-riga small {
-  grid-column: 1;
-  grid-row: 2;
-
   margin: 0 !important;
   padding: 0 !important;
 
-  color: var(--fa-text-light);
+  color: var(--fa-text-muted);
 
   font-size: 0.68rem;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 .unita-colonna .unita-riga:last-child {
@@ -473,7 +467,6 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
 .unita-vuota {
   visibility: hidden;
 }
-
 
 /* =========================================================
    WIDGET OHM

@@ -8,6 +8,7 @@ La legge di Ohm descrive la relazione tra **tensione**, **corrente** e **resiste
 Un **resistore** si oppone al passaggio della corrente in un circuito. Più è alta la sua **resistenza** e _minore_ sarà la corrente.\
 La **tensione** è ciò che spinge la corrente a circolare, quindi più è alta e _maggiore_ sarà la corrente.
 
+
 ## La relazione fondamentale
 
 <div class="lezione-hero">
@@ -27,25 +28,55 @@ dove:
 
 </div>
 
+### Convenzione sui segni della tensione
+
+<div class="relazioni">
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 330px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/ohm_std.png" 
+        alt="Convenzione degli utilizzatori - Tensione positiva" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p>Si applica la formula standard quando i versi di tensione e corrente sono **discordanti**.</p>
+  </div>
+
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 330px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/ohm_neg.png" 
+        alt="Convenzione degli utilizzatori - Tensione negativa" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p>Si pone un segno negativo nella legge di Ohm se i versi di tensione e corrente sono **concordanti**.</p>
+  </div>
+</div>
+
 <OhmParticles />
 
 ## Formule inverse e unità di misura
 
-Dalla relazione principale, possiamo invertirla per trovare resistenza e corrente:
+Dalla relazione principale possiamo ricavare resistenza e corrente:
 $$
-R = \frac{I}{V}
+R = \frac{V}{I}
 \ \ \ \ \text{e} \ \ \ \
 I = \frac{V}{R}
 $$
 
 Per esempio, se una resistenza da **1000 Ω** è collegata a una tensione di **5 V**, la sua corrente sarà $I = \frac{V}{R} = \frac{5\, \text{V}}{1000 Ω} = 5\, \text{mA}$.\
 \
-**Attenzione alle unità di misura**:\
-spesso negli esercizi vengono utilizzate unità di misura come i **kΩ** ("kilo-ohm", 1 kΩ = 1000 Ω) e i **mA** (milli-Ampere, 1000 mA = 1 A).\
+_Osservazione:_\
+Se la tensione è **nulla**, lo è anche la corrente e viceversa. Se la resistenza è nulla (un filo conduttore) e la tensione non è nulla, si ha un _cortocircuito_, e la corrente diventa 'infinita' (sarebbe $I = \frac{V}{0} \rightarrow \infty$). 
+\
+\
+**Attenzione alle unità di misura!**\
+Spesso negli esercizi vengono utilizzate unità di misura come i **kΩ** ("kilo-ohm", 1 kΩ = 1000 Ω) e i **mA** ("milli-Ampere", 1 mA = 0.001 A).\
 Nel svolgere i calcoli bisogna tenerne conto; riprendendo i numeri sopra, i dati potrebbero essere R = 1 kΩ e V = 5V.\
 Però dobbiamo prestare attenzione e dividere i volt per gli ohm, e non per i kilo-ohm, altrimenti il risultato sarebbe 5 A (e non 5 mA). 
 
-<div class="unita-layout">
+
 
 <div class="unita-layout">
 
@@ -53,104 +84,130 @@ Però dobbiamo prestare attenzione e dividere i volt per gli ohm, e non per i ki
 
 <div class="unita-tabella">
 
+  
   <div class="unita-colonna">
     <div class="unita-titolo">Tensione</div>
 
     <div class="unita-riga">
-      <span>microvolt</span>
+      <div class="unita-riga-testo">
+        <span>microvolt</span>
+        <small>10⁻⁶ V</small>
+      </div>
       <strong>μV</strong>
-      <small>10⁻⁶ V</small>
     </div>
 
     <div class="unita-riga">
-      <span>millivolt</span>
+      <div class="unita-riga-testo">
+        <span>millivolt</span>
+        <small>10⁻³ V</small>
+      </div>
       <strong>mV</strong>
-      <small>10⁻³ V</small>
     </div>
 
     <div class="unita-riga">
-      <span>volt</span>
+      <div class="unita-riga-testo">
+        <span>volt</span>
+      </div>
       <strong>V</strong>
-      <small>10⁰ V</small>
     </div>
 
     <div class="unita-riga">
-      <span>kilovolt</span>
+      <div class="unita-riga-testo">
+        <span>kilovolt</span>
+        <small>10³ V</small>
+      </div>
       <strong>kV</strong>
-      <small>10³ V</small>
     </div>
 
     <div class="unita-riga">
-      <span>megavolt</span>
+      <div class="unita-riga-testo">
+        <span>megavolt</span>
+        <small>10⁶ V</small>
+      </div>
       <strong>MV</strong>
-      <small>10⁶ V</small>
     </div>
   </div>
 
+  
   <div class="unita-colonna">
     <div class="unita-titolo">Corrente</div>
 
     <div class="unita-riga">
-      <span>microampere</span>
+      <div class="unita-riga-testo">
+        <span>microampere</span>
+        <small>10⁻⁶ A</small>
+      </div>
       <strong>μA</strong>
-      <small>10⁻⁶ A</small>
     </div>
 
     <div class="unita-riga">
-      <span>milliampere</span>
+      <div class="unita-riga-testo">
+        <span>milliampere</span>
+        <small>10⁻³ A</small>
+      </div>
       <strong>mA</strong>
-      <small>10⁻³ A</small>
     </div>
 
     <div class="unita-riga">
-      <span>ampere</span>
+      <div class="unita-riga-testo">
+        <span>ampere</span>
+      </div>
       <strong>A</strong>
-      <small>10⁰ A</small>
     </div>
 
     <div class="unita-riga">
-      <span>kiloampere</span>
+      <div class="unita-riga-testo">
+        <span>kiloampere</span>
+        <small>10³ A</small>
+      </div>
       <strong>kA</strong>
-      <small>10³ A</small>
     </div>
 
     <div class="unita-riga unita-vuota"></div>
   </div>
 
+  
   <div class="unita-colonna">
     <div class="unita-titolo">Resistenza</div>
 
     <div class="unita-riga">
-      <span>microohm</span>
+      <div class="unita-riga-testo">
+        <span>microohm</span>
+        <small>10⁻⁶ Ω</small>
+      </div>
       <strong>μΩ</strong>
-      <small>10⁻⁶ Ω</small>
     </div>
 
     <div class="unita-riga">
-      <span>milliohm</span>
+      <div class="unita-riga-testo">
+        <span>milliohm</span>
+        <small>10⁻³ Ω</small>
+      </div>
       <strong>mΩ</strong>
-      <small>10⁻³ Ω</small>
     </div>
 
     <div class="unita-riga">
-      <span>ohm</span>
+      <div class="unita-riga-testo">
+        <span>ohm</span>
+      </div>
       <strong>Ω</strong>
-      <small>10⁰ Ω</small>
     </div>
 
     <div class="unita-riga">
-      <span>kiloohm</span>
+      <div class="unita-riga-testo">
+        <span>kiloohm</span>
+        <small>10³ Ω</small>
+      </div>
       <strong>kΩ</strong>
-      <small>10³ Ω</small>
     </div>
 
     <div class="unita-riga">
-      <span>megaohm</span>
+      <div class="unita-riga-testo">
+        <span>megaohm</span>
+        <small>10⁶ Ω</small>
+      </div>
       <strong>MΩ</strong>
-      <small>10⁶ Ω</small>
     </div>
   </div>
-
-</div>
-</div>
+  </div>
 </div>
