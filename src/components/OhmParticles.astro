@@ -44,32 +44,32 @@
       <!-- Tracciato di sfondo per la corrente -->
       <path
         class="circuit-wire-bg"
-        d="M 120 140 V 70 H 285 L 305 50 L 335 90 L 365 50 L 395 90 L 425 50 L 455 90 L 485 50 L 505 70 H 680 V 250 H 120 V 180"
+        d="M 120 140 V 70 H 340 L 350 50 L 365 90 L 380 50 L 395 90 L 410 50 L 425 90 L 440 50 L 450 70 H 680 V 250 H 120 V 180"
       />
 
       <!-- Filo Superiore (Arrivo al resistore) -->
-      <path class="circuit-wire" d="M 120 150 V 70 H 285" />
+      <path class="circuit-wire" d="M 120 150 V 70 H 340" />
 
-      <!-- Resistore Zig-Zag -->
+      <!-- Resistore Zig-Zag (Passo uniforme 15px) -->
       <path
         class="circuit-resistor"
         d="
-          M 285 70
-          L 305 50
-          L 335 90
-          L 365 50
+          M 340 70
+          L 350 50
+          L 365 90
+          L 380 50
           L 395 90
-          L 425 50
-          L 455 90
-          L 485 50
-          L 505 70
+          L 410 50
+          L 425 90
+          L 440 50
+          L 450 70
         "
       />
 
       <!-- Filo Inferiore (Ritorno alla batteria) -->
-      <path class="circuit-wire" d="M 505 70 H 680 V 250 H 120 V 170" />
+      <path class="circuit-wire" d="M 450 70 H 680 V 250 H 120 V 170" />
 
-      <!-- Batteria DC Corretta -->
+      <!-- Batteria DC (Invariata) -->
       <g class="battery-group">
         <!-- Polo Positivo (+): Piastra lunga e sottile -->
         <line class="battery-plate battery-pos" x1="95" y1="150" x2="145" y2="150" />
@@ -162,25 +162,25 @@
     const electrons = Array.from(widget.querySelectorAll('.electron')) as SVGCircleElement[];
     const positions = electrons.map((_, i) => i / electrons.length);
 
-    // Tracciato coordinato con le piastre della batteria (140px / 180px)
+    // Tracciato sincronizzato con il passo di 15px uniforme su tutti i vertici
     const path = [
-      { x: 120, y: 140 },
+      { x: 120, y: 150 },
       { x: 120, y: 70 },
-      { x: 285, y: 70 },
+      { x: 340, y: 70 },
 
-      { x: 305, y: 50 },
-      { x: 335, y: 90 },
-      { x: 365, y: 50 },
+      { x: 350, y: 50 },
+      { x: 365, y: 90 },
+      { x: 380, y: 50 },
       { x: 395, y: 90 },
-      { x: 425, y: 50 },
-      { x: 455, y: 90 },
-      { x: 485, y: 50 },
-      { x: 505, y: 70 },
+      { x: 410, y: 50 },
+      { x: 425, y: 90 },
+      { x: 440, y: 50 },
+      { x: 450, y: 70 },
 
       { x: 680, y: 70 },
       { x: 680, y: 250 },
       { x: 120, y: 250 },
-      { x: 120, y: 180 }
+      { x: 120, y: 170 }
     ];
 
     const segments = [];
