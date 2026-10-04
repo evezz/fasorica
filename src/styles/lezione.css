@@ -789,3 +789,20 @@ body .page .content-panel:first-child {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   LINK NEI CONTENUTI
+   ========================================================= */
+
+.sl-markdown-content a {
+  color: --fa-text !important; /* Blu scuro ben visibile */
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  transition: color 0.15s ease !important;
+}
+
+.sl-markdown-content a:hover,
+.sl-markdown-content a:focus {
+  color: #1e40af !important; /* Blu leggermente più scuro su hover, mai bianco */
+  text-decoration: underline !important;
+}

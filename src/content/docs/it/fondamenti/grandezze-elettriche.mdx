@@ -32,8 +32,6 @@ Andiamo quindi a capire come interpretarle e utilizzarle all'interno di un circu
 
 ## Simboli circuitali e convenzioni
 
-Nei circuiti elettrici la tensione viene erogata da **generatori**, mentre la corrente si misura o si indica lungo i rami del circuito.
-
 <div class="relazioni">
   <div class="relazione" style="text-align: center;">
     <div style="height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
@@ -85,7 +83,32 @@ Nei circuiti elettrici la tensione viene erogata da **generatori**, mentre la co
 
 ## Tensione nulla e corrente nulla
 
+<div class="relazioni">
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Cortocircuito">
+        <line x1="70" y1="10" x2="70" y2="130" stroke="var(--fa-accent, #45443f)" stroke-width="4" stroke-linecap="round" />
+        <circle cx="70" cy="40" r="5" fill="var(--fa-text, #111)" />
+        <circle cx="70" cy="100" r="5" fill="var(--fa-text, #111)" />
+        <text x="90" y="74" fill="var(--fa-text, #111)" font-size="16" font-weight="bold">V = 0</text>
+      </svg>
+    </div>
+    <p><strong>Cortocircuito</strong><br />La differenza di potenziale ai suoi capi è **nulla**, mentre la corrente può assumere **qualsiasi valore** e dipende dal circuito. La resistenza è quella di un conduttore ideale, ossia **nulla**.</p>
+  </div>
 
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Circuito Aperto">
+        <line x1="70" y1="10" x2="70" y2="35" stroke="var(--fa-accent, #45443f)" stroke-width="3" stroke-linecap="round" />
+        <line x1="70" y1="105" x2="70" y2="130" stroke="var(--fa-accent, #45443f)" stroke-width="3" stroke-linecap="round" />
+        <circle cx="70" cy="40" r="5" fill="none" stroke="var(--fa-text, #111)" stroke-width="3" />
+        <circle cx="70" cy="100" r="5" fill="none" stroke="var(--fa-text, #111)" stroke-width="3" />
+        <text x="90" y="74" fill="var(--fa-text, #111)" font-size="16" font-weight="bold">I = 0</text>
+      </svg>
+    </div>
+    <p><strong>Circuito Aperto</strong><br />La corrente che lo attraversa è sempre **nulla**, mentre la differenza di potenziale ai suoi capi può assumere **qualsiasi valore** dipende dal circuito. La resistenza è idealmente **infinita**.</p>
+  </div>
+</div>
 
 ## Misurare tensione e corrente: voltmetro e amperometro
 
@@ -94,7 +117,7 @@ Le due grandezze si misurano in modo molto diverso a causa della loro natura:
 - **Tensione ($V$):** Si misura con uno strumento detto "**voltmetro**" **in parallelo** ai capi del componente di cui si vuole conoscere la differenza di potenziale, senza interrompere il circuito.
 - **Corrente ($I$):** Si misura con uno strumento detto "**amperometro**" **in serie**, cioè aprendo il circuito e facendo passare la corrente *all'interno* dello strumento di misura.
 
----
+Nella pratica, per entrambe le misure si utilizza lo stesso strumento per entrambe le misurazioni: il **multimetro**.
 
 ## La potenza elettrica (<i>P</i>)
 
@@ -105,7 +128,7 @@ P = V \cdot I
 $$
 
 
-Se il componente è un **resistore**, possiamo combinare la potenza con la [Legge di Ohm](/lezioni/elettrotecnica/legge-di-ohm) ($V = R \cdot I$) per ottenere le forme equivalenti della potenza dissipata per effetto Joule:
+Se il componente è un **resistore**, possiamo combinare la potenza con la [Legge di Ohm](/it/fondamenti/legge-di-ohm/) ($V = R \cdot I$) per ottenere le forme equivalenti della potenza dissipata per effetto Joule:
 
 $$
 P = R \cdot I^2
