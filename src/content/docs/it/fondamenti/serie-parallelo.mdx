@@ -1,0 +1,149 @@
+---
+title: Resistenze in Serie e Parallelo
+description: Come calcolare la resistenza equivalente nei collegamenti in serie e in parallelo.
+---
+
+Quando più resistori sono presenti in un circuito, è spesso utile semplificare la rete sostituendoli con un'unica **resistenza equivalente** ($R_{eq}$). 
+
+I due modi fondamentali per collegare i componenti sono il collegamento **in serie** e il collegamento **in parallelo**.
+
+---
+
+## Resistenze in Serie
+
+Due o più resistori si dicono **in serie** quando sono collegati in sequenza, uno dopo l'altro, lungo uno stesso ramo del circuito.
+
+<div class="relazioni">
+  <div class="relazione">
+    <h3>Caratteristiche della Serie</h3>
+    <p>
+      - <strong>Corrente ($I$):</strong> È la <em>stessa</em> per tutti i resistori ($I_1 = I_2 = I$).
+    </p>
+    <p>
+      - <strong>Tensione ($V$):</strong> La tensione totale si <em>distribuisce</em> sui singoli resistori ($V = V_1 + V_2$).
+    </p>
+  </div>
+
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 190px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/Rserie.png" 
+        alt="Resistenze in Serie" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito in Serie</strong><br />La stessa corrente $I$ attraversa $R_1$ ed $R_2$. La tensione $V$ è la somma delle cadute sui due resistori.</p>
+  </div>
+</div>
+
+### Formula della Resistenza Equivalente in Serie
+
+La resistenza equivalente di più componenti in serie è semplicemente la **somma delle singole resistenze**:
+
+<div class="lezione-hero">
+<div class="lezione-hero-text">
+
+$$
+R_{eq} = R_1 + R_2 + \dots + R_n
+$$
+
+</div>
+</div>
+
+> **Regola pratica:** Collegare resistori in serie **aumenta** sempre la resistenza totale del circuito ($R_{eq} > R_{singola}$).
+
+---
+
+## Resistenze in Parallelo
+
+Due o più resistori si dicono **in parallelo** quando i loro terminali corrispondenti sono collegati agli stessi due nodi elettrici.
+
+<div class="relazioni">
+  <div class="relazione">
+    <h3>Caratteristiche del Parallelo</h3>
+    <p>
+      - <strong>Tensione ($V$):</strong> È la <em>stessa</em> ai capi di ciascun resistore ($V_1 = V_2 = V$).
+    </p>
+    <p>
+      - <strong>Corrente ($I$):</strong> La corrente totale si <em>divide</em> nei rami in parallelo ($I = I_1 + I_2$).
+    </p>
+  </div>
+
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 190px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/Rparallelo.png" 
+        alt="Resistenze in Parallelo" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito in Parallelo</strong><br />$R_1$ e $R_2$ sono sottoposti alla stessa tensione $V$. La corrente totale $I$ si divide nelle correnti di ramo $I_1$ e $I_2$.</p>
+  </div>
+</div>
+
+### Formula della Resistenza Equivalente in Parallelo
+
+Nel parallelo, si sommano i reciproci delle singole resistenze (cioè le conduttanze):
+
+$$
+\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \dots + \frac{1}{R_n}
+$$
+
+Nel caso frequente di **soli due resistori in parallelo**, la formula si semplifica con la nota regola **prodotto diviso somma**:
+
+<div class="lezione-hero">
+<div class="lezione-hero-text">
+
+$$
+R_{eq} = \frac{R_1 \cdot R_2}{R_1 + R_2}
+$$
+
+</div>
+</div>
+
+> **Regola pratica:** Collegare resistori in parallelo **riduce** sempre la resistenza totale ($R_{eq} < R_{minima}$). Se i due resistori sono uguali ($R_1 = R_2 = R$), la loro resistenza equivalente è esattamente la metà ($R_{eq} = \frac{R}{2}$).
+
+---
+
+## Confronto Sintetico
+
+Per fissare i concetti, ecco un riepilogo visivo delle formule e delle proprietà dei due collegamenti applicando la [Legge di Ohm](https://fasorica.org/it/fondamenti/legge-di-ohm/):
+
+<div class="relazioni">
+  <div class="relazione">
+    <h3>Serie</h3>
+    <p>• <strong>Corrente:</strong> $I_{tot} = I_1 = I_2$ (uguale)</p>
+    <p>• <strong>Tensione:</strong> $V_{tot} = V_1 + V_2$ (sommata)</p>
+    <p>• <strong>Resistenza:</strong> $R_{eq} = R_1 + R_2$</p>
+  </div>
+
+  <div class="relazione">
+    <h3>Parallelo</h3>
+    <p>• <strong>Corrente:</strong> $I_{tot} = I_1 + I_2$ (sommata)</p>
+    <p>• <strong>Tensione:</strong> $V_{tot} = V_1 = V_2$ (uguale)</p>
+    <p>• <strong>Resistenza:</strong> $R_{eq} = \frac{R_1 \cdot R_2}{R_1 + R_2}$</p>
+  </div>
+</div>
+
+---
+
+<div class="esempio">
+  <h3>Esempio Guidato</h3>
+  <p>
+    Calcoliamo la resistenza equivalente di un circuito composto da due resistori $R_1 = 60\,\Omega$ e $R_2 = 30\,\Omega$:
+  </p>
+  <p>
+    1. <strong>Se collegati in serie:</strong>
+  </p>
+  $$R_{eq,serie} = R_1 + R_2 = 60\,\Omega + 30\,\Omega = 90\,\Omega$$
+  <p>
+    2. <strong>Se collegati in parallelo:</strong>
+  </p>
+  $$R_{eq,par} = \frac{R_1 \cdot R_2}{R_1 + R_2} = \frac{60 \cdot 30}{60 + 30} = \frac{1800}{90} = 20\,\Omega$$
+</div>
+
+---
+
+<div class="sintesi">
+  <p><strong>In sintesi:</strong> In <strong>serie</strong> la corrente è costante e le resistenze si sommano ($R_{eq} > R$). In <strong>parallelo</strong> la tensione è costante e la resistenza totale diminuisce ($R_{eq} < R$).</p>
+</div>
