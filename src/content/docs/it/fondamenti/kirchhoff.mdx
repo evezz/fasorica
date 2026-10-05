@@ -1,0 +1,113 @@
+---
+title: Leggi di Kirchhoff
+description: Principi fondamentali per l'analisi dei circuiti elettrici.
+---
+
+Quando più componenti sono presenti in un circuito complesso, la sola [Legge di Ohm](/it/fondamenti/legge-di-ohm/) non è sempre sufficiente per ricavare tutte le grandezze elettriche. Per analizzare reti con più rami e maglie si utilizzano le due **leggi di Kirchhoff**, che esprimono in forma circuitale i principi fisici di conservazione della carica e dell'energia.
+
+## Legge di Kirchhoff delle correnti (KCL)
+
+La prima legge di Kirchhoff (nota anche come **KCL**, da *Kirchhoff's Current Law*) afferma che la somma algebrica delle correnti che confluiscono in un qualsiasi nodo di un circuito è pari a zero. In realtà è molto più semplice di quel che sembra: la corrente che entra in un nodo deve essere uguale a quella che esce.
+
+<div class="relazioni">
+  <div class="relazione">
+    <h3>Caratteristiche del nodo (KCL)</h3>
+    <p>
+      - <strong>Conservazione della carica:</strong> La carica elettrica non può accumularsi né crearsi all'interno di un nodo.
+    </p>
+    <p>
+      - <strong>Bilancio delle correnti:</strong> La somma delle correnti entranti in un nodo è uguale alla somma delle correnti uscenti:
+      $$I_{entranti} = I_{uscenti}$$
+    </p>
+    <p>
+      Fissando la convenzione di segno (ad esempio correnti entranti positive e uscenti negative), la legge si esprime come:
+    </p>
+
+    <div style="text-align: center; margin: 1.25rem 0;">
+
+$$
+\sum_{k=1}^{n} I_k = 0
+$$
+
+    </div>
+  </div>
+
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 250px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/kcl.png" 
+        alt="Legge di Kirchhoff delle correnti" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Nodo elettrico</strong><br />La corrente entrante $I_1$ si divide nelle correnti uscenti $I_2$ e $I_3$.</p>
+  </div>
+</div>
+
+<div class="esempio">
+  <h3>Dimostrazione pratica (KCL al nodo)</h3>
+  <p>
+    1. Considerando il nodo in figura e considerando positive le correnti entranti nel nodo e negative quelle uscenti si ha: $$\ \ I_1 - I_2 - I_3 = 0$$
+  </p>
+  <p>
+    2. Spostando i termini negativi al secondo membro si ottiene l'uguaglianza tra correnti entranti e uscenti:  $$\ \ I_1 = I_2 + I_3$$
+  </p>
+</div>
+
+> - **✐ Regola pratica**: Il verso delle correnti è arbitrario, a patto che siano fra di loro coerenti. Per esempio, nella figura, $I_1$ non può essere uscente, altrimenti tutta la corrente uscirebbe dal nodo senza mai entrarci.
+
+## Legge di Kirchhoff delle tensioni (KVL)
+
+La seconda legge di Kirchhoff (nota anche come **KVL**, da *Kirchhoff's Voltage Law*) afferma che la somma algebrica delle tensioni incontrate lungo una qualsiasi maglia chiusa di un circuito è pari a zero. Anche qui, sembra più difficile di ciò che sembra: partendo da un punto del circuito e tornando allo stesso punto, la differenza di potenziale deve essere zero.
+
+<div class="relazioni">
+  <div class="relazione">
+    <h3>Caratteristiche della maglia (KVL)</h3>
+    <p>
+      - <strong>Conservazione dell'energia:</strong> Il lavoro svolto dal campo elettrico per muovere una carica lungo un percorso chiuso è nullo.
+    </p>
+    <p>
+      - <strong>Bilancio delle tensioni:</strong> La somma delle tensioni erogate dai generatori equivale alla somma delle cadute di tensione sui componenti della maglia:
+    </p>
+    <p>
+      Scelto un verso arbitrario di percorrenza della maglia (orario o antiorario), la legge si esprime come:
+    </p>
+
+    <div style="text-align: center; margin: 1.25rem 0;">
+
+$$
+\sum_{k=1}^{m} V_k = 0
+$$
+
+    </div>
+  </div>
+
+  <div class="relazione" style="text-align: center;">
+    <div style="height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/kvl.png" 
+        alt="Legge di Kirchhoff delle tensioni" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Maglia chiusa </strong><br />La tensione della batteria genera $V_1$ e $V_2$.</p>
+  </div>
+</div>
+
+<div class="esempio">
+  <h3>Dimostrazione pratica (KVL alla maglia)</h3>
+  <p>
+    1. Percorrendo la maglia in senso orario partendo dal "-" del generatore, sommiamo le frecce delle tensioni che incontriamo nel verso giusto e sottraiamo quelle che incontriamo nel verso opposto. Quando torniamo al punto di partenza eguagliamo a zero. Otteniamo:
+    $$\ \ V - V_1 - V_2 = 0$$
+  </p>
+  <p>
+    2. Esplicitando la tensione del generatore: $$\ \ V = V_1 + V_2$$
+  </p>
+  <p>
+    3. Per esempio, se percorriamo la maglia partendo in mezzo alle due resistenze e in senso antiorario, otteniamo:
+    $$\ \ V_1 - V + V_2 = 0 \ \ \rightarrow \ \ V = V_1 + V_2$$ (deve essere uguale perchè il punto di partenza e il verso scelti non cambiano il risultato ☺)
+  </p>
+  
+</div>
+
+> - **✐ Regola pratica**: Dopo aver deciso il verso delle correnti, disegna le frecce della tensione di ogni componente in senso **discordante** a quello della corrente, in modo da poter applicare la legge di Ohm senza dimenticarsi il segno meno. ([Segno della legge di Ohm](/it/fondamenti/legge-di-ohm/#convenzione-sui-segni-della-tensione))

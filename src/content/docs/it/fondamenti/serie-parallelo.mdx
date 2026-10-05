@@ -36,11 +36,11 @@ Due o più resistori si dicono **in serie** quando sono collegati in sequenza, u
         style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
       />
     </div>
-    <p><strong>Resistenze in serie</strong><br /></p><p>La stessa corrente $I$ attraversa $R_1$ ed $R_2$. <br />La tensione $V$ è la somma delle cadute sui due resistori.</p>
+    <p><strong>Resistenze in serie</strong><br /></p><p>La stessa corrente $I$ attraversa $R_1$ ed $R_2$. <br />La tensione $V$ è la somma delle cadute sui due resistori. ([Perché?](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-tensioni-kvl))</p>
   </div>
 </div>
 
-### Formula della $R_{eq}$ in serie
+### Formula della resistenza equivalente in serie
 
 La resistenza equivalente di più resitori in serie è semplicemente la **somma delle singole resistenze**. Questo significa che all'interno del circuito si possono sostituire gli _n_ resistori in serie con un'unica resistenza dal valore:
 
@@ -54,7 +54,7 @@ $$
 </div>
 </div>
 
-> **Regola pratica:** Collegare resistori in serie **aumenta** sempre la resistenza totale del circuito ($R_{eq} > R_{singola}$) dato che non esistono resistori con valori di resistenza negativi.
+> **✐ Regola pratica:** Collegare resistori in serie **aumenta** sempre la resistenza totale del circuito ($R_{eq} > R_{singola}$) dato che non esistono resistori con valori di resistenza negativi.
 
 ## Resistenze in Parallelo
 
@@ -90,7 +90,7 @@ Due o più resistori si dicono **in parallelo** quando i loro terminali sono col
   </div>
 </div>
 
-### Formula della $R_{eq}$ in parallelo
+### Formula della resistenza equivalente in parallelo
 
 Nel parallelo, si sommano i _reciproci_ delle singole resistenze. Questo significa che all'interno del circuito si possono sostituire gli _n_ resistori in parallelo con un'unica resistenza dal valore:
 
@@ -110,8 +110,8 @@ $$
 </div>
 </div>
 
-> - **Errore frequente**: Dimenticarsi se questa formula è prodotto diviso somma o somma diviso prodotto. Per non doverselo ricordare, uno strumento utilissimo è l'**analisi dimensionale**. Dobbiamo ottenere una resistenza, quindi l'unità di misura risultante deve essere Ohm ($\Omega$). In un prodotto le unità di misura si moltiplicano, in una somma l'unità di misura rimane invariata. Se scrivessimo somma diviso prodotto, avremmo $\frac{\Omega + \Omega}{\Omega \cdot \Omega} = \frac{\Omega}{\Omega^2} = \frac{1}{\Omega}$ che non è una resistenza. Quindi la formula esatta è prodotto diviso somma, che ci dà $\frac{\Omega \cdot \Omega}{\Omega + \Omega} = \frac{\Omega^2}{\Omega} = \Omega$.
-> - **Regola pratica**: Collegare resistori in parallelo **riduce** sempre la resistenza totale ($R_{eq} < R_{minima}$). Se i due resistori are uguali ($R_1 = R_2 = R$), la loro resistenza equivalente è esattamente la metà ($R_{eq} = \frac{R}{2}$).
+> - **⚠︎ Errore frequente**: Dimenticarsi se questa formula è prodotto diviso somma o somma diviso prodotto. Per non doverselo ricordare, uno strumento utilissimo è l'**analisi dimensionale**. Dobbiamo ottenere una resistenza, quindi l'unità di misura risultante deve essere Ohm ($\Omega$). In un prodotto le unità di misura si moltiplicano, in una somma l'unità di misura rimane invariata. Se scrivessimo somma diviso prodotto, avremmo $\frac{\Omega + \Omega}{\Omega \cdot \Omega} = \frac{\Omega}{\Omega^2} = \frac{1}{\Omega}$ che non è una resistenza. Quindi la formula esatta è prodotto diviso somma, che ci dà $\frac{\Omega \cdot \Omega}{\Omega + \Omega} = \frac{\Omega^2}{\Omega} = \Omega$.
+> - **✐ Regola pratica**: Collegare resistori in parallelo **riduce** sempre la resistenza totale ($R_{eq} < R_{minima}$). Se i due resistori are uguali ($R_1 = R_2 = R$), la loro resistenza equivalente è esattamente la metà ($R_{eq} = \frac{R}{2}$).
 
 
 ## Partitore di tensione
