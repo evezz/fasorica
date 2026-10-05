@@ -1,0 +1,90 @@
+---
+title: Teoremi di Thévenin e Norton
+description: Come semplificare reti elettriche complesse utilizzando i circuiti equivalenti di Thévenin e Norton.
+---
+
+I **teoremi di Thévenin e Norton** sono due strumenti fondamentali dell'elettrotecnica che permettono di semplificare qualsiasi rete elettrica lineare, complessa e comunque articolata, riducendola a un circuito equivalente estremamente semplice visto da due morsetti di interesse.
+
+Questa semplificazione è particolarmente utile quando si desidera studiare il comportamento del circuito al variare di un carico $R_L$ senza dover ricalcolare ogni volta l'intera rete.
+
+## Teorema di Thévenin
+
+Il **teorema di Thévenin** afferma che qualsiasi rete bipolare lineare composta da generatori (indipendenti o dipendenti) e resistori può essere sostituita, rispetto a due morsetti $A$ e $B$, da un circuito equivalente formato da:
+
+* Un **generatore ideale di tensione** $V_{th}$ (tensione equivalente di Thévenin).
+
+* Un **resistore** $R_{th}$ (resistenza equivalente di Thévenin) collegato **in serie** al generatore.
+
+### Calcolo dei parametri di Thévenin
+
+Per determinare i valori di $V_{th}$ ed $R_{th}$ si seguono tre passaggi fondamentali:
+
+1. **Isolamento dei morsetti:** Si scollega il carico $R_L$ situato tra i nodi $A$ e $B$.
+
+2. **Calcolo di** $V_{th}$**:** Si calcola la tensione a vuoto $V_{AB,0}$ usando le leggi fondamentali (KVL, KCL o partitori).
+
+3. **Calcolo di** $R_{th}$**:** Si spengono i generatori indipendenti (corto circuito per le tensioni, circuito aperto per le correnti) e si calcola la resistenza equivalente vista da $A$ e $B$.
+
+> **✐ Regola pratica:** Se la rete contiene **generatori dipendenti**, la resistenza equivalente $R_{th}$ non si può trovare spegnendo semplicemente i generatori. Bisogna applicare un generatore di prova $V_o$ (o $I_o$) ai morsetti $A$ e $B$ e calcolare il rapporto $R_{th} = \frac{V_o}{I_o}$.
+
+$$
+I_L = \frac{V_{th}}{R_{th} + R_L}
+$$
+
+$$
+V_L = V_{th} \cdot \frac{R_L}{R_{th} + R_L}
+$$
+
+## Teorema di Norton
+
+Il **teorema di Norton** è il duale del teorema di Thévenin. Afferma che qualsiasi rete bipolare lineare può essere sostituita, rispetto ai morsetti $A$ e $B$, da un circuito equivalente formato da:
+
+* Un **generatore ideale di corrente** $I_{N}$ (corrente equivalente di Norton).
+
+* Un **resistore** $R_{N}$ (resistenza equivalente di Norton) collegato **in parallelo** al generatore.
+
+### Calcolo dei parametri di Norton
+
+Per determinare i parametri del circuito di Norton:
+
+1. **Corto circuito ai morsetti:** Si collegano i nodi $A$ e $B$ con un corto circuito corto-circuitando il carico.
+
+2. **Calcolo di** $I_N$**:** Si calcola la corrente $I_{cc}$ che scorre nel ramo del corto circuito.
+
+3. **Calcolo di** $R_N$**:** Si spengono i generatori indipendenti e si determina la resistenza vista dai morsetti (uguale a $R_{th}$).
+
+> **⚠︎ Errore frequente:** Confondere la corrente di Norton con la corrente che scorre nel carico in condizioni normali. $I_N$ è la corrente calcolata ponendo $V_{AB} = 0$ (corto circuito sui morsetti), non la corrente a vuoto o sul carico inserito.
+
+$$
+I_L = I_N \cdot \frac{R_N}{R_N + R_L}
+$$
+
+## Trasformazione tra Thévenin e Norton
+
+I due circuiti equivalenti sono perfettamente intercambiabili e legati dalla [Legge di Ohm](/it/fondamenti/legge-di-ohm/). È sempre possibile passare da un equivalente all'altro mediante le seguenti relazioni:
+
+$$
+I_N = \frac{V_{th}}{R_{th}} \qquad R_N = R_{th}
+$$
+
+```
+</div>
+
+```
+
+$$
+V_th = I_N \cdot R_N \qquad R_{th} = R_N
+$$
+
+```
+</div>
+
+```
+
+> **✐ Regola pratica:** La relazione generale che lega tensione a vuoto, corrente di corto circuito e resistenza equivalente è la seguente:
+>
+> $$
+> R_{th} = R_N = \frac{V_{th}}{I_N} = \frac{V_{a\_vuoto}}{I_{corto\_circuito}}
+> $$
+
+## Confronto sintetico
