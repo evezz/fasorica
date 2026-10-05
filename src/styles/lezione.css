@@ -154,6 +154,8 @@ body .page .sl-markdown-content > :where(p, ul, ol, blockquote) {
 }
 
 
+
+
 /* =========================================================
    RIQUADRI GENERICI DELLE LEZIONI
    ========================================================= */
@@ -806,3 +808,4 @@ body .page .content-panel:first-child {
   color: #1e40af !important; /* Blu leggermente più scuro su hover, mai bianco */
   text-decoration: underline !important;
 }
+
