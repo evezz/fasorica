@@ -29,7 +29,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'Tensione, corrente e potenza', slug: 'fondamenti/grandezze-elettriche', descrizione: 'Cosa sono, come si misurano e convenzioni.', livello: S },
       { titolo: 'Legge di Ohm', slug: 'fondamenti/legge-di-ohm', descrizione: 'Il legame tra tensione, resistenza e corrente.', livello: S },
       { titolo: 'Resistenze in serie e in parallelo', slug: 'fondamenti/serie-parallelo', descrizione: 'Resistenza equivalente e partitori.', livello: S },
-      { titolo: 'Leggi di Kirchhoff', slug: 'fondamenti/kirchhoff', descrizione: 'Ai nodi e alle maglie.', livello: S },
+      { titolo: 'Leggi di Kirchhoff', slug: 'fondamenti/kirchhoff', descrizione: 'Strumenti per la risoluzione di circuiti.', livello: S },
       { titolo: 'Teoremi di Thevenin e Norton', slug: 'fondamenti/thevenin-norton', descrizione: 'Ridurre una rete complessa a un generatore equivalente.', livello: S },
       { titolo: 'Esercizi', slug: 'fondamenti/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
     ],
