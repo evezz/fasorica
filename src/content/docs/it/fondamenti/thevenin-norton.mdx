@@ -9,82 +9,178 @@ Questa semplificazione è particolarmente utile quando si desidera studiare il c
 
 ## Teorema di Thévenin
 
-Il **teorema di Thévenin** afferma che qualsiasi rete bipolare lineare composta da generatori (indipendenti o dipendenti) e resistori può essere sostituita, rispetto a due morsetti $A$ e $B$, da un circuito equivalente formato da:
+Il teorema di Thévenin afferma che qualsiasi circuito **lineare** comunque complesso, misurato ai suoi terminali (qui indicati con $A$ e $B$ e detti "morsetti") è riducibile a un generatore di tensione ($V_{th}$) in serie a un resistore ($R_{th}$) . Questo teorema ci permette quindi di prendere una rete molto complessa e semplificarla ad una rete facilissima da risolvere.
 
-* Un **generatore ideale di tensione** $V_{th}$ (tensione equivalente di Thévenin).
-
-* Un **resistore** $R_{th}$ (resistenza equivalente di Thévenin) collegato **in serie** al generatore.
+<div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+  <div style="height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+    <img 
+      src="/images/th_thevenin.png" 
+      alt="Calcolo dei parametri di Thévenin" 
+      style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+    />
+  </div>
+  <p><strong>Idea del teorema di Thévenin</strong></p>
+</div>
 
 ### Calcolo dei parametri di Thévenin
 
 Per determinare i valori di $V_{th}$ ed $R_{th}$ si seguono tre passaggi fondamentali:
 
-1. **Isolamento dei morsetti:** Si scollega il carico $R_L$ situato tra i nodi $A$ e $B$.
+1. **Isolamento dei morsetti:** Si scollega il carico $R_L$ situato tra i morsetti $A$ e $B$.
 
-2. **Calcolo di** $V_{th}$**:** Si calcola la tensione a vuoto $V_{AB,0}$ usando le leggi fondamentali (KVL, KCL o partitori).
+2. **Calcolo di** $V_{th}$**:** È la tensione fra il morsetto $A$ e il morsetto $B$ a vuoto (senza il carico). Per trovarla, si possono usare diverse tecniche circuitali (partitori, KVL, KCL, PSE).
 
-3. **Calcolo di** $R_{th}$**:** Si spengono i generatori indipendenti (corto circuito per le tensioni, circuito aperto per le correnti) e si calcola la resistenza equivalente vista da $A$ e $B$.
-
-> **✐ Regola pratica:** Se la rete contiene **generatori dipendenti**, la resistenza equivalente $R_{th}$ non si può trovare spegnendo semplicemente i generatori. Bisogna applicare un generatore di prova $V_o$ (o $I_o$) ai morsetti $A$ e $B$ e calcolare il rapporto $R_{th} = \frac{V_o}{I_o}$.
-
-$$
-I_L = \frac{V_{th}}{R_{th} + R_L}
-$$
-
-$$
-V_L = V_{th} \cdot \frac{R_L}{R_{th} + R_L}
-$$
+3. **Calcolo di** $R_{th}$**:** Si spengono i generatori **indipendenti** (sostituendoli con un corto circuito per le i generatori di tensione, con un circuito aperto per i generatori di corrente) e si calcola la resistenza equivalente vista da $A$ e $B$ (utilizzando le formule di resistenze in serie e in parallelo).
 
 ## Teorema di Norton
 
-Il **teorema di Norton** è il duale del teorema di Thévenin. Afferma che qualsiasi rete bipolare lineare può essere sostituita, rispetto ai morsetti $A$ e $B$, da un circuito equivalente formato da:
+Il teorema di Norton è il duale di quello di Thévenin e ha lo stesso obiettivo. Afferma che qualsiasi circuito **lineare** comunque complesso, misurato ai suoi terminali (qui indicati con $A$ e $B$ e detti "morsetti") è riducibile a un generatore di corrente ($I_n$) in parallelo a un resistore ($R_n$).
 
-* Un **generatore ideale di corrente** $I_{N}$ (corrente equivalente di Norton).
-
-* Un **resistore** $R_{N}$ (resistenza equivalente di Norton) collegato **in parallelo** al generatore.
+<div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+  <div style="height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+    <img 
+      src="/images/th_norton.png" 
+      alt="Calcolo dei parametri di Norton" 
+      style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+    />
+  </div>
+  <p><strong>Idea del teorema di Norton</strong></p>
+</div>
 
 ### Calcolo dei parametri di Norton
 
-Per determinare i parametri del circuito di Norton:
+Per determinare i valori di $I_n$ ed $R_n$ si seguono tre passaggi fondamentali:
 
-1. **Corto circuito ai morsetti:** Si collegano i nodi $A$ e $B$ con un corto circuito corto-circuitando il carico.
+1. **Isolamento dei morsetti:** Si scollega il carico $R_L$ situato tra i morsetti $A$ e $B$.
 
-2. **Calcolo di** $I_N$**:** Si calcola la corrente $I_{cc}$ che scorre nel ramo del corto circuito.
+2. **Calcolo di** $I_n$**:** È la corrente che scorre tra il morsetto $A$ e il morsetto $B$ cortocircuitati (collegando un filo tra $A$ e $B$). Per trovarla, si possono usare diverse tecniche circuitali (partitori, KVL, KCL, PSE).
 
-3. **Calcolo di** $R_N$**:** Si spengono i generatori indipendenti e si determina la resistenza vista dai morsetti (uguale a $R_{th}$).
-
-> **⚠︎ Errore frequente:** Confondere la corrente di Norton con la corrente che scorre nel carico in condizioni normali. $I_N$ è la corrente calcolata ponendo $V_{AB} = 0$ (corto circuito sui morsetti), non la corrente a vuoto o sul carico inserito.
-
-$$
-I_L = I_N \cdot \frac{R_N}{R_N + R_L}
-$$
+3. **Calcolo di** $R_n$**:** Si spengono i generatori **indipendenti** (sostituendoli con un corto circuito per i generatori di tensione, con un circuito aperto per i generatori di corrente) e si calcola la resistenza equivalente vista da $A$ e $B$ (utilizzando le formule di resistenze in serie e in parallelo). <br /> La resistenza di Norton coincide sempre con quella di Thévenin ($R_n = R_{th}$).
 
 ## Trasformazione tra Thévenin e Norton
 
-I due circuiti equivalenti sono perfettamente intercambiabili e legati dalla [Legge di Ohm](/it/fondamenti/legge-di-ohm/). È sempre possibile passare da un equivalente all'altro mediante le seguenti relazioni:
-
+I due circuiti equivalenti sono perfettamente intercambiabili e legati dalla [Legge di Ohm](/it/fondamenti/legge-di-ohm/). Tenendo a mente che le resistenze equivalenti sono identiche, è sempre possibile passare da un equivalente all'altro mediante le seguenti relazioni:
+<br />Avendo la rete di Thévenin e volendo passare a quella di Norton:
 $$
-I_N = \frac{V_{th}}{R_{th}} \qquad R_N = R_{th}
+I_n = \frac{V_{th}}{R_{th}} 
+$$
+Avendo la rete di Norton e volendo passare a quella di Thévenin:
+$$
+V_{th} = I_n \cdot R_n 
 $$
 
-```
+<div class="esempio">
+  <h3>Esempio pratico e conversione Thévenin-Norton</h3>
+
+  <p>
+    Consideriamo un circuito con un generatore di tensione $V_g = 5\, \text{V}$, tre resistori $R_1 = 1\, k\Omega$, $R_2 = 5\, k\Omega$ e $R_3 = 3\, k\Omega$ e un carico $R_L = 1\, k\Omega$ collegato ai morsetti $A$ e $B$. Vogliamo determinare la corrente $I_L$ che scorre nel carico.
+  </p>
+
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_thevNort.png" 
+        alt="Circuito dell'esempio" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito dell'esercizio</strong></p>
+  </div>
+
+  <h4>1. Risoluzione con Thévenin</h4>
+  <p>
+  Dobbiamo staccare il carico $R_L$ e determinare i due parametri $V_{th}$ e $R_{th}$ per riscrivere il circuito in maniera più semplice da risolvere. <br /><br />
+    • <strong>Tensione $V_{th}$ a vuoto:</strong> determiniamo la tensione fra i morsetti $A$ e $B$. Si tratta della tensione ai capi delle resistenze in parallelo $R_2$ e $R_3$.
+     Per trovare questa tensione, possiamo accorgerci che questo circuito in realtà è riconducibile ad un partitore di tensione. 
+     La tensione del generatore si ripartisce fra $R_1$ e il parallelo fra $R_2$ ed $R_3$. 
+     Quest'ultimo vale:
+     <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+     $R_{23} = \frac{R_2 \cdot R_3}{R_2 + R_3} = \frac{5\, k\Omega \cdot 3\, k\Omega}{5\, k\Omega + 3\, k\Omega} = 1,875\, k\Omega$. <br />
+     </div>
+     Ora troviamo $V_{th}$ facendo il partitore di tensione fra $R_1$ e $R_{23}$:
+     <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+     $$V_{th} = V_g \cdot \frac{R_{23}}{R_{23} + R_1} = 5\,\text{V} \cdot \frac{1,875\, k\Omega}{1,875\, k\Omega + 1\, k\Omega} = 3,26\,\text{V}$$
+    </div>
+  </p>
+
+  <p>
+    • <strong>Resistenza $R_{th}$:</strong> Spegnendo $V_g$ (sostituendolo con un cortocircuito), $R_1$, $R_2$ e $R_3$ risultano in parallelo:
+  </p>
+  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$R_{th} = R_1 \parallel R_2 \parallel R_3 \quad \rightarrow \quad \frac{1}{R_{th}} = \frac{1}{R_{1}} + \frac{1}{R_{2}} + \frac{1}{R_{3}} = 1,53\, \text{mS} \quad \rightarrow \quad R_{th} = \frac{1}{1,53\, \text{mS}} = 652,17\, \Omega$$
+  </div>
+  ⚠︎ Quando si hanno più di due resistenze in parallelo bisogna utilizzare questa formula oppure applicare la formula somma diviso prodotto più di una volta.
+  
+  
+  
+  <p>
+  A questo punto abbiamo tutto quello che ci serve, e possiamo ridisegnare il circuito come sotto. In questo circuito calcolare la corrente è facilissimo, e risulta:
+  </p>
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_L = \frac{V_{th}}{R_{th} + R_L} = \frac{3,26\,\text{V}}{652,17\,\Omega + 1\, k\Omega} = 1,97 \,\text{mA}$$
+    </div>
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_thev.png" 
+        alt="Circuito equivalente di Thévenin" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito equivalente di Thévenin</strong></p>
+  </div>
+
+  <h4>2. Risoluzione con Norton</h4>
+  <p>
+    Con Norton dobbiamo svolgere gli stessi passaggi ma trovare $I_n$ invece di $V_{th}$. Per farlo stacchiamo $R_L$ come prima.
+  </p>
+  <p>
+    • <strong>Corrente $I_{n}$ di cortocircuito:</strong> in questo caso dobbiamo cortocircuitare $A$ e $B$ e calcolare la corrente che scorre in quel filo. In questo esercizio è particolarmente semplice in quanto $R_2$ ed $R_3$ vengono cortocircuitate.
+    Rimane quindi solo $R_1$ e per trovare la corrente ci basta fare:
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_n = \frac{V_g}{R_1} = \frac{5\,\text{V}}{1\, k\Omega} = 5 \,\text{mA}$$
+    </div>
+  </p>
+  <p>
+    • <strong>Resistenza $R_{n}$:</strong> i passaggi sono esattamente uguali a quelli fatti nella risoluzione con Thévenin.
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+      $$R_n =652,17\, \Omega$$
+    </div>
+    Abbiamo tutto quello che ci serve e possiamo quindi ridisegnare il circuito come sotto. Per calcolare la corrente che scorre in $R_L$ basta accorgersi che si tratta di un partitore di corrente:
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+      $$I_L = I_n \cdot \frac{R_n}{R_n + R_L} = 5 \,\text{mA} \cdot \frac{652,17\, \Omega}{652,17\, \Omega + 1\, k\Omega} = 1,97\, \text{mA}$$
+    </div>
+
+  </p>
+
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_nort.png" 
+        alt="Circuito equivalente di Norton" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito equivalente di Norton</strong></p>
+  </div>
+
+  <p>
+    Entrambi i teoremi portano allo stesso identico risultato ($I_L = 1,97\,\text{mA}$), confermando la perfetta equivalenza tra il modello Thévenin e il modello Norton.
+  </p>
+   <h4>3. Verifica della trasformazione con la legge di Ohm</h4>
+  <p>
+    Avendo $V_{th}$ troviamo $I_n$ come:
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_n = \frac{V_{th}}{R_{th}} = \frac{3,26\,\text{V}}{652,17\,\Omega} = 5\, \text{mA}$$ 
+    </div>
+
+    Avendo $I_n$ troviamo $V_{th}$ come:
+    <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+      $$V_{th} = R_{th} \cdot I_n = 652,17\,\Omega \cdot 5\, \text{mA} = 3,26\,\text{V}$$ 
+    </div>
+  </p>
 </div>
 
-```
-
-$$
-V_th = I_N \cdot R_N \qquad R_{th} = R_N
-$$
-
-```
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
 </div>
-
-```
-
-> **✐ Regola pratica:** La relazione generale che lega tensione a vuoto, corrente di corto circuito e resistenza equivalente è la seguente:
->
-> $$
-> R_{th} = R_N = \frac{V_{th}}{I_N} = \frac{V_{a\_vuoto}}{I_{corto\_circuito}}
-> $$
-
-## Confronto sintetico
