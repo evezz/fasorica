@@ -9,7 +9,8 @@
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
     "generate-types": "wrangler types",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "circuiti": "bash scripts/circuiti.sh"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.3",

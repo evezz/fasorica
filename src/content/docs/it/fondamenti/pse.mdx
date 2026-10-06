@@ -1,0 +1,120 @@
+---
+title: Principio di sovrapposizione degli effetti
+description: Come analizzare i circuiti elettrici lineari con più generatori applicando il principio di sovrapposizione degli effetti.
+---
+
+Il **principio di sovrapposizione degli effetti (PSE)** è una proprietà fondamentale dei circuiti elettrici **lineari** contenenti due o più generatori indipendenti. 
+
+Questo principio permette di semplificare l'analisi di una rete complessa studiando l'effetto prodotto da ciascun generatore **uno alla volta**, per poi sommare algebricamente i singoli contributi e ottenere la risposta totale del circuito.
+
+## Il principio teorico
+
+In un circuito lineare, qualsiasi tensione di ramo $V$ o corrente di ramo $I$ dovuta a più generatori indipendenti è pari alla **somma algebrica** delle tensioni o delle correnti prodotte da ciascun generatore agendo singolarmente.
+
+<div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+  <div style="height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+    <img 
+      src="/images/circuiti/pse.svg" 
+      alt="Principio di sovrapposizione degli effetti" 
+      style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+    />
+  </div>
+  <p><strong>Sovrapposizione degli effetti</strong><br />La risposta totale è la somma delle risposte ai singoli generatori.</p>
+</div>
+
+### Procedimento operativo
+
+Per applicare il principio di sovrapposizione degli effetti si seguono tre passaggi fondamentali:
+
+1. **Spegnimento dei generatori (tranne uno):** Si attiva un solo generatore indipendente alla volta e si **spengono** tutti gli altri.
+   - I generatori di **tensione** spenti vengono sostituiti da un **cortocircuito** ($V = 0$).
+   - I generatori di **corrente** spenti vengono sostituiti da un **circuito aperto** ($I = 0$).
+
+2. **Calcolo dei contributi parziali:** Si risolve il circuito semplificato per determinare le tensioni o le correnti di interesse generate dal solo generatore attivo (indicandole con pedici o apici, ad esempio $V'$ e $V''$).
+
+3. **Somma algebrica:** Si sommano algebricamente i contributi ottenuti da ciascun generatore, prestando molta attenzione ai versi delle correnti e alle polarità delle tensioni:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size: 1.25rem;">
+$$
+V = V' + V'' + \dots + V^{(n)} \qquad I = I' + I'' + \dots + I^{(n)}
+$$
+</div>
+
+> **⚠︎ Errore frequente:** Il principio di sovrapposizione **non si applica alla potenza** ($P = R \cdot I^2$ oppure $P = \frac{V^2}{R}$), poiché la potenza è una grandezza non lineare (quadratica). Per trovare la potenza totale su un componente occorre prima calcolare la tensione o la corrente totale e poi calcolare la potenza.
+
+<div class="esempio">
+  <h3>Esempio pratico</h3>
+
+  <p>
+    Consideriamo un circuito alimentato da un generatore di tensione $V_g = 12\, \text{V}$ e un generatore di corrente $I_g = 2\, \text{A}$, con due resistori $R_1 = 4\, \Omega$ e $R_2 = 6\, \Omega$. Vogliamo calcolare la corrente $I_2$ che scorre nel resistore $R_2$.
+  </p>
+
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_pse.png" 
+        alt="Circuito con due generatori" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Circuito completo dell'esercizio</strong></p>
+  </div>
+
+  <h4>1. Contributo del solo generatore di tensione ($V_g$ attivo, $I_g$ spento)</h4>
+  <p>
+    Spegniamo il generatore di corrente $I_g$ sostituendolo con un <strong>circuito aperto</strong>. I due resistori $R_1$ e $R_2$ si trovano ora in serie.
+  </p>
+
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_pse_v.png" 
+        alt="Circuito con solo generatore di tensione" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Sottocircuito con $V_g$ attivo</strong></p>
+  </div>
+
+  <p>
+    La corrente parziale $I_2'$ prodotta da $V_g$ vale semplicemente:
+  </p>
+  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_2' = \frac{V_g}{R_1 + R_2} = \frac{12\, \text{V}}{4\, \Omega + 6\, \Omega} = 1,2\, \text{A}$$
+  </div>
+
+  <h4>2. Contributo del solo generatore di corrente ($I_g$ attivo, $V_g$ spento)</h4>
+  <p>
+    Spegniamo il generatore di tensione $V_g$ sostituendolo con un <strong>cortocircuito</strong>. I due resistori $R_1$ e $R_2$ si trovano ora in parallelo.
+  </p>
+
+  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
+    <div style="height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+      <img 
+        src="/images/es_pse_i.png" 
+        alt="Circuito con solo generatore di corrente" 
+        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
+      />
+    </div>
+    <p><strong>Sottocircuito con $I_g$ attivo</strong></p>
+  </div>
+
+  <p>
+    La corrente parziale $I_2''$ prodotta da $I_g$ si calcola con la regola del partitore di corrente:
+  </p>
+  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_2'' = I_g \cdot \frac{R_1}{R_1 + R_2} = 2\, \text{A} \cdot \frac{4\, \Omega}{4\, \Omega + 6\, \Omega} = 0,8\, \text{A}$$
+  </div>
+
+  <h4>3. Calcolo della risposta totale</h4>
+  <p>
+    Poiché entrambe le correnti parziali $I_2'$ e $I_2''$ scorrono verso verso il basso nel ramo di $R_2$, i due contributi si sommano direttamente:
+  </p>
+  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+    $$I_2 = I_2' + I_2'' = 1,2\, \text{A} + 0,8\, \text{A} = 2,0\, \text{A}$$
+  </div>
+</div>
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

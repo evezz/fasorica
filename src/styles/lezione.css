@@ -807,3 +807,14 @@ body .page .content-panel:first-child {
   color: #1e40af !important; /* Blu leggermente più scuro su hover, mai bianco */
 }
 
+/* =========================================================
+   CIRCUITI
+   ========================================================= */
+
+.sl-markdown-content img[src^='/images/circuiti/'] {
+  display: block;
+  max-width: min(100%, 30rem);
+  height: auto;
+  margin: 1.5rem auto;
+   }
+
