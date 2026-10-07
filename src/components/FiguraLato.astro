@@ -1,0 +1,7 @@
+---
+const { src, alt, lato = 'destra', larghezza} = Astro.props;
+---
+<figure class={`fig-lato fig-${lato}`} style={larghezza ? `--fig-w:${larghezza}` : undefined}>
+  <img src={src} alt={alt} loading="lazy" />
+  <figcaption><slot /></figcaption>
+</figure>

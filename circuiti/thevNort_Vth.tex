@@ -1,0 +1,22 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+    \path[draw={rgb,255:red,255;green,0;blue,0}, line width=0.5pt, dash pattern={on 2.6pt off 4pt}] (5, 2) -- (5, -1);
+	\draw (-2, 2) to[american resistor, l={$R_1 \ 1\, \text{k}\Omega$}] (1, 2);
+	\draw (3.25, 2) to[american resistor, l={$R_3 \ 3\, \text{k}\Omega$}] (3.25, -1);
+	\draw (1, -1) to[short] (-2, -1);
+	\node[circ] at (1, 2){};
+	\node[circ] at (1, -1){};
+	\node[ground] at (-2, -1){};
+	\draw (5.75, -1) to[short] (1, -1);
+	\draw (-2, 2) to[american voltage source, l={$V_g \ 5\, \text{V}$}] (-2, -1);
+	\draw (1, 2) to[american resistor, l={$R_2 \ 5\, \text{k}\Omega$}] (1, -1);
+	\draw (5.75, 2) to[short] (1, 2);
+	\node[circ] at (3.25, 2){};
+	\node[circ] at (3.25, -1){};
+	\node[circ] at (5, 2){};
+	\node[circ] at (5, -1){};
+	\node[shape=rectangle, minimum width=0.215cm, minimum height=0.215cm] at (4.875, 2.375){} node[anchor=north west, align=left, text width=-0.173cm, inner sep=6pt] at (4.65, 2.6){\textcolor{rgb,255:red,255;green,0;blue,0}{$A$}};
+	\node[shape=rectangle, minimum width=0.215cm, minimum height=0.215cm] at (4.875, -1.125){} node[anchor=north west, align=left, text width=-0.173cm, inner sep=6pt] at (4.65, -1){\textcolor{rgb,255:red,255;green,0;blue,0}{$B$}};
+	\path[draw={rgb,255:red,255;green,0;blue,0}, -latex] (5.75, -0.75) -- (5.75, 1.75);
+	\node[shape=rectangle, minimum width=0.215cm, minimum height=0.215cm] at (6, 0.625){} node[anchor=north west, align=left, text width=-0.173cm, inner sep=6pt] at (4.95, 0.88){\textcolor{rgb,255:red,255;green,0;blue,0}{$V_{th}$}};
+\end{tikzpicture}

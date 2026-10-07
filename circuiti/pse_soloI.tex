@@ -3,11 +3,11 @@
 	\draw (-2, 2) to[american resistor, l={$R_1 \ 2\, \text{k}\Omega$}] (1, 2);
 	\draw (1, 2) to[american current source, mirror, l_={$I_g \ 2\, \text{mA}$}] (1, -1);
 	\draw (1, 2) to[american resistor, l={$R_2 \ 5\, \text{k}\Omega$}] (4, 2);
-	\draw (-2, 2) to[american voltage source, l_={$V_g  \ 10\, \text{V}$}] (-2, -1);
 	\draw (1, -1) to[short] (-2, -1);
-	\draw (4, 2) to[american resistor, l={$R_L \ 1\, \text{k}\Omega$}, i>^=\textcolor{blue}{$I_L = ?$}] (4, -1);
+	\draw (4, 2) to[american resistor, l={$R_L \ 1\, \text{k}\Omega$}, i<^=\textcolor{blue}{$I_L'' = ?$}] (4, -1);
 	\node[circ] at (1, 2){};
 	\node[circ] at (1, -1){};
 	\node[ground] at (-2, -1){};
 	\draw (4, -1) to[short] (1, -1);
+	\draw (-2, 2) to[short] (-2, -1);
 \end{tikzpicture}
