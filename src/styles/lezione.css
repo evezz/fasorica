@@ -8,6 +8,7 @@
   --fa-card: #ffffff;
   --fa-warn-soft: #f7eddf;
   --fa-warn-border: #e3cfae;
+  --sl-sidebar-width: 21rem;
 
   --sl-content-width: 100%;
   --sl-content-pad-x: clamp(1.25rem, 4vw, 3.5rem);
@@ -23,28 +24,16 @@
 }
 
 
-/* =========================================================
-   SIDEBAR SINISTRO — INDICE LEZIONE
-   ========================================================= */
-
+/* Barra sinistra */
 .fa-torna {
   display: block;
-
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-
-  border-bottom: 1px solid var(--fa-border);
-
-  font-size: 0.9rem;
-  font-weight: 600;
-
-  color: var(--fa-text);
-  text-decoration: none;
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fa-text-muted) !important;
+  text-decoration: none !important;
 }
-
-.fa-torna:hover {
-  text-decoration: underline;
-}
+.fa-torna:hover { color: var(--fa-text) !important; }
 
 
 /* =========================================================
@@ -69,8 +58,11 @@ starlight-toc a:hover {
 }
 
 starlight-toc a[aria-current='true'] {
-  color: var(--fa-text);
-  font-weight: 600;
+  color: var(--fa-text) !important;
+  font-weight: inherit;
+  background: var(--fa-surface-hover);
+  border-left-color: var(--fa-accent);
+  border-radius: 0 6px 6px 0;
 }
 
 
@@ -844,3 +836,65 @@ body .page .content-panel:first-child {
   .sl-markdown-content .fig-lato,
   .sl-markdown-content .fig-lato.fig-sinistra { float: none; width: min(var(--fig-w), 100%); margin: 1rem auto; }
 }
+
+starlight-toc h2,
+#starlight__on-this-page {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--fa-text-muted);
+}
+starlight-toc ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--fa-border); }
+starlight-toc ul ul { border-left: 0; padding-left: 0.75rem; }
+starlight-toc a {
+  display: block;
+  margin-left: -1px;
+  padding: 0.3rem 0.9rem;
+  border-left: 2px solid transparent;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--fa-text-muted) !important;
+  text-decoration: none !important;
+}
+starlight-toc a:hover { color: var(--fa-text) !important; }
+starlight-toc a[aria-current='true'] {
+  color: var(--fa-text) !important;
+  font-weight: 600;
+  border-left-color: var(--fa-accent);
+}
+
+/* Figura principale */
+.sl-markdown-content .figura {
+  width: fit-content;
+  max-width: min(100%, var(--fig-w, 34rem));
+  margin: 1.75rem auto;
+  padding: 1rem 1.5rem 0.75rem;
+  text-align: center;
+  background: var(--fa-card);
+  border: 1px solid var(--fa-border);
+  border-radius: 10px;
+}
+.sl-markdown-content .figura img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.sl-markdown-content .figura figcaption { margin-top: 0.6rem; font-size: 0.9rem; color: var(--fa-text-muted); }
+
+/* Testo + circuito fisso */
+.sl-markdown-content .con-figura {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--fig-w, 18rem);
+  column-gap: 2.5rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.sl-markdown-content .con-figura-lato {
+  position: sticky;
+  top: calc(var(--sl-nav-height, 72px) + 1rem);
+  margin: 0;
+}
+.sl-markdown-content .con-figura-lato img { display: block; width: 100%; height: auto; margin: 0; }
+.sl-markdown-content .con-figura-lato figcaption { margin-top: 0.4rem; font-size: 0.85rem; text-align: center; color: var(--fa-text-muted); }
+@media (max-width: 60rem) {
+  .sl-markdown-content .con-figura { grid-template-columns: 1fr; }
+  .sl-markdown-content .con-figura-lato { position: static; order: -1; width: min(var(--fig-w, 18rem), 100%); margin: 0 auto 1rem; }
+}
+
+

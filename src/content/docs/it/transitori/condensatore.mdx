@@ -3,29 +3,19 @@ title: Il condensatore
 description: Funzionamento, equazioni caratteristiche, carica, scarica ed energia immagazzinata nei condensatori.
 ---
 import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
 
-Il **condensatore** è un componente elettrico reattivo bipolare in grado di immagazzinare energia elettrica sotto forma di un campo elettrostatico. A differenza dei resistori, che dissipano energia sotto forma di calore per effetto Joule, il condensatore è un elemento **accumulatore di energia** che non la dissipa, ma la restituisce al circuito durante le fasi di scarica.
+Il **condensatore** è un componente elettrico **reattivo** in grado di **immagazzinare energia elettrica** sotto forma di campo **elettrostatico**.
+ A differenza dei resistori, che dissipano energia sotto forma di calore per effetto Joule, il condensatore è un elemento **accumulatore di energia** che non la dissipa, ma la restituisce al circuito durante le fasi di scarica.
 
 Trova applicazione in quasi tutti i campi dell'elettronica ed elettrotecnica: dai filtri di segnale, ai circuiti di rifasamento, fino ai sistemi di alimentazione e alle memorie RAM.
 
 ## Struttura e principio di funzionamento
 
 Un condensatore elementare (condensatore piano) è costituito da due armature conduttrici parallele di superficie $A$, separate da uno strato di materiale isolante detto **dielettrico** di spessore $d$.
-
-<div class="relazione" style="text-align: center; margin: 1.5rem 0;">
-  <div style="height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
-    <img 
-      src="/images/circuiti/condensatore_piano.svg" 
-      alt="Struttura di un condensatore piano" 
-      style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
-    />
-  </div>
-  <p><strong>Struttura di un condensatore piano</strong><br />Armature conduttrici e strato dielettrico separatore.</p>
-</div>
-
 Quando ai capi del condensatore viene applicata una differenza di potenziale $V$, si accumula una carica $+Q$ su un'armatura e una carica $-Q$ sull'altra. La carica accumulata $Q$ è direttamente proporzionale alla tensione applicata $V$:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.35rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
 Q = C \cdot V
 $$
@@ -35,11 +25,15 @@ La costante di proporzionalità $C$ è detta **capacità elettrica** e si misura
 
 ### Capacità di un condensatore piano
 
+ <FiguraLato src="/images/circuiti/condensatore.svg" alt="Struttura di un condensatore piano" larghezza='14rem'>
+    Struttura di un condensatore piano
+  </FiguraLato>
+
 La capacità dipende esclusivamente dalla geometria delle armature e dalle proprietà fisiche del dielettrico:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
-C = \varepsilon \cdot \frac{A}{d} = \varepsilon_0 \cdot \varepsilon_r \cdot \frac{A}{d}
+C = \varepsilon_0 \cdot \varepsilon_r \cdot \frac{A}{d} = \varepsilon \cdot \frac{A}{d} 
 $$
 </div>
 
@@ -49,34 +43,53 @@ Dove:
 - $A$ è l'area delle armature conduttrici in $\text{m}^2$.
 - $d$ è la distanza tra le armature in $\text{m}$.
 
-## Equazione caratteristica tensione-corrente
+## Equazione caratteristica
 
-In regime variabile nel tempo, la corrente $i(t)$ che attraversa il condensatore è legata alla variazione temporale della carica $q(t)$, e di conseguenza alla variazione della tensione $v(t)$:
+Per definizione, la corrente $i(t)$ che attraversa un condensatore è pari alla **derivata della carica** rispetto al tempo, cioè alla velocità con cui la carica varia nel tempo:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.35rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
-i(t) = \frac{\text{d}q(t)}{\text{d}t} = C \cdot \frac{\text{d}v(t)}{\text{d}t}
+i(t) = \frac{\text{d}q(t)}{\text{d}t}
 $$
 </div>
 
-Invertendo la relazione differenziale, la tensione $v(t)$ ai capi del condensatore a un generico istante $t$ si ottiene integrando la corrente:
+La carica (al variare del tempo, quindi indicata ora con $q(t)$) nel condensatore è data da 
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+q(t) = C \cdot v(t)
+$$
+</div>
+
+Per trovare la corrente nel condensatore, deriviamo la carica rispetto al tempo osservando che la capacità $C$ dipende dalla geometria del condensatore e non varia nel tempo: 
 
 <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{i(t) = C \cdot \frac{\text{d}v(t)}{\text{d}t}}
+$$
+</div>
+
+> Questa è l'equazione caratteristica del condensatore. Osservandola, si nota che la corrente è proporzionale alla derivata della tensione. 
+In altre parole, in un condensatore la corrente è massima quando la tensione varia rapidamente. Se la tensione è costante $\left(\frac{\text{d}v(t)}{\text{d}t} = 0\right)$, la corrente è nulla ($i(t) = 0$).
+Per questo motivo, in continua il condensatore si comporta come un circuito aperto, il che ha senso poichè si tratta fisicamente di un dispositivo isolante che interrompe il circuito.
+
+> La tensione ai capi di un condensatore **non può variare istantaneamente** ($v(t)$ è una funzione continua).
+ Una variazione istantanea di tensione $\left(\frac{\text{d}v}{\text{d}t} \to \infty \right)$, richiederebbe una corrente infinita, il che è fisicamente impossibile.
+ Per questo motivo, si dice che il condensatore **si oppone a variazioni istantanee di tensione**.
+
+Invertendo la relazione differenziale, la tensione $v(t)$ ai capi del condensatore a un generico istante $t$ si ottiene integrando la corrente:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
 v(t) = v(t_0) + \frac{1}{C} \int_{t_0}^{t} i(\tau) \, \text{d}\tau
 $$
 </div>
 
-### Proprietà fondamentali del condensatore
-
-1. **Continuità della tensione:** La tensione ai capi di un condensatore **non può variare istantaneamente** ($v(t)$ è una funzione continua). Una variazione istantanea di tensione ($\frac{\text{d}v}{\text{d}t} \to \infty$) richiederebbe una corrente infinita, il che è fisicamente impossibile.
-2. **Comportamento in corrente continua (DC):** In regime stazionario la tensione è costante ($\frac{\text{d}v}{\text{d}t} = 0$), quindi la corrente è nulla ($i = 0$). Un condensatore carico in corrente continua si comporta a tutti gli effetti come un **circuito aperto**.
-
 ## Energia immagazzinata
 
-L'energia $W_C$ accumulata nel campo elettrostatico del condensatore si ottiene integrando la potenza istantanea $p(t) = v(t) \cdot i(t)$:
+L'energia $W_C$ accumulata nel campo elettrostatico del condensatore si ottiene integrando la potenza istantanea $p(t) = v(t) \cdot i(t)$. Sostituendo l'equazione caratteristica del condensatore, otteniamo:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.35rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1rem">
 $$
 W_C = \int_{0}^{t} v(\tau) \cdot i(\tau) \, \text{d}\tau = \int_{0}^{V} C \cdot v \, \text{d}v = \frac{1}{2} C V^2
 $$
@@ -84,7 +97,7 @@ $$
 
 Sfruttando la relazione $Q = C \cdot V$, l'energia espressa in **Joule ($\text{J}$)** si può scrivere anche come:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1rem">
 $$
 W_C = \frac{1}{2} C V^2 = \frac{1}{2} \frac{Q^2}{C} = \frac{1}{2} Q V
 $$
@@ -94,9 +107,9 @@ $$
 
 ### Condensatori in parallelo
 
-Quando due o più condensatori sono sottoposti alla stessa tensione $V$, la capacità equivalente $C_{eq}$ è pari alla **somma delle singole capacità**:
+Quando due o più condensatori sono sottoposti alla stessa tensione $V$, la capacità equivalente $C_{eq}$ è pari alla **somma delle singole capacità**, poichè le armature conduttrici dei condensatori in parallelo si comportano come un'unica armatura di superficie pari alla somma delle singole superfici:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
 C_{eq} = C_1 + C_2 + \dots + C_n
 $$
@@ -106,79 +119,18 @@ $$
 
 Quando i condensatori sono collegati in serie, la carica $Q$ accumulata su ciascuno di essi è identica. L'inverso della capacità equivalente è pari alla somma degli inversi delle singole capacità:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
 \frac{1}{C_{eq}} = \frac{1}{C_1} + \frac{1}{C_2} + \dots + \frac{1}{C_n}
 $$
 </div>
 
-Nel caso particolare di **due soli condensatori in serie**:
+Nel caso particolare di **due** soli condensatori in serie:
 
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
 C_{eq} = \frac{C_1 \cdot C_2}{C_1 + C_2}
 $$
-</div>
-
-## Esempio pratico
-
-<div class="esempio">
-  <p>
-    Consideriamo il circuito di figura alimentato da un generatore di tensione stazionario $V_g = 12\, \text{V}$, con una resistenza $R = 2\, \text{k}\Omega$ e due condensatori $C_1 = 4\, \mu\text{F}$ e $C_2 = 12\, \mu\text{F}$ collegati in serie. Vogliamo determinare la carica totale $Q_{tot}$, la tensione $V_1$ e $V_2$ su ciascun condensatore e l'energia totale immagazzinata $W_{tot}$ a regime stazionario.
-  </p>
-
-  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
-    <div style="height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
-      <img 
-        src="/images/circuiti/es_condensatori.svg" 
-        alt="Circuito dell'esempio con condensatori in serie" 
-        style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" 
-      />
-    </div>
-    <p><strong>Circuito dell'esercizio</strong></p>
-  </div>
-
-  <h4>1. Calcolo della capacità equivalente</h4>
-  <p>
-    I due condensatori $C_1$ e $C_2$ sono in serie. Calcoliamo la capacità equivalente $C_{eq}$:
-  </p>
-  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-    $$C_{eq} = \frac{C_1 \cdot C_2}{C_1 + C_2} = \frac{4\, \mu\text{F} \cdot 12\, \mu\text{F}}{4\, \mu\text{F} + 12\, \mu\text{F}} = \frac{48}{16} = 3\, \mu\text{F}$$
-  </div>
-
-  <h4>2. Calcolo della carica e delle tensioni individuali</h4>
-  <p>
-    A regime stazionario in corrente continua, nei condensatori non scorre corrente ($I = 0$). Di conseguenza, la caduta di tensione sulla resistenza è nulla ($V_R = R \cdot 0 = 0\,\text{V}$) e la tensione totale ai capi della serie coincide con quella del generatore $V_g = 12\,\text{V}$.
-  </p>
-
-  <p>
-    Poiché i condensatori sono in serie, la carica accumulata $Q_{tot}$ è uguale per entrambi:
-  </p>
-  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-    $$Q_{tot} = C_{eq} \cdot V_g = 3\, \mu\text{F} \cdot 12\, \text{V} = 36\, \mu\text{C}$$
-  </div>
-
-  <p>
-    Possiamo ora determinare la tensione ai capi di ciascun condensatore:
-  </p>
-  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-    $$V_1 = \frac{Q_{tot}}{C_1} = \frac{36\, \mu\text{C}}{4\, \mu\text{F}} = 9\, \text{V}$$
-  </div>
-  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-    $$V_2 = \frac{Q_{tot}}{C_2} = \frac{36\, \mu\text{C}}{12\, \mu\text{F}} = 3\, \text{V}$$
-  </div>
-
-  <p>
-    Possiamo verificare la correttezza del risultato applicando la KVL: $V_1 + V_2 = 9\,\text{V} + 3\,\text{V} = 12\,\text{V} = V_g$.
-  </p>
-
-  <h4>3. Calcolo dell'energia totale immagazzinata</h4>
-  <p>
-    L'energia complessiva immagazzinata dal sistema di condensatori vale:
-  </p>
-  <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-    $$W_{tot} = \frac{1}{2} C_{eq} V_g^2 = \frac{1}{2} \cdot (3 \times 10^{-6}\, \text{F}) \cdot (12\, \text{V})^2 = 1{,}5 \times 10^{-6} \cdot 144 = 216\, \mu\text{J}$$
-  </div>
 </div>
 
 <div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">

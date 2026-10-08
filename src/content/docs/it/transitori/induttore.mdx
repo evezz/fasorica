@@ -1,0 +1,132 @@
+---
+title: L'induttore
+description: Funzionamento, equazione caratteristica, energia immagazzinata e collegamenti degli induttori.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+
+L'**induttore** è un componente elettrico **reattivo** in grado di **immagazzinare energia elettrica** sotto forma di campo **magnetico**.
+Insieme ai condensatori, costituisce una delle due famiglie fondamentali di elementi accumulatori di energia in elettrotecnica.
+
+Trova applicazione in molti circuiti, fra cui filtri di frequenza, trasformatori, convertitori switching (DC-DC) e motori elettrici.
+
+## Struttura e principio di funzionamento
+
+Un induttore elementare è costituito da un filo conduttore avvolto in spire (spesso attorno a un nucleo di materiale ferromagnetico o semplicemente in aria).
+
+Quando una corrente $i$ attraversa il conduttore, genera un campo magnetico proporzionale alla corrente stessa. Il flusso magnetico totale $\Phi$ concatenato con il circuito è direttamente proporzionale alla corrente $i$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+\Phi = L \cdot i
+$$
+</div>
+
+La costante di proporzionalità $L$ è detta **induttanza** (o coefficiente di autoinduzione) e si misura in **Henry ($\text{H}$)**.
+
+### Induttanza di un solenoide
+
+<FiguraLato src="/images/circuiti/induttore.svg" alt="Struttura di un induttore a solenoide" larghezza='14rem'>
+  Struttura di un induttore a solenoide
+</FiguraLato>
+
+Per un solenoide cilindrico ideale di lunghezza $l$, sezione $A$ e composto da $N$ spire:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+L = \mu_0 \cdot \mu_r \cdot \frac{N^2 \cdot A}{l} = \mu \cdot \frac{N^2 \cdot A}{l}
+$$
+</div>
+
+Dove:
+- $\mu_0 = 4\pi \times 10^{-7} \, \text{H/m}$ è la permeabilità magnetica del vuoto.
+- $\mu_r$ è la permeabilità magnetica relativa del nucleo.
+- $N$ è il numero di spire.
+- $A$ è l'area della sezione trasversale del solenoide in $\text{m}^2$.
+- $l$ è la lunghezza del solenoide in $\text{m}$.
+
+## Equazione caratteristica
+
+In base alla **Legge di Faraday-Neumann-Lenz**, una variazione nel tempo del flusso magnetico induce ai capi dell'induttore una tensione $v(t)$ proporzionale alla derivata del flusso rispetto al tempo:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+v(t) = \frac{\text{d}\Phi(t)}{\text{d}t}
+$$
+</div>
+
+Poiché l'induttanza $L$ dipende solo dalla geometria e dal materiale e non varia nel tempo, derivando la relazione $\Phi(t) = L \cdot i(t)$ si ottiene l'equazione caratteristica dell'induttore:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{v(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t}}
+$$
+</div>
+
+> Questa è l'equazione caratteristica dell'induttore. Osservandola, si nota che la tensione è proporzionale alla derivata della corrente. 
+In altre parole, ai capi dell'induttore si sviluppa una tensione solo quando la corrente varia nel tempo. Se la corrente è costante $\left(\frac{\text{d}i(t)}{\text{d}t} = 0\right)$, la tensione è nulla ($v(t) = 0$).
+Per questo motivo, in regime stazionario (corrente continua) l'induttore si comporta come un **cortocircuito** (un semplice filo di resistenza trascurabile).
+
+> La corrente che attraversa un induttore **non può variare istantaneamente** ($i(t)$ è una funzione continua).
+Una variazione istantanea di corrente $\left(\frac{\text{d}i}{\text{d}t} \to \infty \right)$ richiederebbe una tensione infinita ai suoi capi, il che è fisicamente impossibile.
+Per questo motivo, si dice che l'induttore **si oppone a variazioni istantanee di corrente** (comportamento duale rispetto al [condensatore](/it/transitori/condensatore), che si oppone alle variazioni di tensione).
+
+Invertendo la relazione differenziale, la corrente $i(t)$ che attraversa l'induttore a un generico istante $t$ si ottiene integrando la tensione:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+i(t) = i(t_0) + \frac{1}{L} \int_{t_0}^{t} v(\tau) \, \text{d}\tau
+$$
+</div>
+
+## Energia immagazzinata
+
+L'energia $W_L$ accumulata nel campo magnetico dell'induttore si ottiene integrando la potenza istantanea $p(t) = v(t) \cdot i(t)$. Sostituendo l'equazione caratteristica, otteniamo:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1rem">
+$$
+W_L = \int_{0}^{t} v(\tau) \cdot i(\tau) \, \text{d}\tau = \int_{0}^{I} L \cdot i \, \text{d}i = \frac{1}{2} L I^2
+$$
+</div>
+
+Sfruttando la relazione $\Phi = L \cdot I$, l'energia espressa in **Joule ($\text{J}$)** si può scrivere anche come:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1rem">
+$$
+W_L = \frac{1}{2} L I^2 = \frac{1}{2} \frac{\Phi^2}{L} = \frac{1}{2} \Phi I
+$$
+</div>
+
+## Collegamento di più induttori
+
+### Induttori in serie
+
+Quando due o più induttori non accoppiati magneticamente sono attraversati dalla stessa corrente $i$, l'induttanza equivalente $L_{eq}$ è pari alla **somma delle singole induttanze** (comportamento analogo a quello dei resistori):
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+L_{eq} = L_1 + L_2 + \dots + L_n
+$$
+</div>
+
+### Induttori in parallelo
+
+Quando gli induttori sono sottoposti alla stessa tensione $v$, l'inverso dell'induttanza equivalente è pari alla somma degli inversi delle singole induttanze:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+\frac{1}{L_{eq}} = \frac{1}{L_1} + \frac{1}{L_2} + \dots + \frac{1}{L_n}
+$$
+</div>
+
+Nel caso particolare di **due** soli induttori in parallelo:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+L_{eq} = \frac{L_1 \cdot L_2}{L_1 + L_2}
+$$
+</div>
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

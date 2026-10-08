@@ -3,6 +3,7 @@ title: Principio di sovrapposizione degli effetti
 description: Come analizzare i circuiti elettrici lineari con più generatori applicando il principio di sovrapposizione degli effetti.
 ---
 import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
 
 Il **Principio di Sovrapposizione degli Effetti (PSE)** è una proprietà fondamentale dei circuiti elettrici **lineari** contenenti due o più generatori indipendenti. 
 
@@ -37,16 +38,9 @@ $$
     Consideriamo un circuito alimentato da un generatore di tensione $V_g = 10\, \text{V}$ e un generatore di corrente $I_g = 2\, \text{mA}$, con tre resistori $R_1 = 5\, \text{k}\Omega$, $R_2 = 2\, \text{k}\Omega$ e $R_L = 1\, \text{k}\Omega$. Vogliamo calcolare la corrente $I_L$ che scorre nel resistore $R_L$.
   </p>
 
-  <div class="relazione" style="text-align: center; margin: 1.5rem 0;">
-    <div style="height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
-      <img 
-        src="/images/circuiti/pse.svg" 
-        alt="Circuito con due generatori" 
-        style="width: 100%; height: 100%; object-fit: contain;" 
-      />
-    </div>
-    <p><strong>Circuito completo dell'esercizio</strong></p>
-  </div>
+  <Figura src="/images/circuiti/pse.svg" alt="Circuito con due generatori" larghezza='34rem'>
+    Circuito dell'esercizio
+  </Figura>
 
   <h4>1. Contributo del solo generatore di tensione ($V_g$ attivo, $I_g$ spento)</h4>
 

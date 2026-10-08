@@ -1,0 +1,141 @@
+---
+title: Transitori nei circuiti RC e RL
+description: Risposta nel tempo di circuiti del primo ordine, costante di tempo e processi di carica, scarica ed eccitazione.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+import SimulatoreRC from '../../../../components/SimulatoreRC.astro';
+import SimulatoreRL from '../../../../components/SimulatoreRL.astro';
+
+I **transitori** rappresentano la fase di transizione in cui un circuito passa da uno stato stazionario a un altro a seguito di una variazione improvvisa (es. l'apertura o la chiusura di un interruttore).
+
+Nei circuiti contenenti un solo elemento reattivo (un condensatore o un induttore) e resistenze, il comportamento dinamicamente variabile nel tempo è descritto da un'**equazione differenziale lineare del primo ordine**. Tali circuiti prendono il nome di **circuiti del primo ordine**.
+
+## Il circuito RC
+
+Un circuito RC del primo ordine è composto da una rete di resistori (semplificabile tramite [Thévenin](/it/fondamenti/thevenin-norton/)) e un condensatore di capacità $C$.
+
+### Scarica del condensatore (risposta libera)
+
+Consideriamo un condensatore inizialmente carico alla tensione $V_0$. All'istante $t = 0$ viene collegato a una resistenza $R$.
+
+Applicando la Legge di Kirchhoff delle Tensioni (KVL) alla maglia:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+v_R(t) + v_C(t) = 0 \quad \rightarrow \quad R \cdot i(t) + v_C(t) = 0
+$$
+</div>
+
+Sostituendo l'equazione caratteristica del condensatore $i(t) = C \cdot \frac{\text{d}v_C(t)}{\text{d}t}$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+R C \cdot \frac{\text{d}v_C(t)}{\text{d}t} + v_C(t) = 0
+$$
+</div>
+
+Risolvendo l'equazione differenziale a variabili separabili con la condizione iniziale $v_C(0) = V_0$, otteniamo la legge dell'evoluzione temporale della tensione:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{v_C(t) = V_0 \cdot e^{-\frac{t}{\tau}}} \quad \text{con} \quad \boxed{\tau = R C}
+$$
+</div>
+
+La **costante di tempo** $\tau$ (espressa in secondi $\text{s}$) definisce la velocità con cui il circuito risponde:
+- Per $t = \tau$, la tensione scende al $36{,}8\%$ del valore iniziale ($e^{-1} \approx 0{,}368$).
+- Per $t \ge 5\tau$, il transitorio si considera convenzionalmente **esaurito** ($e^{-5} \approx 0{,}0067$, ovvero meno dell'$1\%$ del valore iniziale).
+
+### Carica del condensatore (risposta scalino)
+
+Se il condensatore è inizialmente scarico $v_C(0) = 0$ e all'istante $t = 0$ viene collegato a un generatore di tensione continua $V_g$ tramite la resistenza $R$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{v_C(t) = V_g \cdot \left(1 - e^{-\frac{t}{\tau}}\right)}
+$$
+</div>
+
+La corrente di carica $i(t)$ parte da un valore massimo pari a $\frac{V_g}{R}$ all'istante $t = 0^+$ e decresce esponenzialmente verso zero:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+i(t) = \frac{V_g}{R} \cdot e^{-\frac{t}{\tau}}
+$$
+</div>
+
+<SimulatoreRC />
+
+> **Nota sulla scala temporale**: Per consentire una visualizzazione sempre chiara dell'intero fenomeno, l'animazione dura sempre 6 secondi reali, indipendentemente dai valori di $R$ e $C$ scelti.
+Il fattore di scala temporale riportato in basso al centro (es. $\times 0{,}39$ o $\times 8{,}3$) indica di quante volte la simulazione è stata rallentata o accelerata rispetto al tempo reale per mostrare esattamente la finestra di $5\tau$.
+
+## Il circuito RL
+
+Un circuito RL del primo ordine è composto da una rete di resistori e un induttore di induttanza $L$.
+
+### Estinzione della corrente (risposta libera)
+
+Consideriamo un induttore attraversato inizialmente da una corrente $I_0$. All'istante $t = 0$ viene cortocircuitato su una resistenza $R$.
+
+Applicando la KVL alla maglia e sostituendo l'equazione caratteristica dell'induttore $v_L(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t}$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+L \cdot \frac{\text{d}i(t)}{\text{d}t} + R \cdot i(t) = 0
+$$
+</div>
+
+La soluzione dell'equazione con condizione iniziale $i(0) = I_0$ è:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{i(t) = I_0 \cdot e^{-\frac{t}{\tau}}} \quad \text{con} \quad \tau = \frac{L}{R}
+$$
+</div>
+
+> Si noti che per il circuito RL la costante di tempo è **$\tau = \frac{L}{R}$**. All'aumentare dell'induttanza $L$, il circuito oppone maggiore "inerzia" alle variazioni di corrente, allungando la durata del transitorio.
+
+### Eccitazione dell'induttore (risposta scalino)
+
+Se l'induttore è inizialmente scarico $i(0) = 0$ e viene collegato a un generatore di tensione $V_g$ tramite la resistenza $R$, l'evoluzione della corrente è:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{i(t) = \frac{V_g}{R} \cdot \left(1 - e^{-\frac{t}{\tau}}\right)}
+$$
+</div>
+
+La tensione ai capi dell'induttore $v_L(t)$ parte dal valore picco $V_g$ all'istante $t = 0^+$ (quando l'induttore si comporta da circuito aperto) e tende a zero per $t \to \infty$ (quando si comporta da corto circuito):
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+v_L(t) = V_g \cdot e^{-\frac{t}{\tau}}
+$$
+</div>
+
+<SimulatoreRL />
+
+## Formula generale dei transitori del primo ordine
+
+Qualsiasi grandezza generica $x(t)$ (tensione o corrente) in un circuito del primo ordine soggetto a ingressi costanti può essere calcolata direttamente senza risolvere ogni volta l'equazione differenziale tramite la **formula generale di risposta al gradino**:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.3rem">
+$$
+\boxed{x(t) = x(\infty) + \left[ x(0^+) - x(\infty) \right] \cdot e^{-\frac{t}{\tau}}}
+$$
+</div>
+
+Dove:
+- **$x(0^+)$** è il valore della grandezza un istante dopo la commutazione dell'interruttore.
+- **$x(\infty)$** è il valore di regime a transitorio esaurito ($t \to \infty$).
+- **$\tau$** è la costante di tempo vista dal componente reattivo ($\tau = R_{th}C$ oppure $\tau = \frac{L}{R_{th}}$).
+
+Per applicare la formula occorre ricordare le proprietà di continuità dei componenti reattivi all'istante di commutazione $t = 0$:
+
+1. **Condensatore:** la tensione è continua $\rightarrow v_C(0^+) = v_C(0^-)$.
+2. **Induttore:** la corrente è continua $\rightarrow i_L(0^+) = i_L(0^-)$.
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

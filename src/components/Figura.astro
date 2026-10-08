@@ -1,0 +1,10 @@
+---
+// Figura principale: riquadro centrato con larghezza personalizzabile.
+// Uso: <Figura src="/images/circuiti/esempio.svg" alt="..." larghezza="45rem">Didascalia</Figura>
+const { src, alt, larghezza = '34rem' } = Astro.props;
+---
+
+<figure class="figura" style={`width: ${larghezza}; max-width: 100%; margin: 1.5rem auto; text-align: center;`}>
+  <img src={src} alt={alt} loading="lazy" style="width: 100%; height: auto; display: block; margin: 0 auto;" />
+  <figcaption style="text-align: center; margin-top: 0.5rem;"><slot /></figcaption>
+</figure>

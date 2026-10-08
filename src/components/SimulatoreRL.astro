@@ -1,0 +1,737 @@
+---
+// Componente SimulatoreRL.astro per FASORICA
+// Uso in MDX: import SimulatoreRL from '../../../../components/SimulatoreRL.astro';
+// <SimulatoreRL />
+import 'katex/dist/katex.min.css';
+---
+
+<div class="sim-rl-container" data-sim-rl>
+  <div class="sim-rl-header">
+    <h3>Simulatore Transitorio Circuito RL</h3>
+    <p>Osserva l'inerzia della corrente i(t) e la tensione indotta v<sub>L</sub>(t) durante la fase di attivazione e disattivazione.</p>
+  </div>
+
+  <div class="sim-rl-grid">
+    <!-- Area Canvas Principale -->
+    <div class="sim-rl-canvas-card">
+      <div class="sim-rl-badges">
+        <span class="badge badge-i">i(t): <strong data-el="i">0.00 mA</strong></span>
+        <span class="badge badge-v">v<sub>L</sub>(t): <strong data-el="vl">0.00 V</strong></span>
+        <span class="badge badge-tau">&tau; = <strong data-el="tau">1.00 ms</strong></span>
+      </div>
+
+      <canvas
+        class="sim-rl-canvas"
+        data-el="canvas"
+        width="700"
+        height="420"
+        role="img"
+        aria-label="Schema del circuito RL e grafico di corrente e tensione nel tempo"
+      ></canvas>
+
+      <div class="sim-rl-formulas" aria-label="Formule del transitorio RL">
+        <span class="formula formula-i" data-el="f-i"></span>
+        <span class="formula formula-v" data-el="f-vl"></span>
+        <span class="formula formula-tau" data-el="f-tau"></span>
+      </div>
+
+      <div class="sim-rl-status">
+        <span>Stato: <strong data-el="stato" class="fixed-val">In attesa</strong></span>
+        <span>Velocità sim.: <strong data-el="speed" class="fixed-val">&times;1.00</strong></span>
+        <span>Tempo t: <strong data-el="tempo" class="fixed-val">0.00 ms</strong></span>
+      </div>
+    </div>
+
+    <!-- Pannello di Controllo -->
+    <div class="sim-rl-controls-card">
+      <h4>Parametri Circuito</h4>
+
+      <div class="control-group" role="group" aria-label="Modalità interruttore">
+        <span class="control-label">Modalità Interruttore</span>
+        <div class="btn-toggle-group">
+          <button data-el="btn-carica" class="btn-toggle active" type="button" aria-pressed="true">Attivazione</button>
+          <button data-el="btn-scarica" class="btn-toggle" type="button" aria-pressed="false">Disattivazione</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Tensione Generatore V<sub>g</sub>: <span data-el="lbl-vg">5 V</span></span>
+          <input type="range" data-el="range-vg" min="1" max="12" step="0.5" value="5" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Resistenza R: <span data-el="lbl-r">100 &Omega;</span></span>
+          <input type="range" data-el="range-r" min="10" max="1000" step="10" value="100" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Induttanza L: <span data-el="lbl-l">100 mH</span></span>
+          <input type="range" data-el="range-l" min="10" max="1000" step="10" value="100" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button data-el="btn-run" class="btn-primary" type="button">Avvia Transitorio</button>
+        <button data-el="btn-reset" class="btn-secondary" type="button">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sim-rl-container {
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+    font-family: inherit;
+    color: var(--fa-text, #252525);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-rl-header h3 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .sim-rl-header p {
+    margin: 0 0 1.25rem 0 !important;
+    font-size: 0.88rem;
+    color: var(--fa-text-muted, #686661);
+  }
+
+  .sim-rl-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .sim-rl-grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+    }
+  }
+
+  .sim-rl-canvas-card {
+    background: #ffffff;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-rl-badges {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .badge {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.61rem;
+    border-radius: 6px;
+    background: #f0efe9;
+    border: 1px solid var(--fa-border, #dedbd4);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge strong {
+    display: inline-block;
+    min-width: 4.2rem;
+    text-align: right;
+  }
+
+  .badge-i strong { color: #1e67d9; }
+  .badge-v strong { color: #8e24aa; }
+  .badge-tau strong { color: #2e7d32; }
+
+  .sim-rl-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 420;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #e2e0d8;
+    display: block;
+  }
+
+  .sim-rl-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fixed-val {
+    display: inline-block;
+    min-width: 4.8rem;
+    text-align: right;
+  }
+
+  .sim-rl-formulas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 1.75rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid #e2e0d8;
+    border-radius: 6px;
+  }
+
+  .formula-i { color: #1e67d9; }
+  .formula-v { color: #8e24aa; }
+  .formula-tau { color: #2e7d32; }
+
+  .formula :global(.katex) {
+    font-size: 1.1em;
+  }
+
+  .sim-rl-controls-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+  }
+
+  .sim-rl-controls-card h4 {
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .control-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .control-group label,
+  .control-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .btn-toggle-group {
+    display: flex;
+    gap: 2px;
+    background: #e5e2da;
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .btn-toggle,
+  .btn-primary,
+  .btn-secondary {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 0.75rem;
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .btn-toggle {
+    flex: 1 1 0;
+    min-height: 2.25rem;
+    background: transparent;
+    color: #555;
+    border-radius: 4px;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-toggle.active {
+    background: #ffffff;
+    color: #252525;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #45443f;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 2.5rem;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+
+  .btn-primary { background: #333; color: #fff; }
+  .btn-primary:hover { background: #111; }
+
+  .btn-secondary { background: #e0ded7; color: #333; }
+  .btn-secondary:hover { background: #d0ceb8; }
+
+  .sim-rl-container button:focus-visible,
+  .sim-rl-container input:focus-visible {
+    outline: 2px solid #1e67d9;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import katex from 'katex';
+
+  type Modalita = 'carica' | 'scarica';
+
+  const FORMULE: Record<Modalita, { i: string; v: string }> = {
+    carica: {
+      i: String.raw`i(t) = \dfrac{V_g}{R}\left(1 - e^{-t/\tau}\right)`,
+      v: String.raw`v_L(t) = V_g\,e^{-t/\tau}`,
+    },
+    scarica: {
+      i: String.raw`i(t) = \dfrac{V_g}{R}\,e^{-t/\tau}`,
+      v: String.raw`v_L(t) = -V_g\,e^{-t/\tau}`,
+    },
+  };
+
+  const W = 700;
+  const H = 420;
+  const DURATA_ANIMAZIONE = 6;
+  const INK = '#333';
+  const BLUE = '#1e67d9';
+  const PURPLE = '#8e24aa';
+  const FONT = 'system-ui, sans-serif';
+
+  const LOOP = { x: 80, y: 100, w: 190, h: 190 };
+  const GRAPH = { x: 350, y: 30, w: 280, h: 330 };
+
+  function fmtTempo(s: number): string {
+    return s < 1e-2 ? `${(s * 1000).toFixed(2)} ms` : `${s.toFixed(2)} s`;
+  }
+
+  function fmtCorrente(a: number): string {
+    return a >= 1 ? `${a.toFixed(2)} A` : `${(a * 1e3).toFixed(1)} mA`;
+  }
+
+  function initSimulatoreRL(root: HTMLElement) {
+    if (root.dataset.simInit) return;
+    root.dataset.simInit = '1';
+
+    const $ = <T extends HTMLElement = HTMLElement>(name: string) =>
+      root.querySelector<T>(`[data-el="${name}"]`)!;
+
+    const canvas = $<HTMLCanvasElement>('canvas');
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    if (!ctx) return;
+
+    const rangeVg = $<HTMLInputElement>('range-vg');
+    const rangeR = $<HTMLInputElement>('range-r');
+    const rangeL = $<HTMLInputElement>('range-l');
+    const lblVg = $('lbl-vg');
+    const lblR = $('lbl-r');
+    const lblL = $('lbl-l');
+    const valI = $('i');
+    const valVl = $('vl');
+    const valTau = $('tau');
+    const txtStato = $('stato');
+    const txtTempo = $('tempo');
+    const txtSpeed = $('speed');
+    const btnCarica = $('btn-carica');
+    const btnScarica = $('btn-scarica');
+    const btnRun = $('btn-run');
+    const btnReset = $('btn-reset');
+    const fI = $('f-i');
+    const fVl = $('f-vl');
+    const fTau = $('f-tau');
+
+    function renderFormule() {
+      const opts = { throwOnError: false };
+      katex.render(FORMULE[modalita].i, fI, opts);
+      katex.render(FORMULE[modalita].v, fVl, opts);
+      katex.render(String.raw`\tau = \dfrac{L}{R}`, fTau, opts);
+    }
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let modalita: Modalita = 'carica';
+    let Vg = 5;
+    let R = 100;
+    let L = 0.1; // 100mH
+    let tau = L / R;
+
+    let progress = 0;
+    let running = false;
+    let animId = 0;
+    let lastTs = 0;
+
+    const particles = Array.from({ length: 14 }, (_, k) => ({ pos: k / 14 }));
+
+    function valoriA(time: number) {
+      const k = Math.exp(-time / tau);
+      const I0 = Vg / R;
+      if (modalita === 'carica') {
+        return { i: I0 * (1 - k), vl: Vg * k };
+      } else {
+        return { i: I0 * k, vl: -Vg * k };
+      }
+    }
+
+    function linea(x1: number, y1: number, x2: number, y2: number) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function puntoSulloAnello(p: number) {
+      const { x, y, w, h } = LOOP;
+      const d = p * 2 * (w + h);
+      if (d < w) return { px: x + d, py: y };
+      if (d < w + h) return { px: x + w, py: y + (d - w) };
+      if (d < 2 * w + h) return { px: x + w - (d - w - h), py: y + h };
+      return { px: x, py: y + h - (d - 2 * w - h) };
+    }
+
+    function disegnaResistoreAmericano(xStart: number, y: number, width: number) {
+      const p = width / 6;
+      const h = 8;
+      ctx.beginPath();
+      ctx.moveTo(xStart, y);
+      ctx.lineTo(xStart + p * 0.5, y - h);
+      ctx.lineTo(xStart + p * 1.5, y + h);
+      ctx.lineTo(xStart + p * 2.5, y - h);
+      ctx.lineTo(xStart + p * 3.5, y + h);
+      ctx.lineTo(xStart + p * 4.5, y - h);
+      ctx.lineTo(xStart + p * 5.5, y + h);
+      ctx.lineTo(xStart + width, y);
+      ctx.stroke();
+    }
+
+    function disegnaInduttore(x: number, yStart: number, height: number) {
+      const r = 8;
+      const nSpire = 4;
+      const step = height / nSpire;
+      ctx.beginPath();
+      ctx.moveTo(x, yStart);
+      for (let k = 0; k < nSpire; k++) {
+        const cy = yStart + k * step + step / 2;
+        ctx.arc(x, cy, r, -Math.PI / 2, Math.PI / 2, false);
+      }
+      ctx.stroke();
+    }
+
+    function disegnaCircuito(iVal: number) {
+      const { x, y, w, h } = LOOP;
+      const mid = y + h / 2;
+      const xr = x + w;
+      const rx = x + w / 2 - 25;
+      const rw = 50;
+
+      ctx.save();
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Ramo superiore: filo + resistore
+      linea(x, y, rx, y);
+      disegnaResistoreAmericano(rx, y, rw);
+      linea(rx + rw, y, xr, y);
+
+      // Ramo destro: Induttore L
+      const lHeight = 60;
+      linea(xr, y, xr, mid - lHeight / 2);
+      disegnaInduttore(xr, mid - lHeight / 2, lHeight);
+      linea(xr, mid + lHeight / 2, xr, y + h);
+
+      // Filo inferiore
+      linea(xr, y + h, x, y + h);
+
+      // Ramo sinistro: Generatore (Attivazione) o GND (Disattivazione)
+      if (modalita === 'carica') {
+        linea(x, y, x, mid - 6);
+        linea(x, mid + 6, x, y + h);
+        linea(x - 18, mid - 6, x + 18, mid - 6);
+        ctx.lineWidth = 4;
+        linea(x - 10, mid + 6, x + 10, mid + 6);
+        ctx.lineWidth = 2;
+      } else {
+        linea(x, y, x, y + h);
+      }
+
+      // Massa
+      linea(x, y + h, x, y + h + 8);
+      linea(x - 12, y + h + 8, x + 12, y + h + 8);
+      linea(x - 8, y + h + 13, x + 8, y + h + 13);
+      linea(x - 4, y + h + 18, x + 4, y + h + 18);
+
+      // Freccia Corrente
+      const ax = x + 30;
+      const dir = 1; // Sempre in verso orario
+      ctx.fillStyle = BLUE;
+      ctx.beginPath();
+      ctx.moveTo(ax + 6 * dir, y);
+      ctx.lineTo(ax - 4 * dir, y - 5);
+      ctx.lineTo(ax - 4 * dir, y + 5);
+      ctx.closePath();
+      ctx.fill();
+
+      // Etichette
+      ctx.fillStyle = '#252525';
+      ctx.font = `bold 13px ${FONT}`;
+      ctx.textAlign = 'center';
+      ctx.fillText('R', rx + rw / 2, y - 16);
+      ctx.fillStyle = BLUE;
+      ctx.font = `italic bold 13px ${FONT}`;
+      ctx.fillText('i', ax, y - 12);
+      ctx.fillStyle = '#252525';
+      ctx.font = `bold 13px ${FONT}`;
+      ctx.textAlign = 'left';
+      ctx.fillText('L', xr + 18, mid + 4);
+      ctx.textAlign = 'right';
+      ctx.fillText(modalita === 'carica' ? 'Vg' : 'Vg = 0', x - 24, mid + 4);
+
+      // Particelle
+      if (running && !reduceMotion) {
+        ctx.fillStyle = BLUE;
+        particles.forEach((p) => {
+          const { px, py } = puntoSulloAnello(p.pos);
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      ctx.restore();
+    }
+
+    function disegnaGrafico(t: number) {
+      const { x: gx, y: gy, w: gw, h: gh } = GRAPH;
+      const I0 = Vg / R;
+      const yG = (n: number) => gy + gh - 10 - n * (gh - 20);
+      const normI = (time: number) => valoriA(time).i / I0;
+      const normV = (time: number) => Math.abs(valoriA(time).vl) / Vg;
+
+      ctx.save();
+
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(gx, gy, gw, gh);
+      ctx.strokeStyle = '#ebe8e0';
+      ctx.lineWidth = 1;
+      for (let k = 0; k <= 5; k++) {
+        linea(gx, gy + (gh / 5) * k, gx + gw, gy + (gh / 5) * k);
+        linea(gx + (gw / 5) * k, gy, gx + (gw / 5) * k, gy + gh);
+      }
+      ctx.strokeStyle = '#dedbd4';
+      ctx.strokeRect(gx, gy, gw, gh);
+
+      ctx.fillStyle = '#888';
+      ctx.font = `10px ${FONT}`;
+      ctx.textAlign = 'center';
+      for (let k = 1; k <= 5; k++) ctx.fillText(`${k}τ`, gx + (gw / 5) * k, gy + gh + 14);
+      ctx.fillStyle = '#666';
+      ctx.font = `bold 11px ${FONT}`;
+      ctx.fillText('Tempo t (multipli di τ)', gx + gw / 2, gy + gh + 30);
+
+      // Asse Y sinistro: Corrente
+      ctx.fillStyle = BLUE;
+      ctx.textAlign = 'right';
+      ctx.fillText('i', gx, gy - 10);
+      ctx.fillText(fmtCorrente(I0), gx - 6, yG(1) + 4);
+      ctx.fillText('0', gx - 6, yG(0) + 4);
+
+      // Asse Y destro: Tensione
+      ctx.fillStyle = PURPLE;
+      ctx.textAlign = 'left';
+      ctx.fillText('|vL|', gx + gw, gy - 10);
+      ctx.fillText(`${Vg.toFixed(1)} V`, gx + gw + 6, yG(1) + 4);
+      ctx.fillText('0 V', gx + gw + 6, yG(0) + 4);
+
+      // Tracciamento curve
+      const traccia = (f: (time: number) => number, colore: string, frazione: number, alpha: number) => {
+        const n = Math.round(gw * frazione);
+        if (n <= 0) return;
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = colore;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let px = 0; px <= n; px++) {
+          const py = yG(f((px / gw) * 5 * tau));
+          if (px === 0) ctx.moveTo(gx + px, py);
+          else ctx.lineTo(gx + px, py);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      };
+      traccia(normI, BLUE, 1, 0.3);
+      traccia(normV, PURPLE, 1, 0.3);
+      traccia(normI, BLUE, progress, 1);
+      traccia(normV, PURPLE, progress, 1);
+
+      // Punto tempo corrente
+      const curX = gx + progress * gw;
+      if (progress > 0) {
+        ctx.strokeStyle = '#999';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        linea(curX, gy, curX, gy + gh);
+        ctx.setLineDash([]);
+      }
+      const punto = (py: number, colore: string) => {
+        ctx.fillStyle = colore;
+        ctx.beginPath();
+        ctx.arc(curX, py, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      };
+      punto(yG(normI(t)), BLUE);
+      punto(yG(normV(t)), PURPLE);
+
+      ctx.restore();
+    }
+
+    function draw() {
+      const t = progress * 5 * tau;
+      const { i, vl } = valoriA(t);
+
+      valI.textContent = fmtCorrente(i);
+      valVl.textContent = `${vl.toFixed(2)} V`;
+      txtTempo.textContent = fmtTempo(t);
+
+      ctx.clearRect(0, 0, W, H);
+      disegnaCircuito(i);
+      disegnaGrafico(t);
+    }
+
+    function updateParams() {
+      Vg = parseFloat(rangeVg.value);
+      R = parseFloat(rangeR.value);
+      L = parseFloat(rangeL.value) / 1000;
+      tau = L / R;
+
+      lblVg.textContent = `${Vg} V`;
+      lblR.textContent = `${R} Ω`;
+      lblL.textContent = `${rangeL.value} mH`;
+      valTau.textContent = fmtTempo(tau);
+
+      const fattore = (5 * tau) / DURATA_ANIMAZIONE;
+      txtSpeed.textContent = `×${fattore >= 10 ? fattore.toFixed(0) : fattore.toPrecision(2)}`;
+      draw();
+    }
+
+    function resetSim() {
+      running = false;
+      cancelAnimationFrame(animId);
+      progress = 0;
+      txtStato.textContent = 'In attesa';
+      draw();
+    }
+
+    function setModalita(m: Modalita) {
+      modalita = m;
+      btnCarica.classList.toggle('active', m === 'carica');
+      btnScarica.classList.toggle('active', m === 'scarica');
+      btnCarica.setAttribute('aria-pressed', String(m === 'carica'));
+      btnScarica.setAttribute('aria-pressed', String(m === 'scarica'));
+      renderFormule();
+      resetSim();
+    }
+
+    function loop(ts: number) {
+      if (!running) return;
+      if (!root.isConnected) {
+        running = false;
+        return;
+      }
+
+      const dt = Math.min((ts - lastTs) / 1000, 0.05);
+      lastTs = ts;
+      progress = Math.min(progress + dt / DURATA_ANIMAZIONE, 1);
+
+      const { i } = valoriA(progress * 5 * tau);
+      const I0 = Vg / R;
+      const passo = (i / I0) * 0.4 * dt;
+      particles.forEach((p) => {
+        p.pos = (((p.pos + passo) % 1) + 1) % 1;
+      });
+
+      if (progress >= 1) {
+        running = false;
+        txtStato.textContent = 'Transitorio completato';
+      }
+      draw();
+      if (running) animId = requestAnimationFrame(loop);
+    }
+
+    btnCarica.addEventListener('click', () => setModalita('carica'));
+    btnScarica.addEventListener('click', () => setModalita('scarica'));
+    rangeVg.addEventListener('input', updateParams);
+    rangeR.addEventListener('input', updateParams);
+    rangeL.addEventListener('input', updateParams);
+    btnReset.addEventListener('click', resetSim);
+
+    btnRun.addEventListener('click', () => {
+      resetSim();
+      running = true;
+      txtStato.textContent = modalita === 'carica' ? 'Attivazione...' : 'Disattivazione...';
+      lastTs = performance.now();
+      animId = requestAnimationFrame(loop);
+    });
+
+    renderFormule();
+    updateParams();
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-sim-rl]').forEach((el) => initSimulatoreRL(el));
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

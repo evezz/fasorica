@@ -1,0 +1,146 @@
+---
+title: Transitori nei circuiti RLC
+description: Analisi della risposta nel tempo dei circuiti del secondo ordine, equazione caratteristica e regimi di smorzamento (sovrasmorzato, critico e sottosmorzato).
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+
+I circuiti contenenti **due elementi reattivi** (un condensatore $C$ e un induttore $L$, oppure due elementi dello stesso tipo non riducibili a uno solo) sono descritti da un'**equazione differenziale lineare del secondo ordine**. Tali reti prendono il nome di **circuiti del secondo ordine**.
+
+A differenza dei circuiti del primo ordine (RC ed RL), in cui la risposta transitoria è sempre un semplice decadimento o accrescimento esponenziale monotono, nei circuiti del secondo ordine l'energia può scambiarsi continuamente tra il campo elettrico del condensatore e il campo magnetico dell'induttore, dando origine a **comportamenti oscillatori**.
+
+---
+
+## Modello matematico e equazione caratteristica
+
+Consideriamo un circuito RLC serie esente da generatori (risposta libera) o collegato a un ingresso costante. Applicando la Legge di Kirchhoff delle Tensioni (KVL), l'equazione differenziale che governa la variabile di stato $x(t)$ (es. la tensione $v_C(t)$ o la corrente $i_L(t)$) si presenta nella forma canonica:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+\frac{\text{d}^2 x(t)}{\text{d}t^2} + 2\alpha \frac{\text{d}x(t)}{\text{d}t} + \omega_0^2 \, x(t) = 0
+$$
+</div>
+
+Dove sono definiti due parametri fondamentali della rete:
+
+1. **Frequenza di risonanza propria ($\omega_0$):**
+   <div style="text-align: center; margin: 0.75rem 0; font-size:1.15rem">
+   $$
+   \omega_0 = \frac{1}{\sqrt{L C}} \quad [\text{rad/s}]
+   $$
+   </div>
+
+2. **Coefficiente di smorzamento ($\alpha$):**
+   - Per il **circuito RLC serie**: $\alpha = \frac{R}{2L}$
+   - Per il **circuito RLC parallelo**: $\alpha = \frac{1}{2 R C}$
+
+Cercando soluzioni del tipo $x(t) = A e^{s t}$, si ricava l'**equazione caratteristica algebrica**:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+s^2 + 2\alpha s + \omega_0^2 = 0
+$$
+</div>
+
+Le cui due radici (frequenze complesse o autovalori) sono date da:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+s_{1,2} = -\alpha \pm \sqrt{\alpha^2 - \omega_0^2}
+$$
+</div>
+
+---
+
+## I tre regimi di smorzamento
+
+Il comportamento del transitorio dipende dal segno del discriminante $\Delta = \alpha^2 - \omega_0^2$, ovvero dal rapporto tra il coefficiente di smorzamento $\alpha$ e la frequenza di risonanza $\omega_0$.
+
+### 1. Regime sovrasmorzato ($\alpha > \omega_0$)
+
+Se la resistenza nel circuito è elevata (dissipazione preponderante rispetto allo scambio energetico tra $L$ e $C$), le radici $s_1$ e $s_2$ sono **reali e distinte** entrambe negative ($s_1, s_2 < 0$).
+
+La risposta è data dalla somma di due esponenziali che decadono monotonamente senza alcuna oscillazione:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{x(t) = A_1 e^{s_1 t} + A_2 e^{s_2 t}}
+$$
+</div>
+
+### 2. Regime a smorzamento critico ($\alpha = \omega_0$)
+
+Rappresenta il confine tra il comportamento aperiodico e quello oscillatorio. Le due radici sono **reali e coincidenti**: $s_1 = s_2 = -\alpha$.
+
+La risposta del circuito ha la forma:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{x(t) = (A_1 + A_2 t) \cdot e^{-\alpha t}}
+$$
+</div>
+
+> Il regime critico rappresenta il modo **più rapido in assoluto** con cui il circuito raggiunge lo stato stazionario finale senza superarlo o oscillare (assenza di overshoot).
+
+### 3. Regime sottosmorzato ($\alpha < \omega_0$)
+
+Se la resistenza è ridotta, il discriminante è negativo e le radici sono **complesse coniugate**:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+s_{1,2} = -\alpha \pm j \omega_d
+$$
+</div>
+
+Dove **$\omega_d = \sqrt{\omega_0^2 - \alpha^2}$** è la **frequenza propria smorzata** delle oscillazioni.
+
+Sfruttando l'identità di Eulero, la risposta può essere scritta nella forma di un'**oscillazione smorzata**:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{x(t) = e^{-\alpha t} \cdot \left[ A_1 \cos(\omega_d t) + A_2 \sin(\omega_d t) \right]}
+$$
+</div>
+
+L'ampiezza dell'oscillazione sinusoidale di frequenza $\omega_d$ viene inviluppata dall'esponenziale decrescente $e^{-\alpha t}$ con costante di tempo $\tau = \frac{1}{\alpha}$.
+
+---
+
+## Determinazione delle costanti di integrazione
+
+Per calcolare le due costanti $A_1$ e $A_2$ occorre applicare **due condizioni iniziali** note all'istante $t = 0^+$:
+
+1. Il valore della grandezza $x(0^+)$.
+2. Il valore della sua derivata prima $\left. \frac{\text{d}x(t)}{\text{d}t} \right|_{t = 0^+}$.
+
+Ricordando sempre le proprietà di continuità delle variabili di stato:
+- $v_C(0^+) = v_C(0^-)$
+- $i_L(0^+) = i_L(0^-)$
+
+La derivata prima all'istante $t = 0^+$ si ricava esprimendo le equazioni caratteristiche dei componenti:
+- Per la tensione del condensatore: $\frac{\text{d}v_C(0^+)}{\text{d}t} = \frac{i_C(0^+)}{C}$
+- Per la corrente dell'induttore: $\frac{\text{d}i_L(0^+)}{\text{d}t} = \frac{v_L(0^+)}{L}$
+
+---
+
+## Risposta forzata e transitorio completo
+
+In presenza di generatori continui di valore $X_\infty$ applicati per $t \ge 0$, la risposta totale del circuito è data dalla somma della **risposta transitoria (omogenea)** e della **risposta a regime permanente (particolare)**:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+x(t) = x_{\text{transitorio}}(t) + X_\infty
+$$
+</div>
+
+Ad esempio, per un circuito sottosmorzato soggetto a uno scalino di tensione, l'equazione completa risulta:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+x(t) = X_\infty + e^{-\alpha t} \cdot \left[ A_1 \cos(\omega_d t) + A_2 \sin(\omega_d t) \right]
+$$
+</div>
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>
