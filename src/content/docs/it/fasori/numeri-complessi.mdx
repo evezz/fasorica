@@ -1,0 +1,150 @@
+---
+title: Numeri complessi per l'elettronica
+description: Rappresentazione cartesiana, polare ed esponenziale dei numeri complessi, conversioni ed operazioni algebriche per l'analisi dei circuiti in regime alternato.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+import SimulatoreComplessi from '../../../../components/SimulatoreComplessi.astro';
+
+Nello studio dei circuiti in **regime sinusoidale permanente**, i numeri complessi costituiscono lo strumento matematico fondamentale per sintetizzare in un unico oggetto algebrico sia l'**ampiezza** sia la **fase** di una grandezza elettrica (tensione o corrente).
+In questa pagina vedremo come rappresentare un numero complesso in diverse forme equivalenti, come effettuare le conversioni tra di esse e come eseguire le operazioni algebriche fondamentali.
+
+## L'unità immaginaria in elettronica ($j$)
+L'unità immaginaria è un concetto matematico che nasce dall'esigenza di risolvere equazioni algebriche che non ammettono soluzioni reali. In particolare, l'unità immaginaria $j$ è definita come la radice quadrata di $-1$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size: 1.25rem;">
+$$
+\boxed{j = \sqrt{-1}} \quad \text{con} \quad \boxed{j^2 = -1}
+$$
+</div>
+
+> In matematica l'unità immaginaria è indicata tradizionalmente con $i$. In ingegneria elettrica ed elettronica si adotta la notazione $j$ per evitare qualsiasi confusione con la corrente istantanea $i(t)$:
+
+Moltiplicare un vettore o un fasore per $j$ nel piano complesso equivale matematicamente a effettuare una **rotazione di $90^\circ$ ($\frac{\pi}{2}\text{ rad}$) in senso antiorario**.
+
+## Numeri complessi e loro rappresentazione
+
+I numeri complessi sono composti da una parte reale ed una parte immaginaria, ed in elettronica vengono utilizzati per rappresentare le grandezze sinusoidali (tensioni e correnti) in regime alternato.
+Possono essere rappresentati sul **Piano di Gauss** (dove l'asse orizzontale rappresenta la parte reale $\text{Re}$ e l'asse verticale la parte immaginaria $\text{Im}$) in diverse forme equivalenti.
+
+### 1. Forma cartesiana 
+Esprime il numero complesso esplicitando parte reale e parte immaginaria:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size: 1.2rem;">
+$$
+Z = a + jb
+$$
+</div>
+
+*   **$a = \text{Re}\{Z\}$**: Parte reale (in elettronica associata a componenti **resistivi** $R$).
+*   **$b = \text{Im}\{Z\}$**: Parte immaginaria (in elettronica associata a componenti **reattivi** $X$, come induttanze o capacità).
+
+
+### 2. Forma polare
+Esprime il numero complesso tramite il suo **modulo** (distanza dall'origine) e la sua **fase** (angolo rispetto all'asse reale):
+
+<div style="text-align: center; margin: 1.25rem 0; font-size: 1.2rem;">
+$$
+Z = |Z| \cdot e^{j\theta}
+$$
+</div>
+
+* $|Z|$ = modulo del numero complesso (in elettronica associato all'**ampiezza** della grandezza sinusoidale).
+* $\theta$ = fase del numero complesso (in elettronica associata allo **sfasamento** della grandezza sinusoidale).
+
+> Molte volte, per semplicità, la forma polare viene indicata con la notazione $Z = |Z| \angle \theta$.
+
+## Simulatore interattivo del piano di Gauss
+<SimulatoreComplessi />
+
+## Conversioni fra le due forme di rappresentazione
+
+### 1. Da forma cartesiana a forma polare 
+
+Dati $a$ e $b$, vogliamo ricavare il modulo $|Z|$ e la fase $\theta$ 
+$$
+a + jb \longrightarrow |Z|e^{j\theta}
+$$
+
+#### Passo 1: Calcolo del modulo $|Z|$
+
+
+Applicando il **teorema di Pitagora** al triangolo rettangolo:
+
+$$
+|Z|^2 = a^2 + b^2 \implies \boxed{|Z| = \sqrt{a^2 + b^2}}
+$$
+
+#### Passo 2: Calcolo della fase $\theta$
+Dalla definizione di tangente trigonometrica ($\tan\theta = \frac{\text{cateto opposto}}{\text{cateto adiacente}} = \frac{b}{a}$), si applica la funzione arcotangente:
+
+$$
+\theta = \arctan\left(\frac{b}{a}\right)
+$$
+
+> **⚠︎ Nota fondamentale sui quadranti:**
+> Poiché la funzione $\arctan$ restituisce valori solo nell'intervallo $(-90^\circ, +90^\circ)$, per determinare l'angolo corretto nei $4$ quadranti occorre considerare i segni di $a$ e $b$ (oppure usare la funzione $\text{atan2}(b, a)$):
+>
+> *   **$I^\circ$ Quadrante ($a > 0, b \ge 0$):** $\theta = \arctan\left(\frac{b}{a}\right)$
+> *   **$II^\circ$ Quadrante ($a < 0, b \ge 0$):** $\theta = \arctan\left(\frac{b}{a}\right) + 180^\circ$
+> *   **$III^\circ$ Quadrante ($a < 0, b < 0$):** $\theta = \arctan\left(\frac{b}{a}\right) - 180^\circ$
+> *   **$IV^\circ$ Quadrante ($a > 0, b < 0$):** $\theta = \arctan\left(\frac{b}{a}\right)$
+
+---
+
+### 2. Da forma polare a forma cartesiana 
+
+Dati il modulo $|Z|$ e l'angolo $\theta$, vogliamo ricavare la parte reale $a$ e la parte immaginaria $b$:
+$$
+|Z|e^{j\theta} \longrightarrow a + jb   
+$$
+
+#### Passo 1: Calcolo della parte reale $a$
+La parte reale è la proiezione dell'ipotenusa $|Z|$ sull'asse orizzontale (tramite il coseno):
+
+$$
+\boxed{a = |Z| \cos\theta}
+$$
+
+#### Passo 2: Calcolo della parte immaginaria $b$
+La parte immaginaria è la proiezione dell'ipotenusa $|Z|$ sull'asse verticale (tramite il seno):
+
+$$
+\boxed{b = |Z| \sin\theta}
+$$
+
+#### Dimostrazione diretta tramite la formula di Eulero
+Sostituendo l'**identità di Eulero** $e^{j\theta} = \cos\theta + j\sin\theta$ nella forma esponenziale, si ritrova immediatamente l'espressione cartesiana:
+
+$$
+Z = |Z| \cdot e^{j\theta} = |Z|(\cos\theta + j\sin\theta) = \underbrace{|Z|\cos\theta}_{a} + j \underbrace{|Z|\sin\theta}_{b} = a + jb
+$$
+
+## Operazioni fondamentali
+
+La scelta della forma di rappresentazione ottimizza i calcoli algebrici nei circuiti. Potremmo dovere eseguire somme e sottrazioni di numeri complessi (per esempio applicando le leggi di Kirchhoff), oppure moltiplicazioni e divisioni (per esempio applicando la legge di Ohm). In generale:
+
+#### Somma e sottrazione: usare la forma cartesiana
+Si sommano o sottraggono separatamente le parti reali e le parti immaginarie:
+
+$$
+(a_1 + jb_1) \pm (a_2 + jb_2) = (a_1 \pm a_2) + j(b_1 \pm b_2)
+$$
+
+#### Moltiplicazione e divisione: usare la forma polare
+*   **Moltiplicazione:** Si moltiplicano i moduli e si **sommano** le fasi.
+    $$
+    Z_1 \cdot Z_2 = (|Z_1| \cdot |Z_2|) \angle (\theta_1 + \theta_2)
+    $$
+*   **Divisione:** Si dividono i moduli e si **sottraggono** le fasi.
+    $$
+    \frac{Z_1}{Z_2} = \left(\frac{|Z_1|}{|Z_2|}\right) \angle (\theta_1 - \theta_2)
+    $$
+
+> **✐ Regola pratica**: se si devono sommare due numeri complessi in forma polare conviene convertirli prima in forma cartesiana come visto [sopra](/it/fasori/numeri-complessi/#2-da-forma-polare-a-forma-cartesiana), e poi eseguire la somma.
+Se invece si devono moltiplicare o dividere due numeri complessi in forma cartesiana conviene convertirli prima in forma polare come visto [sopra](/it/fasori/numeri-complessi/#1-da-forma-cartesiana-a-forma-polare), e poi eseguire la moltiplicazione o la divisione.
+Sì, è molta matematica, ma questo è il modo più semplice ☺
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

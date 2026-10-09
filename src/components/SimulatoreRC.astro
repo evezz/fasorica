@@ -8,7 +8,7 @@ import 'katex/dist/katex.min.css';
 <div class="sim-rc-container" data-sim-rc>
   <div class="sim-rc-header">
     <h3>Simulatore Transitorio Circuito RC</h3>
-    <p>Osserva il flusso di carica e l'andamento temporale di tensione v<sub>C</sub>(t) e corrente i(t). </p>
+    <p>Osserva il flusso di carica e l'andamento temporale di tensione v<sub>C</sub>(t) e corrente i(t).</p>
   </div>
 
   <div class="sim-rc-grid">
@@ -347,7 +347,6 @@ import 'katex/dist/katex.min.css';
   const LOOP = { x: 80, y: 100, w: 190, h: 190 };
   const GRAPH = { x: 350, y: 30, w: 280, h: 330 };
 
-  // Formattazione dinamica (ms quando t < 1s, s altrimenti)
   function fmtTempo(s: number): string {
     return s < 1 ? `${(s * 1000).toFixed(1)} ms` : `${s.toFixed(2)} s`;
   }
@@ -453,15 +452,41 @@ import 'katex/dist/katex.min.css';
       ctx.stroke();
     }
 
+    function disegnaInterruttore(x1: number, y: number, x2: number, aperto: boolean) {
+      const r = 3;
+      // Morsetti
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.arc(x1, y, r, 0, Math.PI * 2);
+      ctx.arc(x2, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Levetta dell'interruttore
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      if (aperto) {
+        ctx.lineTo(x1 + (x2 - x1) * 0.9, y - 12); // Inclinata verso l'alto se aperto
+      } else {
+        ctx.lineTo(x2, y); // Chiusa in orizzontale se in funzione
+      }
+      ctx.stroke();
+    }
+
     function disegnaCircuito(vc: number) {
       const { x, y, w, h } = LOOP;
       const mid = y + h / 2;
       const xr = x + w;
       const g = 14;
       const pw = 44;
-      const rx = x + w / 2 - 25;
+
+      // Coordinate interruttore e resistore sul ramo superiore
+      const swX1 = x + 20;
+      const swX2 = x + 50;
+      const rx = x + 110;
       const rw = 50;
+
       const q = Math.min(Math.max(vc / Vg, 0), 1);
+      const isSwitchOpen = !running && progress === 0; // Aperto prima dell'avvio / reset
 
       ctx.save();
       ctx.strokeStyle = INK;
@@ -469,10 +494,14 @@ import 'katex/dist/katex.min.css';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      linea(x, y, rx, y);
+      // Filo superiore con Interruttore e Resistore Americano
+      linea(x, y, swX1, y);
+      disegnaInterruttore(swX1, y, swX2, isSwitchOpen);
+      linea(swX2, y, rx, y);
       disegnaResistoreAmericano(rx, y, rw);
       linea(rx + rw, y, xr, y);
 
+      // Ramo destro con Condensatore C
       linea(xr, y, xr, mid - g / 2);
       linea(xr, mid + g / 2, xr, y + h);
       ctx.fillStyle = `rgba(217, 56, 30, ${0.08 + q * 0.7})`;
@@ -482,8 +511,10 @@ import 'katex/dist/katex.min.css';
       linea(xr - pw / 2, mid + g / 2, xr + pw / 2, mid + g / 2);
       ctx.lineWidth = 2;
 
+      // Filo inferiore
       linea(xr, y + h, x, y + h);
 
+      // Ramo sinistro: Generatore (Carica) o GND (Scarica)
       if (modalita === 'carica') {
         linea(x, y, x, mid - 6);
         linea(x, mid + 6, x, y + h);
@@ -495,12 +526,14 @@ import 'katex/dist/katex.min.css';
         linea(x, y, x, y + h);
       }
 
+      // Massa
       linea(x, y + h, x, y + h + 8);
       linea(x - 12, y + h + 8, x + 12, y + h + 8);
       linea(x - 8, y + h + 13, x + 8, y + h + 13);
       linea(x - 4, y + h + 18, x + 4, y + h + 18);
 
-      const ax = x + 30;
+      // Freccia di i(t)
+      const ax = rx + rw + 15;
       const dir = modalita === 'carica' ? 1 : -1;
       ctx.fillStyle = BLUE;
       ctx.beginPath();
@@ -510,9 +543,11 @@ import 'katex/dist/katex.min.css';
       ctx.closePath();
       ctx.fill();
 
+      // Etichette dello schema
       ctx.fillStyle = '#252525';
       ctx.font = `bold 13px ${FONT}`;
       ctx.textAlign = 'center';
+      ctx.fillText('S', (swX1 + swX2) / 2, y - 16); // Etichetta Switch
       ctx.fillText('R', rx + rw / 2, y - 16);
       ctx.fillStyle = BLUE;
       ctx.font = `italic bold 13px ${FONT}`;
@@ -524,12 +559,14 @@ import 'katex/dist/katex.min.css';
       ctx.textAlign = 'right';
       ctx.fillText(modalita === 'carica' ? 'Vg' : 'Vg = 0', x - 24, mid + 4);
 
+      // Segni della carica sulle armature
       ctx.fillStyle = RED;
       ctx.globalAlpha = 0.25 + 0.75 * q;
       ctx.fillText('+', xr - pw / 2 - 6, mid - g / 2 + 4);
       ctx.fillText('−', xr - pw / 2 - 6, mid + g / 2 + 4);
       ctx.globalAlpha = 1;
 
+      // Particelle della corrente
       if (running && !reduceMotion) {
         ctx.fillStyle = BLUE;
         particles.forEach((p) => {
@@ -720,5 +757,4 @@ import 'katex/dist/katex.min.css';
 
   initAll();
   document.addEventListener('astro:page-load', initAll);
-
 </script>

@@ -1,0 +1,456 @@
+---
+// Componente SimulatoreSinusoide.astro per FASORICA
+// Uso in MDX: import SimulatoreSinusoide from '../../../../components/SimulatoreSinusoide.astro';
+// <SimulatoreSinusoide />
+import 'katex/dist/katex.min.css';
+---
+
+<div class="sim-sin-container" data-sim-sin>
+  <div class="sim-sin-header">
+    <h3>Simulatore del Segnale Sinusoidale</h3>
+    <p>Visualizza l'andamento temporale di v(t) = V<sub>m</sub>&middot;cos(&omega;t + &phi;) e calcola il valore efficace V<sub>rms</sub>.</p>
+  </div>
+
+  <div class="sim-sin-grid">
+    <!-- Area Canvas Principale -->
+    <div class="sim-sin-canvas-card">
+      <div class="sim-sin-badges">
+        <span class="badge badge-vm">V<sub>m</sub>: <strong data-el="val-vm">5.00 V</strong></span>
+        <span class="badge badge-vrms">V<sub>rms</sub>: <strong data-el="val-vrms">3.54 V</strong></span>
+        <span class="badge badge-freq">f: <strong data-el="val-f">50 Hz</strong></span>
+        <span class="badge badge-period">T: <strong data-el="val-t">20.0 ms</strong></span>
+      </div>
+
+      <canvas
+        class="sim-sin-canvas"
+        data-el="canvas"
+        width="700"
+        height="380"
+        role="img"
+        aria-label="Grafico del segnale sinusoidale nel tempo"
+      ></canvas>
+
+      <div class="sim-sin-formulas" aria-label="Formula della sinusoide corrente">
+        <span class="formula" data-el="f-eq"></span>
+      </div>
+
+      <div class="sim-sin-status">
+        <span>Pulsazione &omega;: <strong data-el="val-omega" class="fixed-val">314.16 rad/s</strong></span>
+        <span>Sfasamento &phi;: <strong data-el="val-phi-rad" class="fixed-val">0.00 rad</strong></span>
+      </div>
+    </div>
+
+    <!-- Pannello di Controllo -->
+    <div class="sim-sin-controls-card">
+      <h4>Parametri del Segnale</h4>
+
+      <div class="control-group">
+        <label>
+          <span>Ampiezza di Picco V<sub>m</sub>: <span data-el="lbl-vm">5 V</span></span>
+          <input type="range" data-el="range-vm" min="1" max="10" step="0.5" value="5" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Frequenza f: <span data-el="lbl-f">50 Hz</span></span>
+          <input type="range" data-el="range-f" min="10" max="100" step="5" value="50" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Fase Iniziale &phi;: <span data-el="lbl-phi">0&deg;</span></span>
+          <input type="range" data-el="range-phi" min="-180" max="180" step="15" value="0" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button data-el="btn-reset" class="btn-secondary" type="button">Reset Parametri</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sim-sin-container {
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+    font-family: inherit;
+    color: var(--fa-text, #252525);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-sin-header h3 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .sim-sin-header p {
+    margin: 0 0 1.25rem 0 !important;
+    font-size: 0.88rem;
+    color: var(--fa-text-muted, #686661);
+  }
+
+  .sim-sin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .sim-sin-grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+    }
+  }
+
+  .sim-sin-canvas-card {
+    background: #ffffff;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-sin-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .badge {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.61rem;
+    border-radius: 6px;
+    background: #f0efe9;
+    border: 1px solid var(--fa-border, #dedbd4);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge strong {
+    display: inline-block;
+    min-width: 3.8rem;
+    text-align: right;
+  }
+
+  .badge-vm strong { color: #d9381e; }
+  .badge-vrms strong { color: #1e67d9; }
+  .badge-freq strong { color: #2e7d32; }
+  .badge-period strong { color: #8e24aa; }
+
+  .sim-sin-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 380;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #e2e0d8;
+    display: block;
+  }
+
+  .sim-sin-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fixed-val {
+    display: inline-block;
+    min-width: 5.5rem;
+    text-align: right;
+  }
+
+  .sim-sin-formulas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid #e2e0d8;
+    border-radius: 6px;
+    color: #d9381e;
+  }
+
+  .formula :global(.katex) {
+    font-size: 1.1em;
+  }
+
+  .sim-sin-controls-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+  }
+
+  .sim-sin-controls-card h4 {
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .control-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #45443f;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 0.5rem;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    min-height: 2.5rem;
+    border-radius: 6px;
+    border: none;
+    background: #e0ded7;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .btn-secondary:hover { background: #d0ceb8; }
+
+  .sim-sin-container button:focus-visible,
+  .sim-sin-container input:focus-visible {
+    outline: 2px solid #1e67d9;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import katex from 'katex';
+
+  const W = 700;
+  const H = 380;
+  const RED = '#d9381e';
+  const BLUE = '#1e67d9';
+  const FONT = 'system-ui, sans-serif';
+
+  const GRAPH = { x: 55, y: 25, w: 600, h: 300 };
+  const T_MAX_MS = 100; // Finestra temporale fissa sull'asse X (0 - 100 ms)
+
+  function initSimulatoreSinusoide(root: HTMLElement) {
+    if (root.dataset.simInit) return;
+    root.dataset.simInit = '1';
+
+    const $ = <T extends HTMLElement = HTMLElement>(name: string) =>
+      root.querySelector<T>(`[data-el="${name}"]`)!;
+
+    const canvas = $<HTMLCanvasElement>('canvas');
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    if (!ctx) return;
+
+    const rangeVm = $<HTMLInputElement>('range-vm');
+    const rangeF = $<HTMLInputElement>('range-f');
+    const rangePhi = $<HTMLInputElement>('range-phi');
+
+    const lblVm = $('lbl-vm');
+    const lblF = $('lbl-f');
+    const lblPhi = $('lbl-phi');
+
+    const valVm = $('val-vm');
+    const valVrms = $('val-vrms');
+    const valF = $('val-f');
+    const valT = $('val-t');
+    const valOmega = $('val-omega');
+    const valPhiRad = $('val-phi-rad');
+
+    const btnReset = $('btn-reset');
+    const fEq = $('f-eq');
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    let Vm = 5;
+    let freq = 50;
+    let phiDeg = 0;
+
+    function linea(x1: number, y1: number, x2: number, y2: number) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function renderFormula() {
+      const phiSign = phiDeg >= 0 ? '+' : '';
+      const strFormula = String.raw`v(t) = ${Vm.toFixed(1)} \cdot \cos\left(2\pi \cdot ${freq}\,t ${phiDeg !== 0 ? phiSign + phiDeg + String.raw`\degree` : ''}\right) \text{ [V]}`;
+      katex.render(strFormula, fEq, { throwOnError: false });
+    }
+
+    function draw() {
+      const { x: gx, y: gy, w: gw, h: gh } = GRAPH;
+      const cy = gy + gh / 2;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.save();
+
+      // Sfondo e Griglia
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(gx, gy, gw, gh);
+      ctx.strokeStyle = '#f0efe9';
+      ctx.lineWidth = 1;
+
+      // Linee orizzontali secondarie della griglia (step 2 V -> 10 divisioni totali tra -10V e +10V)
+      for (let v = -10; v <= 10; v += 2) {
+        const yPos = cy - (v / 10) * (gh / 2);
+        linea(gx, yPos, gx + gw, yPos);
+      }
+
+      // Linee verticali griglia temporale (step 10 ms)
+      for (let t = 0; t <= T_MAX_MS; t += 10) {
+        const xPos = gx + (t / T_MAX_MS) * gw;
+        linea(xPos, gy, xPos, gy + gh);
+      }
+
+      // Cornice e Asse X centrale
+      ctx.strokeStyle = '#dedbd4';
+      ctx.strokeRect(gx, gy, gw, gh);
+      ctx.strokeStyle = '#a09d95';
+      ctx.lineWidth = 1.5;
+      linea(gx, cy, gx + gw, cy); // Asse X (Tempo)
+
+      // Etichette asse Y (Tensione, step di 2 V)
+      ctx.fillStyle = '#666';
+      ctx.font = `10px ${FONT}`;
+      ctx.textAlign = 'right';
+      for (let v = -10; v <= 10; v += 2) {
+        const yPos = cy - (v / 10) * (gh / 2);
+        const txt = v > 0 ? `+${v} V` : `${v} V`;
+        ctx.fillText(txt, gx - 6, yPos + 3);
+      }
+
+      // Etichette fisse asse X (Tempo in ms da 0 a 100 ms con passo 20 ms)
+      ctx.textAlign = 'center';
+      for (let t = 0; t <= T_MAX_MS; t += 20) {
+        const xPos = gx + (t / T_MAX_MS) * gw;
+        ctx.fillText(`${t} ms`, xPos, gy + gh + 16);
+      }
+      ctx.font = `bold 11px ${FONT}`;
+      ctx.fillText('Tempo t (ms)', gx + gw / 2, gy + gh + 32);
+
+      // Linea livello V_rms (tratteggiata)
+      const Vrms = Vm / Math.sqrt(2);
+      const yVrms = cy - (Vrms / 10) * (gh / 2);
+      ctx.strokeStyle = BLUE;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      linea(gx, yVrms, gx + gw, yVrms);
+      ctx.setLineDash([]);
+      ctx.fillStyle = BLUE;
+      ctx.font = `10px ${FONT}`;
+      ctx.textAlign = 'left';
+      ctx.fillText(`Vrms = ${Vrms.toFixed(2)} V`, gx + 6, yVrms - 4);
+
+      // Tracciamento effettivo della Sinusoide v(t)
+      const phiRad = (phiDeg * Math.PI) / 180;
+      const omega = 2 * Math.PI * freq;
+
+      ctx.strokeStyle = RED;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+
+      for (let px = 0; px <= gw; px++) {
+        const tSec = (px / gw) * (T_MAX_MS / 1000); // Mappatura sui 100 ms fissi
+        const v = Vm * Math.cos(omega * tSec + phiRad);
+        const py = cy - (v / 10) * (gh / 2); // Scala 10V = altezza massima ammissibile
+
+        if (px === 0) ctx.moveTo(gx + px, py);
+        else ctx.lineTo(gx + px, py);
+      }
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function updateParams() {
+      Vm = parseFloat(rangeVm.value);
+      freq = parseFloat(rangeF.value);
+      phiDeg = parseFloat(rangePhi.value);
+
+      const Vrms = Vm / Math.sqrt(2);
+      const T_ms = (1 / freq) * 1000;
+      const omega = 2 * Math.PI * freq;
+      const phiRad = (phiDeg * Math.PI) / 180;
+
+      lblVm.textContent = `${Vm} V`;
+      lblF.textContent = `${freq} Hz`;
+      lblPhi.textContent = `${phiDeg}°`;
+
+      valVm.textContent = `${Vm.toFixed(2)} V`;
+      valVrms.textContent = `${Vrms.toFixed(2)} V`;
+      valF.textContent = `${freq} Hz`;
+      valT.textContent = `${T_ms.toFixed(1)} ms`;
+      valOmega.textContent = `${omega.toFixed(2)} rad/s`;
+      valPhiRad.textContent = `${phiRad.toFixed(2)} rad`;
+
+      renderFormula();
+      draw();
+    }
+
+    btnReset.addEventListener('click', () => {
+      rangeVm.value = '5';
+      rangeF.value = '50';
+      rangePhi.value = '0';
+      updateParams();
+    });
+
+    rangeVm.addEventListener('input', updateParams);
+    rangeF.addEventListener('input', updateParams);
+    rangePhi.addEventListener('input', updateParams);
+
+    updateParams();
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-sim-sin]').forEach((el) => initSimulatoreSinusoide(el));
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

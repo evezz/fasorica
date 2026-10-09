@@ -1,0 +1,67 @@
+---
+title: Segnali Sinusoidali
+description: Rappresentazione analitica, ampiezza, frequenza, fase, valore efficace (RMS) e introduzione ai fasori nei circuiti AC.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+import SimulatoreSinusoide from '../../../../components/SimulatoreSinusoide.astro';
+
+Nei circuiti elettrici in **corrente alternata (AC)**, i segnali di tensione e corrente variano nel tempo secondo funzioni **sinusoidali**.
+La sinusoide non è altro che la rappresentazione grafica di una funzione matematica periodica, che descrive l'andamento di grandezze elettriche nel tempo.
+
+## Rappresentazione Analitica di una Sinusoide
+
+Una tensione sinusoidale generica $v(t)$ variabile nel tempo è espressa matematicamente come:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.25rem;">
+$$
+\boxed{v(t) = V_m \cdot \cos(\omega t + \phi)}
+$$
+</div>
+
+Dove le grandezze caratteristiche sono:
+
+*   **Ampiezza di picco ($V_m$):** Il valore massimo assunto dal segnale (espresso in Volt $\text{V}$). Da non confondere con l'ampiezza picco-picco $V_{pp}$, che rappresenta la differenza tra il valore massimo e quello minimo del segnale ($V_{pp} = 2 \cdot V_m$).
+*   **Pulsazione o frequenza angolare ($\omega$):** Misura la velocità di variazione dell'angolo nel tempo, espressa in radianti al secondo ($\text{rad/s}$). È legata alla frequenza $f$ dalla relazione:
+    <div style="text-align: center; margin: 1.25rem 0; font-size: 1.5rem;">
+    $$\omega = 2\pi f = \frac{2\pi}{T}$$
+    </div>
+*   **Frequenza ($f$):** Il numero di cicli completi compiuti in un secondo, misurata in Hertz ($\text{Hz} = \text{s}^{-1}$).
+*   **Periodo ($T$):** La durata di un ciclo completo (in secondi $\text{s}$), pari a $T = \frac{1}{f}$.
+*   **Fase iniziale ($\phi$):** L'angolo di sfasamento all'istante $t = 0$, espresso in radianti ($\text{rad}$) o gradi ($\degree$).
+
+
+## Valore Efficace (RMS - Root Mean Square)
+
+In regime alternato, l'ampiezza di picco $V_m$ non descrive direttamente la capacità del segnale di trasferire potenza a un carico. Per questo si introduce un nuovo parametro, detto **valore efficace** ($V_{\text{rms}}$), definito come il valore di tensione continua che dissiperebbe la stessa potenza media su un resistore equivalente.
+
+La definizione matematica generale del valore efficace per un segnale periodico $v(t)$ di periodo $T$ è:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size: 1.15rem;">
+$$
+V_{\text{rms}} = \sqrt{\frac{1}{T} \int_{0}^{T} v^2(t) \, \text{d}t}
+$$
+</div>
+
+> *Root Mean Square* significa proprio "radice quadrata della media dei quadrati", in quanto il valore efficace è calcolato elevando al quadrato la funzione, calcolandone la media (con l'integralesul periodo) e infine estraendo la radice quadrata.
+
+Sostituendo la funzione sinusoidale $v(t) = V_m \cos(\omega t + \phi)$ e risolvendo l'integrale tramite l'identità trigonometrica di duplicazione $\cos^2(x) = \frac{1 + \cos(2x)}{2}$, si ottiene la fondamentale relazione:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.3rem;">
+$$
+\boxed{V_{\text{rms}} = \frac{V_m}{\sqrt{2}} \approx 0{,}707 \cdot V_m}
+$$
+</div>
+
+> La tensione di rete domestica europea di $230\text{ V}$ indica un **valore efficace**. L'ampiezza di picco reale raggiunta nelle nostre prese è pari a $V_m = 230 \cdot \sqrt{2} \approx 325\text{ V}$.
+
+
+## Simulatore Interattivo del Segnale Sinusoidale
+
+Modifica l'ampiezza $V_m$, la frequenza $f$ e la fase iniziale $\phi$ per osservare come si trasforma la forma d'onda $v(t)$ nel dominio del tempo e come varia il suo valore efficace $V_{\text{rms}}$.
+
+<SimulatoreSinusoide />
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

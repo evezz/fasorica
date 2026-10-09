@@ -1,0 +1,570 @@
+---
+// Componente SimulatoreComplessi.astro per FASORICA
+// Uso in MDX: import SimulatoreComplessi from '../../../../components/SimulatoreComplessi.astro';
+// <SimulatoreComplessi />
+import 'katex/dist/katex.min.css';
+---
+
+<div class="sim-cx-container" data-sim-cx>
+  <div class="sim-cx-header">
+    <h3>Simulatore Piano di Gauss e Numeri Complessi</h3>
+    <p>Trascina il punto nel piano complesso oppure varia i parametri per analizzare le forme di rappresentazione di Z.</p>
+  </div>
+
+  <div class="sim-cx-grid">
+    <!-- Area Canvas Principale -->
+    <div class="sim-cx-canvas-card">
+      <div class="sim-cx-badges">
+        <span class="badge badge-re">Re: <strong data-el="val-re">4.00</strong></span>
+        <span class="badge badge-im">Im: <strong data-el="val-im">3.00 j</strong></span>
+        <span class="badge badge-mod">|Z|: <strong data-el="val-mod">5.00</strong></span>
+        <span class="badge badge-phase">&theta;: <strong data-el="val-phase">36.87&deg;</strong></span>
+      </div>
+
+      <canvas
+        class="sim-cx-canvas"
+        data-el="canvas"
+        width="700"
+        height="380"
+        role="img"
+        aria-label="Rappresentazione del numero complesso sul piano di Gauss"
+      ></canvas>
+
+      <div class="sim-cx-formulas" aria-label="Rappresentazioni del numero complesso">
+        <span class="formula" data-el="f-eq"></span>
+      </div>
+
+      <div class="sim-cx-status">
+        <span>Complesso Coniugato Z*: <strong data-el="val-conj" class="fixed-val">4.00 - j 3.00</strong></span>
+        <span>Fase in rad: <strong data-el="val-rad" class="fixed-val">0.64 rad</strong></span>
+      </div>
+    </div>
+
+    <!-- Pannello di Controllo -->
+    <div class="sim-cx-controls-card">
+      <h4>Coordinate Complesse</h4>
+
+      <div class="control-group">
+        <label>
+          <span>Parte Reale Re(Z): <span data-el="lbl-a">4.0</span></span>
+          <input type="range" data-el="range-a" min="-10" max="10" step="0.5" value="4" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Parte Immaginaria Im(Z): <span data-el="lbl-b">3.0</span></span>
+          <input type="range" data-el="range-b" min="-10" max="10" step="0.5" value="3" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Modulo |Z|: <span data-el="lbl-mod">5.0</span></span>
+          <input type="range" data-el="range-mod" min="0.5" max="12" step="0.5" value="5" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Fase &theta;: <span data-el="lbl-phase">37&deg;</span></span>
+          <input type="range" data-el="range-phase" min="-180" max="180" step="5" value="37" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button data-el="btn-reset" class="btn-secondary" type="button">Reset (4+j3)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sim-cx-container {
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+    font-family: inherit;
+    color: var(--fa-text, #252525);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-cx-header h3 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .sim-cx-header p {
+    margin: 0 0 1.25rem 0 !important;
+    font-size: 0.88rem;
+    color: var(--fa-text-muted, #686661);
+  }
+
+  .sim-cx-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .sim-cx-grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+    }
+  }
+
+  .sim-cx-canvas-card {
+    background: #ffffff;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-cx-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .badge {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.61rem;
+    border-radius: 6px;
+    background: #f0efe9;
+    border: 1px solid var(--fa-border, #dedbd4);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge strong {
+    display: inline-block;
+    min-width: 3.8rem;
+    text-align: right;
+  }
+
+  .badge-re strong { color: #d9381e; }
+  .badge-im strong { color: #1e67d9; }
+  .badge-mod strong { color: #2e7d32; }
+  .badge-phase strong { color: #8e24aa; }
+
+  .sim-cx-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 380;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #e2e0d8;
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  .sim-cx-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fixed-val {
+    display: inline-block;
+    min-width: 6.5rem;
+    text-align: right;
+  }
+
+  .sim-cx-formulas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid #e2e0d8;
+    border-radius: 6px;
+    color: #252525;
+  }
+
+  .formula :global(.katex) {
+    font-size: 1.1em;
+  }
+
+  .sim-cx-controls-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+  }
+
+  .sim-cx-controls-card h4 {
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .control-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #45443f;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 0.5rem;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    min-height: 2.5rem;
+    border-radius: 6px;
+    border: none;
+    background: #e0ded7;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .btn-secondary:hover { background: #d0ceb8; }
+
+  .sim-cx-container button:focus-visible,
+  .sim-cx-container input:focus-visible {
+    outline: 2px solid #1e67d9;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import katex from 'katex';
+
+  const W = 700;
+  const H = 380;
+  const RED = '#d9381e';
+  const BLUE = '#1e67d9';
+  const GREEN = '#2e7d32';
+  const PURPLE = '#8e24aa';
+  const FONT = 'system-ui, sans-serif';
+
+  const SCALE = 12; // Limite degli assi [-12, +12]
+
+  function initSimulatoreComplessi(root: HTMLElement) {
+    if (root.dataset.simInit) return;
+    root.dataset.simInit = '1';
+
+    const $ = <T extends HTMLElement = HTMLElement>(name: string) =>
+      root.querySelector<T>(`[data-el="${name}"]`)!;
+
+    const canvas = $<HTMLCanvasElement>('canvas');
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    if (!ctx) return;
+
+    const rangeA = $<HTMLInputElement>('range-a');
+    const rangeB = $<HTMLInputElement>('range-b');
+    const rangeMod = $<HTMLInputElement>('range-mod');
+    const rangePhase = $<HTMLInputElement>('range-phase');
+
+    const lblA = $('lbl-a');
+    const lblB = $('lbl-b');
+    const lblMod = $('lbl-mod');
+    const lblPhase = $('lbl-phase');
+
+    const valRe = $('val-re');
+    const valIm = $('val-im');
+    const valMod = $('val-mod');
+    const valPhase = $('val-phase');
+    const valConj = $('val-conj');
+    const valRad = $('val-rad');
+
+    const btnReset = $('btn-reset');
+    const fEq = $('f-eq');
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    let a = 4;
+    let b = 3;
+
+    let isDragging = false;
+
+    function linea(x1: number, y1: number, x2: number, y2: number) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function renderFormula() {
+      const mod = Math.sqrt(a * a + b * b);
+      const phaseDeg = (Math.atan2(b, a) * 180) / Math.PI;
+
+      const signB = b >= 0 ? '+' : '-';
+      const absB = Math.abs(b).toFixed(2);
+
+      const strFormula = String.raw`Z = ${a.toFixed(2)} ${signB} j\,${absB} = ${mod.toFixed(2)} \angle ${phaseDeg.toFixed(1)}\degree = ${mod.toFixed(2)} \cdot e^{j\,${phaseDeg.toFixed(1)}\degree}`;
+      katex.render(strFormula, fEq, { throwOnError: false });
+    }
+
+    function draw() {
+      const cx = W / 2;
+      const cy = H / 2;
+      const pixPerUnit = (H / 2 - 30) / SCALE;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.save();
+
+      // Griglia
+      ctx.strokeStyle = '#f0efe9';
+      ctx.lineWidth = 1;
+
+      for (let u = -SCALE; u <= SCALE; u += 2) {
+        if (u === 0) continue;
+        const xPos = cx + u * pixPerUnit;
+        const yPos = cy - u * pixPerUnit;
+        linea(xPos, 0, xPos, H);
+        linea(0, yPos, W, yPos);
+      }
+
+      // Assi cartesiani
+      ctx.strokeStyle = '#dedbd4';
+      ctx.lineWidth = 1.5;
+      linea(0, cy, W, cy); // Asse Reale
+      linea(cx, 0, cx, H); // Asse Immaginario
+
+      // Tacche ed etichette assi
+      ctx.fillStyle = '#888';
+      ctx.font = `10px ${FONT}`;
+      ctx.textAlign = 'center';
+
+      for (let u = -SCALE + 2; u <= SCALE - 2; u += 4) {
+        if (u === 0) continue;
+        const xPos = cx + u * pixPerUnit;
+        const yPos = cy - u * pixPerUnit;
+
+        // Tacche Re
+        linea(xPos, cy - 3, xPos, cy + 3);
+        ctx.fillText(`${u}`, xPos, cy + 14);
+
+        // Tacche Im
+        linea(cx - 3, yPos, cx + 3, yPos);
+        ctx.textAlign = 'right';
+        ctx.fillText(`${u}j`, cx - 6, yPos + 3);
+        ctx.textAlign = 'center';
+      }
+
+      // Etichette assi
+      ctx.fillStyle = '#444';
+      ctx.font = `bold 11px ${FONT}`;
+      ctx.fillText('Reale (Re)', W - 40, cy - 8);
+      ctx.fillText('Immaginario (Im)', cx + 55, 18);
+
+      // Coordinate del punto Z
+      const px = cx + a * pixPerUnit;
+      const py = cy - b * pixPerUnit;
+      const mod = Math.sqrt(a * a + b * b);
+      const phaseRad = Math.atan2(b, a);
+
+      // Cerchio del modulo
+      ctx.strokeStyle = '#e2e0d8';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, mod * pixPerUnit, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Proiezioni sugli assi
+      ctx.strokeStyle = '#bbb';
+      linea(px, cy, px, py); // Proiezione Re
+      linea(cx, py, px, py); // Proiezione Im
+      ctx.setLineDash([]);
+
+      // Arco della fase
+      if (mod > 0.5) {
+        ctx.strokeStyle = PURPLE;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 28, 0, -phaseRad, b > 0);
+        ctx.stroke();
+
+        ctx.fillStyle = PURPLE;
+        ctx.font = `11px ${FONT}`;
+        const labelAngle = -phaseRad / 2;
+        ctx.fillText('θ', cx + 38 * Math.cos(labelAngle), cy + 38 * Math.sin(labelAngle));
+      }
+
+      // Vettore Z (Fasore)
+      ctx.strokeStyle = GREEN;
+      ctx.lineWidth = 2.5;
+      linea(cx, cy, px, py);
+
+      // Punta della freccia
+      const headLen = 10;
+      const angle = Math.atan2(py - cy, px - cx);
+      ctx.fillStyle = GREEN;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px - headLen * Math.cos(angle - Math.PI / 6), py - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(px - headLen * Math.cos(angle + Math.PI / 6), py - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+
+      // Punto Z trascinabile
+      ctx.fillStyle = RED;
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Etichetta del punto Z
+      ctx.fillStyle = '#111';
+      ctx.font = `bold 12px ${FONT}`;
+      ctx.textAlign = 'left';
+      ctx.fillText(' Z', px + 8, py - 6);
+
+      ctx.restore();
+    }
+
+    function updateFromCartesian() {
+      const mod = Math.sqrt(a * a + b * b);
+      const phaseRad = Math.atan2(b, a);
+      const phaseDeg = (phaseRad * 180) / Math.PI;
+
+      rangeA.value = a.toString();
+      rangeB.value = b.toString();
+      rangeMod.value = mod.toFixed(2);
+      rangePhase.value = Math.round(phaseDeg).toString();
+
+      lblA.textContent = a.toFixed(1);
+      lblB.textContent = b.toFixed(1);
+      lblMod.textContent = mod.toFixed(1);
+      lblPhase.textContent = `${Math.round(phaseDeg)}°`;
+
+      valRe.textContent = a.toFixed(2);
+      valIm.textContent = `${b >= 0 ? '+' : ''}${b.toFixed(2)} j`;
+      valMod.textContent = mod.toFixed(2);
+      valPhase.textContent = `${phaseDeg.toFixed(1)}°`;
+
+      const conjSign = -b >= 0 ? '+' : '-';
+      valConj.textContent = `${a.toFixed(2)} ${conjSign} j ${Math.abs(b).toFixed(2)}`;
+      valRad.textContent = `${phaseRad.toFixed(2)} rad`;
+
+      renderFormula();
+      draw();
+    }
+
+    function updateFromPolar() {
+      const mod = parseFloat(rangeMod.value);
+      const phaseDeg = parseFloat(rangePhase.value);
+      const phaseRad = (phaseDeg * Math.PI) / 180;
+
+      a = mod * Math.cos(phaseRad);
+      b = mod * Math.sin(phaseRad);
+
+      updateFromCartesian();
+    }
+
+    // Gestione posizionamento esatto e senza offset durante il Drag
+    function handlePointer(e: PointerEvent) {
+      const rect = canvas.getBoundingClientRect();
+      
+      // Mappatura esatta tra coordinate CSS e coordinate logiche W x H (700x380)
+      const scaleX = W / rect.width;
+      const scaleY = H / rect.height;
+
+      const clickX = (e.clientX - rect.left) * scaleX;
+      const clickY = (e.clientY - rect.top) * scaleY;
+
+      const cx = W / 2;
+      const cy = H / 2;
+      const pixPerUnit = (H / 2 - 30) / SCALE;
+
+      a = (clickX - cx) / pixPerUnit;
+      b = -(clickY - cy) / pixPerUnit;
+
+      // Clamping nei limiti degli assi
+      a = Math.max(-SCALE, Math.min(SCALE, a));
+      b = Math.max(-SCALE, Math.min(SCALE, b));
+
+      updateFromCartesian();
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      canvas.setPointerCapture(e.pointerId);
+      handlePointer(e);
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (isDragging) handlePointer(e);
+    });
+
+    canvas.addEventListener('pointerup', (e) => {
+      isDragging = false;
+      canvas.releasePointerCapture(e.pointerId);
+    });
+
+    // Eventi Sliders
+    rangeA.addEventListener('input', () => {
+      a = parseFloat(rangeA.value);
+      updateFromCartesian();
+    });
+
+    rangeB.addEventListener('input', () => {
+      b = parseFloat(rangeB.value);
+      updateFromCartesian();
+    });
+
+    rangeMod.addEventListener('input', updateFromPolar);
+    rangePhase.addEventListener('input', updateFromPolar);
+
+    btnReset.addEventListener('click', () => {
+      a = 4;
+      b = 3;
+      updateFromCartesian();
+    });
+
+    updateFromCartesian();
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-sim-cx]').forEach((el) => initSimulatoreComplessi(el));
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

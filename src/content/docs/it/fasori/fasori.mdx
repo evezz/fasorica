@@ -1,0 +1,102 @@
+---
+title: I fasori e la trasformata fasoriale
+description: Dalle sinusoidi al dominio della frequenza, definizione di fasore, diagramma fasoriale interattivo e legge di Ohm in regime sinusoidale per R, L e C.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+import SimulatoreFasori from '../../../../components/SimulatoreFasori.astro';
+
+L'analisi dei circuiti in regime alternato effettuata direttamente nel dominio del tempo richiede la risoluzione di equazioni differenziali, in quanto si utilizzano i componenti reattivi (condensatore e induttore), i quali presentano una derivata nella loro equazione caratteristica.
+L'introduzione dei **fasori** (ideata da Charles Proteus Steinmetz) permette di trasformare le equazioni differenziali temporali in **equazioni algebriche**, semplificando drasticamente l'analisi dei circuiti lineari.
+
+## Definizione di fasore
+
+Consideriamo una tensione sinusoidale generica nel dominio del tempo $v(t)$:
+
+$$
+v(t) = V_m \cos(\omega t + \phi)
+$$
+
+Ora, questa formula matematica è esaustiva, in quanto ci dà tutte le informazioni necessarie per descrivere il segnale: l'**ampiezza di picco** $V_m$, la **pulsazione** $\omega$ e la **fase iniziale** $\phi$. 
+Tuttavia, la forma dei segnali all'interno del circuito sarà sempre sinusoidale. Quindi possiamo snellire questa formula dimenticandoci della funzione coseno. 
+Inoltre, la frequenza non cambia mai all'interno del circuito (se è lineare, ma i circuiti di base lo sono), quindi per descrivere questo segnale possiamo concentrarci solo su due parametri: l'**ampiezza di picco** $V_m$ e la **fase iniziale** $\phi$.
+Questa è l'idea alla base dei fasori: per rappresentare un segnale sinusoidale ci portiamo dietro solo $V_m$ e $\phi$.
+Sfruttando la formula di Eulero ($e^{j x} = \cos x + j \sin x$), possiamo esprimere la sinusoide come la parte reale di un esponenziale complesso:
+
+$$
+v(t) = \text{Re}\left\{ V_m e^{j(\omega t + \phi)} \right\} = \text{Re}\left\{ \underbrace{V_m e^{j\phi}}_{\text{Fasore } \mathbf{V}} \cdot e^{j\omega t} \right\}
+$$
+
+Isolando la parte indipendente dal tempo $t$ (perchè appunto la frequenza non cambia e non vogliamo portarcela dietro), definiamo il **fasore della tensione $\mathbf{V}$**:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.3rem;">
+$$
+\boxed{\mathbf{V} = V_m e^{j\phi} = V_m \angle \phi}
+$$
+</div>
+
+Un fasore è un numero complesso espresso in **[forma polare](/it/fasori/numeri-complessi#2-forma-polare)** che racchiude in sé l'**ampiezza di picco** $V_m$ e la **fase iniziale** $\phi$ del segnale.
+
+## Simulatore del diagramma fasoriale
+<SimulatoreFasori />
+
+## Relazioni costitutive degli elementi circuitali
+
+Nel dominio della frequenza (o dei fasori), l'operazione di derivazione temporale $\frac{\text{d}}{\text{d}t}$ corrisponde al semplice prodotto algebrico per $j\omega$:
+
+$$
+\frac{\text{d}}{\text{d}t} \;\longrightarrow\; j\omega
+$$
+
+Grazie a questa proprietà, le relazioni Volt-Ampere di resistori, induttori e condensatori si trasformano in relazioni algebriche lineari del tipo **$\mathbf{V} = \mathbf{Z} \cdot \mathbf{I}$** (Legge di Ohm generalizzata):
+
+---
+
+### 1. Resistore ($R$)
+Nel resistore la tensione e la corrente sono legate dalla legge $v(t) = R \cdot i(t)$. Passando ai fasori:
+
+$$
+\mathbf{V} = R \cdot \mathbf{I}
+$$
+
+*   **Sfasamento:** Tensione e corrente sono perfettamente **in fase** ($\Delta\phi = 0^\circ$).
+
+---
+
+### 2. Induttore ($L$)
+Nell'induttore la tensione è proporzionale alla derivata della corrente $v(t) = L \frac{\text{d}i(t)}{\text{d}t}$. Passando ai fasori:
+
+$$
+\mathbf{V} = j\omega L \cdot \mathbf{I}
+$$
+
+Poiché $j = 1 e^{j 90^\circ}$, la tensione è sfasata di $+90^\circ$ rispetto alla corrente.
+
+*   **Sfasamento:** La tensione è **in anticipo di $90^\circ$** sulla corrente (oppure la corrente è in ritardo sulla tensione).
+
+---
+
+### 3. Condensatore ($C$)
+Nel condensatore la corrente è la derivata della tensione $i(t) = C \frac{\text{d}v(t)}{\text{d}t}$. Passando ai fasori:
+
+$$
+\mathbf{I} = j\omega C \cdot \mathbf{V} \implies \mathbf{V} = \frac{1}{j\omega C} \cdot \mathbf{I} = -j \frac{1}{\omega C} \cdot \mathbf{I}
+$$
+
+Poiché $-j = 1 e^{-j 90^\circ}$, la tensione è sfasata di $-90^\circ$ rispetto alla corrente.
+
+*   **Sfasamento:** La tensione è **in ritardo di $90^\circ$** sulla corrente (oppure la corrente è in anticipo sulla tensione).
+
+---
+
+## Sommario delle relazioni tra i fasori
+
+| Elemento | Relazione fasoriale | Impedenza $\mathbf{Z}$ | Sfasamento tensione-corrente |
+| :--- | :--- | :--- | :--- |
+| **Resistore ($R$)** | $\mathbf{V} = R \mathbf{I}$ | $R$ | $0^\circ$ (in fase) |
+| **Induttore ($L$)** | $\mathbf{V} = j\omega L \mathbf{I}$ | $j\omega L$ | $+90^\circ$ (tensione in anticipo) |
+| **Condensatore ($C$)** | $\mathbf{V} = \frac{1}{j\omega C} \mathbf{I}$ | $-j \frac{1}{\omega C}$ | $-90^\circ$ (tensione in ritardo) |
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

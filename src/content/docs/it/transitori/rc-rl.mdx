@@ -15,9 +15,49 @@ Nei circuiti contenenti un solo elemento reattivo (un condensatore o un induttor
 
 Un circuito RC del primo ordine è composto da una rete di resistori (semplificabile tramite [Thévenin](/it/fondamenti/thevenin-norton/)) e un condensatore di capacità $C$.
 
+### Carica del condensatore (risposta allo scalino)
+
+Se il condensatore è inizialmente **scarico** $v_C(0) = 0$ e all'istante $t = 0$ viene collegato a un generatore di tensione continua $V_g$ tramite la resistenza $R$:
+
+Applicando la Legge di Kirchhoff delle Tensioni (KVL) alla maglia:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+v_R(t) + v_C(t) = V_g \quad \rightarrow \quad R \cdot i(t) + v_C(t) = V_g
+$$
+</div>
+
+Sostituendo l'equazione caratteristica del condensatore $i(t) = C \cdot \frac{\text{d}v_C(t)}{\text{d}t}$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+R C \cdot \frac{\text{d}v_C(t)}{\text{d}t} + v_C(t) = V_g
+$$
+</div>
+
+Risolvendo l'equazione differenziale non omogenea con la condizione iniziale $v_C(0) = 0$, otteniamo la legge dell'evoluzione temporale della tensione:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{v_C(t) = V_g \cdot \left(1 - e^{-\frac{t}{\tau}}\right)} \quad \text{con} \quad \boxed{\tau = R C}
+$$
+</div>
+
+La **costante di tempo** $\tau$ (espressa in secondi $\text{s}$) definisce la velocità con cui il circuito risponde:
+- Per $t = \tau$, la tensione sale al $63{,}2\%$ del valore finale ($1 - e^{-1} \approx 0{,}632$).
+- Per $t \ge 5\tau$, il transitorio si considera convenzionalmente **esaurito** ($1 - e^{-5} \approx 0{,}9933$, ovvero più del $99\%$ del valore finale).
+
+La corrente di carica $i(t)$ parte da un valore massimo pari a $\frac{V_g}{R}$ all'istante $t = 0^+$ e decresce esponenzialmente verso zero:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+i(t) = C \cdot \frac{\text{d}v_C(t)}{\text{d}t} = \frac{V_g}{R} \cdot e^{-\frac{t}{\tau}}
+$$
+</div>
+
 ### Scarica del condensatore (risposta libera)
 
-Consideriamo un condensatore inizialmente carico alla tensione $V_0$. All'istante $t = 0$ viene collegato a una resistenza $R$.
+Consideriamo un condensatore inizialmente **carico** alla tensione $V_0$. All'istante $t = 0$ viene collegato a una resistenza $R$ scollegando il generatore.
 
 Applicando la Legge di Kirchhoff delle Tensioni (KVL) alla maglia:
 
@@ -35,82 +75,82 @@ R C \cdot \frac{\text{d}v_C(t)}{\text{d}t} + v_C(t) = 0
 $$
 </div>
 
-Risolvendo l'equazione differenziale a variabili separabili con la condizione iniziale $v_C(0) = V_0$, otteniamo la legge dell'evoluzione temporale della tensione:
+Risolvendo l'equazione differenziale omogenea a variabili separabili con la condizione iniziale $v_C(0) = V_0$, otteniamo:
 
 <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
 $$
-\boxed{v_C(t) = V_0 \cdot e^{-\frac{t}{\tau}}} \quad \text{con} \quad \boxed{\tau = R C}
+\boxed{v_C(t) = V_0 \cdot e^{-\frac{t}{\tau}}}
 $$
 </div>
 
-La **costante di tempo** $\tau$ (espressa in secondi $\text{s}$) definisce la velocità con cui il circuito risponde:
+Durante la scarica:
 - Per $t = \tau$, la tensione scende al $36{,}8\%$ del valore iniziale ($e^{-1} \approx 0{,}368$).
 - Per $t \ge 5\tau$, il transitorio si considera convenzionalmente **esaurito** ($e^{-5} \approx 0{,}0067$, ovvero meno dell'$1\%$ del valore iniziale).
 
-### Carica del condensatore (risposta scalino)
-
-Se il condensatore è inizialmente scarico $v_C(0) = 0$ e all'istante $t = 0$ viene collegato a un generatore di tensione continua $V_g$ tramite la resistenza $R$:
-
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-$$
-\boxed{v_C(t) = V_g \cdot \left(1 - e^{-\frac{t}{\tau}}\right)}
-$$
-</div>
-
-La corrente di carica $i(t)$ parte da un valore massimo pari a $\frac{V_g}{R}$ all'istante $t = 0^+$ e decresce esponenzialmente verso zero:
-
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
-$$
-i(t) = \frac{V_g}{R} \cdot e^{-\frac{t}{\tau}}
-$$
-</div>
-
 <SimulatoreRC />
 
-> **Nota sulla scala temporale**: Per consentire una visualizzazione sempre chiara dell'intero fenomeno, l'animazione dura sempre 6 secondi reali, indipendentemente dai valori di $R$ e $C$ scelti.
+> **Nota sulla scala temporale:** Per consentire una visualizzazione sempre chiara dell'intero fenomeno, l'animazione dura sempre 6 secondi reali, indipendentemente dai valori di $R$ e $C$ scelti.
 Il fattore di scala temporale riportato in basso al centro (es. $\times 0{,}39$ o $\times 8{,}3$) indica di quante volte la simulazione è stata rallentata o accelerata rispetto al tempo reale per mostrare esattamente la finestra di $5\tau$.
 
 ## Il circuito RL
 
-Un circuito RL del primo ordine è composto da una rete di resistori e un induttore di induttanza $L$.
+Un circuito RL del primo ordine è composto da una rete di resistori e un induttore di induttanza $L$. Le formule sono praticamente identiche al circuito RC, ma con le grandezze elettriche invertite: la corrente assume il ruolo della tensione e viceversa (e cambia la formula di $\tau$).
 
-### Estinzione della corrente (risposta libera)
+### Eccitazione dell'induttore (risposta allo scalino)
 
-Consideriamo un induttore attraversato inizialmente da una corrente $I_0$. All'istante $t = 0$ viene cortocircuitato su una resistenza $R$.
+Se l'induttore è inizialmente **scarico** $i(0) = 0$ e all'istante $t = 0$ viene collegato a un generatore di tensione continua $V_g$ tramite la resistenza $R$:
 
-Applicando la KVL alla maglia e sostituendo l'equazione caratteristica dell'induttore $v_L(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t}$:
+Applicando la KVL alla maglia:
 
 <div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
-L \cdot \frac{\text{d}i(t)}{\text{d}t} + R \cdot i(t) = 0
+v_R(t) + v_L(t) = V_g \quad \rightarrow \quad R \cdot i(t) + L \cdot \frac{\text{d}i(t)}{\text{d}t} = V_g
 $$
 </div>
 
-La soluzione dell'equazione con condizione iniziale $i(0) = I_0$ è:
+Risolvendo l'equazione differenziale non omogenea con condizione iniziale $i(0) = 0$, l'evoluzione temporale della corrente risulta:
 
 <div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
 $$
-\boxed{i(t) = I_0 \cdot e^{-\frac{t}{\tau}}} \quad \text{con} \quad \tau = \frac{L}{R}
+\boxed{i(t) = \frac{V_g}{R} \cdot \left(1 - e^{-\frac{t}{\tau}}\right)} \quad \text{con} \quad \boxed{\tau = \frac{L}{R}}
 $$
 </div>
 
 > Si noti che per il circuito RL la costante di tempo è **$\tau = \frac{L}{R}$**. All'aumentare dell'induttanza $L$, il circuito oppone maggiore "inerzia" alle variazioni di corrente, allungando la durata del transitorio.
 
-### Eccitazione dell'induttore (risposta scalino)
-
-Se l'induttore è inizialmente scarico $i(0) = 0$ e viene collegato a un generatore di tensione $V_g$ tramite la resistenza $R$, l'evoluzione della corrente è:
-
-<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
-$$
-\boxed{i(t) = \frac{V_g}{R} \cdot \left(1 - e^{-\frac{t}{\tau}}\right)}
-$$
-</div>
-
-La tensione ai capi dell'induttore $v_L(t)$ parte dal valore picco $V_g$ all'istante $t = 0^+$ (quando l'induttore si comporta da circuito aperto) e tende a zero per $t \to \infty$ (quando si comporta da corto circuito):
+La tensione ai capi dell'induttore $v_L(t)$ parte dal valore di picco $V_g$ all'istante $t = 0^+$ (quando l'induttore si comporta come un circuito aperto) e decresce esponenzialmente verso zero per $t \to \infty$ (quando si comporta come un cortocircuito):
 
 <div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
 $$
-v_L(t) = V_g \cdot e^{-\frac{t}{\tau}}
+v_L(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t} = V_g \cdot e^{-\frac{t}{\tau}}
+$$
+</div>
+
+### Estinzione della corrente (risposta libera)
+
+Consideriamo un induttore attraversato inizialmente da una corrente di regime $I_0 = \frac{V_g}{R}$. All'istante $t = 0$ il circuito viene cortocircuitato su una resistenza $R$ scollegando il generatore.
+
+Applicando la KVL alla maglia e sostituendo l'equazione caratteristica dell'induttore $v_L(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t}$:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+R \cdot i(t) + L \cdot \frac{\text{d}i(t)}{\text{d}t} = 0
+$$
+</div>
+
+Risolvendo l'equazione differenziale omogenea a variabili separabili con la condizione iniziale $i(0) = I_0$, otteniamo la legge di estinzione della corrente:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.25rem">
+$$
+\boxed{i(t) = I_0 \cdot e^{-\frac{t}{\tau}}}
+$$
+</div>
+
+Durante l'estinzione, la tensione indotta ai capi dell'induttore inverta la propria polarità per opporsi alla diminuzione della corrente:
+
+<div style="text-align: center; margin: 1.25rem 0; font-size:1.15rem">
+$$
+v_L(t) = L \cdot \frac{\text{d}i(t)}{\text{d}t} = -R \cdot I_0 \cdot e^{-\frac{t}{\tau}} = -V_g \cdot e^{-\frac{t}{\tau}}
 $$
 </div>
 

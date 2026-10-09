@@ -1,0 +1,662 @@
+---
+// Componente SimulatoreFasori.astro per FASORICA
+// Uso in MDX: import SimulatoreFasori from '../../../../components/SimulatoreFasori.astro';
+// <SimulatoreFasori />
+import 'katex/dist/katex.min.css';
+---
+
+<div class="sim-fas-container" data-sim-fas>
+  <div class="sim-fas-header">
+    <h3>Simulatore del diagramma fasoriale</h3>
+    <p>Trascina la freccia del fasore o avvia l'animazione per osservare come il vettore rotante genera la sinusoide nel tempo.</p>
+  </div>
+
+  <div class="sim-fas-grid">
+    <!-- Area Canvas Principale -->
+    <div class="sim-fas-canvas-card">
+      <div class="sim-fas-badges">
+        <span class="badge badge-vm">V<sub>m</sub>: <strong data-el="val-vm">5.00 V</strong></span>
+        <span class="badge badge-vrms">V<sub>rms</sub>: <strong data-el="val-vrms">3.54 V</strong></span>
+        <span class="badge badge-phase">&phi;: <strong data-el="val-phase">30&deg;</strong></span>
+        <span class="badge badge-freq">f: <strong data-el="val-freq">50 Hz</strong></span>
+      </div>
+
+      <canvas
+        class="sim-fas-canvas"
+        data-el="canvas"
+        width="700"
+        height="380"
+        role="img"
+        aria-label="Diagramma fasoriale e sinusoide proiettata nel tempo"
+      ></canvas>
+
+      <div class="sim-fas-formulas" aria-label="Rappresentazione del fasore">
+        <span class="formula" data-el="f-eq"></span>
+      </div>
+
+      <div class="sim-fas-status">
+        <span>Stato: <strong data-el="stato" class="fixed-val">In attesa</strong></span>
+        <span>Tempo t: <strong data-el="tempo" class="fixed-val">0.0 ms</strong></span>
+      </div>
+    </div>
+
+    <!-- Pannello di Controllo -->
+    <div class="sim-fas-controls-card">
+      <h4>Parametri fasore</h4>
+
+      <div class="control-group">
+        <label>
+          <span>Ampiezza V<sub>m</sub>: <span data-el="lbl-vm">5 V</span></span>
+          <input type="range" data-el="range-vm" min="1" max="10" step="0.5" value="5" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Fase iniziale &phi;: <span data-el="lbl-phi">30&deg;</span></span>
+          <input type="range" data-el="range-phi" min="-180" max="180" step="1" value="30" />
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <span>Frequenza f: <span data-el="lbl-freq">50 Hz</span></span>
+          <input type="range" data-el="range-freq" min="10" max="100" step="5" value="50" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button data-el="btn-run" class="btn-primary" type="button">Avvia rotazione</button>
+        <button data-el="btn-reset" class="btn-secondary" type="button">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sim-fas-container {
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+    font-family: inherit;
+    color: var(--fa-text, #252525);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-fas-header h3 {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .sim-fas-header p {
+    margin: 0 0 1.25rem 0 !important;
+    font-size: 0.88rem;
+    color: var(--fa-text-muted, #686661);
+  }
+
+  .sim-fas-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .sim-fas-grid {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+    }
+  }
+
+  .sim-fas-canvas-card {
+    background: #ffffff;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sim-fas-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .badge {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.61rem;
+    border-radius: 6px;
+    background: #f0efe9;
+    border: 1px solid var(--fa-border, #dedbd4);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge strong {
+    display: inline-block;
+    min-width: 3.8rem;
+    text-align: right;
+  }
+
+  .badge-vm strong { color: #d9381e; }
+  .badge-vrms strong { color: #1e67d9; }
+  .badge-phase strong { color: #8e24aa; }
+  .badge-freq strong { color: #2e7d32; }
+
+  .sim-fas-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 380;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #e2e0d8;
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  .sim-fas-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fixed-val {
+    display: inline-block;
+    min-width: 5.5rem;
+    text-align: right;
+  }
+
+  .sim-fas-formulas {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--fa-surface, #f8f7f3);
+    border: 1px solid #e2e0d8;
+    border-radius: 6px;
+    color: #252525;
+    overflow-x: auto;
+  }
+
+  .formula {
+    margin: 0 auto;
+  }
+
+  .formula :global(.katex) {
+    font-size: 1.1em;
+  }
+
+  .sim-fas-controls-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--fa-border, #dedbd4);
+    border-radius: 8px;
+  }
+
+  .sim-fas-controls-card h4 {
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .control-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #45443f;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0 0.5rem;
+    margin: 0;
+    border-radius: 6px;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn-primary { background: #333; color: #fff; }
+  .btn-primary:hover { background: #111; }
+
+  .btn-secondary { background: #e0ded7; color: #333; }
+  .btn-secondary:hover { background: #d0ceb8; }
+
+  .sim-fas-container button:focus-visible,
+  .sim-fas-container input:focus-visible {
+    outline: 2px solid #1e67d9;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import katex from 'katex';
+
+  // Convenzione del fasore:
+  //   true  -> v(t) = Vm·cos(ωt + φ)   (parte reale di Vm∠φ · e^{jωt})
+  //   false -> v(t) = Vm·sin(ωt + φ)   (parte immaginaria)
+  const USA_COSENO = true;
+
+  const W = 700;
+  const H = 380;
+  const RED = '#d9381e';
+  const BLUE = '#1e67d9';
+  const PURPLE = '#8e24aa';
+  const FONT = 'system-ui, sans-serif';
+
+  // Geometria del canvas
+  const CX = 150; // centro del piano complesso
+  const CY = H / 2; // asse reale e anche 0 V del grafico
+  const PX_PER_V = 14; // stessa scala per piano e grafico: ±10 V = ±140 px
+  const SCALE_V = 10;
+  const R_ARCO = 30; // raggio dell'arco che indica φ
+  const GX = 335; // origine del grafico nel tempo
+  const GW = 335; // larghezza del grafico
+  const PLOT_TOP = CY - SCALE_V * PX_PER_V - 12;
+  const PLOT_H = 2 * (SCALE_V * PX_PER_V + 12);
+  const LIMITE_PIANO_X = GX - 15; // il click oltre questo x non afferra il fasore
+
+  const T_MAX_MS = 40; // finestra temporale del grafico (0 - 40 ms)
+  const T_MAX_S = T_MAX_MS / 1000;
+  // Secondi simulati per ogni secondo reale: l'animazione è ~67 volte più lenta del vero
+  const SIM_SPEED = 0.015;
+
+  function normDeg(d: number) {
+    let x = ((((d + 180) % 360) + 360) % 360) - 180;
+    if (x === -180) x = 180;
+    return x || 0;
+  }
+
+  function initSimulatoreFasori(root: HTMLElement) {
+    if (root.dataset.simInit) return;
+    root.dataset.simInit = '1';
+
+    const $ = <T extends HTMLElement = HTMLElement>(name: string) =>
+      root.querySelector<T>(`[data-el="${name}"]`)!;
+
+    const canvas = $<HTMLCanvasElement>('canvas');
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    if (!ctx) return;
+
+    const rangeVm = $<HTMLInputElement>('range-vm');
+    const rangePhi = $<HTMLInputElement>('range-phi');
+    const rangeFreq = $<HTMLInputElement>('range-freq');
+
+    const lblVm = $('lbl-vm');
+    const lblPhi = $('lbl-phi');
+    const lblFreq = $('lbl-freq');
+
+    const valVm = $('val-vm');
+    const valVrms = $('val-vrms');
+    const valPhase = $('val-phase');
+    const valFreq = $('val-freq');
+
+    const txtStato = $('stato');
+    const txtTempo = $('tempo');
+
+    const btnRun = $('btn-run');
+    const btnReset = $('btn-reset');
+    const fEq = $('f-eq');
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    let Vm = 5;
+    let phiDeg = 30;
+    let freq = 50;
+
+    let running = false;
+    let animId = 0;
+    let lastTs = 0;
+    let timeAcc = 0;
+    let isDragging = false;
+
+    function linea(x1: number, y1: number, x2: number, y2: number) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function renderFormula() {
+      const fn = USA_COSENO ? '\\cos' : '\\sin';
+      const fase = phiDeg === 0 ? '' : `${phiDeg > 0 ? '+' : '-'} ${Math.abs(phiDeg)}^{\\circ}`;
+      const tex = String.raw`\mathbf{V} = ${Vm.toFixed(1)}\,\angle\,${phiDeg}^{\circ}\ \text{V} \quad\Longleftrightarrow\quad v(t) = ${Vm.toFixed(1)}\,${fn}\!\left(2\pi \cdot ${freq}\,t ${fase}\right)\ \text{V}`;
+      katex.render(tex, fEq, { throwOnError: false });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.save();
+
+      const omega = 2 * Math.PI * freq;
+      const phiRad = (phiDeg * Math.PI) / 180;
+      const theta = phiRad + omega * timeAcc;
+      const valore = (ang: number) => Vm * (USA_COSENO ? Math.cos(ang) : Math.sin(ang));
+
+      const R = Vm * PX_PER_V;
+      const px = CX + R * Math.cos(theta);
+      const py = CY - R * Math.sin(theta);
+      const vNow = valore(theta);
+      const a = vNow * PX_PER_V;
+      const xDot = GX + (timeAcc / T_MAX_S) * GW;
+      const yDot = CY - a;
+
+      // 1. PIANO COMPLESSO (SINISTRA)
+      ctx.fillStyle = '#45443f';
+      ctx.font = `600 12px ${FONT}`;
+      ctx.textAlign = 'left';
+      ctx.fillText('Piano complesso', 12, 22);
+      ctx.fillText('Dominio del tempo: v(t)', GX, 22);
+
+      ctx.strokeStyle = '#e2e0d8';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#cfccc3';
+      ctx.lineWidth = 1.5;
+      linea(5, CY, 295, CY);
+      linea(CX, 36, CX, H - 36);
+
+      ctx.fillStyle = '#666';
+      ctx.font = `bold 12px ${FONT}`;
+      ctx.textAlign = 'right';
+      ctx.fillText('Re', 295, CY - 7);
+      ctx.textAlign = 'left';
+      ctx.fillText('Im', CX + 8, 46);
+
+      if (phiDeg !== 0) {
+        ctx.strokeStyle = PURPLE;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 4]);
+        linea(CX, CY, CX + R * Math.cos(phiRad), CY - R * Math.sin(phiRad));
+        ctx.setLineDash([]);
+
+        ctx.beginPath();
+        ctx.arc(CX, CY, R_ARCO, 0, -phiRad, phiRad > 0);
+        ctx.stroke();
+
+        const mid = phiRad / 2;
+        ctx.fillStyle = PURPLE;
+        ctx.font = `italic 600 13px ${FONT}`;
+        ctx.textAlign = 'center';
+        ctx.fillText('\u03c6', CX + (R_ARCO + 12) * Math.cos(mid), CY - (R_ARCO + 12) * Math.sin(mid) + 4);
+      }
+
+      ctx.strokeStyle = 'rgba(217, 56, 30, 0.55)';
+      ctx.fillStyle = 'rgba(217, 56, 30, 0.8)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([4, 4]);
+      if (USA_COSENO) {
+        linea(px, py, px, CY);
+        if (Math.abs(a) > 0.5) {
+          ctx.beginPath();
+          if (a > 0) ctx.arc(CX, CY, a, 0, -Math.PI / 2, true);
+          else ctx.arc(CX, CY, -a, Math.PI, Math.PI / 2, true);
+          ctx.stroke();
+        }
+        linea(CX, yDot, xDot, yDot);
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(px, CY, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(CX, yDot, 3, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        linea(px, py, xDot, yDot);
+        ctx.setLineDash([]);
+      }
+
+      ctx.strokeStyle = RED;
+      ctx.lineWidth = 2.5;
+      linea(CX, CY, px, py);
+
+      const headLen = 9;
+      const angle = Math.atan2(py - CY, px - CX);
+      ctx.fillStyle = RED;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px - headLen * Math.cos(angle - Math.PI / 6), py - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(px - headLen * Math.cos(angle + Math.PI / 6), py - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. DOMINIO DEL TEMPO (DESTRA)
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(GX, PLOT_TOP, GW, PLOT_H);
+      ctx.strokeStyle = '#f0efe9';
+      ctx.lineWidth = 1;
+
+      for (let v = -SCALE_V; v <= SCALE_V; v += 2) {
+        const yPos = CY - v * PX_PER_V;
+        linea(GX, yPos, GX + GW, yPos);
+      }
+      for (let t = 0; t <= T_MAX_MS; t += 10) {
+        const xPos = GX + (t / T_MAX_MS) * GW;
+        linea(xPos, PLOT_TOP, xPos, PLOT_TOP + PLOT_H);
+      }
+
+      ctx.strokeStyle = '#dedbd4';
+      ctx.strokeRect(GX, PLOT_TOP, GW, PLOT_H);
+      ctx.strokeStyle = '#a09d95';
+      ctx.lineWidth = 1.5;
+      linea(GX, CY, GX + GW, CY);
+
+      ctx.fillStyle = '#666';
+      ctx.font = `12px ${FONT}`;
+      ctx.textAlign = 'right';
+      ctx.fillText('+10 V', GX - 5, CY - SCALE_V * PX_PER_V + 4);
+      ctx.fillText('0 V', GX - 5, CY + 4);
+      ctx.fillText('\u221210 V', GX - 5, CY + SCALE_V * PX_PER_V + 4);
+
+      ctx.textAlign = 'center';
+      for (let t = 0; t <= T_MAX_MS; t += 10) {
+        const xPos = GX + (t / T_MAX_MS) * GW;
+        ctx.fillText(`${t} ms`, xPos, PLOT_TOP + PLOT_H + 16);
+      }
+
+      ctx.strokeStyle = BLUE;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let pX = 0; pX <= GW; pX++) {
+        const tSec = (pX / GW) * T_MAX_S;
+        const yVal = CY - valore(omega * tSec + phiRad) * PX_PER_V;
+        if (pX === 0) ctx.moveTo(GX + pX, yVal);
+        else ctx.lineTo(GX + pX, yVal);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = RED;
+      ctx.beginPath();
+      ctx.arc(xDot, yDot, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function leggiParametri() {
+      Vm = parseFloat(rangeVm.value);
+      phiDeg = parseFloat(rangePhi.value);
+      freq = parseFloat(rangeFreq.value);
+    }
+
+    function aggiorna() {
+      const Vrms = Vm / Math.SQRT2;
+
+      lblVm.textContent = `${Vm} V`;
+      lblPhi.textContent = `${phiDeg}°`;
+      lblFreq.textContent = `${freq} Hz`;
+
+      valVm.textContent = `${Vm.toFixed(2)} V`;
+      valVrms.textContent = `${Vrms.toFixed(2)} V`;
+      valPhase.textContent = `${phiDeg}°`;
+      valFreq.textContent = `${freq} Hz`;
+
+      renderFormula();
+      draw();
+    }
+
+    function resetSim() {
+      running = false;
+      cancelAnimationFrame(animId);
+      btnRun.textContent = 'Avvia rotazione';
+      txtStato.textContent = 'In attesa';
+      timeAcc = 0;
+      txtTempo.textContent = '0.0 ms';
+      leggiParametri();
+      aggiorna();
+    }
+
+    function loop(ts: number) {
+      if (!running) return;
+      if (!root.isConnected) {
+        running = false;
+        return;
+      }
+
+      const dt = Math.min((ts - lastTs) / 1000, 0.05);
+      lastTs = ts;
+
+      timeAcc = (timeAcc + dt * SIM_SPEED) % T_MAX_S;
+      txtTempo.textContent = `${(timeAcc * 1000).toFixed(1)} ms`;
+
+      draw();
+      animId = requestAnimationFrame(loop);
+    }
+
+    function coordinate(e: PointerEvent) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (W / rect.width),
+        y: (e.clientY - rect.top) * (H / rect.height),
+      };
+    }
+
+    function trascina(e: PointerEvent) {
+      const { x, y } = coordinate(e);
+      const angoloPuntatore = (Math.atan2(CY - y, x - CX) * 180) / Math.PI;
+      const rotazione = 360 * freq * timeAcc;
+      phiDeg = normDeg(Math.round(angoloPuntatore - rotazione));
+      rangePhi.value = String(phiDeg);
+      aggiorna();
+    }
+
+    function fineDrag(e: PointerEvent) {
+      if (!isDragging) return;
+      isDragging = false;
+      if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (coordinate(e).x >= LIMITE_PIANO_X) return;
+      isDragging = true;
+      canvas.setPointerCapture(e.pointerId);
+      trascina(e);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (isDragging) trascina(e);
+    });
+    canvas.addEventListener('pointerup', fineDrag);
+    canvas.addEventListener('pointercancel', fineDrag);
+
+    const suSlider = () => {
+      leggiParametri();
+      aggiorna();
+    };
+    rangeVm.addEventListener('input', suSlider);
+    rangePhi.addEventListener('input', suSlider);
+    rangeFreq.addEventListener('input', suSlider);
+
+    btnReset.addEventListener('click', resetSim);
+
+    btnRun.addEventListener('click', () => {
+      if (running) {
+        running = false;
+        cancelAnimationFrame(animId);
+        btnRun.textContent = 'Riprendi rotazione';
+        txtStato.textContent = 'In pausa';
+      } else {
+        running = true;
+        btnRun.textContent = 'Pausa';
+        txtStato.textContent = 'Rotazione in corso...';
+        lastTs = performance.now();
+        animId = requestAnimationFrame(loop);
+      }
+    });
+
+    leggiParametri();
+    aggiorna();
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-sim-fas]').forEach((el) => initSimulatoreFasori(el));
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

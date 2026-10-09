@@ -454,6 +454,24 @@ import 'katex/dist/katex.min.css';
       ctx.stroke();
     }
 
+    function disegnaInterruttore(x1: number, y: number, x2: number, aperto: boolean) {
+      const r = 3;
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.arc(x1, y, r, 0, Math.PI * 2);
+      ctx.arc(x2, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      if (aperto) {
+        ctx.lineTo(x1 + (x2 - x1) * 0.9, y - 12);
+      } else {
+        ctx.lineTo(x2, y);
+      }
+      ctx.stroke();
+    }
+
     function disegnaInduttore(x: number, yStart: number, height: number) {
       const r = 8;
       const nSpire = 4;
@@ -471,8 +489,13 @@ import 'katex/dist/katex.min.css';
       const { x, y, w, h } = LOOP;
       const mid = y + h / 2;
       const xr = x + w;
-      const rx = x + w / 2 - 25;
+
+      const swX1 = x + 20;
+      const swX2 = x + 50;
+      const rx = x + 110;
       const rw = 50;
+
+      const isSwitchOpen = !running && progress === 0;
 
       ctx.save();
       ctx.strokeStyle = INK;
@@ -480,8 +503,10 @@ import 'katex/dist/katex.min.css';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      // Ramo superiore: filo + resistore
-      linea(x, y, rx, y);
+      // Ramo superiore: filo + interruttore + resistore
+      linea(x, y, swX1, y);
+      disegnaInterruttore(swX1, y, swX2, isSwitchOpen);
+      linea(swX2, y, rx, y);
       disegnaResistoreAmericano(rx, y, rw);
       linea(rx + rw, y, xr, y);
 
@@ -513,8 +538,8 @@ import 'katex/dist/katex.min.css';
       linea(x - 4, y + h + 18, x + 4, y + h + 18);
 
       // Freccia Corrente
-      const ax = x + 30;
-      const dir = 1; // Sempre in verso orario
+      const ax = rx + rw + 15;
+      const dir = 1;
       ctx.fillStyle = BLUE;
       ctx.beginPath();
       ctx.moveTo(ax + 6 * dir, y);
@@ -527,6 +552,7 @@ import 'katex/dist/katex.min.css';
       ctx.fillStyle = '#252525';
       ctx.font = `bold 13px ${FONT}`;
       ctx.textAlign = 'center';
+      ctx.fillText('S', (swX1 + swX2) / 2, y - 16);
       ctx.fillText('R', rx + rw / 2, y - 16);
       ctx.fillStyle = BLUE;
       ctx.font = `italic bold 13px ${FONT}`;
