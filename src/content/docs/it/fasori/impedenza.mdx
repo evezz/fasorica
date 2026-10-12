@@ -1,0 +1,244 @@
+---
+title: Impedenza ed ammettenza nei circuiti AC
+description: Definizione di impedenza Z ed ammettenza Y, triangolo dell'impedenza, combinazioni di componenti R, L e C e simulatore interattivo in regime sinusoidale.
+---
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+
+Nei circuiti in regime sinusoidale permanente, il rapporto tra il fasore della tensione e il fasore della corrente definisce l'**impedenza complessa**.
+L'introduzione dell'impedenza estende la **legge di Ohm** ai circuiti in corrente alternata (AC), trasformando le equazioni differenziali del tempo in semplici equazioni algebriche complesse.
+Per la spiegazione completa di come si arriva a questa definizione, si rimanda alla lezione sui [fasori](/it/fasori/fasori).
+
+
+## Definizione di impedenza ($\mathbf{Z}$)
+
+L'**impedenza** $\mathbf{Z}$ è il rapporto complesso tra il fasore della tensione $\mathbf{V}$ ai capi di un bipolo e il fasore della corrente $\mathbf{I}$ che lo attraversa:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.3rem;">
+$$
+\boxed{\mathbf{Z} = \frac{\mathbf{V}}{\mathbf{I}}}
+$$
+</div>
+
+Espressa in forma cartesiana, l'impedenza si scompone in parte reale e parte immaginaria:
+
+$$
+\mathbf{Z} = R + jX \quad [\Omega]
+$$
+
+*   **Resistenza $R = \text{Re}\{\mathbf{Z}\}$** (misurata in Ohm, $\Omega$): oppone resistenza al flusso di corrente dissipando energia sotto forma di calore (effetto Joule). È sempre $R \ge 0$.
+*   **Reattanza $X = \text{Im}\{\mathbf{Z}\}$** (misurata in Ohm, $\Omega$): misura l'opposizione al passaggio della corrente dovuta all'accumulo e alla restituzione di energia nei campi elettrici e magnetici.
+    *   **Reattanza induttiva ($X > 0$):** l'effetto induttivo prevale e la tensione è in anticipo sulla corrente.
+    *   **Reattanza capacitiva ($X < 0$):** l'effetto capacitivo prevale e la tensione è in ritardo sulla corrente.
+
+In forma polare, l'impedenza è caratterizzata dal suo modulo $|Z|$ e dal suo angolo di fase $\theta_Z$:
+
+$$
+\mathbf{Z} = |Z| \angle \theta_Z = |Z| \, e^{j\theta_Z}
+$$
+
+dove:
+
+$$
+|Z| = \sqrt{R^2 + X^2}, \quad \theta_Z = \arctan\left(\frac{X}{R}\right) = \theta_V - \theta_I
+$$
+
+## Impedenza degli elementi circuitali fondamentali
+
+Richiamando la relazione tra la derivata temporale $\frac{\text{d}}{\text{d}t}$ e l'operatore $j\omega$ vista [qui](/it/fasori/fasori#relazione-fondamentale-tra-derivata-e-fasore), ricaviamo le impedenze dei tre elementi circuitali fondamentali:
+
+### 1. Resistore puro ($R$)
+Poiché $v(t) = R \cdot i(t)$, in forma fasoriale abbiamo $\mathbf{V} = R \mathbf{I}$:
+
+$$
+\mathbf{Z}_R = R = R + j0 = R \angle 0^\circ
+$$
+
+L'impedenza è puramente reale. Tensione e corrente sono in fase ($\theta_Z = 0^\circ$).
+
+### 2. Condensatore puro ($C$)
+Poiché $i(t) = C \frac{\text{d}v(t)}{\text{d}t}$, passando ai fasori $\mathbf{I} = j\omega C \mathbf{V}$:
+
+$$
+\mathbf{Z}_C = \frac{1}{j\omega C} = -\frac{j}{\omega C} = \frac{1}{\omega C} \angle -90^\circ
+$$
+
+La reattanza capacitiva è $X_C = -\frac{1}{\omega C} = -\frac{1}{2\pi f C}$. L'impedenza è puramente immaginaria negativa: la tensione è in ritardo di $-90^\circ$ sulla corrente.
+
+
+### 3. Induttore puro ($L$)
+Poiché $v(t) = L \frac{\text{d}i(t)}{\text{d}t}$, sostituendo la derivata con $j\omega$:
+
+$$
+\mathbf{Z}_L = j\omega L = \omega L \angle 90^\circ
+$$
+
+La reattanza induttiva è $X_L = \omega L = 2\pi f L$. L'impedenza è puramente immaginaria positiva: la tensione è in anticipo di $+90^\circ$ sulla corrente.
+
+| Componente | Resistenza \($R$\) | Reattanza \($X$\) | Impedenza \($\mathbf{Z}$\) |
+|:---:|:---:|:---:|:---:|
+| Resistore | $$R$$ | $$0$$ | $$R$$ |
+| Condensatore | $$0$$ | $$-\dfrac{1}{\omega C}$$ | $$-\dfrac{j}{\omega C}$$ |
+| Induttore | $$0$$ | $$\omega L$$ | $$j\omega L$$ |
+
+
+
+## Definizione di ammettenza ($\mathbf{Y}$)
+
+L'**ammettenza** $\mathbf{Y}$ è il reciproco dell'impedenza e misura la facilità con cui un circuito si lascia attraversare dalla corrente alternata:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.3rem;">
+$$
+\boxed{\mathbf{Y} = \frac{1}{\mathbf{Z}} = \frac{\mathbf{I}}{\mathbf{V}}}
+$$
+</div>
+
+L'ammettenza si misura in **Siemens ($S$)**.<br />
+In forma cartesiana, l'ammettenza si scompone in **conduttanza** $G$ e **suscettanza** $B$, misurate anch'esse in Siemens:
+
+$$
+\mathbf{Y} = G + jB \quad [S]
+$$
+
+
+### Conversione diretta tra Z ed Y
+
+Attenzione: la conduttanza $G$ **non** è semplicemente il reciproco della resistenza $1/R$ se nel circuito è presente una reattanza $X$.
+
+Sviluppando il reciproco di $\mathbf{Z} = R + jX$ e moltiplicando per il complesso coniugato:
+
+$$
+\mathbf{Y} = \frac{1}{R + jX} = \frac{R - jX}{(R + jX)(R - jX)} = \frac{R - jX}{R^2 + X^2}
+$$
+
+Uguagliando le parti reale e immaginaria a $\mathbf{Y} = G + jB$:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.25rem;">
+$$
+\boxed{G = \frac{R}{R^2 + X^2}} \qquad \boxed{B = -\frac{X}{R^2 + X^2}}
+$$
+</div>
+
+> **✐ Regola fondamentale:**
+> *   Per circuiti con componenti in **serie**, è più comodo lavorare con le **impedenze** ($\mathbf{Z}_{\text{eq}} = \mathbf{Z}_1 + \mathbf{Z}_2 + \dots$).
+> *   Per circuiti con componenti in **parallelo**, è più comodo lavorare con le **ammettenze** ($\mathbf{Y}_{\text{eq}} = \mathbf{Y}_1 + \mathbf{Y}_2 + \dots$).
+
+> **✐ Regola pratica**: Le impedenze e le ammettenze sono numeri complessi, quindi le somme vanno effettuate in forma cartesiana, mentre moltiplicazioni e divisioni in forma polare. ([Come?!](/it/fasori/numeri-complessi/#operazioni-fondamentali))
+
+## Esempio pratico
+<div class="esempio">
+  
+  Consideriamo un circuito alimentato alla frequenza di rete $f = 50\text{ Hz}$ ($\omega = 314.16\text{ rad/s}$) con una tensione di alimentazione $\mathbf{V} = 230 \angle 0^\circ\text{ V}$ composto da due rami in parallelo:
+  - **Ramo 1 (Serie $R - L$):** composto da un resistore $R = 22\ \Omega$ e un induttore $L = 85\text{ mH} = 0.085\text{ H}$.
+  - **Ramo 2:** un condensatore $C = 120\ \mu\text{F} = 120 \cdot 10^{-6}\text{ F}$.<br />
+
+  Vogliamo calcolare la corrente totale $\textbf{I}$ in forma fasoriale e analitica.
+
+  <Figura src="/images/circuiti/RLC_impedenza.svg" alt="Circuito esercizio impedenza" larghezza='30rem'>
+    Circuito dell'esercizio
+  </Figura>
+
+  #### 1. Ramo 1: somma delle impedenze in serie ($Z_{\text{s1}}$)
+
+  > **Regola fondamentale:** Per componenti collegati in **serie**, si sommano direttamente le **impedenze** $\mathbf{Z}$.
+
+  Calcoliamo la reattanza dell'induttore:
+  $$
+  X_L = \omega L = 314.16 \cdot 0.085 \approx 26.70\ \Omega \quad \implies \quad \mathbf{Z}_L = +j26.70\ \Omega
+  $$
+
+  L'impedenza equivalente del Ramo 1 in forma cartesiana e polare è:
+  $$
+  \mathbf{Z}_{\text{s1}} = R + jX_L = \mathbf{22 + j26.70\ \Omega}
+  $$
+  - Modulo: $|Z_{\text{s1}}| = \sqrt{22^2 + 26.70^2} = \sqrt{484 + 712.89} = \sqrt{1196.89} \approx 34.60\ \Omega$
+  - Fase: $\theta_1 = \arctan\left(\frac{26.70}{22}\right) \approx 50.51^\circ$
+  $$
+  \mathbf{Z}_{\text{s1}} = 34.60 \angle +50.51^\circ\ \Omega
+  $$
+
+  (Ricorda le [formule di conversione fra cartesiano e polare](/it/fasori/numeri-complessi/#conversioni-fra-le-due-forme-di-rappresentazione))
+  <br />
+
+
+  #### 2. Parallelo tra i rami: somma delle ammettenze ($Y_{\text{tot}}$)
+
+  > **Regola fondamentale:** Per rami o componenti in **parallelo**, la somma diretta si effettua sulle **ammettenze** $\mathbf{Y}$.
+
+  - **Ammettenza del Ramo 1 ($\mathbf{Y}_1$):**
+    $$
+    G_1 = \frac{R}{R^2 + X_L^2} = \frac{22}{1196.89} \approx 0.01838\text{ S}
+    $$
+    $$
+    B_1 = -\frac{X_L}{R^2 + X_L^2} = -\frac{26.70}{1196.89} \approx -0.02231\text{ S}
+    $$
+    $$
+    \mathbf{Y}_1 = \mathbf{0.01838 - j0.02231\text{ S}}
+    $$
+
+    (Conviene farla in forma cartesiana, perché il passo successivo è quello di sommarla all'ammettenza del ramo 2.)
+
+  - **Ammettenza del Ramo 2 ($\mathbf{Y}_2$):**
+    $$
+    B_C = \omega C = 314.16 \cdot (120 \cdot 10^{-6}) \approx 0.03770\text{ S} \quad \implies \quad \mathbf{Y}_2 = \mathbf{0 + j0.03770\text{ S}}
+    $$
+
+  - **Ammettenza Totale ($\mathbf{Y}_{\text{tot}} = \mathbf{Y}_1 + \mathbf{Y}_2$):**
+    $$
+    \mathbf{Y}_{\text{tot}} = (0.01838 + 0) + j(-0.02231 + 0.03770) = \mathbf{0.01838 + j0.01539\text{ S}}
+    $$
+
+  
+
+  #### 3. Impedenza totale del circuito ($\mathbf{Z}_{\text{tot}}$)
+
+  Convertiamo l'ammettenza totale in forma polare per ricavare l'impedenza equivalente:
+  $$
+  |Y_{\text{tot}}| = \sqrt{0.01838^2 + 0.01539^2} = \sqrt{0.0003378 + 0.0002369} \approx 0.02397\text{ S}
+  $$
+  $$
+  \theta_Y = \arctan\left(\frac{0.01539}{0.01838}\right) \approx 39.94^\circ
+  $$
+  $$
+  \mathbf{Y}_{\text{tot}} = 0.02397 \angle +39.94^\circ\text{ S}
+  $$
+
+  <FiguraLato src="/images/circuiti/RLC_semplificato.svg" alt="Legge di Ohm in alternata" larghezza='26rem'>
+    Circuito equivalente semplificato con impedenza totale $\mathbf{Z}_{\text{tot}}$ e corrente totale $\mathbf{I}$.
+  </FiguraLato>
+
+  L'impedenza totale $\mathbf{Z}_{\text{tot}}$ è il reciproco dell'ammettenza totale:
+  $$
+  \mathbf{Z}_{\text{tot}} = \frac{1}{\mathbf{Y}_{\text{tot}}} = \frac{1}{0.02397 \angle +39.94^\circ} = \mathbf{41.72 \angle -39.94^\circ\ \Omega}
+  $$
+
+  Siamo quindi arrivati ad un'unica impedenza equivalente che rappresenta l'intero circuito, come se fosse un singolo bipolo. Ora, grazie ai fasori, calcolare la corrente è immediato.
+
+  #### 4. Calcolo della corrente totale erogata ($\mathbf{I}_{\text{tot}}$)
+
+  La divisione di numeri complessi (legge di Ohm $\mathbf{I} = \frac{\mathbf{V}}{\mathbf{Z}}$) si esegue **in modo immediato e pulito in forma polare**: dividendo i moduli e sottraendo le fasi.
+
+  $$
+  \mathbf{I}_{\text{tot}} = \frac{\mathbf{V}}{\mathbf{Z}_{\text{tot}}} = \frac{230 \angle 0^\circ\text{ V}}{41.72 \angle -39.94^\circ\ \Omega} = \left(\frac{230}{41.72}\right) \angle \left(0^\circ - (-39.94^\circ)\right)
+  $$
+
+  <div style="text-align: center; margin: 1.25rem 0;">
+    $$
+    \mathbf{I}_{\text{tot}} = \mathbf{5.51 \angle +39.94^\circ\text{ A}}
+    $$
+  </div>
+
+  In forma analitica, la corrente totale è:
+  $$
+  \mathbf{I}_{\text{tot}} = 5.51 \cos(314.16 t + 39.94^\circ)\text{ A}
+  $$
+
+  <span style="font-size: 0.88rem; color: #666; display: block; margin-top: 0.5rem;">
+    <em>Interpretazione fisica:</em> La corrente totale ha un valore efficace di $5.51\text{ A}$ ed è in <strong>anticipo di $39.94^\circ$</strong> sulla tensione del generatore. L'effetto capacitivo del condensatore in parallelo prevale sulla componente induttiva del primo ramo.
+  </span>
+</div>
+
+
+<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
+  <strong>Autorialità e trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
+</div>

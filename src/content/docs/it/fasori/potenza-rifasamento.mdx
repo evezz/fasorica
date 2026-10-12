@@ -1,0 +1,253 @@
+---
+title: Potenza in corrente alternata e rifasamento
+description: Studio della potenza attiva, reattiva e apparente, triangolo delle potenze e calcolo analitico del condensatore di rifasamento.
+---
+
+Nei circuiti in corrente alternata (AC) in regime sinusoidale permanente, il calcolo della potenza richiede un approccio più articolato rispetto alla corrente continua. La presenza di elementi reattivi (induttori e condensatori) introduce infatti uno sfasamento tra la tensione e la corrente, dando origine a forme diverse di potenza che convivono nella stessa rete.
+
+---
+
+## La potenza istantanea e lo sfasamento
+
+Consideriamo un bipolo generico alimentato da una tensione sinusoidale $v(t)$ e attraversato da una corrente $i(t)$, con versi di riferimento scelti secondo la **convenzione dell'utilizzatore** (la corrente entra dal morsetto positivo, quindi $p > 0$ significa potenza assorbita dal bipolo):
+
+$$
+v(t) = V_m \cos(\omega t)
+$$
+
+$$
+i(t) = I_m \cos(\omega t - \varphi)
+$$
+
+Dove:
+- $V_m$ e $I_m$ sono i valori di picco di tensione e corrente.
+- $\omega = 2\pi f$ è la pulsazione in rad/s.
+- $\varphi$ è l'angolo di sfasamento tra tensione e corrente: per $\varphi > 0$ la corrente è **in ritardo** rispetto alla tensione (carico induttivo), per $\varphi < 0$ è **in anticipo** (carico capacitivo).
+
+La potenza istantanea $p(t)$ scambiata dal bipolo è il prodotto, istante per istante, di tensione e corrente:
+
+$$
+p(t) = v(t) \cdot i(t) = V_m I_m \cos(\omega t) \cos(\omega t - \varphi)
+$$
+
+Applicando le formule di Werner $\cos(\alpha)\cos(\beta) = \frac{1}{2}[\cos(\alpha - \beta) + \cos(\alpha + \beta)]$, otteniamo:
+
+$$
+p(t) = \frac{V_m I_m}{2} \left[ \cos(\varphi) + \cos(2\omega t - \varphi) \right]
+$$
+
+Ricordando che i valori efficaci sono $V = \frac{V_m}{\sqrt{2}}$ e $I = \frac{I_m}{\sqrt{2}}$ (quindi $\frac{V_m I_m}{2} = V I$), possiamo riscrivere la potenza istantanea usando la formula di addizione del coseno $\cos(2\omega t - \varphi) = \cos(2\omega t)\cos(\varphi) + \sin(2\omega t)\sin(\varphi)$:
+
+$$
+p(t) = V I \cos(\varphi) \cdot \left[ 1 + \cos(2\omega t) \right] + V I \sin(\varphi) \cdot \sin(2\omega t)
+$$
+
+Questa scomposizione mostra che la potenza istantanea è formata da due componenti distinte:
+1. Una componente **unidirezionale**, sempre di segno non negativo, con valore medio $V I \cos(\varphi)$ (legata alla potenza effettivamente convertita in altre forme di energia).
+2. Una componente **oscillante** a frequenza doppia $2\omega$, di ampiezza $V I \sin(\varphi)$ e con valore medio nullo (legata al palleggio di energia con i campi elettrici e magnetici).
+
+## Le tre definizioni di potenza
+
+Dall'analisi della potenza istantanea si definiscono le tre grandezze fondamentali dell'elettrotecnica in AC.
+
+### 1. Potenza attiva ($P$)
+Rappresenta la media temporale della potenza istantanea su un periodo ed è la potenza che viene effettivamente convertita in altre forme di energia (meccanica, termica, luminosa).
+
+$$
+P = V I \cos(\varphi) \quad \text{[W]}
+$$
+
+Unità di misura: **Watt** ($\text{W}$).
+
+### 2. Potenza reattiva ($Q$)
+Rappresenta l'ampiezza della componente oscillante della potenza istantanea, cioè lo scambio continuo di energia tra la rete e i campi magnetici (induttori) o elettrici (condensatori). Ha valore medio nullo e non produce lavoro utile, ma impegna comunque corrente nei conduttori.
+
+$$
+Q = V I \sin(\varphi) \quad \text{[var]}
+$$
+
+Unità di misura: **Volt-Ampere Reattivi** ($\text{var}$).
+- **Carico induttivo ($\varphi > 0$):** $Q > 0$ (il carico assorbe potenza reattiva).
+- **Carico capacitivo ($\varphi < 0$):** $Q < 0$ (il carico eroga potenza reattiva).
+
+### 3. Potenza apparente ($S$)
+Rappresenta il prodotto semplice dei valori efficaci di tensione e corrente. Indica la potenza che generatori, trasformatori e linee di trasporto devono essere in grado di sostenere (è il parametro con cui vengono dimensionati).
+
+$$
+S = V I \quad \text{[VA]}
+$$
+
+Unità di misura: **Volt-Ampere** ($\text{VA}$).
+
+## Il triangolo delle potenze e il fattore di potenza
+
+Dalle definizioni precedenti, e dall'identità $\cos^2\varphi + \sin^2\varphi = 1$, si ottiene il **triangolo delle potenze**, un triangolo rettangolo con ipotenusa $S$ e cateti $P$ e $Q$:
+
+$$
+S = \sqrt{P^2 + Q^2} \qquad \tan(\varphi) = \frac{Q}{P}
+$$
+
+In ambito complesso, definiamo la **potenza complessa** $\mathbf{S}$ come il prodotto tra la tensione fasoriale e il coniugato della corrente fasoriale (con valori efficaci):
+
+$$
+\mathbf{S} = \mathbf{V} \cdot \mathbf{I}^* = P + jQ
+$$
+
+Il suo modulo è la potenza apparente, $|\mathbf{S}| = S$, e il suo argomento è lo sfasamento $\varphi$.
+
+Il **fattore di potenza** è il rapporto tra la potenza attiva e la potenza apparente. In regime sinusoidale coincide con $\cos\varphi$:
+
+$$
+\cos(\varphi) = \frac{P}{S} = \frac{P}{\sqrt{P^2 + Q^2}}
+$$
+
+Un fattore di potenza prossimo a $1$ indica che la quasi totalità della potenza apparente è potenza attiva, cioè che la corrente assorbita dalla rete viene sfruttata quasi interamente per compiere lavoro utile. Poiché il coseno è una funzione pari, $\cos\varphi$ non distingue un carico induttivo da uno capacitivo: per questo si specifica se il fattore di potenza è "in ritardo" (induttivo) o "in anticipo" (capacitivo).
+
+### Il teorema di Boucherot
+
+Quando più carichi sono collegati alla stessa rete, **le potenze attiva e reattiva si sommano algebricamente, mentre la potenza apparente no**:
+
+$$
+P_{\text{tot}} = \sum_k P_k \qquad Q_{\text{tot}} = \sum_k Q_k \qquad S_{\text{tot}} = \sqrt{P_{\text{tot}}^2 + Q_{\text{tot}}^2} \le \sum_k S_k
+$$
+
+Questo risultato è alla base del rifasamento: un condensatore ha $Q < 0$ e, sommandosi alla $Q > 0$ del carico induttivo, riduce la potenza reattiva totale richiesta alla rete.
+
+## Il principio del rifasamento
+
+La maggior parte dei carichi industriali (motori elettrici, trasformatori, saldatrici) ha natura **ohmico-induttiva** ($\varphi > 0$). Questo comporta l'assorbimento di un'elevata quantità di potenza reattiva $Q$.
+
+### Conseguenze di un basso fattore di potenza
+1. **Correnti elevate in linea:** per erogare la stessa potenza attiva $P$, a parità di tensione $V$, la corrente richiesta è tanto maggiore quanto più basso è $\cos\varphi$:
+   $$
+   I = \frac{P}{V \cos(\varphi)}
+   $$
+2. **Maggiori perdite per effetto Joule:** le perdite nei cavi variano con il quadrato della corrente ($P_{\text{persa}} = R_{\text{linea}} I^2$).
+3. **Cadute di tensione superiori:** una corrente maggiore provoca una maggiore caduta di tensione lungo le condutture.
+4. **Sovradimensionamento degli impianti:** generatori, trasformatori e cavi devono essere dimensionati sulla potenza apparente $S$ e non solo su quella attiva $P$.
+5. **Penali contrattuali:** i distributori applicano corrispettivi per l'energia reattiva prelevata oltre una certa soglia. In Italia, ad esempio, il riferimento è circa il $33\%$ dell'energia attiva (cioè $\cos\varphi \approx 0.95$), con corrispettivi più alti al di sotto di $\cos\varphi = 0.8$; soglie e utenze interessate dipendono dalla regolazione ARERA e dal tipo di fornitura.
+
+Il **rifasamento** consiste nel collegare in parallelo al carico induttivo una batteria di condensatori. Il condensatore ha potenza reattiva negativa ($Q < 0$): in pratica genera localmente la potenza reattiva che il carico richiede, evitando che essa debba circolare lungo la rete di distribuzione. La corrente nel carico non cambia; si riduce invece la corrente nel tratto di linea **a monte** del punto in cui è inserito il condensatore.
+
+## Calcolo analitico della capacità di rifasamento
+
+Vogliamo ridurre l'angolo di sfasamento del circuito da un valore iniziale $\varphi_1$ a un valore finale desiderato $\varphi_2$ (con $\varphi_2 < \varphi_1$, ovvero $\cos\varphi_2 > \cos\varphi_1$).
+
+### Passaggio 1: calcolo delle potenze reattive iniziale e finale
+Poiché la batteria di condensatori (ideale) viene collegata in parallelo al carico, la tensione $V$ e la potenza attiva $P$ **rimangono invariate**: il condensatore non assorbe potenza attiva.
+
+Dalla definizione $\tan(\varphi) = \frac{Q}{P}$, ricaviamo:
+- Potenza reattiva iniziale: $Q_1 = P \tan(\varphi_1)$
+- Potenza reattiva finale desiderata: $Q_2 = P \tan(\varphi_2)$
+
+### Passaggio 2: determinazione della potenza reattiva capacitiva ($Q_C$)
+Per il teorema di Boucherot, la potenza reattiva vista dalla rete dopo il rifasamento è $Q_2 = Q_1 - Q_C$, dove $Q_C > 0$ indica il **modulo** della potenza reattiva fornita dalla batteria (che, con la convenzione dell'utilizzatore, ha potenza reattiva $-Q_C$). Quindi $Q_C$ è pari alla differenza tra la potenza reattiva iniziale e quella finale:
+
+$$
+Q_C = Q_1 - Q_2 = P \tan(\varphi_1) - P \tan(\varphi_2)
+$$
+
+$$
+Q_C = P \left( \tan(\varphi_1) - \tan(\varphi_2) \right)
+$$
+
+### Passaggio 3: ricavo della capacità $C$
+Un condensatore di capacità $C$ sottoposto alla tensione efficace $V$ a pulsazione $\omega$ è attraversato dalla corrente $\mathbf{I}_C = j\omega C\,\mathbf{V}$, quindi la sua potenza complessa è $\mathbf{S}_C = \mathbf{V}\mathbf{I}_C^* = -j\omega C V^2$. La potenza reattiva fornita (in modulo) è:
+
+$$
+Q_C = \omega C V^2
+$$
+
+Eguagliando le due espressioni di $Q_C$:
+
+$$
+\omega C V^2 = P \left( \tan(\varphi_1) - \tan(\varphi_2) \right)
+$$
+
+Isolando la capacità $C$, otteniamo la formula fondamentale del rifasamento:
+
+$$
+C = \frac{P \left( \tan(\varphi_1) - \tan(\varphi_2) \right)}{\omega V^2}
+$$
+
+<div class="esempio" style="background: var(--fa-surface, #f8f7f3); border: 1px solid var(--fa-border, #dedbd4); border-left: 4px solid #1e67d9; border-radius: 8px; padding: 1.25rem; margin: 2rem 0;">
+  <h3 style="margin-top: 0; color: #1e67d9; font-size: 1.15rem;">Esempio pratico: rifasamento di un impianto monofase</h3>
+
+  Un laboratorio industriale assorbe una potenza attiva $P = 15.4\text{ kW}$ ($15400\text{ W}$) a una tensione monofase $V = 230\text{ V}$ alla frequenza $f = 50\text{ Hz}$ ($\omega = 2\pi \cdot 50 = 314.16\text{ rad/s}$). Il fattore di potenza iniziale dell'impianto è $\cos(\varphi_1) = 0.67$ (induttivo).
+
+  Si desidera rifasare l'impianto portando il fattore di potenza al valore obiettivo $\cos(\varphi_2) = 0.95$.
+
+  #### 1. Calcolo degli angoli di sfasamento e delle tangenti
+  Dalle funzioni inverse del coseno ricaviamo i rispettivi angoli. Per evitare errori di arrotondamento, conviene calcolare la tangente direttamente dal coseno con $\tan\varphi = \frac{\sqrt{1 - \cos^2\varphi}}{\cos\varphi}$:
+  - Angolo iniziale $\varphi_1$:
+    $$
+    \varphi_1 = \arccos(0.67) \approx 47.93^\circ \implies \tan(\varphi_1) = \frac{\sqrt{1 - 0.67^2}}{0.67} = \frac{0.74236}{0.67} \approx 1.1080
+    $$
+  - Angolo finale $\varphi_2$:
+    $$
+    \varphi_2 = \arccos(0.95) \approx 18.19^\circ \implies \tan(\varphi_2) = \frac{\sqrt{1 - 0.95^2}}{0.95} = \frac{0.31225}{0.95} \approx 0.3287
+    $$
+
+  #### 2. Calcolo della potenza reattiva della batteria di condensatori
+  $$
+  Q_C = P \left( \tan(\varphi_1) - \tan(\varphi_2) \right)
+  $$
+  $$
+  Q_C = 15400 \cdot (1.1080 - 0.3287) = 15400 \cdot 0.7793 \approx 12001\text{ var}
+  $$
+
+  #### 3. Calcolo della capacità $C$ del condensatore
+  $$
+  C = \frac{Q_C}{\omega V^2} = \frac{12001}{314.16 \cdot (230)^2} = \frac{12001}{314.16 \cdot 52900} = \frac{12001}{16619064} \approx 0.000722\text{ F}
+  $$
+
+  Convertendo in microfarad ($\mu\text{F}$):
+  $$
+  C \approx 722\ \mu\text{F}
+  $$
+
+  #### 4. Verifica con il triangolo delle potenze
+  Calcoliamo le potenze prima e dopo l'inserimento del condensatore:
+  - Prima del rifasamento:
+    $$
+    Q_1 = P\tan(\varphi_1) \approx 15400 \cdot 1.1080 \approx 17063\text{ var} \qquad S_1 = \frac{P}{\cos(\varphi_1)} = \frac{15400}{0.67} \approx 22985\text{ VA}
+    $$
+  - Dopo il rifasamento:
+    $$
+    Q_2 = P\tan(\varphi_2) \approx 15400 \cdot 0.3287 \approx 5062\text{ var} \qquad S_2 = \frac{P}{\cos(\varphi_2)} = \frac{15400}{0.95} \approx 16211\text{ VA}
+    $$
+
+  La differenza $Q_1 - Q_2 = 17063 - 5062 = 12001\text{ var}$ coincide con $Q_C$ calcolata al punto 2, e la potenza apparente richiesta alla rete scende da $22.99\text{ kVA}$ a $16.21\text{ kVA}$.
+
+  #### 5. Verifica della riduzione della corrente di linea
+  Confrontiamo le correnti assorbite dalla rete prima e dopo l'inserimento del condensatore:
+  - Corrente iniziale $I_1$:
+    $$
+    I_1 = \frac{P}{V \cos(\varphi_1)} = \frac{15400}{230 \cdot 0.67} = \frac{15400}{154.1} \approx 99.94\text{ A}
+    $$
+  - Corrente finale $I_2$:
+    $$
+    I_2 = \frac{P}{V \cos(\varphi_2)} = \frac{15400}{230 \cdot 0.95} = \frac{15400}{218.5} \approx 70.48\text{ A}
+    $$
+
+  Gli stessi valori si ottengono da $I = S/V$: $22985 / 230 \approx 99.94\text{ A}$ e $16211 / 230 \approx 70.48\text{ A}$.
+
+  <span style="font-size: 0.88rem; color: #666; display: block; margin-top: 0.5rem;">
+    <em>Risultato finale:</em> A parità di potenza attiva fornita al carico ($15.4\text{ kW}$), il rifasamento riduce la corrente circolante nella linea a monte del condensatore da $99.94\text{ A}$ a $70.48\text{ A}$ (un abbattimento del $29.5\%$). Poiché le perdite per effetto Joule sono proporzionali a $I^2$, il rapporto tra le perdite finali e iniziali è $(0.67/0.95)^2 \approx 0.497$: le perdite sulla linea si riducono del $50.3\%$.
+  </span>
+</div>
+
+## Osservazioni pratiche
+
+### Sistemi trifase
+Gli impianti industriali sono quasi sempre trifase. La potenza reattiva totale da compensare si calcola con la stessa formula $Q_C = P(\tan\varphi_1 - \tan\varphi_2)$, usando la potenza attiva **totale** $P$. Detta $V_L$ la tensione concatenata, la capacità di ciascuno dei tre condensatori dipende dal collegamento:
+- **Stella:** $C_Y = \dfrac{Q_C}{\omega V_L^2}$
+- **Triangolo:** $C_\Delta = \dfrac{Q_C}{3\,\omega V_L^2}$
+
+A parità di $Q_C$, il collegamento a triangolo richiede quindi condensatori di capacità pari a un terzo, ma sottoposti a una tensione $\sqrt{3}$ volte maggiore.
+
+### Attenzione al sovra-rifasamento
+Se $Q_C$ supera la potenza reattiva $Q_1$ del carico, la rete vede un carico capacitivo ($\varphi < 0$): la corrente torna ad aumentare, possono comparire sovratensioni e, in presenza di armoniche, fenomeni di risonanza con le induttanze della rete. Per questo l'obiettivo tipico è $\cos\varphi \approx 0.95$ e non $1$.
+
+### Scelta del banco di condensatori
+Le batterie di rifasamento si acquistano in valori commerciali, espressi in kvar alla tensione nominale. Quando il carico varia durante la giornata si usano banchi a gradini con regolatore automatico, in modo da inserire solo la potenza reattiva necessaria ed evitare il sovra-rifasamento nei periodi di basso carico. La tensione nominale dei condensatori deve essere adeguata a quella dell'impianto.

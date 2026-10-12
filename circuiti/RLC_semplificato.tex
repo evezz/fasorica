@@ -1,0 +1,8 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (6, 3) to[sinusoidal voltage source, l={$\textbf{V} \ 230\, \text{V} \angle 0^\circ $}, i^>=\textcolor{blue}{$\textbf{I} = ?$}] (6, 9);
+	\draw (6, 9) to[short] (9, 9);
+	\draw (6, 3) to[short] (9, 3);
+	\node[shape=rectangle, minimum width=1.465cm, minimum height=0.715cm] at (5, 5.625){} node[anchor=north west, align=left, text width=1.077cm, inner sep=6pt] at (4.25, 6){50 Hz};
+	\draw (9, 3) to[generic, l_={$\textbf{Z}_{\text{tot}} = 41.72 \angle -39.94^\circ $}] (9, 9);
+\end{tikzpicture}

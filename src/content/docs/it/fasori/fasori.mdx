@@ -9,8 +9,9 @@ import FasoreScroll from '../../../../components/FasoreScroll.astro';
 
 <FasoreScroll />
 
-L'analisi dei circuiti in regime alternato effettuata direttamente nel dominio del tempo richiede la risoluzione di equazioni differenziali, in quanto si utilizzano i componenti reattivi (condensatore e induttore), i quali presentano una derivata nella loro equazione caratteristica.
-L'introduzione dei **fasori** (ideata da Charles Proteus Steinmetz) permette di trasformare le equazioni differenziali temporali in **equazioni algebriche**, semplificando drasticamente l'analisi dei circuiti lineari.
+L'analisi dei circuiti in regime alternato effettuata direttamente nel dominio del tempo richiede la risoluzione di equazioni differenziali (cioè equazioni dove l'incognita è una funzione, per esempio tensione o corrente, e nella stessa equazione compaiono le derivate della funzione stessa).
+Questo succede perché icomponenti reattivi (condensatore e induttore) presentano una derivata nella loro equazione caratteristica.
+L'introduzione dei **fasori** (ideata da Charles Proteus Steinmetz) permette di trasformare le equazioni differenziali temporali in **equazioni algebriche** (senza derivate!!), semplificando drasticamente l'analisi dei circuiti lineari.
 
 ## Definizione di fasore
 
@@ -43,43 +44,97 @@ Un fasore è un numero complesso espresso in **[forma polare](/it/fasori/numeri-
 ## Simulatore del diagramma fasoriale
 <SimulatoreFasori />
 
-## Relazioni costitutive degli elementi circuitali
-
-Nel dominio della frequenza (o dei fasori), l'operazione di derivazione temporale $\frac{\text{d}}{\text{d}t}$ corrisponde al semplice prodotto algebrico per $j\omega$:
+## Relazione fondamentale tra derivata e fasore
+Vediamo ora come effettivamente trasformare le equazioni differenziali in equazioni algebriche tramite i fasori.
+<br />Partiamo dalla definizione di fasore.
+Ogni tensione sinusoidale stazionaria $v(t) = V_m \cos(\omega t + \phi)$ può essere espressa tramite l'identità di Eulero come la parte reale di un numero complesso rotante:
 
 $$
-\frac{\text{d}}{\text{d}t} \;\longrightarrow\; j\omega
+v(t) = \text{Re}\left\{ V_m e^{j(\omega t + \phi)} \right\} = \text{Re}\left\{ \underbrace{V_m e^{j\phi}}_{\mathbf{V} \text{ (Fasore)}} \cdot e^{j\omega t} \right\}
 $$
 
-Grazie a questa proprietà, le relazioni Volt-Ampere di resistori, induttori e condensatori si trasformano in relazioni algebriche lineari del tipo **$\mathbf{V} = \mathbf{Z} \cdot \mathbf{I}$** (Legge di Ohm generalizzata):
+Se applichiamo l'operatore di derivata rispetto al tempo $\frac{\text{d}}{\text{d}t}$ a $v(t)$, la derivata agisce unicamente sul termine dipendente dal tempo $e^{j\omega t}$:
 
----
+$$
+\frac{\text{d}}{\text{d}t} v(t) = \frac{\text{d}}{\text{d}t} \text{Re}\left\{ \mathbf{V} e^{j\omega t} \right\} = \text{Re}\left\{ \mathbf{V} \cdot \frac{\text{d}}{\text{d}t}\left( e^{j\omega t} \right) \right\}
+$$
 
-### 1. Resistore (*R*)
+Ricordando la regola di derivazione per la funzione esponenziale complessa $\frac{\text{d}}{\text{d}t}\left(e^{a t}\right) = a e^{a t}$ (dove in questo caso $a = j\omega$):
+
+$$
+\frac{\text{d}}{\text{d}t}\left( e^{j\omega t} \right) = j\omega \, e^{j\omega t}
+$$
+
+Sostituendo il risultato nell'espressione della derivata otteniamo:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.25rem;">
+$$
+\frac{\text{d}}{\text{d}t} v(t) = \text{Re}\left\{ (j\omega \mathbf{V}) \cdot e^{j\omega t} \right\}
+$$
+</div>
+
+Quindi effettivamente la derivata nel tempo corrisponde a una moltiplicazione per $j\omega$.
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.35rem;">
+$$
+\boxed{\frac{\text{d}}{\text{d}t} \ \Longleftrightarrow \ j\omega}
+$$
+</div>
+
+Derivare una sinusoide nel tempo equivale a **moltiplicare il suo fasore per il fattore complesso $j\omega$**.
+Per questo le equazioni differenziali diventano algebriche!
+
+
+Per capire cosa fa concretamente l'operatore $j\omega$, scriviamolo prima in **forma polare**:
+
+$$
+j\omega = \omega \cdot j = \omega \cdot e^{j 90^\circ} = \omega \angle 90^\circ
+$$
+
+Ora prendiamo il fasore di partenza $\mathbf{V} = V_m e^{j\phi} = V_m \angle \phi$ e calcoliamo esplicitamente la moltiplicazione fasoriale tra $\mathbf{V}$ e $j\omega$:
+
+$$
+\mathbf{V}_{\text{derivato}} = j\omega \mathbf{V} = (\omega \cdot e^{j 90^\circ}) \cdot (V_m \cdot e^{j\phi}) = (\omega V_m) \cdot e^{j(\phi + 90^\circ)}
+$$
+
+In notazione polare sintetica:
+
+$$
+\mathbf{V}_{\text{derivato}} = (\omega V_m) \angle (\phi + 90^\circ)
+$$
+
+Tornando ora dal dominio dei fasori alla **forma analitica nel tempo** $v_{\text{derivato}}(t)$:
+
+$$
+v_{\text{derivato}}(t) = \text{Re}\left\{ \mathbf{V}_{\text{derivato}} \cdot e^{j\omega t} \right\} = \boxed{\textcolor{red}{\omega} V_m \cos(\omega t + \phi \textcolor{red}{+ 90^\circ})}
+$$
+
+La moltiplicazione per $j\omega$ produce quindi due soli effetti chiarissimi:
+1. **Scala l'ampiezza** moltiplicando il picco $V_m$ per la frequenza angolare $\omega$ (più il segnale è veloce, più la derivata è grande).
+2. **Aggiunge $90^\circ$ alla fase**, provocando un **anticipo di fase di $90^\circ$**. (Anche se è controintuitivo, sommare all'interno del coseno equivale ad *anticipare* la sinusoide!)
+
+
+Per dualità, l'operazione inversa della derivata (l'integrazione nel tempo) corrisponde alla **divisione algebrica per $j\omega$**:
+
+$$
+\boxed{\int \text{d}t \quad \Longleftrightarrow \quad \frac{1}{j\omega} = -j \frac{1}{\omega}}
+$$
+
+Poiché $-j = 1 \angle (-90^\circ)$, integrare un segnale sinusoidale **riduce** l'ampiezza di un fattore $\omega$ e introduce un **ritardo di fase di $-90^\circ$**.
+
+## Equazioni caratteristiche dei componenti in regime sinusoidale
+Grazie a questo spiegone matematico le equazioni caratteristiche di resistori, condensatori e induttori si trasformano in relazioni algebriche lineari del tipo **$\mathbf{V} = \mathbf{Z} \cdot \mathbf{I}$** (Legge di Ohm generalizzata):
+
+### 1. Resistore ($R$)
 Nel resistore la tensione e la corrente sono legate dalla legge $v(t) = R \cdot i(t)$. Passando ai fasori:
 
 $$
 \mathbf{V} = R \cdot \mathbf{I}
 $$
 
-*   **Sfasamento:** Tensione e corrente sono perfettamente **in fase** ($\Delta\phi = 0^\circ$).
+*   **Effetto:** Tensione e corrente sono perfettamente **in fase** ($\Delta\phi = 0^\circ$). La resistenza semplicemente scala l'ampiezza della corrente.
 
----
-
-### 2. Induttore (*L*)
-Nell'induttore la tensione è proporzionale alla derivata della corrente $v(t) = L \frac{\text{d}i(t)}{\text{d}t}$. Passando ai fasori:
-
-$$
-\mathbf{V} = j\omega L \cdot \mathbf{I}
-$$
-
-Poiché $j = 1 e^{j 90^\circ}$, la tensione è sfasata di $+90^\circ$ rispetto alla corrente.
-
-*   **Sfasamento:** La tensione è **in anticipo di $90^\circ$** sulla corrente (oppure la corrente è in ritardo sulla tensione).
-
----
-
-### 3. Condensatore (*C*)
+### 2. Condensatore ($C$)
 Nel condensatore la corrente è la derivata della tensione $i(t) = C \frac{\text{d}v(t)}{\text{d}t}$. Passando ai fasori:
 
 $$
@@ -88,18 +143,20 @@ $$
 
 Poiché $-j = 1 e^{-j 90^\circ}$, la tensione è sfasata di $-90^\circ$ rispetto alla corrente.
 
-*   **Sfasamento:** La tensione è **in ritardo di $90^\circ$** sulla corrente (oppure la corrente è in anticipo sulla tensione).
+*   **Effetto:** La tensione è **in ritardo di $90^\circ$** sulla corrente (oppure la corrente è in anticipo sulla tensione). La tensione viene scalata di un fattore $\frac{1}{\omega C}$ (più la frequenza è alta, più la tensione è piccola).
 
----
 
-## Sommario delle relazioni tra i fasori
+### 3. Induttore ($L$)
+Nell'induttore la tensione è proporzionale alla derivata della corrente $v(t) = L \frac{\text{d}i(t)}{\text{d}t}$. Passando ai fasori:
 
-| Elemento | Relazione fasoriale | Impedenza $\mathbf{Z}$ | Sfasamento tensione-corrente |
-| :--- | :--- | :--- | :--- |
-| **Resistore ($R$)** | $\mathbf{V} = R \mathbf{I}$ | $R$ | $0^\circ$ (in fase) |
-| **Induttore ($L$)** | $\mathbf{V} = j\omega L \mathbf{I}$ | $j\omega L$ | $+90^\circ$ (tensione in anticipo) |
-| **Condensatore ($C$)** | $\mathbf{V} = \frac{1}{j\omega C} \mathbf{I}$ | $-j \frac{1}{\omega C}$ | $-90^\circ$ (tensione in ritardo) |
+$$
+\mathbf{V} = j\omega L \cdot \mathbf{I}
+$$
 
-<div class="autoria" style="margin-top: 3.5rem; padding: 1rem 1.25rem; background: var(--fa-surface); border: 1px solid var(--fa-border); border-radius: var(--fa-radius, 8px); font-size: 0.88rem; color: var(--fa-text-muted);">
-  <strong>Autorialità e Trasparenza</strong> — Il contenuto di questa lezione è stato scritto e verificato da un umano per garantirne la correttezza didattica e scientifica.
-</div>
+Poiché $j = 1 e^{j 90^\circ}$, la tensione è sfasata di $+90^\circ$ rispetto alla corrente.
+
+*   **Effetto:** La tensione è **in anticipo di $90^\circ$** sulla corrente (oppure la corrente è in ritardo sulla tensione). La tensione viene scalata di un fattore $\omega L$ (più la frequenza è alta, più la tensione è grande).
+
+
+Il vantaggio che otteniamo utilizzando i fasori è enorme: ora possiamo trattare tutti i componenti con una semplice legge di Ohm generalizzata! ☺
+Questo argomento in dettaglio è trattato nella lezione sull'[impedenza](/it/fasori/impedenza).

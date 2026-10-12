@@ -7,3 +7,17 @@ const lingua = Astro.url.pathname.split('/').filter(Boolean)[0] ?? 'it';
 
 <a class="fa-torna" href={`/${lingua}/lezioni/`}>Tutte le lezioni</a>
 <TableOfContents />
+
+<script>
+  // Starlight costruisce l'indice con il testo semplice dei titoli, quindi le formule restano codice LaTeX.
+  // Qui copiamo nell'indice il titolo già composto da KaTeX (solo per i titoli che contengono formule).
+  document.querySelectorAll('starlight-toc a[href^="#"]').forEach((voce) => {
+    const titolo = document.getElementById(voce.getAttribute('href').slice(1));
+    if (!titolo || !titolo.querySelector('.katex')) return;
+    (voce.querySelector('span') ?? voce).innerHTML = titolo.innerHTML;
+  });
+</script>
+
+<style is:global>
+  starlight-toc .katex { font-size: 1em; }
+</style>

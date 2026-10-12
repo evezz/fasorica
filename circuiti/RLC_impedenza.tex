@@ -1,0 +1,12 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (6, 3) to[sinusoidal voltage source, l={$\textbf{V} \ 230\, \text{V} \angle 0^\circ$}, i^>=\textcolor{blue}{$\textbf{I} = ?$}] (6, 9);
+	\draw (9, 9) to[american resistor, l_={$R \ 22\, \Omega$}] (9, 6);
+	\draw (9, 6) to[cute inductor, l_={$L \ 85 \, \text{mH}$}] (9, 3);
+	\draw (11, 9) to[capacitor, l={$C \ 120 \, \mu\text{F}$}] (11, 3);
+	\draw (6, 9) to[short] (11, 9);
+	\draw (6, 3) to[short] (11, 3);
+	\node[circ] at (9, 9){};
+	\node[circ] at (9, 3){};
+    	\node[shape=rectangle, minimum width=1.465cm, minimum height=0.715cm] at (5, 5.625){} node[anchor=north west, align=left, text width=1.077cm, inner sep=6pt] at (4.35, 6){50 Hz};
+\end{tikzpicture}
