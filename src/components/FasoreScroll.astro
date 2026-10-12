@@ -1,0 +1,382 @@
+---
+// FasoreScroll.astro: un piccolo fasore nell'angolo che ruota mentre scorri la pagina.
+// Arrivato in fondo ha fatto un giro completo (360°) e compare un messaggio con un pulsante per ripartire.
+//
+// Uso (in fondo alla pagina MDX, o ovunque: è position: fixed):
+//   import FasoreScroll from '../../components/FasoreScroll.astro';
+//   <FasoreScroll />
+//
+// Facoltativo: misurare la lettura solo su un elemento (per esempio l'articolo, ignorando footer e commenti)
+//   <FasoreScroll selector="article" />
+interface Props {
+  selector?: string;
+}
+const { selector = '' } = Astro.props;
+---
+
+<div class="fs" data-fasore-scroll data-selector={selector}>
+  <p class="fs-sr" role="status" data-fs="annuncio"></p>
+
+  <div class="fs-bolla" data-fs="bolla" hidden>
+    <p>Giro completo: sei tornato al punto di partenza, come ogni buon fasore. Si riparte?</p>
+    <div class="fs-azioni">
+      <button type="button" class="fs-btn fs-btn-primario" data-fs="riparti">Si riparte</button>
+      <button type="button" class="fs-btn" data-fs="chiudi">Resto qui</button>
+    </div>
+  </div>
+
+  <div class="fs-quadrante">
+    <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <circle class="fs-fondo" cx="50" cy="50" r="47" />
+      <g class="fs-assi">
+        <line x1="8" y1="50" x2="92" y2="50" />
+        <line x1="50" y1="8" x2="50" y2="92" />
+      </g>
+      <!-- l'arco cresce in senso antiorario: partenza a destra (0°), il flip verticale inverte il verso del cerchio -->
+      <circle
+        class="fs-arco"
+        data-fs="arco"
+        cx="50"
+        cy="50"
+        r="47"
+        pathLength="100"
+        stroke-dasharray="0 100"
+        transform="translate(0 100) scale(1 -1)"
+      ></circle>
+      <line class="fs-proiezione" data-fs="proiezione" x1="88" y1="50" x2="88" y2="50"></line>
+      <circle class="fs-punto-re" data-fs="punto-re" cx="88" cy="50" r="2.6"></circle>
+      <g data-fs="freccia">
+        <line class="fs-gambo" x1="50" y1="50" x2="76" y2="50" />
+        <polygon class="fs-punta" points="88,50 74,43 74,57" />
+      </g>
+      <circle class="fs-centro" cx="50" cy="50" r="3.2" />
+    </svg>
+    <span class="fs-gradi" data-fs="gradi">0°</span>
+  </div>
+</div>
+
+<style>
+  .fs {
+    --fs-accent: var(--fa-accent, #d9381e);
+    --fs-testo: var(--fa-text, #252525);
+    --fs-superficie: var(--fa-surface, #f8f7f3);
+    --fs-bordo: var(--fa-border, #dedbd4);
+
+    position: fixed;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Finché lo script non ha misurato la pagina (o se la pagina entra tutta nello schermo) non si vede */
+  .fs:not([data-attivo='1']) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .fs-quadrante {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .fs-quadrante svg {
+    display: block;
+    width: 76px;
+    height: 76px;
+    overflow: visible;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.14));
+  }
+
+  .fs-fondo {
+    fill: var(--fs-superficie); /* pieno: il testo sotto non deve trasparire */
+    stroke: var(--fs-bordo);
+    stroke-width: 2;
+  }
+
+  .fs-assi line {
+    stroke: var(--fs-bordo);
+    stroke-width: 1.4;
+  }
+
+  .fs-arco {
+    fill: none;
+    stroke: var(--fs-accent);
+    stroke-opacity: 0.4;
+    stroke-width: 4;
+    stroke-linecap: butt;
+  }
+
+  .fs-proiezione {
+    stroke: var(--fs-accent);
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+  }
+
+  .fs-punto-re {
+    fill: var(--fs-accent);
+    fill-opacity: 0.8;
+  }
+
+  .fs-gambo {
+    stroke: var(--fs-accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .fs-punta {
+    fill: var(--fs-accent);
+  }
+
+  .fs-centro {
+    fill: var(--fs-accent);
+  }
+
+  .fs-gradi {
+    min-width: 3.4em;
+    padding: 1px 6px;
+    border: 1px solid var(--fs-bordo);
+    border-radius: 999px;
+    background: var(--fs-superficie);
+    color: var(--fs-testo);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .fs-bolla {
+    position: relative;
+    box-sizing: border-box;
+    width: min(270px, calc(100vw - 32px));
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--fs-bordo);
+    border-radius: 10px;
+    background: var(--fs-superficie);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.16);
+    color: var(--fs-testo);
+    pointer-events: auto;
+    animation: fs-entra 0.3s ease-out;
+  }
+
+  .fs-bolla[hidden] {
+    display: none;
+  }
+
+  .fs-bolla p {
+    margin: 0 0 0.65rem 0 !important;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .fs-azioni {
+    display: flex;
+    flex-wrap: nowrap;     /* Impedisce che uno dei due vada a capo */
+    align-items: center;  /* Mantiene entrambi i bottoni sulla stessa identica linea verticale */
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .fs-btn {
+    flex: 1 1 0px;        /* Stessa larghezza per entrambi */
+    height: 2.2rem;       /* Stessa altezza per entrambi */
+    margin: 0;            /* Rimuove eventuali margini di default del browser */
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
+    border: 1px solid var(--fs-bordo);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--fs-testo);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .fs-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .fs-btn-primario {
+    border-color: #333;
+    background: #333;
+    color: #fff;
+  }
+
+  .fs-btn-primario:hover {
+    background: #111;
+  }
+
+  .fs-btn:focus-visible {
+    outline: 2px solid #1e67d9;
+    outline-offset: 2px;
+  }
+
+  /* Solo per gli screen reader */
+  .fs-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @keyframes fs-entra {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .fs {
+      right: 10px;
+    }
+    .fs-quadrante svg {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fs,
+    .fs-bolla {
+      animation: none;
+      transition: none;
+    }
+  }
+
+  @media print {
+    .fs {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const SOGLIA_FINE = 0.985; // da qui in poi il giro è "completo"
+  const SOGLIA_RIENTRO = 0.94; // sotto questa soglia il messaggio sparisce
+  const R_PUNTA = 38; // raggio della punta della freccia, in unità del viewBox
+
+  let root: HTMLElement | null = null;
+  let rafId = 0;
+  let ascoltatoriGlobali = false;
+
+  const limita = (x: number) => Math.min(1, Math.max(0, x));
+  const q = (nome: string) => root!.querySelector<HTMLElement>(`[data-fs="${nome}"]`)!;
+  const qs = (nome: string) => root!.querySelector<SVGElement>(`[data-fs="${nome}"]`)!;
+
+  function leggiProgresso(): number | null {
+    if (!root) return null;
+    const sel = root.dataset.selector;
+    if (sel) {
+      const bersaglio = document.querySelector(sel);
+      if (bersaglio) {
+        const r = bersaglio.getBoundingClientRect();
+        const totale = r.height - window.innerHeight;
+        return totale > 4 ? limita(-r.top / totale) : null;
+      }
+    }
+    const totale = document.documentElement.scrollHeight - window.innerHeight;
+    return totale > 4 ? limita(window.scrollY / totale) : null;
+  }
+
+  function disegna() {
+    rafId = 0;
+    if (!root || !root.isConnected) return;
+
+    const p = leggiProgresso();
+    if (p === null) {
+      root.dataset.attivo = '0'; // pagina più corta dello schermo: niente da leggere, niente fasore
+      return;
+    }
+    root.dataset.attivo = '1';
+
+    const gradi = p * 360;
+    const rad = (gradi * Math.PI) / 180;
+    const x = 50 + R_PUNTA * Math.cos(rad);
+    const y = 50 - R_PUNTA * Math.sin(rad);
+
+    // Verso antiorario, come in matematica: in SVG la rotazione positiva è oraria, quindi il segno meno
+    qs('freccia').setAttribute('transform', `rotate(${-gradi} 50 50)`);
+    qs('arco').setAttribute('stroke-dasharray', `${p * 100} 100`);
+
+    // Proiezione della punta sull'asse reale: è il valore istantaneo di cos θ
+    const proiezione = qs('proiezione');
+    proiezione.setAttribute('x1', String(x));
+    proiezione.setAttribute('y1', String(y));
+    proiezione.setAttribute('x2', String(x));
+    proiezione.setAttribute('y2', '50');
+    const puntoRe = qs('punto-re');
+    puntoRe.setAttribute('cx', String(x));
+
+    q('gradi').textContent = `${Math.round(gradi)}°`;
+
+    // Messaggio finale
+    const bolla = q('bolla');
+    if (p >= SOGLIA_FINE && root.dataset.chiusa !== '1') {
+      if (bolla.hidden) {
+        bolla.hidden = false;
+        q('annuncio').textContent = bolla.querySelector('p')!.textContent;
+      }
+    } else if (p < SOGLIA_RIENTRO && !bolla.hidden) {
+      bolla.hidden = true;
+      q('annuncio').textContent = '';
+    }
+  }
+
+  function richiedi() {
+    if (!rafId) rafId = requestAnimationFrame(disegna);
+  }
+
+  function inizializza() {
+    root = document.querySelector<HTMLElement>('[data-fasore-scroll]');
+    if (!root) return;
+
+    if (!root.dataset.fsInit) {
+      root.dataset.fsInit = '1';
+      const el = root;
+
+      q('riparti').addEventListener('click', () => {
+        const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: ridotto ? 'auto' : 'smooth' });
+      });
+      q('chiudi').addEventListener('click', () => {
+        el.dataset.chiusa = '1';
+        q('bolla').hidden = true;
+        q('annuncio').textContent = '';
+      });
+    }
+
+    if (!ascoltatoriGlobali) {
+      ascoltatoriGlobali = true;
+      window.addEventListener('scroll', richiedi, { passive: true });
+      window.addEventListener('resize', richiedi);
+    }
+    richiedi();
+  }
+
+  inizializza();
+  // Con le View Transitions di Astro la pagina cambia senza ricaricare lo script
+  document.addEventListener('astro:page-load', inizializza);
+</script>

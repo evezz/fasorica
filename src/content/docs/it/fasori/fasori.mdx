@@ -5,6 +5,9 @@ description: Dalle sinusoidi al dominio della frequenza, definizione di fasore, 
 import FiguraLato from '../../../../components/FiguraLato.astro';
 import Figura from '../../../../components/Figura.astro';
 import SimulatoreFasori from '../../../../components/SimulatoreFasori.astro';
+import FasoreScroll from '../../../../components/FasoreScroll.astro';
+
+<FasoreScroll />
 
 L'analisi dei circuiti in regime alternato effettuata direttamente nel dominio del tempo richiede la risoluzione di equazioni differenziali, in quanto si utilizzano i componenti reattivi (condensatore e induttore), i quali presentano una derivata nella loro equazione caratteristica.
 L'introduzione dei **fasori** (ideata da Charles Proteus Steinmetz) permette di trasformare le equazioni differenziali temporali in **equazioni algebriche**, semplificando drasticamente l'analisi dei circuiti lineari.
@@ -52,7 +55,7 @@ Grazie a questa proprietà, le relazioni Volt-Ampere di resistori, induttori e c
 
 ---
 
-### 1. Resistore ($R$)
+### 1. Resistore (*R*)
 Nel resistore la tensione e la corrente sono legate dalla legge $v(t) = R \cdot i(t)$. Passando ai fasori:
 
 $$
@@ -63,7 +66,7 @@ $$
 
 ---
 
-### 2. Induttore ($L$)
+### 2. Induttore (*L*)
 Nell'induttore la tensione è proporzionale alla derivata della corrente $v(t) = L \frac{\text{d}i(t)}{\text{d}t}$. Passando ai fasori:
 
 $$
@@ -76,7 +79,7 @@ Poiché $j = 1 e^{j 90^\circ}$, la tensione è sfasata di $+90^\circ$ rispetto a
 
 ---
 
-### 3. Condensatore ($C$)
+### 3. Condensatore (*C*)
 Nel condensatore la corrente è la derivata della tensione $i(t) = C \frac{\text{d}v(t)}{\text{d}t}$. Passando ai fasori:
 
 $$
