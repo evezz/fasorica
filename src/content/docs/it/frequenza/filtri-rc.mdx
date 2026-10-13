@@ -1,0 +1,239 @@
+---
+title: Filtri RC passa-basso e passa-alto
+description: Analisi in frequenza dei filtri passivi RC del primo ordine, calcolo analitico di modulo e fase della funzione di trasferimento e frequenza di taglio a -3 dB.
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+Un **filtro elettronico** è un circuito in grado di selezionare o attenuare determinate componenti in frequenza di un segnale d'ingresso. I filtri passivi RC sfruttano la dipendenza della reattanza capacitiva $X_C = \frac{1}{\omega C}$ dalla frequenza per modificare l'ampiezza e la fase della tensione d'uscita.
+
+## Funzione di trasferimento
+
+La **funzione di trasferimento** $H(j\omega)$ è il rapporto fasoriale tra la tensione d'uscita e la tensione d'ingresso:
+
+$$
+H(j\omega) = \frac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}}
+$$
+
+È fondamentale nell'analisi in frequenza, e descrive come si comporta il circuito al variare della frequenza (o analogamente della pulsazione $\omega$).
+Trattandosi di un numero complesso $N(\omega) / D(\omega)$, il suo calcolo in ampiezza e fase segue le regole dell'algebra complessa.
+
+### 1. Calcolo del modulo $|H(j\omega)|$
+Il modulo descrive la **risposta in ampiezza** (il guadagno del filtro alla frequenza $\omega$). 
+
+Per un numero complesso espresso come rapporto di parte reale e immaginaria $\frac{A + jB}{C + jD}$, il modulo complessivo equivale al rapporto tra il modulo del numeratore e il modulo del denominatore:
+
+$$
+|H(j\omega)| = \frac{|N(j\omega)|}{|D(j\omega)|} = \frac{\sqrt{\text{Re}\{N\}^2 + \text{Im}\{N\}^2}}{\sqrt{\text{Re}\{D\}^2 + \text{Im}\{D\}^2}}
+$$
+
+### 2. Calcolo della fase $\theta(\omega)$
+La fase descrive lo **sfasamento angolare** introdotto dal filtro tra il segnale di uscita e quello di ingresso.
+
+L'argomento (o fase) di un rapporto di numeri complessi equivale alla **differenza tra l'angolo del numeratore e l'angolo del denominatore**:
+
+$$
+\theta(\omega) = \arg\left(H(j\omega)\right) = \arg(N(j\omega)) - \arg(D(j\omega))
+$$
+
+Ricordando che l'angolo di un generico numero complesso $A + jB$ si ricava con l'arcotangente $\arctan\left(\frac{B}{A}\right)$:
+
+$$
+\theta(\omega) = \arctan\left(\frac{\text{Im}\{N\}}{\text{Re}\{N\}}\right) - \arctan\left(\frac{\text{Im}\{D\}}{\text{Re}\{D\}}\right)
+$$
+
+## Il filtro RC passa-basso
+Si tratta semplicemente di una serie fra una resistenza ed un condensatore. Il segnale d'uscita $v_{\text{out}}(t)$ viene prelevato ai capi del condensatore $C$.
+Viene detto filtro "passa-basso" in quanto permette solo ad alcune frequenze al di sotto di una certa frequenza (detta **frequenza di taglio**, indicata con $f_c$) di arrivare all'uscita.
+Le frequenze al di sopra di questa frequenza vengono idealmente eliminate. Andiamo a vedere nello specifico il comportamento di questo filtro.
+
+  <Figura src="/images/circuiti/RC.svg" alt="Circuito RC" larghezza='40rem'>
+    Circuito RC passa-basso.
+  </Figura>
+
+### 1. Funzione di trasferimento $H(j\omega)$
+Applicando il partitore di tensione nel dominio dei [fasori](/it/fasori/fasori/) tra la resistenza $R$ e l'impedenza del condensatore $\mathbf{Z}_C = \frac{1}{j\omega C}$:
+
+$$
+\mathbf{V}_{\text{out}} = \mathbf{V}_{\text{in}} \cdot \frac{\mathbf{Z}_C}{R + \mathbf{Z}_C} = \mathbf{V}_{\text{in}} \cdot \frac{\frac{1}{j\omega C}}{R + \frac{1}{j\omega C}}
+$$
+
+Moltiplicando numeratore e denominatore per $j\omega C$, ricaviamo la funzione di trasferimento:
+
+$$
+H(j\omega) = \frac{1}{1 + j\omega RC}
+$$
+
+### 2. Modulo e fase di $H(j\omega)$
+
+* **Modulo $|H(j\omega)|$:**
+  Il numeratore è il numero reale $1 + j0$, con modulo $\sqrt{1^2 + 0^2} = 1$.
+  Il denominatore è il numero complesso $1 + j(\omega RC)$, con modulo $\sqrt{1^2 + (\omega RC)^2}$.
+
+  $$
+  |H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}
+  $$
+
+* **Fase $\theta(\omega)$:**
+  L'angolo del numeratore è $\arctan\left(\frac{0}{1}\right) = 0^\circ$.
+  L'angolo del denominatore è $\arctan\left(\frac{\omega RC}{1}\right) = \arctan(\omega RC)$.
+
+  $$
+  \theta(\omega) = 0^\circ - \arctan(\omega RC) = -\arctan(\omega RC)
+  $$
+
+### 3. Comportamento limite
+#### A basse frequenze ($\omega \to 0$)
+
+* **Cosa significa matematicamente ($\omega \to 0$):**
+  Significa che la frequenza del segnale d'ingresso $f$ diventa molto piccola, avvicinandosi allo stato continuo (in corrente continua $\text{DC}$, $f = 0\text{ Hz}$ e $\omega = 0\text{ rad/s}$). 
+  Sostituendo $\omega = 0$ nelle formule di modulo e fase:
+  $$
+  |H(0)| = \frac{1}{\sqrt{1 + 0^2}} = \frac{1}{1} = 1 \quad
+  $$
+  $$
+  \theta(0) = -\arctan(0) = 0^\circ
+  $$
+  Dire che $|H| \to 1$ significa che l'ampiezza della tensione d'uscita è identica a quella d'ingresso ($V_{\text{out}} = V_{\text{in}}$). Dire che $\theta \to 0^\circ$ significa che la sinusoide d'uscita è perfettamente sovrapposta e sincronizzata nel tempo con quella d'ingresso (sfasamento nullo).
+
+* **Perché succede fisicamente:**
+  La reattanza del condensatore è $X_C = \frac{1}{\omega C}$. Quando $\omega$ tende a zero, $X_C$ tende all'infinito ($X_C \to \infty$). Il condensatore si comporta quindi come un **circuito aperto** (un'interruzione del ramo). Non scorre corrente nel circuito, non c'è caduta di tensione sulla resistenza $R$, e tutta la tensione d'ingresso si ritrova invariata ai capi del condensatore in uscita.
+
+#### Ad alte frequenze ($\omega \to \infty$)
+
+* **Cosa significa matematicamente ($\omega \to \infty$):**
+  Significa che la frequenza del segnale d'ingresso diventa estremamente elevata rispetto alla frequenza di taglio del filtro ($\omega \gg \omega_c$).
+  Facendo il limite per $\omega \to \infty$:
+  $$
+  \lim_{\omega \to \infty} |H(j\omega)| = \lim_{\omega \to \infty} \frac{1}{\sqrt{1 + (\omega RC)^2}} = \frac{1}{\infty} = 0
+  $$
+  $$
+  \lim_{\omega \to \infty} \theta(\omega) = -\lim_{\omega \to \infty} \arctan(\omega RC) = -90^\circ
+  $$
+  Dire che $|H| \to 0$ significa che l'ampiezza del segnale in uscita diventa trascurabile, fino ad annullarsi del tutto ($V_{\text{out}} \approx 0\text{ V}$). Il segnale viene bloccato (attenuato).
+  Dire che $\theta \to -90^\circ$ significa che la tensione d'uscita accumula un ritardo di fase di un quarto di periodo ($90^\circ$) rispetto al segnale d'ingresso.
+
+* **Perché succede fisicamente:**
+  Man mano che la frequenza sale, la reattanza del condensatore crolla verso zero ($X_C \to 0$). Il condensatore offre una resistenza al passaggio della corrente sempre più irrilevante, comportandosi come un vero e proprio **cortocircuito**. Tutta la tensione d'ingresso cade sulla resistenza $R$, mentre ai capi del condensatore (dove preleviamo l'uscita) la tensione scende a zero.
+
+## Il filtro RC passa-alto
+
+Anche in questo caso è composto semplicemente da una resistenza ed un condensatore: la differenza è che il segnale d'uscita $v_{\text{out}}(t)$ viene prelevato ai capi del resistore $R$.
+Viene detto filtro "passa-alto" in quanto permette solo ad alcune frequenze al di sopra di una certa frequenza (detta **frequenza di taglio**, indicata con $f_c$) di arrivare all'uscita.
+Le frequenze al di sotto di questa frequenza vengono idealmente eliminate. Il comportamento è duale a quello del filtro passa-basso.
+
+  <Figura src="/images/circuiti/CR.svg" alt="Circuito CR" larghezza='40rem'>
+    Circuito RC passa-alto.
+  </Figura>
+
+### 1. Funzione di trasferimento $H(j\omega)$
+Applicando nuovamente il partitore di tensione per la resistenza $R$:
+
+$$
+\mathbf{V}_{\text{out}} = \mathbf{V}_{\text{in}} \cdot \frac{R}{R + \frac{1}{j\omega C}} = \mathbf{V}_{\text{in}} \cdot \frac{j\omega RC}{1 + j\omega RC}
+$$
+
+$$
+H(j\omega) = \frac{j\omega RC}{1 + j\omega RC}
+$$
+
+### 2. Modulo e fase di $H(j\omega)$
+
+* **Modulo $|H(j\omega)|$:**
+  Il numeratore è puramente immaginario $0 + j(\omega RC)$, con modulo $\sqrt{0^2 + (\omega RC)^2} = \omega RC$.
+  Il denominatore ha modulo $\sqrt{1^2 + (\omega RC)^2}$.
+
+  $$
+  |H(j\omega)| = \frac{\omega RC}{\sqrt{1 + (\omega RC)^2}}
+  $$
+
+* **Fase $\theta(\omega)$:**
+  L'angolo del numeratore immaginario positivo è $\arctan\left(\frac{\omega RC}{0}\right) = +90^\circ$.
+  L'angolo del denominatore è $\arctan(\omega RC)$.
+
+  $$
+  \theta(\omega) = 90^\circ - \arctan(\omega RC)
+  $$
+
+### 3. Comportamento limite
+#### A basse frequenze ($\omega \to 0$)
+
+* **Cosa significa matematicamente ($\omega \to 0$):**
+  Significa che la frequenza del segnale d'ingresso $f$ tende a zero (corrente continua o variazioni estremamente lente). 
+  Sostituendo $\omega = 0$ nelle formule del passa-alto:
+  $$
+  |H(0)| = \frac{0 \cdot RC}{\sqrt{1 + 0^2}} = \frac{0}{1} = 0
+  $$
+  $$
+  \theta(0) = 90^\circ - \arctan(0) = +90^\circ
+  $$
+  Dire che $|H| \to 0$ significa che l'ampiezza della tensione d'uscita si annulla ($V_{\text{out}} \approx 0\text{ V}$): la componente continua e le basse frequenze vengono completamente bloccate.
+  Dire che $\theta \to +90^\circ$ significa che l'uscita è in anticipo di fase di un quarto di periodo rispetto all'ingresso.
+
+* **Perché succede fisicamente:**
+  La reattanza del condensatore è $X_C = \frac{1}{\omega C}$. Per $\omega \to 0$, $X_C$ tende all'infinito ($X_C \to \infty$): il condensatore si comporta come un **circuito aperto** (un'interruzione sulla linea). Impedendo il passaggio della corrente verso il carico, l'intera tensione d'ingresso cade sul condensatore stesso, lasciando tensione nulla ai capi della resistenza $R$ in uscita.
+
+#### Ad alte frequenze ($\omega \to \infty$)
+
+* **Cosa significa matematicamente ($\omega \to \infty$):**
+  Significa che la frequenza del segnale d'ingresso è molto superiore alla frequenza di taglio ($\omega \gg \omega_c$).
+  Calcolando il limite per $\omega \to \infty$:
+  $$
+  \lim_{\omega \to \infty} |H(j\omega)| = \lim_{\omega \to \infty} \frac{\omega RC}{\sqrt{1 + (\omega RC)^2}} = \lim_{\omega \to \infty} \frac{\omega RC}{\omega RC \sqrt{\frac{1}{(\omega RC)^2} + 1}} = 1
+  $$
+  $$
+  \lim_{\omega \to \infty} \theta(\omega) = 90^\circ - \lim_{\omega \to \infty} \arctan(\omega RC) = 90^\circ - 90^\circ = 0^\circ
+  $$
+  Dire che $|H| \to 1$ significa che il segnale attraversa il filtro inalterato in ampiezza ($V_{\text{out}} = V_{\text{in}}$). Dire che $\theta \to 0^\circ$ significa che la sinusoide d'uscita è perfettamente sovrapposta e sincronizzata nel tempo con quella d'ingresso (sfasamento nullo).
+
+* **Perché succede fisicamente:**
+  All'aumentare della frequenza, la reattanza del condensatore crolla verso zero ($X_C \to 0$), facendolo comportare come un **cortocircuito** (un filo ideale). Il condensatore non oppone quasi alcuna resistenza al passaggio delle variazioni rapide di tensione; di conseguenza, la tensione d'ingresso si trasferisce integralmente ai capi della resistenza $R$ in uscita.
+
+## La frequenza di taglio ($f_c$) e i $-3\, \text{dB}$
+
+La **frequenza di taglio** $f_c$ (o pulsazione di taglio $\omega_c = 2\pi f_c$) definisce il confine convenzionale tra la banda passante e la banda attenuata del filtro.
+È il parametro più importante di questi filtri e ne definisce il funzionamento.
+
+### Derivazione matematica della frequenza di taglio
+Per convenzione, la frequenza di taglio si definisce come la frequenza in cui la **potenza in uscita si dimezza** rispetto alla potenza d'ingresso:
+
+$$
+P_{\text{out}} = \frac{1}{2} P_{\text{in}}
+$$
+
+Poiché la potenza è proporzionale al quadrato della tensione ($P \propto V^2$), il dimezzamento della potenza equivale a un abbattimento del modulo della funzione di trasferimento di un fattore $\frac{1}{\sqrt{2}} \approx 0.707$:
+
+$$
+|H(j\omega_c)| = \frac{1}{\sqrt{2}}
+$$
+
+Eguagliando il modulo del passa-basso alla condizione di taglio:
+
+$$
+\frac{1}{\sqrt{1 + (\omega_c RC)^2}} = \frac{1}{\sqrt{2}} \implies 1 + (\omega_c RC)^2 = 2 \implies \omega_c RC = 1
+$$
+
+Ricaviamo la **pulsazione di taglio** $\omega_c$:
+
+$$
+\omega_c = \frac{1}{RC} \quad [\text{rad/s}]
+$$
+
+E la **frequenza di taglio** $f_c$:
+
+<div style="text-align: center; margin: 1.5rem 0; font-size: 1.35rem;">
+$$
+\boxed{f_c = \frac{1}{2\pi RC}} \quad [\text{Hz}]
+$$
+</div>
+
+Per il passa-alto è la stessa, provare per credere ☺
+
+#### Significato dei $-3\, \text{dB}$
+Per rappresentare graficamente l'attenuazione del filtro su un'ampia scala numerica e collegarla ai diagrammi di Bode, si esprime il modulo in decibel (dB) utilizzando la formula $G_{\text{dB}} = 20 \log_{10}(\vert{}H\vert{})$:
+
+$$
+G_{\text{dB}} = 20 \log_{10}\left(|H(j\omega_c)|\right) = 20 \log_{10}\left(\frac{1}{\sqrt{2}}\right) = -20 \log_{10}(\sqrt{2}) \approx -3.01\text{ dB}
+$$
+
+Alla frequenza di taglio $f_c$, l'ampiezza del segnale d'uscita subisce un'attenuazione di **$-3\text{ dB}$** rispetto al valore massimo.

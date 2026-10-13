@@ -1,0 +1,13 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (5, 4) to[capacitor, l={$C$}] (9, 4);
+	\draw (9, 4) to[american resistor, l={$R$}] (9, 1);
+	\draw (9, 4) to[short] (10, 4);
+	\draw (10, 1) to[short] (5, 1);
+	\node[circ] at (9, 4){};
+	\node[circ] at (9, 1){};
+	\path[draw={rgb,255:red,58;green,118;blue,231}, -stealth] (5, 1.25) -- (5, 3.75);
+	\path[draw={rgb,255:red,211;green,109;blue,80}, -stealth] (10, 1.25) -- (10, 3.75);
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.965cm] at (4.75, 2.25){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (4.25, 2.75){\textcolor{rgb,255:red,58;green,118;blue,231}{$V_{in}$}};
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.965cm] at (10.5, 2.25){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (10, 2.75){\textcolor{rgb,255:red,211;green,109;blue,80}{$V_{out}$}};
+\end{tikzpicture}
