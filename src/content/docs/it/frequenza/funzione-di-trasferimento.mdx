@@ -1,0 +1,196 @@
+---
+title: Funzione di trasferimento
+description: Spiegazione della funzione di trasferimento, poli e zeri e comportamento in frequenza.
+---
+
+import FiguraLato from '../../../../components/FiguraLato.astro';
+
+La **funzione di trasferimento (FdT)** è una funzione che caratterizza il comportamento di un sistema dinamico tempo-invariante nel dominio della frequenza, mettendo in relazione l'ingresso e l'uscita. 
+Genericamente si può scrivere nella forma:
+
+<div className="formula-numerata">
+$$
+H(j\omega)=
+\overset{\text{①}}{K}
+\cdot
+\frac{
+\overset{\text{②}}{\left(j\frac{\omega}{\omega_{z0}}\right)}
+\cdot
+\overset{\text{③}}{\left(1+j\frac{\omega}{\omega_{z1}}\right)}
+\dots
+}{
+\underset{\text{④}}{\left(j\frac{\omega}{\omega_{p0}}\right)}
+\cdot
+\underset{\text{⑤}}{\left(1+j\frac{\omega}{\omega_{p1}}\right)}
+\dots
+}
+$$
+</div>
+
+Andiamo a vedere i componenti principali utili per l'analisi in frequenza dei circuiti.
+
+
+## Analisi dei singoli fattori
+
+### 1. Costante ($K$)
+
+<FiguraLato src="/images/circuiti/bode-costante.svg" alt="Diagramma di Bode del modulo di una costante K" larghezza='50.2rem'>
+    Diagramma di Bode di una costante $K=10$ (a sinistra) e di una costante $K=-10$ (a destra).
+</FiguraLato>
+
+È un fattore moltiplicativo davanti a tutta la funzione (è un numero).
+
+* **Modulo (dB):** 
+  $$|K|_{\text{dB}} = 20 \log |K|$$
+
+* **Fase:** 
+  $$\angle K = \begin{cases} 0 & \text{se } K > 0 \\ -\pi & \text{se } K < 0 \quad (!!)\end{cases}$$
+
+> **Nota sui grafici ([diagramma di Bode](/it/frequenza/bode))**: l'asse orizzontale delle pulsazioni è *logaritmico*, dove ogni intervallo principale rappresenta una potenza di 10. Inoltre è normalizzata rispetto alla frequenza dei poli e degli zeri, per far sì che il cambiamento del comportamento in frequenza avvenga sempre per $\omega/\omega_{p/z}=1$ (ossia $\omega = \omega_{p/z}$). Nel caso dei poli e zeri nell'origine, l'asse è normalizzato rispetto al passaggio agli $0\, \text{dB}$ (il polo/zero è nell'origine $\omega = 0\, \text{rad/s}$ che però non è rappresentabile in scala logaritmica). L'asse verticale nel caso del modulo è in decibel ($\text{dB}$), nel caso della fase è in gradi ($\degree$).
+
+### 2. Zero nell'origine $\left(j \frac{\omega}{\omega_{z0}}\right)$
+
+<FiguraLato src="/images/circuiti/bode-zero-origine.svg" alt="Diagramma di Bode del modulo di uno zero nell'origine" larghezza='25rem'>
+    Diagramma di Bode di uno zero nell'origine.
+</FiguraLato>
+
+Si dicono **zeri** le radici del numeratore della FdT (cioè quei punti in cui il numeratore si annulla).
+Si dice *nell'origine* perchè il punto che annulla questo termine è $\omega = 0$.
+
+* **Modulo (dB):**
+  $$\left| j \frac{\omega}{\omega_{z0}} \right|_{\text{dB}} = 20 \log \left| j \frac{\omega}{\omega_{z0}} \right| = 20 \log \left( \frac{\omega}{\omega_{z0}} \right) = 20 \log(\omega) - 20 \log(\omega_{z0})$$ *(proprietà dei logaritmi)*
+  * $\omega_{z0}$ è la frequenza alla quale la FdT ha guadagno unitario (il modulo in dB è pari a $0$).
+  * Pendenza della retta: **$+20 \text{ dB/decade}$**.
+
+* **Fase:**
+  $$\angle \left( j \frac{\omega}{\omega_{z0}} \right) = \frac{\pi}{2}$$
+  *(tutti i segni meno vengono raccolti nel termine $K$, quindi la fase di questo termine è sempre $+\frac{\pi}{2}$).*
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+  <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Perché $20 \text{ dB/decade}$?
+  </summary>
+
+  <div style={{ marginTop: '1rem' }}>
+    La pendenza di **$20 \text{ dB/decade}$** deriva direttamente dalla definizione di decibel applicata al modulo della funzione di trasferimento espressa in scala logaritmica.
+    #### 1. Definizione del modulo in decibel
+    Per un generico termine proporzionale alla frequenza come lo zero nell'origine $H(j\omega) = j \frac{\omega}{\omega_{z0}}$, il modulo espresso in decibel è:
+
+    $$
+    |H(j\omega)|_{\text{dB}} = 20 \log_{10} \left| j \frac{\omega}{\omega_{z0}} \right| = 20 \log_{10} \left( \frac{\omega}{\omega_{z0}} \right)
+    $$
+
+    Sfruttando la proprietà dei logaritmi $\log\left(\frac{a}{b}\right) = \log(a) - \log(b)$:
+
+    $$
+    |H(j\omega)|_{\text{dB}} = 20 \log_{10}(\omega) - 20 \log_{10}(\omega_{z0})
+    $$
+
+    #### 2. Definizione di "Decade"
+    Una **decade** rappresenta una variazione di frequenza di un fattore $10$. Consideriamo due frequenze $\omega_1$ e $\omega_2$ tali che:
+
+    $$
+    \omega_2 = 10 \cdot \omega_1
+    $$
+
+    #### 3. Calcolo dello scostamento ($\Delta \text{dB}$)
+    Calcoliamo la differenza di modulo in dB tra la frequenza $\omega_2$ e la frequenza $\omega_1$:
+
+    $$
+    \Delta \text{dB} = |H(j\omega_2)|_{\text{dB}} - |H(j\omega_1)|_{\text{dB}}
+    $$
+
+    Sostituendo le espressioni trovate al punto 1:
+
+    $$
+    \Delta \text{dB} = \Big[ 20 \log_{10}(\omega_2) - 20 \log_{10}(\omega_{z0}) \Big] - \Big[ 20 \log_{10}(\omega_1) - 20 \log_{10}(\omega_{z0}) \Big]
+    $$
+
+    I termini costanti $-20 \log_{10}(\omega_{z0})$ si elidono a vicenda:
+
+    $$
+    \Delta \text{dB} = 20 \log_{10}(\omega_2) - 20 \log_{10}(\omega_1) = 20 \log_{10} \left( \frac{\omega_2}{\omega_1} \right)
+    $$
+
+    #### 4. Sostituzione dell'intervallo di una decade
+    Essendo $\frac{\omega_2}{\omega_1} = 10$, otteniamo:
+
+    $$
+    \Delta \text{dB} = 20 \log_{10}(10) = 20 \cdot 1 = +20 \text{ dB}
+    $$
+
+    > **In sintesi:** Ogni volta che la frequenza si moltiplica per $10$ (una decade), il logaritmo aumenta di $1$. Moltiplicato per il coefficiente dei decibel ($20$), si ottiene una variazione esattamente pari a **$+20 \text{ dB/decade}$**. Per i poli (al denominatore), la proprietà dei logaritmi porta il segno meno, ottenendo **$-20 \text{ dB/decade}$**.
+  </div>
+</details>
+
+### 3. Zero non nell'origine $\left(1 + j \frac{\omega}{\omega_{z1}}\right)$
+
+<FiguraLato src="/images/circuiti/bode-zero.svg" alt="Diagramma di Bode del modulo di uno zero non nell'origine" larghezza='25rem'>
+    Diagramma di Bode di uno zero non nell'origine.
+</FiguraLato>
+
+A differenza dello zero nell'origine, uno zero di questo tipo si annulla in $\omega = -\omega_{z1}$. Tuttavia nei diagrammi di Bode la frequenza varia lungo l'asse reale positivo ($\omega > 0$); di conseguenza, il punto d'interesse è $\omega = \omega_{z1}$: il termine non si annulla, ma assume valore $1 + j$.
+In questo punto, la funzione di trasferimento varia il suo comportamento.
+
+
+* **Pulsazione dello zero:** $\omega_{z1}$
+
+* **Modulo (dB):**
+  $$\left| 1 + j \frac{\omega}{\omega_{z1}} \right|_{\text{dB}} = 20 \log \left| 1 + j \frac{\omega}{\omega_{z1}} \right|$$
+  * Per $\omega \ll \omega_{z1} \implies \approx 0 \text{ dB}$
+  * Per $\omega \gg \omega_{z1} \implies \text{retta con pendenza } +20 \text{ dB/decade} \quad$
+    *( perché $1 + j \frac{\omega}{\omega_{z1}} \approx j \frac{\omega}{\omega_{z1}}$)* .
+  * In $\omega = \omega_{z1} \implies \left| 1 + j \frac{\omega}{\omega_{z1}} \right|_{\text{dB}} = 20 \log \sqrt{2} \approx 3\, \text{dB}$ 
+
+* **Fase:**
+  $$\angle \left( 1 + j \frac{\omega}{\omega_{z1}} \right) = \begin{cases} 0 & \text{per } \omega \ll \omega_{z1} \\ \frac{\pi}{4} & \text{per } \omega = \omega_{z1} \\ \frac{\pi}{2} & \text{per } \omega \gg \omega_{z1} \end{cases}$$
+
+
+### 4. Polo nell'origine $\left(\frac{1}{j \frac{\omega}{\omega_{p0}}}\right)$
+
+<FiguraLato src="/images/circuiti/bode-polo-origine.svg" alt="Diagramma di Bode del modulo di un polo nell'origine" larghezza='25rem'>
+    Diagramma di Bode di un polo nell'origine.
+</FiguraLato>
+
+Si dicono **poli** le radici del denominatore della FdT (cioè quei punti in cui il denominatore si annulla e la FdT tende a infinito).
+Si dice *nell'origine* perché il punto che annulla il denominatore è $\omega = 0$.
+
+* **Modulo (dB):**
+  $$\left| \frac{1}{j \frac{\omega}{\omega_{p0}}} \right|_{\text{dB}} = 20 \log \left| \frac{1}{j \frac{\omega}{\omega_{p0}}} \right| = 20 \left( \log(1) - \log \left| j \frac{\omega}{\omega_{p0}} \right| \right) = 20 \left( 0 - \log \left| j \frac{\omega}{\omega_{p0}} \right| \right) = -20 \log \left| j \frac{\omega}{\omega_{p0}} \right|= -20 \log \left( \frac{\omega}{\omega_{p0}} \right) = -20 \log(\omega) + 20 \log(\omega_{p0})$$ 
+    - $\omega_{p0}$ è la frequenza alla quale questo termine ha guadagno unitario (il modulo in dB è pari a $0$).
+    - Pendenza della retta: **$-20 \text{ dB/decade}$**.
+
+* **Fase:**
+  $$\angle \left( \frac{1}{j \frac{\omega}{\omega_{p0}}} \right) = -\frac{\pi}{2}$$
+  *(tutti i segni meno vengono raccolti nel termine $K$, quindi la fase di questo termine è sempre $-\frac{\pi}{2}$).*
+
+
+### 5. Polo non nell'origine $\left(\frac{1}{1 + j \frac{\omega}{\omega_{p1}}}\right)$
+
+<FiguraLato src="/images/circuiti/bode-polo.svg" alt="Diagramma di Bode del modulo di un polo non nell'origine" larghezza='25rem'>
+    Diagramma di Bode di un polo non nell'origine.
+</FiguraLato>
+
+A differenza del polo nell'origine, un polo di questo tipo si annulla in $\omega = -\omega_{p1}$. Tuttavia nei diagrammi di Bode la frequenza varia lungo l'asse reale positivo ($\omega > 0$); di conseguenza, il punto d'interesse è $\omega = \omega_{p1}$: il termine non si annulla, ma assume valore $\frac{1}{1 + j}$.
+In questo punto, la funzione di trasferimento varia il suo comportamento.
+
+
+- **Pulsazione del polo:** $\omega_{p1}$
+
+- **Modulo (dB):**
+  $$\left| \frac{1}{1 + j \frac{\omega}{\omega_{p1}}} \right|_{\text{dB}} = -20 \log \left| 1 + j \frac{\omega}{\omega_{p1}} \right|$$
+    - Per $\omega \ll \omega_{p1} \implies \approx 0 \text{ dB}$
+    - Per $\omega \gg \omega_{p1} \implies \text{retta con pendenza } -20 \text{ dB/decade} \quad$
+    *(perché $\frac{1}{1 + j \frac{\omega}{\omega_{p1}}} \approx \frac{1}{j \frac{\omega}{\omega_{p1}}}$)*.
+    - In $\omega = \omega_{p1} \implies \left| \frac{1}{1 + j \frac{\omega}{\omega_{p1}}} \right|_{\text{dB}} = -20 \log \sqrt{2} \approx -3\, \text{dB}$ 
+
+- **Fase:**
+  $$\angle \left( \frac{1}{1 + j \frac{\omega}{\omega_{p1}}} \right) = \begin{cases} 0 & \text{per } \omega \ll \omega_{p1} \\ -\frac{\pi}{4} & \text{per } \omega = \omega_{p1} \\ -\frac{\pi}{2} & \text{per } \omega \gg \omega_{p1} \end{cases}$$
+
+## In sintesi: effetto di poli e zeri
+
+| <span style={{ color: '#252525' }}>Elemento</span> | <span style={{ color: '#252525' }}>Effetto sul Guadagno (Modulo)</span> | <span style={{ color: '#252525' }}>Effetto sulla Fase</span> |
+| :--- | :--- | :--- |
+| **Zero** | Fa **salire** il guadagno ($+20\text{ dB/decade}$) | Fa **guadagnare** fase ($+\frac{\pi}{2}$) |
+| **Polo** | Fa **scendere** il guadagno ($-20\text{ dB/decade}$) | Fa **perdere** fase ($-\frac{\pi}{2}$) |
+  

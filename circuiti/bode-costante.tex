@@ -1,0 +1,49 @@
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\pgfplotsset{
+  bode/.style={
+    width=6.4cm, height=4.4cm, xmin=0.01, xmax=100,
+    grid=both, major grid style={gray!55}, minor grid style={gray!20},
+    tick label style={font=\footnotesize}, label style={font=\small},
+    title style={font=\small},
+    xlabel={$\omega$ [rad/s]}, % <-- Presente su TUTTI i grafici
+  },
+  bode mag/.style={bode, ymin=-50, ymax=50, ytick={-40,-20,0,20,40},
+    ylabel={$|G|_{\mathrm{dB}}$}},
+  bode fase/.style={bode, ymin=-200, ymax=50, ytick={-180,-90,0},
+    ylabel={$\varphi$ [$^\circ$]}},
+}
+\begin{document}
+\begin{tikzpicture}
+
+% ==================== SINISTRA: K = 10 ====================
+% ---------- modulo ----------
+\begin{semilogxaxis}[bode mag, name=magL, title={Modulo ($K=10$)}]
+  \addplot[blue, very thick] coordinates {(0.01,20) (100,20)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:0.012,22)
+    {$K=10\;\Rightarrow\;20\log_{10}|K|=20$ dB};
+\end{semilogxaxis}
+
+% ---------- fase ----------
+\begin{semilogxaxis}[bode fase, name=faseL, at={(magL.south west)}, yshift=-1.8cm, anchor=north west, title={Fase ($K=10$)}]
+  \addplot[blue, very thick] coordinates {(0.01,0) (100,0)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:0.012,8) {$K>0:\;\varphi=0^\circ$};
+\end{semilogxaxis}
+
+% ==================== DESTRA: K = -10 ====================
+% ---------- modulo ----------
+\begin{semilogxaxis}[bode mag, name=magR, at={(magL.north east)}, xshift=1.6cm, anchor=north west, title={Modulo ($K=-10$)}]
+  \addplot[blue, very thick] coordinates {(0.01,20) (100,20)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:0.012,22)
+    {$K=-10\;\Rightarrow\;20\log_{10}|K|=20$ dB};
+\end{semilogxaxis}
+
+% ---------- fase ----------
+\begin{semilogxaxis}[bode fase, name=faseR, at={(magR.south west)}, yshift=-1.8cm, anchor=north west, title={Fase ($K=-10$)}]
+  \addplot[blue, very thick] coordinates {(0.01,-180) (100,-180)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:0.012,-170) {$K<0:\;\varphi=-180^\circ$};
+\end{semilogxaxis}
+
+\end{tikzpicture}
+\end{document}

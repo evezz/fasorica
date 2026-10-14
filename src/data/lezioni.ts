@@ -64,7 +64,7 @@ export const argomenti: Argomento[] = [
     lezioni: [
       { titolo: 'Filtri passivi RC', slug: 'frequenza/filtri-rc', descrizione: 'Passa-basso e passa-alto, frequenza di taglio.', livello: SU },
       { titolo: 'Funzione di trasferimento', slug: 'frequenza/funzione-di-trasferimento', descrizione: 'Poli, zeri e comportamento in frequenza.', livello: U },
-      { titolo: 'Diagrammi di Bode', slug: 'frequenza/bode', descrizione: 'Tracciare modulo e fase con le approssimazioni asintotiche.', livello: U },
+      { titolo: 'Diagrammi di Bode', slug: 'frequenza/bode', descrizione: 'Tracciare modulo e fase partendo da un circuito.', livello: U },
       { titolo: 'Esercizi', slug: 'frequenza/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
     ],
   },

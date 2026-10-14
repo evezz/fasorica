@@ -817,7 +817,7 @@ body .page .content-panel:first-child {
   .sl-markdown-content .fig-lato {
   --fig-w: 17rem;
   float: right;
-  width: min(var(--fig-w), 42%);
+  width: min(var(--fig-w), 82%);
   margin: 0.25rem 0 1rem 1.75rem;
 }
 .sl-markdown-content .fig-lato.fig-sinistra { float: left; margin: 0.25rem 1.75rem 1rem 0; }
@@ -895,4 +895,8 @@ starlight-toc a[aria-current='true'] {
 @media (max-width: 60rem) {
   .sl-markdown-content .con-figura { grid-template-columns: 1fr; }
   .sl-markdown-content .con-figura-lato { position: static; order: -1; width: min(var(--fig-w, 18rem), 100%); margin: 0 auto 1rem; }
+}
+
+.sl-markdown-content .formula-numerata .katex-display {
+  padding-top: 0.6em;
 }

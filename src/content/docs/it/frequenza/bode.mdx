@@ -1,0 +1,112 @@
+---
+title: Diagramma di Bode
+description: Guida completa al tracciamento asintotico dei diagrammi di Bode per modulo e fase. Guida su come ricavarli partendo da un circuito in AC.
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+Il **diagramma di Bode** (ideato da Hendrik Wade Bode) rappresentano lo strumento grafico fondamentale per visualizzare la risposta in frequenza $H(j\omega)$ di un circuito o di un sistema LTI. Consistono in due grafici cartesiani sovrapposti:
+
+1. **Diagramma del modulo $|H(j\omega)|_{\text{dB}}$**: espresso in decibel ($\text{dB}$) in funzione della pulsazione $\omega$.
+2. **Diagramma della fase $\arg(H(j\omega))$**: espressa in gradi ($\deg$) in funzione della pulsazione $\omega$.
+
+L'asse delle ascisse ($\omega$) utilizza sempre una **scala logaritmica in base 10**, permettendo di analizzare il comportamento del circuito su una banda di frequenze estremamente ampia (da frazioni di hertz a megahertz).
+
+> Nota: il diagramma di Bode è *sempre* sia modulo che fase, mai uno senza l'altro.
+
+## Tracciare il diagramma di Bode partendo da un circuito
+In questa sezione vedremo come arrivare al diagramma di Bode e quindi al comportamento in frequenza partendo da un circuito elettrico.
+Prendiamo un circuito molto semplice, un filtro RC: 
+
+  <Figura src="/images/circuiti/RC.svg" alt="Circuito RC" larghezza='40rem'>
+    Filtro RC.
+  </Figura>
+
+Nella [lezione dedicata](/it/frequenza/filtri-rc) a questo tipo di circuiti abbiamo già calcolato la funzione di trasferimento, che vale:
+$$
+H(j\omega) = \frac{1}{1 + j\omega RC}
+$$
+
+Ora vogliamo disegnare graficamente questa funzione, quindi andare a creare dei grafici che a colpo d'occhio ci indicano il comportamento del filtro al variare della frequenza. Questi grafici sono il diagramma di Bode. Per capire come procedere, si consiglia di leggere prima la lezione sullo studio della [funzione di trasferimento](/it/frequenza/funzione-di-trasferimento). <br />
+Per ricondurci alla notazione standard, potremmo riscrivere la funzione di trasferimento come:
+$$
+H(j\omega) = \frac{1}{1 + j\frac{\omega}{\omega_p}} \quad \text{con} \quad \omega_p = \frac{1}{RC}
+$$
+
+Per cui questa funzione di trasferimento ha $K=1$, nessuno zero e un polo non nell'origine a pulsazione $\omega_p$. Passiamo quindi al disegnare il diagramma del modulo e della fase di questa funzione di trasferimento.
+
+## Diagramma del modulo
+Il modulo della funzione di trasferimento del circuito vale:
+
+$$
+|H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}
+$$
+
+Ora per tracciare il diagramma dobbiamo convertirlo in $\text{dB}$:
+
+$$
+|H(j\omega)|_{\text{dB}} = 20 \log \left| \frac{1}{\sqrt{1 + (\omega RC)^2}} \right| = 20 \log \frac{1}{\sqrt{1 + (\omega RC)^2}}
+$$
+
+Analizziamone il comportamento al variare di $\omega$:
+- per $\omega \to 0: \quad |H(j\omega)|_{\text{dB}} \to 20 \log(1) = 0$
+- per $\omega=\omega_p: \quad |H(j\omega)|_{\text{dB}} = 20 \log \left(\frac{1}{\sqrt{2}}\right) \approx -3\, \text{dB}$
+- per $\omega \to \infty: \quad |H(j\omega)|_{\text{dB}} \to 20 \log(0) \to -\infty$
+
+Per entrare più nel dettaglio dell'andamento per $\omega \to \infty$, possiamo trascurare $1$ rispetto a $(\omega RC)^2$ sotto la radice, ottenendo l'approssimazione:
+
+$$
+|H(j\omega)|_{\text{dB}} \approx 20 \log \left( \frac{1}{\omega RC} \right) = -20 \log(\omega RC) = -20 \log(\omega) + 20 \log(\omega_p)
+$$
+
+Questa è l'equazione di una **retta con pendenza $-20 \text{ dB/decade}$** rispetto alla scala logaritmica delle frequenze.
+
+Confrontando i due comportamenti limite, definiamo due asintoti:
+1. **Asintoto per basse frequenze ($\omega \ll \omega_p$):** una retta orizzontale a quota $0 \text{ dB}$.
+2. **Asintoto per alte frequenze ($\omega \gg \omega_p$):** una retta inclinata con pendenza $-20 \text{ dB/decade}$.
+
+I due asintoti si intersecano esattamente alla pulsazione di taglio $\omega = \omega_p = \frac{1}{RC}$, dove l'asintoto cambia pendenza.
+
+### Errore dell'approssimazione asintotica
+Il grafico reale differisce da quello asintotico a spezzata soprattutto nell'intorno della pulsazione di taglio. Calcoliamo il valore reale per $\omega = \omega_p$:
+
+$$
+|H(j\omega_p)|_{\text{dB}} = 20 \log \left( \frac{1}{\sqrt{1 + 1}} \right) = 20 \log \left( \frac{1}{\sqrt{2}} \right) \approx -3.01 \text{ dB}
+$$
+
+In corrispondenza della pulsazione del polo $\omega_p$, la curva reale si trova circa **$3 \text{ dB}$ sotto** rispetto all'incrocio degli asintoti.
+
+
+## Diagramma della fase
+La fase (o argomento) della funzione di trasferimento vale:
+
+$$
+\angle(H(j\omega)) = -\arctan(\omega RC) = -\arctan\left(\frac{\omega}{\omega_p}\right)
+$$
+
+Analizziamo il valore della fase nei punti chiave:
+
+- per $\omega \to 0: \quad \arg(H(j\omega)) \to -\arctan(0) = \mathbf{0^\circ}$
+- per $\omega = \omega_p: \quad \arg(H(j\omega_p)) = -\arctan(1) = \mathbf{-45^\circ}$
+- per $\omega \to \infty: \quad \arg(H(j\omega)) \to -\arctan(\infty) = \mathbf{-90^\circ}$
+
+### Approssimazione asintotica della fase
+Per tracciare graficamente la fase in modo agevole, si adotta un'approssimazione a tre tratti lineari:
+
+1. Per $\omega \le 0.1 \omega_p$ **(una decade prima del polo):** la fase si approssima con la retta orizzontale a **$0^\circ$**.
+2. Per $\omega \ge 10 \omega_p$ **(una decade dopo il polo):** la fase si approssima con la retta orizzontale a **$-90^\circ$**.
+3. Nell'intervallo **tra $0.1 \omega_p$ e $10 \omega_p$:** la fase decresce linearmente da $0^\circ$ a $-90^\circ$ passando per $-45^\circ$ a $\omega = \omega_p$, con una pendenza pari a **$-45^\circ/\text{decade}$**.
+
+
+## Grafici di Bode del circuito RC
+
+<Figura src="/images/circuiti/bode-rc.svg" alt="Diagrammi di Bode di modulo e fase del filtro RC" larghezza='44rem'>
+  Diagramma di Bode del modulo e della fase per un polo reale a pulsazione $\omega_p$.
+</Figura>
+
+### Ricapitolando per il filtro RC:
+- Il circuito si comporta come un **filtro passa-basso**: lascia inalterati i segnali a bassa frequenza ($0 \text{ dB}$, cioè guadagno unitario) e attenua i segnali ad alta frequenza.
+- La **frequenza di taglio** $\omega_p = \frac{1}{RC}$ segna la transizione tra la banda passante e la banda di attenuazione.
+- A frequenze molto elevate, la fase accumula un ritardo di $90^\circ$ rispetto all'ingresso.
+
+

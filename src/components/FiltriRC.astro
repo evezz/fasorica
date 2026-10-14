@@ -1,0 +1,1676 @@
+---
+/**
+ * FiltriRC.astro
+ *
+ * Simulatore didattico dei filtri RC passa-basso e passa-alto a regime
+ * sinusoidale (metodo dei fasori). Canvas + SVG, nessun framework.
+ *
+ * Dipendenza: KaTeX (le formule sono composte a build time, zero JS in piu'
+ * nel browser):
+ *     npm install katex
+ * Se il CSS di KaTeX e' gia' caricato dal tuo layout puoi togliere l'import
+ * del CSS qui sotto.
+ */
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+interface Props {
+  /** Filtro mostrato all'avvio. */
+  tipo?: 'passa-basso' | 'passa-alto';
+  /** Segnale in ingresso all'avvio. */
+  segnale?: 'sinusoide' | 'rumore' | 'baseline';
+}
+
+const {
+  tipo = 'passa-basso',
+  segnale = 'sinusoide',
+} = Astro.props;
+
+const tipoIniziale = tipo === 'passa-alto' ? 'hp' : 'lp';
+const segnaleIniziale = segnale === 'rumore' ? 'noise' : segnale === 'baseline' ? 'drift' : 'sin';
+const uid = `rcf-${Math.random().toString(36).slice(2, 8)}`;
+
+/* ---------------- LaTeX (composto a build time) ---------------- */
+
+const tex = (s: string, display = false) =>
+  katex.renderToString(s, { displayMode: display, throwOnError: false, strict: 'ignore' });
+const m = (s: string) => tex(s);
+
+const Vin = String.raw`\dot V_{\mathrm{in}}`;
+const Vout = String.raw`\dot V_{\mathrm{out}}`;
+const VR = String.raw`\dot V_{R}`;
+const VC = String.raw`\dot V_{C}`;
+const H = String.raw`\lvert H\rvert`;
+const phi = String.raw`\varphi`;
+const fc = String.raw`f_c`;
+
+const eq = {
+  lp1: tex(
+    String.raw`\begin{aligned}
+      H(j\omega) &= \frac{${Vout}}{${Vin}} = \frac{\dfrac{1}{j\omega C}}{R+\dfrac{1}{j\omega C}}\\[0.7em]
+      &= \frac{1}{1+j\omega RC} = \frac{1}{1+j\,\dfrac{f}{f_c}}
+    \end{aligned}`,
+    true,
+  ),
+  lp2: tex(String.raw`${H}=\frac{1}{\sqrt{1+\left(f/f_c\right)^{2}}}\qquad ${phi}=-\arctan\frac{f}{f_c}`, true),
+  hp1: tex(
+    String.raw`\begin{aligned}
+      H(j\omega) &= \frac{${Vout}}{${Vin}} = \frac{R}{R+\dfrac{1}{j\omega C}}\\[0.7em]
+      &= \frac{j\omega RC}{1+j\omega RC} = \frac{j\,f/f_c}{1+j\,f/f_c}
+    \end{aligned}`,
+    true,
+  ),
+  hp2: tex(String.raw`${H}=\frac{f/f_c}{\sqrt{1+\left(f/f_c\right)^{2}}}\qquad ${phi}=90^\circ-\arctan\frac{f}{f_c}`, true),
+  c1: tex(String.raw`f_c=\frac{1}{2\pi RC}\qquad \tau=RC=\frac{1}{\omega_c}`, true),
+  c2: tex(String.raw`f=f_c\;\Rightarrow\;${H}=\frac{1}{\sqrt{2}}\;(-3\,\mathrm{dB}),\quad \lvert ${phi}\rvert=45^\circ`, true),
+  c3: tex(String.raw`${H}_{\mathrm{dB}}=20\log_{10}${H}\qquad \Delta t=\frac{\lvert ${phi}\rvert}{360^\circ}\,T`, true),
+};
+---
+
+<section
+  class="rcf"
+  data-rcf
+  data-tipo={tipoIniziale}
+  data-sig={segnaleIniziale}
+  data-playing="1"
+  aria-label="Simulatore di filtri RC passa-basso e passa-alto"
+>
+
+  <div class="rcf-top">
+    <div class="rcf-ctl">
+      <div class="ctl-row">
+        <fieldset class="ctl-group">
+          <legend>Tipo di Filtro</legend>
+          <div class="seg">
+            <label>
+              <input type="radio" name={`${uid}-tipo`} value="lp" data-ctl="tipo" checked={tipoIniziale === 'lp'} />
+              <span>Passa-basso</span>
+            </label>
+            <label>
+              <input type="radio" name={`${uid}-tipo`} value="hp" data-ctl="tipo" checked={tipoIniziale === 'hp'} />
+              <span>Passa-alto</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="ctl-group ctl-wide">
+          <legend>Segnale in ingresso</legend>
+          <div class="seg">
+            <label>
+              <input type="radio" name={`${uid}-sig`} value="sin" data-ctl="sig" checked={segnaleIniziale === 'sin'} />
+              <span>Sinusoide pura</span>
+            </label>
+            <label>
+              <input type="radio" name={`${uid}-sig`} value="noise" data-ctl="sig" checked={segnaleIniziale === 'noise'} />
+              <span>Con rumore (alta freq.)</span>
+            </label>
+            <label>
+              <input type="radio" name={`${uid}-sig`} value="drift" data-ctl="sig" checked={segnaleIniziale === 'drift'} />
+              <span>Baseline wandering (deriva)</span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Barra informativa frequenza di taglio -->
+      <div class="fc-badge-bar">
+        <span>Frequenza di taglio risultante:</span>
+        <strong class="fc-badge-val" data-out="fc">159 Hz</strong>
+      </div>
+
+      <div class="ctl-sliders">
+        <div class="sl">
+          <div class="sl-head">
+            <label class="sl-name" for={`${uid}-R`}>Resistenza <span class="m" set:html={m('R')} /></label>
+            <output class="sl-val" data-out="R" for={`${uid}-R`}>1,0 kΩ</output>
+          </div>
+          <input id={`${uid}-R`} type="range" min="0" max="1000" step="1" value="333" data-ctl="R" />
+        </div>
+
+        <div class="sl">
+          <div class="sl-head">
+            <label class="sl-name" for={`${uid}-C`}>Capacità <span class="m" set:html={m('C')} /></label>
+            <output class="sl-val" data-out="C" for={`${uid}-C`}>1,0 µF</output>
+          </div>
+          <input id={`${uid}-C`} type="range" min="0" max="1000" step="1" value="600" data-ctl="C" />
+        </div>
+
+        <div class="sl">
+          <div class="sl-head">
+            <label class="sl-name" for={`${uid}-f`}>Frequenza del segnale <span class="m" set:html={m('f')} /></label>
+            <span class="sl-right">
+              <output class="sl-val" data-out="f" for={`${uid}-f`}>159 Hz</output>
+              <button type="button" class="chip" data-act="fc" title="Imposta f uguale alla frequenza di taglio" set:html={m('f=f_c')} />
+            </span>
+          </div>
+          <input id={`${uid}-f`} type="range" min="0" max="1000" step="1" value="458" data-ctl="f" />
+        </div>
+
+        <div class="sl" data-slider="lvl">
+          <div class="sl-head">
+            <label class="sl-name" for={`${uid}-lvl`}>Intensità del disturbo</label>
+            <output class="sl-val" data-out="lvl" for={`${uid}-lvl`}>50 %</output>
+          </div>
+          <input id={`${uid}-lvl`} type="range" min="0" max="100" step="1" value="50" data-ctl="lvl" />
+        </div>
+      </div>
+    </div>
+
+    <figure class="rcf-circuit">
+      <svg class="rcf-sch" viewBox="0 0 290 130" role="img" aria-label="Schema del circuito RC">
+        <g class="sch-lp">
+          <path class="w" d="M40 30 H78 M130 30 H240 M190 30 V56 M174 56 H206 M174 66 H206 M190 66 V100 M40 100 H240 M140 100 V108 M128 108 H152 M133 114 H147 M138 120 H142" />
+          <rect class="w" x="78" y="22" width="52" height="16" rx="2" />
+          <circle class="n" cx="190" cy="30" r="3" />
+          <circle class="n" cx="190" cy="100" r="3" />
+          <circle class="w" cx="40" cy="30" r="4" />
+          <circle class="w" cx="40" cy="100" r="4" />
+          <circle class="w" cx="240" cy="30" r="4" />
+          <circle class="w" cx="240" cy="100" r="4" />
+          <text class="it" x="104" y="15" text-anchor="middle">R</text>
+          <text class="it" x="214" y="64">C</text>
+          <text class="t-in it" x="4" y="69">V<tspan class="up" dy="3" font-size="10">in</tspan></text>
+          <text class="t-out it" x="250" y="69">V<tspan class="up" dy="3" font-size="10">out</tspan></text>
+        </g>
+        <g class="sch-hp">
+          <path class="w" d="M40 30 H100 M110 30 H240 M100 18 V42 M110 18 V42 M190 30 V52 M190 88 V100 M40 100 H240 M140 100 V108 M128 108 H152 M133 114 H147 M138 120 H142" />
+          <rect class="w" x="182" y="52" width="16" height="36" rx="2" />
+          <circle class="n" cx="190" cy="30" r="3" />
+          <circle class="n" cx="190" cy="100" r="3" />
+          <circle class="w" cx="40" cy="30" r="4" />
+          <circle class="w" cx="40" cy="100" r="4" />
+          <circle class="w" cx="240" cy="30" r="4" />
+          <circle class="w" cx="240" cy="100" r="4" />
+          <text class="it" x="105" y="12" text-anchor="middle">C</text>
+          <text class="it" x="208" y="74">R</text>
+          <text class="t-in it" x="4" y="69">V<tspan class="up" dy="3" font-size="10">in</tspan></text>
+          <text class="t-out it" x="250" y="69">V<tspan class="up" dy="3" font-size="10">out</tspan></text>
+        </g>
+      </svg>
+      <figcaption>
+        <span class="only-lp">Passa-basso: l'uscita è prelevata ai capi del condensatore <span class="m" set:html={m('C')} />.</span>
+        <span class="only-hp">Passa-alto: l'uscita è prelevata ai capi della resistenza <span class="m" set:html={m('R')} />.</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <p class="rcf-hint" data-hint></p>
+
+  <div class="rcf-grid">
+    <figure class="panel panel-time">
+      <div class="panel-bar">
+        <h3 class="panel-title">Segnali nel tempo</h3>
+        <span class="panel-meta" data-ro="tb"></span>
+        <button type="button" class="pbtn" data-act="play">
+          <svg class="ic-pause" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z" /></svg>
+          <svg class="ic-play" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z" /></svg>
+          <span data-play-label>Pausa</span>
+        </button>
+      </div>
+
+      <div class="tr-head">
+        <span class="sw sw-in" aria-hidden="true"></span>
+        <span>Ingresso <span class="m" set:html={m(String.raw`v_{\mathrm{in}}(t)`)} /> [V]</span>
+        <span class="tr-note" data-note="in" hidden>linea tratteggiata: segnale utile senza disturbo</span>
+      </div>
+      <canvas class="cv-in" data-cv="vin" role="img" aria-label="Andamento nel tempo del segnale di ingresso"></canvas>
+
+      <div class="tr-head">
+        <span class="sw sw-out" aria-hidden="true"></span>
+        <span>Uscita <span class="m" set:html={m(String.raw`v_{\mathrm{out}}(t)`)} /> [V]</span>
+        <span class="tr-note">linea tratteggiata: segnale utile in ingresso</span>
+      </div>
+      <canvas class="cv-out" data-cv="vout" role="img" aria-label="Andamento nel tempo del segnale di uscita"></canvas>
+
+      <figcaption
+        set:html={`Le due tracce hanno la stessa scala verticale. La base dei tempi si adatta automaticamente mantenendo leggibile la forma d'onda.`}
+      />
+    </figure>
+
+    <figure class="panel panel-phasor">
+      <div class="panel-bar">
+        <h3 class="panel-title">Diagramma fasoriale</h3>
+      </div>
+      <canvas class="cv-ph" data-cv="phasor" role="img" aria-label="Diagramma dei fasori di ingresso, uscita e dell'altro elemento"></canvas>
+      <figcaption
+        set:html={`Fasori della fondamentale: ${m(`${Vin}=${VR}+${VC}`)}. Al variare della frequenza, la punta di ${m(Vout)} scorre lungo la semicirconferenza.`}
+      />
+    </figure>
+
+    <div class="rcf-bode">
+      <figure class="panel">
+        <div class="panel-bar">
+          <h3 class="panel-title" set:html={`Modulo ${m(H)} [dB]`} />
+        </div>
+        <canvas class="cv-bode" data-cv="bm" role="img" aria-label="Diagramma di Bode del modulo"></canvas>
+        <figcaption set:html={`Modulo in dB. In viola l'andamento reale, tratteggiati gli asintoti.`} />
+      </figure>
+      <figure class="panel">
+        <div class="panel-bar">
+          <h3 class="panel-title" set:html={`Fase ${m(phi)} [°]`} />
+        </div>
+        <canvas class="cv-bode" data-cv="bp" role="img" aria-label="Diagramma di Bode della fase"></canvas>
+        <figcaption set:html={`Fase in gradi. La linea verticale tratteggiata indica la frequenza di taglio ${m(fc)}.`} />
+      </figure>
+    </div>
+  </div>
+
+  <section class="rcf-math" aria-label="Formule">
+    <h3 class="panel-title">Formule di riferimento</h3>
+    <div class="eq-grid">
+      <div class="eq-card only-lp">
+        <p class="eq-title">Passa-basso <span>(uscita ai capi del condensatore)</span></p>
+        <div class="eq" set:html={eq.lp1} />
+        <div class="eq" set:html={eq.lp2} />
+      </div>
+      <div class="eq-card only-hp">
+        <p class="eq-title">Passa-alto <span>(uscita ai capi della resistenza)</span></p>
+        <div class="eq" set:html={eq.hp1} />
+        <div class="eq" set:html={eq.hp2} />
+      </div>
+      <div class="eq-card">
+        <p class="eq-title">Frequenza di taglio e parametri fondamentali</p>
+        <div class="eq" set:html={eq.c1} />
+        <div class="eq" set:html={eq.c2} />
+        <div class="eq" set:html={eq.c3} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Template LaTeX dinamici per JS -->
+  <template data-tex="H" set:html={m(H)} />
+  <template data-tex="phi" set:html={m(phi)} />
+  <template data-tex="fc" set:html={m(fc)} />
+  <template data-tex="feqfc" set:html={m('f=f_c')} />
+
+  <noscript><p>Il simulatore richiede JavaScript attivo.</p></noscript>
+</section>
+
+<style>
+  .rcf {
+    --acc: var(--rcf-accent, #2563eb);
+    --line: var(--rcf-line, rgba(128, 128, 128, 0.3));
+    --soft: rgba(128, 128, 128, 0.15);
+    --fill: var(--rcf-fill, rgba(128, 128, 128, 0.05));
+    --segmented-bg: rgba(128, 128, 128, 0.12);
+    color: inherit;
+    font-family: inherit;
+    container-type: inline-size;
+    width: 100%;
+    display: grid;
+    gap: 1rem;
+    margin-block: 1.5rem;
+  }
+  .rcf-title {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+  .rcf :global(.katex) {
+    font-size: 1.05em;
+  }
+  .m :global(.katex) {
+    font-size: 1.05em;
+  }
+
+  /* ---------- Comandi e Selezione Riquadri ---------- */
+  .rcf-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .rcf-ctl {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--fill);
+  }
+  .ctl-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.2rem;
+  }
+  .ctl-group {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .ctl-wide {
+    flex-grow: 2;
+  }
+  .ctl-group legend {
+    padding: 0;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.75;
+  }
+
+  /* Segmented Controls */
+  .seg {
+    display: flex;
+    background: var(--segmented-bg);
+    padding: 3px;
+    border-radius: 0.6rem;
+    border: 1px solid var(--line);
+    gap: 3px;
+  }
+  .seg label {
+    position: relative;
+    flex: 1 1 0;
+    display: block;
+    cursor: pointer;
+    margin: 0;
+  }
+  .seg input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .seg span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.6rem;
+    text-align: center;
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.2;
+    border-radius: 0.45rem;
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    user-select: none;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .seg label:hover input:not(:checked) + span {
+    background: rgba(128, 128, 128, 0.15);
+  }
+  .seg input:checked + span {
+    background: var(--acc);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  }
+  .seg input:focus-visible + span {
+    outline: 2px solid var(--acc);
+    outline-offset: 1px;
+  }
+
+  /* Badge Frequenza di Taglio */
+  .fc-badge-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.5rem;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    font-size: 0.88rem;
+  }
+  .fc-badge-val {
+    color: var(--acc);
+    font-size: 0.98rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ctl-sliders {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1.6rem;
+  }
+  .sl {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .sl-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    min-height: 1.8rem;
+    font-size: 0.88rem;
+  }
+  .sl-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sl-val {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .sl input[type='range'] {
+    width: 100%;
+    margin: 0.2rem 0 0;
+    accent-color: var(--acc);
+  }
+  .sl.is-off {
+    opacity: 0.38;
+  }
+
+  .chip,
+  .pbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font: inherit;
+    font-size: 0.82rem;
+    line-height: 1;
+    color: inherit;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .chip {
+    padding: 0.25rem 0.55rem;
+  }
+  .pbtn {
+    padding: 0.35rem 0.75rem;
+  }
+  .pbtn svg {
+    fill: currentColor;
+  }
+  .chip:hover,
+  .pbtn:hover {
+    background: var(--fill);
+    border-color: var(--acc);
+  }
+  .chip:focus-visible,
+  .pbtn:focus-visible {
+    outline: 2px solid var(--acc);
+    outline-offset: 2px;
+  }
+  .rcf[data-playing='0'] .ic-pause,
+  .rcf[data-playing='1'] .ic-play {
+    display: none;
+  }
+
+  /* ---------- Schema Circuito ---------- */
+  .rcf-circuit {
+    margin: 0;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--fill);
+  }
+  .rcf-circuit figcaption {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0.8;
+  }
+  .rcf-sch {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    color: inherit;
+  }
+  .rcf-sch .w {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .rcf-sch .n {
+    fill: currentColor;
+  }
+  .rcf-sch text {
+    fill: currentColor;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .rcf-sch .it {
+    font-style: italic;
+  }
+  .rcf-sch .up {
+    font-style: normal;
+  }
+  .rcf-sch .t-in {
+    fill: var(--rcf-in, #3b82f6);
+    font-weight: 600;
+  }
+  .rcf-sch .t-out {
+    fill: var(--rcf-out, #ea580c);
+    font-weight: 600;
+  }
+  .rcf[data-tipo='lp'] .sch-hp,
+  .rcf[data-tipo='hp'] .sch-lp,
+  .rcf[data-tipo='lp'] .only-hp,
+  .rcf[data-tipo='hp'] .only-lp {
+    display: none;
+  }
+
+  /* ---------- Suggerimento didattico ---------- */
+  .rcf-hint {
+    margin: 0;
+    padding: 0.65rem 0.95rem;
+    border-left: 4px solid var(--acc);
+    background: var(--fill);
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  /* ---------- Pannelli Grafici ---------- */
+  .rcf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .panel {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0.65rem 0.8rem 0.65rem;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--fill);
+  }
+  .panel-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.9rem;
+    min-height: 2rem;
+    margin-bottom: 0.3rem;
+  }
+  .panel-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 650;
+    line-height: 1.2;
+  }
+  .panel-meta {
+    font-size: 0.82rem;
+    opacity: 0.78;
+    font-variant-numeric: tabular-nums;
+  }
+  .panel-bar .pbtn {
+    margin-left: auto;
+  }
+  .panel canvas {
+    display: block;
+    width: 100%;
+  }
+  .panel figcaption {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    opacity: 0.78;
+  }
+  .tr-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem 0.5rem;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .tr-head .m {
+    font-weight: 400;
+  }
+  .tr-note {
+    margin-left: auto;
+    font-size: 0.76rem;
+    font-weight: 400;
+    opacity: 0.72;
+  }
+  .tr-note[hidden] {
+    display: none;
+  }
+  .sw {
+    width: 0.9rem;
+    height: 3px;
+    border-radius: 2px;
+  }
+  .sw-in {
+    background: var(--rcf-in, #3b82f6);
+  }
+  .sw-out {
+    background: var(--rcf-out, #ea580c);
+  }
+  .cv-in {
+    height: 160px;
+  }
+  .cv-out {
+    height: 164px;
+  }
+  .cv-ph {
+    height: 360px;
+  }
+  .cv-bode {
+    height: 200px;
+  }
+  .rcf-bode {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* ---------- Formule ---------- */
+  .rcf-math {
+    padding: 0.8rem 1rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--fill);
+  }
+  .eq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 0.6rem 1.6rem;
+    margin-top: 0.4rem;
+  }
+  .eq-title {
+    margin: 0.4rem 0 0;
+    font-size: 0.88rem;
+    font-weight: 650;
+  }
+  .eq-title span {
+    font-weight: 400;
+    opacity: 0.78;
+  }
+  .eq :global(.katex-display) {
+    margin: 0.5em 0;
+    padding: 0.1em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .eq :global(.katex-display > .katex) {
+    font-size: 1.08em;
+  }
+
+  /* ---------- Responsive ---------- */
+  @container (max-width: 880px) {
+    .rcf-top,
+    .rcf-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cv-ph {
+      height: 300px;
+    }
+    .rcf-circuit {
+      grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+      justify-items: start;
+      align-items: center;
+      gap: 1rem;
+    }
+    .rcf-circuit figcaption {
+      text-align: left;
+    }
+  }
+  @container (max-width: 560px) {
+    .ctl-sliders,
+    .rcf-bode {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .rcf-circuit {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+    }
+    .rcf-circuit figcaption {
+      text-align: center;
+    }
+    .seg span {
+      padding: 0.4rem 0.3rem;
+      font-size: 0.8rem;
+    }
+    .cv-ph {
+      height: 280px;
+    }
+  }
+</style>
+
+<script>
+  type Tipo = 'lp' | 'hp';
+  type Segnale = 'sin' | 'noise' | 'drift';
+  interface Tone {
+    m: number;
+    a: number;
+    th: number;
+  }
+  interface Cv {
+    el: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    w: number;
+    h: number;
+  }
+  interface Pal {
+    fg: string;
+    font: string;
+    cin: string;
+    cout: string;
+    caux: string;
+  }
+
+  const TAU = Math.PI * 2;
+  const DEG = 180 / Math.PI;
+  const MINUS = '−';
+
+  const E24 = [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1, 10];
+  const RANGE = { R: [2, 5], C: [-9, -4], f: [-2, 7] };
+
+  const NOISE_M = [7.3, 8.9, 10.7, 12.1, 14.3, 16.9, 19.1, 21.7, 24.3];
+  const NOISE_G = [1.0, 0.85, 1.15, 0.9, 1.1, 0.8, 1.05, 0.95, 1.2];
+  const NOISE_TH = [0.6, 2.1, 4.0, 1.2, 5.3, 3.3, 0.2, 4.7, 2.6];
+  const NOISE_NORM = Math.sqrt(NOISE_G.reduce((s, g) => s + g * g, 0));
+  const NOISE: Tone[] = NOISE_M.map((m, i) => ({ m, a: NOISE_G[i] / NOISE_NORM, th: NOISE_TH[i] }));
+
+  const DRIFT: Tone[] = [
+    { m: 0.047, a: 0.9, th: 1.0 },
+    { m: 0.083, a: 0.6, th: 3.9 },
+    { m: 0.131, a: 0.4, th: 0.4 },
+    { m: 0.197, a: 0.25, th: 2.5 },
+  ];
+  const DRIFT_DC = 0.5;
+
+  const MIN_PERIODS: Record<Segnale, number> = { sin: 2, noise: 2, drift: 8 };
+
+  /* ---------------- Utilità ---------------- */
+
+  function logMap(pos: number, r: number[]): number {
+    return Math.pow(10, r[0] + ((r[1] - r[0]) * pos) / 1000);
+  }
+  function logPos(v: number, r: number[]): number {
+    const p = Math.round((1000 * (Math.log10(v) - r[0])) / (r[1] - r[0]));
+    return Math.min(1000, Math.max(0, p));
+  }
+  function e24(v: number): number {
+    const dec = Math.pow(10, Math.floor(Math.log10(v)));
+    const m = v / dec;
+    let best = E24[0];
+    let bd = Infinity;
+    for (const e of E24) {
+      const d = Math.abs(Math.log(m / e));
+      if (d < bd) {
+        bd = d;
+        best = e;
+      }
+    }
+    return best * dec;
+  }
+
+  function niceUp(x: number): number {
+    const e = Math.floor(Math.log10(x));
+    const mant = x / Math.pow(10, e);
+    const mm = mant <= 1.0000001 ? 1 : mant <= 2.0000001 ? 2 : mant <= 5.0000001 ? 5 : 10;
+    return mm * Math.pow(10, e);
+  }
+  function unitFor(W: number): { k: number; u: string } {
+    if (W >= 0.9995) return { k: 1, u: 's' };
+    if (W >= 0.9995e-3) return { k: 1e3, u: 'ms' };
+    if (W >= 0.9995e-6) return { k: 1e6, u: 'µs' };
+    return { k: 1e9, u: 'ns' };
+  }
+  function decFor(s: number): number {
+    return s >= 1 ? 0 : Math.min(4, Math.ceil(-Math.log10(s) - 1e-9));
+  }
+
+  function num(n: number, sig = 3): string {
+    if (!isFinite(n)) return '—';
+    const a = Math.abs(n);
+    const dec = a === 0 ? 0 : Math.max(0, Math.min(6, sig - 1 - Math.floor(Math.log10(a))));
+    const s = n.toFixed(dec).replace('.', ',');
+    return s.charAt(0) === '-' ? MINUS + s.slice(1) : s;
+  }
+  const PFX: [number, string][] = [
+    [1e9, 'G'],
+    [1e6, 'M'],
+    [1e3, 'k'],
+    [1, ''],
+    [1e-3, 'm'],
+    [1e-6, 'µ'],
+    [1e-9, 'n'],
+    [1e-12, 'p'],
+  ];
+  function eng(v: number, unit: string, sig = 3): string {
+    if (!isFinite(v)) return '—';
+    if (v === 0) return `0 ${unit}`;
+    const a = Math.abs(v);
+    let pf = PFX[PFX.length - 1];
+    for (const p of PFX) {
+      if (a >= p[0] * 0.9995) {
+        pf = p;
+        break;
+      }
+    }
+    return `${num(v / pf[0], sig)} ${pf[1]}${unit}`;
+  }
+  function fmtDb(db: number): string {
+    return Math.abs(db) < 0.005 ? '0,00 dB' : `${num(db, 3)} dB`;
+  }
+  function fmtDeg(d: number): string {
+    if (Math.abs(d) < 0.05) return '0,0°';
+    return `${d > 0 ? '+' : ''}${num(d, 3)}°`;
+  }
+  function lbl(v: number): string {
+    const s = Number.isInteger(v) ? String(Math.abs(v)) : Math.abs(v).toFixed(1).replace('.', ',');
+    return (v < 0 ? MINUS : '') + s;
+  }
+  function tickF(f: number): string {
+    if (f >= 1e6) return `${f / 1e6}M`;
+    if (f >= 1e3) return `${f / 1e3}k`;
+    if (f >= 1) return String(f);
+    return String(f).replace('.', ',');
+  }
+  function niceStep(ymax: number): number {
+    for (const s of [0.5, 1, 2, 5, 10]) if (ymax / s <= 3.01) return s;
+    return 10;
+  }
+
+  function mk(el: HTMLCanvasElement): Cv {
+    return { el, ctx: el.getContext('2d') as CanvasRenderingContext2D, w: 0, h: 0 };
+  }
+  function fit(c: Cv) {
+    const r = c.el.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    c.w = Math.round(r.width);
+    c.h = Math.round(r.height);
+    c.el.width = Math.max(1, Math.round(c.w * dpr));
+    c.el.height = Math.max(1, Math.round(c.h * dpr));
+    c.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function ln(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  function arrow(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, lw: number) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    const ux = dx / len;
+    const uy = dy / len;
+    const hd = Math.min(11, len * 0.4);
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = lw;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2 - ux * hd * 0.8, y2 - uy * hd * 0.8);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - ux * hd - uy * hd * 0.45, y2 - uy * hd + ux * hd * 0.45);
+    ctx.lineTo(x2 - ux * hd + uy * hd * 0.45, y2 - uy * hd - ux * hd * 0.45);
+    ctx.closePath();
+    ctx.fill();
+  }
+  function mq(query: string): boolean {
+    return typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+  }
+
+  let FONT = 'system-ui, sans-serif';
+  interface RPart {
+    t: string;
+    it: boolean;
+    sub: boolean;
+  }
+  function parseRich(s: string): RPart[] {
+    const out: RPart[] = [];
+    let math = false;
+    let cur = '';
+    const flush = () => {
+      if (!cur) return;
+      if (math) {
+        cur.split(/((?:[A-Za-zͰ-Ͽ]̇?)+)/).forEach((t, i) => {
+          if (t) out.push({ t, it: i % 2 === 1, sub: false });
+        });
+      } else {
+        out.push({ t: cur, it: false, sub: false });
+      }
+      cur = '';
+    };
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i];
+      if (ch === '$') {
+        flush();
+        math = !math;
+      } else if (math && ch === '_') {
+        flush();
+        let sub: string;
+        if (s[i + 1] === '{') {
+          const e = s.indexOf('}', i);
+          sub = s.slice(i + 2, e);
+          i = e;
+        } else {
+          sub = s[i + 1] || '';
+          i += 1;
+        }
+        if (sub) out.push({ t: sub, it: false, sub: true });
+      } else {
+        cur += ch;
+      }
+    }
+    flush();
+    return out;
+  }
+  function rich(ctx: CanvasRenderingContext2D, s: string, x: number, y: number, size = 12, weight = 400, align: 'left' | 'right' | 'center' = 'left', draw = true): number {
+    const parts = parseRich(s);
+    const font = (p: RPart) => `${p.it ? 'italic ' : ''}${weight} ${p.sub ? size * 0.84 : size}px ${FONT}`;
+    let total = 0;
+    const ws = parts.map((p) => {
+      ctx.font = font(p);
+      const w = ctx.measureText(p.t).width;
+      total += w;
+      return w;
+    });
+    if (!draw) return total;
+    let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    parts.forEach((p, i) => {
+      ctx.font = font(p);
+      ctx.fillText(p.t, cx, y + (p.sub ? size * 0.22 : 0));
+      cx += ws[i];
+    });
+    return total;
+  }
+
+  /* ---------------- Istanza Componente ---------------- */
+
+  function initRoot(root: HTMLElement) {
+    if (root.dataset.rcfReady) return;
+    root.dataset.rcfReady = '1';
+
+    function q<T extends HTMLElement>(sel: string): T {
+      return root.querySelector(sel) as T;
+    }
+    function qa<T extends HTMLElement>(sel: string): T[] {
+      return Array.from(root.querySelectorAll(sel)) as T[];
+    }
+
+    const reduced = mq('(prefers-reduced-motion: reduce)');
+    const S = {
+      type: (root.dataset.tipo === 'hp' ? 'hp' : 'lp') as Tipo,
+      sig: (root.dataset.sig === 'noise' ? 'noise' : root.dataset.sig === 'drift' ? 'drift' : 'sin') as Segnale,
+      R: 1000,
+      C: 1e-6,
+      f: 1,
+      level: 50,
+      tau: 0,
+      fc: 1,
+      mag: 1,
+      ph: 0,
+      u0: 0,
+      W: 0,
+      Wt: 0,
+      yMax: 1.25,
+      yTarget: 1.25,
+      reduced,
+      playing: !reduced,
+    };
+
+    const cvs = {
+      vin: mk(q<HTMLCanvasElement>('[data-cv="vin"]')),
+      vout: mk(q<HTMLCanvasElement>('[data-cv="vout"]')),
+      phasor: mk(q<HTMLCanvasElement>('[data-cv="phasor"]')),
+      bm: mk(q<HTMLCanvasElement>('[data-cv="bm"]')),
+      bp: mk(q<HTMLCanvasElement>('[data-cv="bp"]')),
+    };
+    const ro: Record<string, HTMLElement> = {};
+    qa('[data-ro]').forEach((el) => (ro[el.dataset.ro as string] = el));
+    const outs: Record<string, HTMLElement> = {};
+    qa('[data-out]').forEach((el) => (outs[el.dataset.out as string] = el));
+    const sl: Record<string, HTMLInputElement> = {};
+    qa<HTMLInputElement>('input[type="range"][data-ctl]').forEach((el) => (sl[el.dataset.ctl as string] = el));
+    const hintEl = q('[data-hint]');
+    const noteIn = q('[data-note="in"]');
+    const playLabel = q('[data-play-label]');
+    const TEX: Record<string, string> = {};
+    qa('template[data-tex]').forEach((t) => (TEX[t.dataset.tex as string] = (t as HTMLTemplateElement).innerHTML));
+    const X = (k: string) => TEX[k] || k;
+
+    let tin: Tone[] = [];
+    let tout: Tone[] = [];
+    let dcIn = 0;
+    let dcOut = 0;
+
+    function Hc(f: number): { mag: number; ph: number } {
+      const x = f / S.fc;
+      if (S.type === 'lp') return { mag: 1 / Math.sqrt(1 + x * x), ph: -Math.atan(x) };
+      return { mag: x / Math.sqrt(1 + x * x), ph: Math.PI / 2 - Math.atan(x) };
+    }
+
+    function rebuild() {
+      S.tau = S.R * S.C;
+      S.fc = 1 / (TAU * S.tau);
+      const h = Hc(S.f);
+      S.mag = h.mag;
+      S.ph = h.ph;
+      const lvl = S.sig === 'sin' ? 0 : S.level / 100;
+
+      tin = [{ m: 1, a: 1, th: 0 }];
+      tout = [{ m: 1, a: h.mag, th: h.ph }];
+      dcIn = 0;
+      dcOut = 0;
+
+      const extra = S.sig === 'noise' ? NOISE : S.sig === 'drift' ? DRIFT : [];
+      for (const t of extra) {
+        const hk = Hc(S.f * t.m);
+        tin.push({ m: t.m, a: lvl * t.a, th: t.th });
+        tout.push({ m: t.m, a: lvl * t.a * hk.mag, th: t.th + hk.ph });
+      }
+      if (S.sig === 'drift') {
+        dcIn = lvl * DRIFT_DC;
+        dcOut = dcIn * Hc(0).mag;
+      }
+
+      let yt = 1.25;
+      if (S.sig === 'noise') yt = (1 + lvl * 1.84) * 1.06;
+      if (S.sig === 'drift') yt = (1 + lvl * (0.85 * DRIFT.reduce((s, t) => s + t.a, 0) + DRIFT_DC)) * 1.05;
+      S.yTarget = Math.max(1.25, yt);
+
+      S.Wt = niceUp(MIN_PERIODS[S.sig] / S.f);
+      if (!S.W) S.W = S.Wt;
+    }
+
+    function sum(tones: Tone[], dc: number, u: number): number {
+      let s = dc;
+      for (let i = 0; i < tones.length; i++) {
+        const t = tones[i];
+        s += t.a * Math.sin(TAU * t.m * u + t.th);
+      }
+      return s;
+    }
+    const evalIn = (u: number) => sum(tin, dcIn, u);
+    const evalOut = (u: number) => sum(tout, dcOut, u);
+
+    function pal(): Pal {
+      const cs = getComputedStyle(root);
+      const v = (n: string, d: string) => cs.getPropertyValue(n).trim() || d;
+      FONT = cs.fontFamily || FONT;
+      return {
+        fg: cs.color || '#888',
+        font: FONT,
+        cin: v('--rcf-in', '#3b82f6'),
+        cout: v('--rcf-out', '#ea580c'),
+        caux: v('--rcf-aux', '#8b5cf6'),
+      };
+    }
+
+    /* ----- Rendering Grafici ----- */
+
+    function drawTime(c: Cv, kind: 'in' | 'out', p: Pal) {
+      const { ctx, w, h } = c;
+      if (w < 60 || h < 40) return;
+      ctx.clearRect(0, 0, w, h);
+      const L = 44;
+      const Rm = 10;
+      const T = kind === 'in' ? 28 : 8;
+      const B = kind === 'out' ? 30 : 4;
+      const pw = w - L - Rm;
+      const ph = h - T - B;
+      const ymid = T + ph / 2;
+      const Y = (v: number) => ymid - v * (ph / 2 / S.yMax);
+      const W = S.W;
+      const N = S.f * W;
+      const u0 = S.u0;
+      const col = kind === 'in' ? p.cin : p.cout;
+
+      ctx.save();
+      ctx.font = `12px ${p.font}`;
+      ctx.strokeStyle = p.fg;
+      ctx.fillStyle = p.fg;
+      ctx.lineWidth = 1;
+
+      const step = niceUp(W / 10);
+      const un = unitFor(W);
+      const dec = decFor(step * un.k);
+      const nDiv = Math.floor(W / step + 1e-6);
+      const stepPx = (step / W) * pw;
+      const every = stepPx >= 36 ? 1 : stepPx >= 18 ? 2 : stepPx >= 7.2 ? 5 : 10;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      for (let i = 0; i <= nDiv; i++) {
+        const x = L + ((i * step) / W) * pw;
+        ctx.globalAlpha = i === 0 ? 0.3 : 0.13;
+        ln(ctx, x, T, x, T + ph);
+        if (kind === 'out' && i % every === 0) {
+          ctx.globalAlpha = 0.75;
+          ctx.fillText((i * step * un.k).toFixed(dec).replace('.', ','), x, T + ph + 14);
+        }
+      }
+
+      const st = niceStep(S.yMax);
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let v = 0; v <= S.yMax + 1e-9; v += st) {
+        for (const sg of v === 0 ? [1] : [1, -1]) {
+          const y = Y(sg * v);
+          ctx.globalAlpha = v === 0 ? 0.4 : 0.14;
+          ln(ctx, L, y, L + pw, y);
+          ctx.globalAlpha = 0.75;
+          ctx.fillText(lbl(sg * v), L - 6, y);
+        }
+      }
+      ctx.globalAlpha = 0.3;
+      ctx.strokeRect(L, T, pw, ph);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(L, T - 1, pw, ph + 2);
+      ctx.clip();
+      const n = Math.max(80, Math.floor(pw * 2.5));
+      const trace = (fn: (u: number) => number) => {
+        ctx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const x = L + (pw * i) / n;
+          const y = Y(fn(u0 + (N * i) / n));
+          if (i) ctx.lineTo(x, y);
+          else ctx.moveTo(x, y);
+        }
+        ctx.stroke();
+      };
+      if (kind === 'out' || S.sig !== 'sin') {
+        ctx.globalAlpha = 0.6;
+        ctx.strokeStyle = p.fg;
+        ctx.lineWidth = 1.3;
+        ctx.setLineDash([4, 4]);
+        trace((u) => Math.sin(TAU * u));
+      }
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = col;
+      trace(kind === 'in' ? evalIn : evalOut);
+      ctx.restore();
+
+      if (kind === 'in') {
+        const tpx = pw / N;
+        const by = 13;
+        ctx.globalAlpha = 0.85;
+        ctx.strokeStyle = p.fg;
+        ctx.fillStyle = p.fg;
+        ctx.lineWidth = 1.4;
+        ctx.setLineDash([]);
+        ln(ctx, L, by, L + tpx, by);
+        ln(ctx, L, by - 4.5, L, by + 4.5);
+        ln(ctx, L + tpx, by - 4.5, L + tpx, by + 4.5);
+        ctx.globalAlpha = 0.95;
+        rich(ctx, `$T$ = 1/$f$ = ${eng(1 / S.f, 's')}`, L + tpx + 9, by + 4, 12, 600);
+      } else {
+        ctx.globalAlpha = 0.72;
+        ctx.fillStyle = p.fg;
+        rich(ctx, `$t$ [${un.u}]`, w - Rm, h - 3, 11, 400, 'right');
+      }
+      ctx.restore();
+    }
+
+    function drawPhasor(c: Cv, p: Pal) {
+      const { ctx, w, h } = c;
+      if (w < 80 || h < 80) return;
+      ctx.clearRect(0, 0, w, h);
+      const lp = S.type === 'lp';
+      const s = Math.min((w - 28) / 1.5, (h - 44) / 1.3);
+      const ox = w / 2 - 0.5 * s;
+      const oy = h / 2 + (lp ? -0.2 : 0.2) * s;
+      const X = (re: number) => ox + re * s;
+      const Y = (im: number) => oy - im * s;
+      const hre = S.mag * Math.cos(S.ph);
+      const him = S.mag * Math.sin(S.ph);
+      const hx = X(hre);
+      const hy = Y(him);
+
+      ctx.save();
+      ctx.font = `12px ${p.font}`;
+      ctx.textBaseline = 'middle';
+      ctx.strokeStyle = p.fg;
+      ctx.fillStyle = p.fg;
+      ctx.lineWidth = 1;
+
+      ctx.globalAlpha = 0.3;
+      ln(ctx, 10, oy, w - 10, oy);
+      ln(ctx, ox, 10, ox, h - 10);
+      ctx.globalAlpha = 0.75;
+      ctx.textAlign = 'right';
+      ctx.fillText('Re', w - 12, oy - 9);
+      ctx.textAlign = 'left';
+      ctx.fillText('Im', ox + 7, 14);
+      ctx.globalAlpha = 0.5;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath();
+      ctx.arc(X(0.5), Y(0), 0.5 * s, 0, Math.PI, !lp);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const d1x = X(0) - hx;
+      const d1y = Y(0) - hy;
+      const d2x = X(1) - hx;
+      const d2y = Y(0) - hy;
+      const l1 = Math.hypot(d1x, d1y);
+      const l2 = Math.hypot(d2x, d2y);
+      if (l1 > 24 && l2 > 24) {
+        const k = 9;
+        const a1x = (d1x / l1) * k;
+        const a1y = (d1y / l1) * k;
+        const a2x = (d2x / l2) * k;
+        const a2y = (d2y / l2) * k;
+        ctx.globalAlpha = 0.7;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(hx + a1x, hy + a1y);
+        ctx.lineTo(hx + a1x + a2x, hy + a1y + a2y);
+        ctx.lineTo(hx + a2x, hy + a2y);
+        ctx.stroke();
+      }
+
+      ctx.globalAlpha = 1;
+      arrow(ctx, hx, hy, X(1), Y(0), p.caux, 2.2);
+      arrow(ctx, X(0), Y(0), X(1), Y(0), p.cin, 3.4);
+      arrow(ctx, X(0), Y(0), hx, hy, p.cout, 2.2);
+      ctx.fillStyle = p.cout;
+      ctx.beginPath();
+      ctx.arc(hx, hy, 3.5, 0, TAU);
+      ctx.fill();
+
+      const r = Math.min(0.16 * s, 40);
+      if (Math.abs(S.ph) > 0.01) {
+        ctx.strokeStyle = p.fg;
+        ctx.lineWidth = 1.4;
+        ctx.globalAlpha = 0.85;
+        ctx.beginPath();
+        ctx.arc(ox, oy, r, 0, -S.ph, S.ph > 0);
+        ctx.stroke();
+        if (Math.abs(S.ph) * DEG > 22) {
+          ctx.fillStyle = p.fg;
+          rich(ctx, `$φ$ = ${fmtDeg(S.ph * DEG)}`, ox + (r + 9) * Math.cos(S.ph / 2), oy - (r + 9) * Math.sin(S.ph / 2) + 4, 12, 400);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      const side = (ax: number, ay: number, bx: number, by: number, vx: number, vy: number, text: string, color: string) => {
+        let nx = -(by - ay);
+        let ny = bx - ax;
+        const nl = Math.hypot(nx, ny) || 1;
+        nx /= nl;
+        ny /= nl;
+        const mx = (ax + bx) / 2;
+        const my = (ay + by) / 2;
+        if ((mx - vx) * nx + (my - vy) * ny < 0) {
+          nx = -nx;
+          ny = -ny;
+        }
+        ctx.fillStyle = color;
+        const tw = rich(ctx, text, 0, 0, 13, 600, 'left', false);
+        const px = mx + nx * 15;
+        const al = nx > 0.4 ? 0 : nx < -0.4 ? 1 : 0.5;
+        const left = Math.min(w - 4 - tw, Math.max(4, px - tw * al));
+        rich(ctx, text, left, my + ny * 14 + 4, 13, 600);
+      };
+      side(X(0), Y(0), X(1), Y(0), hx, hy, '$V̇_{in}$', p.cin);
+      side(X(0), Y(0), hx, hy, X(1), Y(0), lp ? '$V̇_{out}$ = $V̇_C$' : '$V̇_{out}$ = $V̇_R$', p.cout);
+      side(hx, hy, X(1), Y(0), X(0), Y(0), lp ? '$V̇_R$' : '$V̇_C$', p.caux);
+      ctx.restore();
+    }
+
+    function drawBode(c: Cv, kind: 'mag' | 'ph', p: Pal) {
+      const { ctx, w, h } = c;
+      if (w < 80 || h < 80) return;
+      ctx.clearRect(0, 0, w, h);
+      const lp = S.type === 'lp';
+      const L = 46;
+      const Rm = 12;
+      const T = 10;
+      const B = 30;
+      const pw = w - L - Rm;
+      const ph = h - T - B;
+      const lc = Math.log10(S.fc);
+      const lf = Math.log10(S.f);
+      const half = Math.max(2.5, Math.abs(lf - lc) + 0.5);
+      const a = lc - half;
+      const b = lc + half;
+      const X = (l: number) => L + ((l - a) / (b - a)) * pw;
+      const vmin = kind === 'mag' ? -60 : lp ? -100 : -10;
+      const vmax = kind === 'mag' ? 6 : lp ? 10 : 100;
+      const Y = (v: number) => T + ((vmax - v) / (vmax - vmin)) * ph;
+      const val = (f: number) => {
+        const hh = Hc(f);
+        return kind === 'mag' ? 20 * Math.log10(hh.mag) : hh.ph * DEG;
+      };
+      const ticks = kind === 'mag' ? [0, -20, -40, -60] : lp ? [0, -45, -90] : [0, 45, 90];
+
+      ctx.save();
+      ctx.font = `12px ${p.font}`;
+      ctx.strokeStyle = p.fg;
+      ctx.fillStyle = p.fg;
+      ctx.lineWidth = 1;
+
+      const pxDec = pw / (b - a);
+      const k0 = Math.ceil(a);
+      const k1 = Math.floor(b);
+      const stepK = Math.max(1, Math.ceil(36 / pxDec));
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      for (let k = k0; k <= k1; k++) {
+        const x = X(k);
+        ctx.globalAlpha = 0.12;
+        ln(ctx, x, T, x, T + ph);
+        if ((k - k0) % stepK === 0) {
+          ctx.globalAlpha = 0.75;
+          ctx.fillText(tickF(Math.pow(10, k)), x, T + ph + 14);
+        }
+      }
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (const v of ticks) {
+        const y = Y(v);
+        ctx.globalAlpha = v === 0 ? 0.35 : 0.14;
+        ln(ctx, L, y, L + pw, y);
+        ctx.globalAlpha = 0.75;
+        ctx.fillText(lbl(v), L - 6, y);
+      }
+      ctx.globalAlpha = 0.3;
+      ctx.strokeRect(L, T, pw, ph);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(L, T, pw, ph);
+      ctx.clip();
+      if (kind === 'mag') {
+        const asy = (l: number) => {
+          const d = 20 * (l - lc);
+          return lp ? (d > 0 ? -d : 0) : d < 0 ? d : 0;
+        };
+        ctx.strokeStyle = p.caux;
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(X(a), Y(asy(a)));
+        ctx.lineTo(X(lc), Y(0));
+        ctx.lineTo(X(b), Y(asy(b)));
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = p.caux;
+      ctx.lineWidth = 2.4;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      const n = Math.max(60, Math.floor(pw));
+      for (let i = 0; i <= n; i++) {
+        const l = a + ((b - a) * i) / n;
+        const y = Y(val(Math.pow(10, l)));
+        if (i) ctx.lineTo(X(l), y);
+        else ctx.moveTo(X(l), y);
+      }
+      ctx.stroke();
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = p.fg;
+      ctx.globalAlpha = 0.55;
+      ctx.setLineDash([5, 4]);
+      ln(ctx, X(lc), T, X(lc), T + ph);
+      const yv = Y(val(S.f));
+      ctx.strokeStyle = p.cout;
+      ctx.globalAlpha = 0.9;
+      ctx.setLineDash([2, 3]);
+      ln(ctx, X(lf), T, X(lf), T + ph);
+      ln(ctx, L, yv, X(lf), yv);
+      ctx.restore();
+
+      const yc = Math.min(T + ph, Math.max(T, yv));
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = p.cout;
+      ctx.beginPath();
+      ctx.arc(X(lf), yc, 5, 0, TAU);
+      ctx.fill();
+      const right = X(lf) > L + pw * 0.62;
+      const desc = !(kind === 'mag' && !lp);
+      let up = desc ? !right : right;
+      if (up && yc < T + 18) up = false;
+      if (!up && yc > T + ph - 16) up = true;
+      ctx.textAlign = right ? 'right' : 'left';
+      ctx.textBaseline = 'middle';
+      ctx.font = `600 12px ${p.font}`;
+      ctx.fillText(kind === 'mag' ? fmtDb(val(S.f)) : fmtDeg(val(S.f)), X(lf) + (right ? -9 : 9), yc + (up ? -11 : 14));
+
+      ctx.fillStyle = p.fg;
+      ctx.globalAlpha = 0.8;
+      rich(ctx, '$f_c$', X(lc) + 5, T + ph - 6, 12, 400);
+      ctx.globalAlpha = 0.72;
+      rich(ctx, '$f$ [Hz]', w - Rm, h - 3, 11, 400, 'right');
+      ctx.restore();
+    }
+
+    /* ----- Testo Guida / Obiettivo Didattico ----- */
+
+    function att(f: number): number {
+      return -20 * Math.log10(Hc(f).mag);
+    }
+    function range2(f1: number, f2: number): string {
+      const a1 = Math.min(att(f1), att(f2));
+      const a2 = Math.max(att(f1), att(f2));
+      return `${num(a1, 2)}–${num(a2, 2)} dB`;
+    }
+    function hintText(): string {
+      const lp = S.type === 'lp';
+      const aU = att(S.f);
+      const H = X('H');
+      const phi = X('phi');
+      const fcX = X('fc');
+      if (S.sig === 'sin') {
+        return lp
+          ? `Il passa-basso lascia passare le basse frequenze (${H} → 1, ${phi} → 0°) e attenua le alte (${H} → 0, ${phi} → −90°). Usa il pulsante «${X('feqfc')}» per verificare i valori a frequenza di taglio (−3 dB, −45°).`
+          : `Il passa-alto attenua le basse frequenze (${H} → 0, ${phi} → +90°) e lascia passare le alte (${H} → 1, ${phi} → 0°). Usa il pulsante «${X('feqfc')}» per verificare i valori a frequenza di taglio (−3 dB, +45°).`;
+      }
+      if (S.sig === 'noise') {
+        const f1 = S.f * NOISE_M[0];
+        const f2 = S.f * NOISE_M[NOISE_M.length - 1];
+        const rng = `${eng(f1, 'Hz', 2)}–${eng(f2, 'Hz', 2)}`;
+        return lp
+          ? `🎯 <strong>Obiettivo</strong>: Rimuovere il rumore ad alta frequenza. Il disturbo si trova nell'intervallo <strong>${rng}</strong>. Selezionando il <strong>Passa-basso</strong> e posizionando <em>f<sub>c</sub></em> (${eng(S.fc, 'Hz')}) al di sotto delle frequenze di rumore, la componente ad alta frequenza viene attenuata di ${range2(f1, f2)} preservando la sinusoide utile.`
+          : `<strong>⚠︎ Filtro Errato</strong>: Il Passa-alto lascia passare i disturbi ad alta frequenza (<strong>${rng}</strong>, attenuazione min. ${range2(f1, f2)}). Per ripulire questo segnale <strong>passa al filtro Passa-basso</strong>.`;
+      }
+      const f1 = S.f * DRIFT[0].m;
+      const f2 = S.f * DRIFT[DRIFT.length - 1].m;
+      const rng = `${eng(f1, 'Hz', 2)}–${eng(f2, 'Hz', 2)}`;
+      return lp
+        ? `<strong>⚠︎ Filtro Errato</strong>: Il Passa-basso lascia passare la deriva lenta in bassa frequenza (<strong>${rng}</strong>) e la componente continua (offset). La linea di base non si stabilizza. Per eliminarla <strong>passa al filtro Passa-alto</strong>.`
+        : `🎯 <strong>Obiettivo</strong>: Eliminare la deriva (baseline wandering). La deriva oscilla molto lentamente (<strong>${rng}</strong>). Selezionando il <strong>Passa-alto</strong> e impostando <em>f<sub>c</sub></em> (${eng(S.fc, 'Hz')}) al di sopra della deriva, l'offset continuo viene bloccato totalmente (H(0)=0) e le oscillazioni lente vengono attenuate di ${range2(f1, f2)}, stabilizzando la sinusoide a zero.`;
+    }
+
+    function readouts() {
+      ro.tb.textContent = `Base dei tempi: ${eng(niceUp(S.Wt / 10), 's', 1)}/div`;
+    }
+
+    function syncUI() {
+      root.dataset.tipo = S.type;
+      root.dataset.sig = S.sig;
+      root.dataset.playing = S.playing ? '1' : '0';
+      outs.R.textContent = eng(S.R, 'Ω', 2);
+      outs.C.textContent = eng(S.C, 'F', 2);
+      outs.f.textContent = eng(S.f, 'Hz');
+      outs.fc.textContent = eng(S.fc, 'Hz');
+      outs.lvl.textContent = `${Math.round(S.level)} %`;
+      sl.lvl.disabled = S.sig === 'sin';
+      const wrap = sl.lvl.closest('.sl');
+      if (wrap) wrap.classList.toggle('is-off', S.sig === 'sin');
+      noteIn.hidden = S.sig === 'sin';
+      hintEl.innerHTML = hintText();
+      playLabel.textContent = S.playing ? 'Pausa' : 'Riproduci';
+      readouts();
+    }
+
+    /* ----- Controllo Loop Animazione ----- */
+
+    function resizeAll() {
+      for (const k of Object.keys(cvs) as (keyof typeof cvs)[]) fit(cvs[k]);
+    }
+    function renderStatic() {
+      const p = pal();
+      drawPhasor(cvs.phasor, p);
+      drawBode(cvs.bm, 'mag', p);
+      drawBode(cvs.bp, 'ph', p);
+    }
+    function renderTime() {
+      const p = pal();
+      drawTime(cvs.vin, 'in', p);
+      drawTime(cvs.vout, 'out', p);
+    }
+
+    function settle(dt: number): boolean {
+      let moving = false;
+      const lw = Math.log(S.W);
+      const lt = Math.log(S.Wt);
+      if (S.reduced || Math.abs(lt - lw) < 1e-3) {
+        S.W = S.Wt;
+      } else {
+        S.W = Math.exp(lw + (lt - lw) * Math.min(1, dt * 10));
+        moving = true;
+      }
+      if (S.reduced || Math.abs(S.yTarget - S.yMax) < 1e-3) {
+        S.yMax = S.yTarget;
+      } else {
+        S.yMax += (S.yTarget - S.yMax) * Math.min(1, dt * 8);
+        moving = true;
+      }
+      return moving;
+    }
+
+    let raf = 0;
+    let last = 0;
+    let visible = true;
+    function frame(ts: number) {
+      raf = 0;
+      if (!root.isConnected || !visible) return;
+      const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0;
+      last = ts;
+      if (S.playing) S.u0 += dt * 0.07 * S.f * S.W;
+      const moving = settle(dt);
+      renderTime();
+      if (S.playing || moving) raf = requestAnimationFrame(frame);
+    }
+    function kick() {
+      if (!raf && visible && root.isConnected) {
+        last = 0;
+        raf = requestAnimationFrame(frame);
+      }
+    }
+
+    function update() {
+      rebuild();
+      syncUI();
+      renderStatic();
+      renderTime();
+      kick();
+    }
+
+    /* ----- Gestione Eventi ----- */
+
+    function onControl(ev: Event) {
+      const t = ev.target as HTMLInputElement;
+      const ctl = t && t.dataset ? t.dataset.ctl : undefined;
+      if (!ctl) return;
+      switch (ctl) {
+        case 'tipo':
+          if (t.checked) S.type = t.value as Tipo;
+          break;
+        case 'sig':
+          if (t.checked) S.sig = t.value as Segnale;
+          break;
+        case 'R':
+          S.R = e24(logMap(+t.value, RANGE.R));
+          break;
+        case 'C':
+          S.C = e24(logMap(+t.value, RANGE.C));
+          break;
+        case 'f':
+          S.f = logMap(+t.value, RANGE.f);
+          break;
+        case 'lvl':
+          S.level = +t.value;
+          break;
+      }
+      update();
+    }
+    root.addEventListener('input', onControl);
+    root.addEventListener('change', onControl);
+
+    root.addEventListener('click', (ev) => {
+      const b = (ev.target as HTMLElement).closest('[data-act]') as HTMLElement | null;
+      if (!b) return;
+      if (b.dataset.act === 'fc') {
+        S.f = Math.min(Math.pow(10, RANGE.f[1]), Math.max(Math.pow(10, RANGE.f[0]), S.fc));
+        sl.f.value = String(logPos(S.f, RANGE.f));
+        update();
+      } else if (b.dataset.act === 'play') {
+        S.playing = !S.playing;
+        update();
+      }
+    });
+
+    /* ----- Inizializzazione ----- */
+
+    S.f = 1 / (TAU * S.R * S.C);
+    sl.R.value = String(logPos(S.R, RANGE.R));
+    sl.C.value = String(logPos(S.C, RANGE.C));
+    sl.f.value = String(logPos(S.f, RANGE.f));
+    sl.lvl.value = String(S.level);
+
+    resizeAll();
+    update();
+
+    const relayout = () => {
+      resizeAll();
+      renderStatic();
+      renderTime();
+    };
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(relayout).observe(root);
+    window.addEventListener('resize', relayout);
+
+    const redraw = () => {
+      renderStatic();
+      renderTime();
+    };
+    if (typeof window.matchMedia === 'function') {
+      const mm = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mm.addEventListener) mm.addEventListener('change', redraw);
+    }
+    if (typeof MutationObserver !== 'undefined') {
+      new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme', 'style'] });
+    }
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      new IntersectionObserver((entries) => {
+        visible = entries.some((e) => e.isIntersecting);
+        if (visible) kick();
+      }).observe(root);
+    }
+
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-rcf]').forEach(initRoot);
+  }
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>
