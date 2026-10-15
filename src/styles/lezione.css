@@ -900,3 +900,78 @@ starlight-toc a[aria-current='true'] {
 .sl-markdown-content .formula-numerata .katex-display {
   padding-top: 0.6em;
 }
+
+
+.pn-figure {
+  /* colori: modificali per adattarli al sito */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --p-fill: #fdeceb;
+  --n-fill: #e7f0fd;
+  --depl-fill: #fff2c2;
+  --depl-edge: #b58900;
+  --electron: #1d5fd1;
+  --hole: #d1342b;
+  --field: #15803d;
+  --curve: #0f766e;
+ 
+  margin: 2rem auto;
+  max-width: 860px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+}
+.pn-figure svg { display: block; width: 100%; height: auto; }
+.pn-figure figcaption { margin-top: .6rem; font-size: .92rem; line-height: 1.45; color: var(--muted); }
+ 
+/* regioni */
+.pn-figure .region-p   { fill: var(--p-fill); }
+.pn-figure .region-n   { fill: var(--n-fill); }
+.pn-figure .depletion  { fill: var(--depl-fill); }
+.pn-figure .frame      { fill: none; stroke: var(--ink); stroke-width: 2; }
+.pn-figure .junction   { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.pn-figure .edge       { stroke: var(--depl-edge); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.pn-figure .guide      { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; opacity: .8; }
+ 
+/* portatori mobili */
+.pn-figure .carrier-e  { fill: var(--electron); }
+.pn-figure .carrier-h  { fill: #fff; stroke: var(--hole); stroke-width: 2; }
+.pn-figure .sign       { fill: none; stroke-width: 2.2; stroke-linecap: round; }
+.pn-figure .sign-e     { stroke: #fff; }
+.pn-figure .sign-h     { stroke: var(--hole); }
+ 
+/* ioni fissi */
+.pn-figure .ion-neg    { fill: #cfe0fb; stroke: var(--electron); stroke-width: 2; }
+.pn-figure .ion-pos    { fill: #f9d3d0; stroke: var(--hole); stroke-width: 2; }
+.pn-figure .sign-ion-neg { stroke: var(--electron); }
+.pn-figure .sign-ion-pos { stroke: var(--hole); }
+ 
+/* evidenziazione dei portatori che si muovono (fig. 2) */
+.pn-figure .halo-e     { fill: none; stroke: var(--electron); stroke-width: 2; stroke-dasharray: 3 3; }
+.pn-figure .halo-h     { fill: none; stroke: var(--hole);     stroke-width: 2; stroke-dasharray: 3 3; }
+ 
+/* frecce */
+.pn-figure .arrow-e     { stroke: var(--electron); stroke-width: 3.5; fill: none; }
+.pn-figure .arrow-h     { stroke: var(--hole);     stroke-width: 3.5; fill: none; }
+.pn-figure .arrow-field { stroke: var(--field);    stroke-width: 4.5; fill: none; }
+.pn-figure .mk-e        { fill: var(--electron); }
+.pn-figure .mk-h        { fill: var(--hole); }
+.pn-figure .mk-field    { fill: var(--field); }
+.pn-figure .mk-ink      { fill: var(--ink); }
+ 
+/* grafico */
+.pn-figure .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.pn-figure .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.pn-figure .dim   { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.pn-figure .curve { stroke: var(--curve); stroke-width: 4; fill: none; stroke-linejoin: round; }
+ 
+/* testi */
+.pn-figure text       { fill: var(--ink); }
+.pn-figure .t-title   { font-size: 17px; font-weight: 600; text-anchor: middle; }
+.pn-figure .t-small   { font-size: 14px; text-anchor: middle; }
+.pn-figure .t-leg     { font-size: 13.5px; }
+.pn-figure .t-axis    { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 17px; }
+.pn-figure .t-end     { text-anchor: end; }
+.pn-figure .t-mid     { text-anchor: middle; }
+.pn-figure .field-label { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 700; font-size: 20px; text-anchor: middle; fill: var(--field); }
+.pn-figure sub { font-size: .75em; }
+

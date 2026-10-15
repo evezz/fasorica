@@ -1,0 +1,287 @@
+---
+title: La Giunzione PN
+description: Analisi fisica e quantitativa della giunzione PN a partire dal semiconduttore drogato, formazione della regione di svuotamento e conduzione in polarizzazione diretta e inversa.
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+Iniziamo questa lezione introducendo i **semiconduttori**: sono materiali che hanno proprietà di conduzione dell'elettricità intermedie rispetto a conduttori e isolanti. 
+Non conducono bene come i conduttori, ma possono essere messi in delle condizioni specifiche (per esempio alzando o abbassando la loro temperatura) per farli condurre di più o di meno.
+Per questo motivo i semiconduttori sono fra i materiali più usati in elettronica; il più comune fra questi è il **silicio**. <br />
+La tecnica più importante per lavorare con i semiconduttori è il **drogaggio**. Grazie a questa tecnica, un'interfaccia tra due regioni dello stesso cristallo può mostrare un comportamento unidirezionale, ossia che lascia scorrere la corrente solo in un determinato verso.
+In questa pagina partiamo dal drogaggio per arrivare alle fondamenta di tutti i dispositivi elettronici: la giunzione PN.
+
+## Dal semiconduttore intrinseco al drogaggio
+
+La tecnica del drogaggio consiste nell'inserire una piccola percentuale di altri atomi per modificare le proprietà elettroniche del semiconduttore di partenza. Consideriamo un pezzo di **silicio**: è un materiale che ha 4 elettroni nel livello energetico più esterno, creando 4 legami di valenza con altri atomi di silicio.
+Inserendo atomi che hanno un elettrone di valenza in meno del silicio (per esempio il boro), questo andrà ad occupare il posto di un atomo di silicio e tutti e tre i suoi elettroni di valenza creeranno un legame, ma rimarrà un "buco" detto **lacuna** (un'assenza di elettrone).
+Viceversa, inserendo atomi che hanno un elettrone di valenza in più rispetto al silicio (per esempio il fosforo o l'antimonio), tutti i suoi elettroni di valenza legheranno con 4 atomi esterni, lasciando così libero un elettrone che può contribuire alla conduzione. <br />
+Il primo tipo di drogaggio si dice **Tipo P** e produce un silicio con molte cariche "positive" (le lacune, che sono per convenzione opposte degli elettroni e quindi positive). <br />
+Il secondo tipo di drogaggio si dice **Tipo N** e produce un silicio con molte cariche negative (molti più elettroni rispetto al caso non drogato).
+
+<Figura src="/images/silicon_doping.svg" alt="Immagine: [Silicon doping - Type P and N - it](https://commons.wikimedia.org/wiki/File:Silicon_doping_-_Type_P_and_N_-_it.svg), di [VectorVoyager](https://commons.wikimedia.org/wiki/User:VectorVoyager), distribuita con licenza [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/). Immagine non modificata." larghezza='50rem'>
+  Confronto tra il drogaggio di tipo N e quello di tipo P nel silicio.<br/><small>Immagine: [Silicon doping - Type P and N - it](https://commons.wikimedia.org/wiki/File:Silicon_doping_-_Type_P_and_N_-_it.svg), di [VectorVoyager](https://commons.wikimedia.org/wiki/User:VectorVoyager), distribuita con licenza [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/). Immagine non modificata.</small>
+</Figura>
+
+
+### Donatori, accettori e legge di azione di massa
+Quando viene fatto un drogaggio di tipo P, l'atomo inserito diventa un **accettore** di un altro elettrone, perchè avendo solo tre elettroni legati si crea una lacuna e può *accettare* un altro elettrone. La concentrazione di questi atomi si indica con $N_A$. Le lacune naturalmente presenti nel silicio puro sono pochissime. Le lacune create da un drogaggio di tipo P sono immensamente superiori a quelle naturali, quindi la concentrazione totale di lacune ($p$) è pari quasi esattamente al numero di atomi accettori inseriti ($N_A$).
+$$
+p \approx N_A
+$$
+Quando viene fatto un drogaggio di tipo N, l'atomo inserito diventa un **donatore** di un suo elettrone, perchè non trova un legame nella struttura cristallina del silicio. La concentrazione di questi atomi si indica con $N_D$ Anche per gli elettroni, il loro numero nel silicio puro è estremamente basso. Gli elettroni liberati da un drogaggio di tipo N sono immensamente superiori a quelli naturali, quindi la concentrazione totale di elettroni ($n$) è pari quasi esattamente al numero di atomi donatori inseriti ($N_D$).
+
+$$
+n \approx N_D 
+$$
+
+Nel materiale ci sono sempre due processi continui:
+ - La **generazione**: il calore crea continuamente coppie elettrone-lacuna. In breve, li elettroni lasciano il loro posto creando una lacuna.
+ - La **ricombinazione**: quando un elettrone libero incontra una lacuna vuota, ci cade dentro e entrambi "spariscono" come cariche libere (il legame si riempie e si annullano a vicenda).
+
+Ora, cosa succede se aumentiamo enormemente il numero di elettroni (drogaggio N)?<br />
+Essendoci un'enorme quantità di elettroni in giro, per una povera lacuna diventa facilissimo scontrarsi con uno di essi e ricombinarsi. Di conseguenza, il numero di lacune crolla drasticamente. In condizioni di equilibrio a temperatura costante, la quantità di cariche segue una regola matematica ferrea, detta **legge di azione di massa**: il prodotto tra elettroni ($n$) e lacune ($p$) deve rimanere sempre un numero costante, indicato con $n_i^2$ (dove $n_i$ è la concentrazione intrinseca del materiale puro):
+$$
+n \cdot p = n_i^2
+$$
+
+Per esempio, se $n_i = 10^{10}\, \text{cm}^{-3}$ e droghiamo con fosforo con concentrazione $n \approx N_D = 10^{16}\, \text{cm}^{-3}$, allora: $p = \frac{n_i^2}{N_D} = \frac{10^{20}}{10^{16}} = 10^{4}\, \text{cm}^{-3}$ (cioè $n \gg p$).
+
+## Accostamento di silicio N e P
+
+<svg viewBox="-160 0 1000 220" width="100%" role="img" aria-labelledby="pn1-t pn1-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title id="pn1-t">Semiconduttore P e semiconduttore N affiancati</title>
+  <desc id="pn1-d">A sinistra la zona P, a destra la zona N, separate dalla giunzione tratteggiata. In P la concentrazione di lacune è 10 alla 16 per centimetro cubo, in N quella di elettroni è la stessa.</desc>
+  <rect x="80" y="60" width="260" height="140" fill="#fdeceb"/>
+  <rect x="340" y="60" width="260" height="140" fill="#e7f0fd"/>
+  <rect x="80" y="60" width="520" height="140" fill="none" stroke="#1f2933" stroke-width="2"/>
+  <line x1="340" y1="60" x2="340" y2="200" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="210" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore P</text>
+  <text x="470" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore N</text>
+  <text x="94" y="92" font-family="Georgia, Times New Roman, serif" font-size="18" fill="#d1342b"><tspan font-style="italic">p</tspan> = 10<tspan dy="-7" font-size="12">16</tspan><tspan dy="7" dx="4">cm</tspan><tspan dy="-7" font-size="12">−3</tspan></text>
+  <text x="586" y="92" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-size="18" fill="#1d5fd1"><tspan font-style="italic">n</tspan> = 10<tspan dy="-7" font-size="12">16</tspan><tspan dy="7" dx="4">cm</tspan><tspan dy="-7" font-size="12">−3</tspan></text>
+</svg>
+
+Mettendo a contatto ideale una regione drogata $P$ e una regione drogata $N$ nello stesso cristallo, si crea un forte **gradiente di concentrazione**:
+* Le lacune tendono a diffondere dalla regione $P$ alla regione $N$.
+* Gli elettroni tendono a diffondere dalla regione $N$ alla regione $P$.
+
+Quindi appena le due regioni vengono messe a contatto, avviene questo meccanismo per cui gli elettroni saltano nella zona $P$, e le lacune saltano nella zona $N$. Questo succede per un brevissimo tempo, fino a che un elettrone nella zona $N$ deve fare un salto "troppo lungo" per arrivare alle lacune non occupate da altri elettroni. Si arriva quindi ad un nuovo equilibrio.
+
+<svg viewBox="-160 0 1000 220" width="100%" role="img" aria-labelledby="pn2-t pn2-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title id="pn2-t">Diffusione di un elettrone e di una lacuna attraverso la giunzione</title>
+  <desc id="pn2-d">Stessa struttura della figura 1. Un elettrone, cerchio blu con il segno meno, si muove dalla zona N verso la zona P. Una lacuna, cerchio rosso con il segno più, si muove dalla zona P verso la zona N.</desc>
+  <defs>
+    <marker id="pn2-ae" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d5fd1"/></marker>
+    <marker id="pn2-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d1342b"/></marker>
+  </defs>
+  <rect x="80" y="60" width="260" height="140" fill="#fdeceb"/>
+  <rect x="340" y="60" width="260" height="140" fill="#e7f0fd"/>
+  <rect x="80" y="60" width="520" height="140" fill="none" stroke="#1f2933" stroke-width="2"/>
+  <line x1="340" y1="60" x2="340" y2="200" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="210" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore P</text>
+  <text x="470" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore N</text>
+  <circle cx="400" cy="100" r="14" fill="#1d5fd1"/>
+  <path d="M393 100H407" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <line x1="382" y1="100" x2="286" y2="100" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#pn2-ae)"/>
+  <text x="400" y="80" font-size="14" font-weight="600" text-anchor="middle" fill="#1d5fd1">elettrone</text>
+  <circle cx="280" cy="160" r="14" fill="#fff" stroke="#d1342b" stroke-width="2.5"/>
+  <path d="M273 160H287M280 153V167" fill="none" stroke="#d1342b" stroke-width="3" stroke-linecap="round"/>
+  <line x1="298" y1="160" x2="394" y2="160" stroke="#d1342b" stroke-width="3.5" marker-end="url(#pn2-ah)"/>
+  <text x="280" y="190" font-size="14" font-weight="600" text-anchor="middle" fill="#d1342b">lacuna</text>
+</svg>
+
+In questa situazione, gli elettroni che sono passati alla zona $P$ hanno lasciato dietro degli atomi di silicio senza un elettrone, quindi con una carica parziale positiva ($N_D^+$). Viceversa le lacune hanno lasciato una carica negativa ($N_A^-$). Si crea così la **zona di carica spaziale** (o **zona di svuotamento**). In questa regione non ci sono i *portatori mobili* (cioè elettroni e lacune) ma carica **fissa**.
+La presenza di cariche fisse genera un **campo elettrico interno** $\vec{E}$ diretto dalla regione $N$ alla regione $P$ (dalla carica fissa positiva alla carica fissa negativa). Questo campo elettrico si oppone al fenomeno precedente di diffusione, garantendo l'equilibrio. 
+Dal campo elettrico si può calcolare il potenziale elettrico ai capi della giunzione, che risulta essere:
+
+$$
+V_0 = V_T \ln \left( \frac{N_A \cdot N_D}{n_i^2} \right)
+$$
+
+Dove $V_T = \frac{k_B T}{q} \approx 25.9\text{ mV}$ a $T = 300\text{ K}$ è la tensione termica. Generalmente, questo potenziale è detto **barriera di potenziale** e vale circa $0{,}6 - 0{,}7\, \text{V}$.
+
+<svg viewBox="-160 0 1000 510" width="100%" role="img" aria-labelledby="pn3-t pn3-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title id="pn3-t">Zona di carica spaziale, campo elettrico e potenziale in una giunzione PN</title>
+  <desc id="pn3-d">Attorno alla giunzione c'è la zona di carica spaziale, con ioni accettori negativi dal lato P e ioni donatori positivi dal lato N. Sopra di essa una freccia indica il campo elettrico, diretto da N verso P. Sotto, il grafico del potenziale sale dal valore della zona P a quello della zona N, con una differenza V0.</desc>
+  <defs>
+    <marker id="pn3-af" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#15803d"/></marker>
+    <marker id="pn3-ax" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+    <marker id="pn3-dm" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+  </defs>
+  <rect x="80" y="60" width="260" height="140" fill="#fdeceb"/>
+  <rect x="340" y="60" width="260" height="140" fill="#e7f0fd"/>
+  <rect x="285" y="60" width="110" height="140" fill="#fff2c2"/>
+  <rect x="80" y="60" width="520" height="140" fill="none" stroke="#1f2933" stroke-width="2"/>
+  <line x1="340" y1="60" x2="340" y2="200" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <line x1="285" y1="60" x2="285" y2="470" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="395" y1="60" x2="395" y2="470" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <line x1="340" y1="275" x2="340" y2="470" stroke="#6b7785" stroke-width="1" stroke-dasharray="3 4" opacity="0.8"/>
+  <text x="210" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore P</text>
+  <text x="470" y="46" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">Semiconduttore N</text>
+  <line x1="380" y1="16" x2="300" y2="16" stroke="#15803d" stroke-width="4.5" marker-end="url(#pn3-af)"/>
+  <text x="392" y="23" font-family="Georgia, Times New Roman, serif" font-style="italic" font-weight="700" font-size="20" fill="#15803d">E</text>
+  <text x="316" y="138" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#1d5fd1">N</text>
+  <text x="317" y="144" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">A</text>
+  <text x="317" y="130" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">−</text>
+  <text x="371" y="138" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#d1342b">N</text>
+  <text x="372" y="144" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">D</text>
+  <text x="372" y="130" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">+</text>
+  <line x1="288" y1="216" x2="392" y2="216" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pn3-dm)" marker-end="url(#pn3-dm)"/>
+  <text x="340" y="238" font-size="14" text-anchor="middle" fill="#1f2933">zona di carica</text>
+  <text x="340" y="255" font-size="14" text-anchor="middle" fill="#1f2933">spaziale</text>
+  <line x1="50" y1="470" x2="50" y2="290" stroke="#1f2933" stroke-width="2" marker-end="url(#pn3-ax)"/>
+  <line x1="50" y1="470" x2="652" y2="470" stroke="#1f2933" stroke-width="2" marker-end="url(#pn3-ax)"/>
+  <text x="50" y="280" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V</text>
+  <text x="664" y="476" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">x</text>
+  <line x1="50" y1="330" x2="395" y2="330" stroke="#6b7785" stroke-width="1" stroke-dasharray="3 4" opacity="0.8"/>
+  <line x1="395" y1="430" x2="560" y2="430" stroke="#6b7785" stroke-width="1" stroke-dasharray="3 4" opacity="0.8"/>
+  <text x="40" y="336" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V<tspan dy="5" font-size="12">N</tspan></text>
+  <text x="40" y="436" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V<tspan dy="5" font-size="12">P</tspan></text>
+  <path d="M50 430H285Q312.5 430 340 380Q367.5 330 395 330H600" fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="570" y1="334" x2="570" y2="426" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pn3-dm)" marker-end="url(#pn3-dm)"/>
+  <text x="582" y="388" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V<tspan dy="5" font-size="12">0</tspan></text>
+  <path d="M285 464V476M340 464V476M395 464V476" fill="none" stroke="#1f2933" stroke-width="2"/>
+  <text x="285" y="494" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">−x<tspan dy="5" font-size="12">p</tspan></text>
+  <text x="340" y="494" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">0</text>
+  <text x="395" y="494" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">x<tspan dy="5" font-size="12">n</tspan></text>
+</svg>
+
+
+## 3. Profilo di Carica, Campo Elettrico e Larghezza della ZCS
+
+Assumendo l'**approssimazione di svuotamento completo** (carica netta pari a $-q N_A$ nella zona $P$ e $+q N_D$ nella zona $N$, con bordi netti in $-x_p$ e $x_n$), possiamo risolvere l'equazione di Poisson monodimensionale:
+
+$$
+\frac{d^2 V(x)}{dx^2} = -\frac{\rho(x)}{\varepsilon_s} = -\frac{d E(x)}{dx}
+$$
+
+### Condizione di Neutralità globale della ZCS
+La carica positiva totale nella regione $N$ deve eguagliare la carica negativa totale nella regione $P$:
+
+$$
+q N_A x_p = q N_D x_n \implies \frac{x_p}{x_n} = \frac{N_D}{N_A}
+$$
+
+*La ZCS si estende maggiormente nella regione meno drogata.*
+
+### Campo Elettrico Massimo
+Integrando $\rho(x)$, si ottiene un profilo di campo elettrico triangolare che raggiunge il suo massimo valore assoluto all'interfaccia metallurgica $x = 0$:
+
+$$
+|E_{\text{max}}| = \frac{q N_A x_p}{\varepsilon_s} = \frac{q N_D x_n}{\varepsilon_s}
+$$
+
+### Ampiezza Totale della Regione di Svuotamento $W$
+Sommando le estensioni nei due lati $W = x_p + x_n$ in funzione della tensione applicata $V$:
+
+$$
+W(V) = \sqrt{\frac{2 \varepsilon_s}{q} \left( \frac{N_A + N_D}{N_A N_D} \right) (V_0 - V)}
+$$
+
+Dove $\varepsilon_s = \varepsilon_r \varepsilon_0$ è la permittività dielettrica del semiconduttore ($\approx 11.7 \varepsilon_0$ per il silicio).
+
+---
+
+## 4. La Giunzione PN in Polarizzazione
+
+Applichiamo una tensione esterna $V = V_P - V_N$ ai capi della giunzione.
+
+### A. Polarizzazione Diretta ($V > 0$)
+Collegando il morsetto positivo alla regione $P$ e il negativo alla regione $N$:
+* Il campo elettrico esterno si **oppone** al campo interno $E_{\text{int}}$.
+* La barriera di potenziale viene abbassata a $(V_0 - V)$.
+* La larghezza della ZCS diminuisce: $W(V) < W(0)$.
+* Abbassando la barriera, un grande numero di maggioritari può **diffondere** oltre la giunzione: gli elettroni iniettati in P e le lacune iniettate in N diventano portatori minoritari in eccesso e danno luogo a un'elevata **corrente diretta crescente esponenzialmente**.
+
+### B. Polarizzazione Inversa ($V < 0$)
+Collegando il morsetto positivo alla regione $N$ e il negativo alla regione $P$:
+* Il campo elettrico esterno si **somma** al campo interno.
+* La barriera di potenziale aumenta a $(V_0 + |V|)$.
+* La larghezza della ZCS aumenta: $W(V) > W(0)$.
+* La diffusione dei maggioritari viene completamente bloccata.
+* L'unica corrente presente è dovuta ai portatori minoritari generati termicamente ai bordi della ZCS che vengono trascinati dal campo elettrico, generando la piccola **corrente di saturazione inversa $I_S$**.
+
+---
+
+## 5. Equazione del Diodo Ideal (Shockley)
+
+Applicando la legge di diffusione dei portatori minoritari ai bordi della ZCS (condizioni limite di Shockley), si ricava l'equazione caratteristica tensione-corrente:
+
+$$
+I(V) = I_S \left( e^{\frac{V}{\eta V_T}} - 1 \right)
+$$
+
+Dove:
+* $I_S$ è la **corrente di saturazione inversa**:
+  $$I_S = q A n_i^2 \left( \frac{D_n}{L_n N_A} + \frac{D_p}{L_p N_D} \right)$$
+* $A$ è l'area trasversale della giunzione.
+* $D_n, D_p$ sono le costanti di diffusione di elettroni e lacune.
+* $L_n = \sqrt{D_n \tau_n}$ e $L_p = \sqrt{D_p \tau_p}$ sono le lunghezze di diffusione.
+* $\eta$ è il fattore d'idealità ($1 \le \eta \le 2$).
+
+<div class="unita-tabella">
+  <div class="unita-colonna">
+    <div class="unita-titolo">Stato</div>
+    <div class="unita-riga"><strong>Equilibrio</strong></div>
+    <div class="unita-riga"><strong>Pol. Diretta</strong></div>
+    <div class="unita-riga"><strong>Pol. Inversa</strong></div>
+  </div>
+  <div class="unita-colonna">
+    <div class="unita-titolo">Tensione $V$</div>
+    <div class="unita-riga"><span>$V = 0$</span></div>
+    <div class="unita-riga"><span>$V > 0$</span></div>
+    <div class="unita-riga"><span>$V < 0$</span></div>
+  </div>
+  <div class="unita-colonna">
+    <div class="unita-titolo">Barriera Totale</div>
+    <div class="unita-riga"><span>$V_0$</span></div>
+    <div class="unita-riga"><span>$V_0 - V$</span></div>
+    <div class="unita-riga"><span>$V_0 + |V|$</span></div>
+  </div>
+  <div class="unita-colonna">
+    <div class="unita-titolo">Larghezza ZCS ($W$)</div>
+    <div class="unita-riga"><span>$W_0$</span></div>
+    <div class="unita-riga"><span>$W < W_0$</span></div>
+    <div class="unita-riga"><span>$W > W_0$</span></div>
+  </div>
+  <div class="unita-colonna">
+    <div class="unita-titolo">Corrente $I$</div>
+    <div class="unita-riga"><span>$I = 0$</span></div>
+    <div class="unita-riga"><span>$I \approx I_S e^{V/\eta V_T}$</span></div>
+    <div class="unita-riga"><span>$I \approx -I_S$</span></div>
+  </div>
+</div>
+
+---
+
+## 6. Effetti Capacitativi della Giunzione
+
+In regime dinamico o ad alta frequenza, la giunzione PN presenta due contributi capacitativi distinti:
+
+### 1. Capacità di Svuotamento (Giunzione) $C_j$
+In polarizzazione inversa, le cariche fisse $+q N_D$ e $-q N_A$ separate dal dielettrico della ZCS (larga $W$) si comportano esattamente come un condensatore a facce piane e parallele:
+
+$$
+C_j(V_R) = \frac{\varepsilon_s A}{W(V_R)} = \frac{C_{j0}}{\sqrt{1 + \frac{V_R}{V_0}}}
+$$
+
+*Questa capacità diminuisce all'aumentare della tensione inversa $V_R$ ed è alla base del funzionamento dei **diodi Varicap**.*
+
+### 2. Capacità di Diffusione $C_d$
+In polarizzazione diretta, la corrente è sostenuta dall'iniezione di portatori minoritari accumulati ai bordi della giunzione prima della loro ricombinazione. Questo accumulo variabile di carica da diffusional comporta una capacità di diffusione proporzionale alla corrente diretta $I_D$:
+
+$$
+C_d = \frac{\tau_T \cdot I_D}{\eta V_T}
+$$
+
+Dove $\tau_T$ è il tempo di transito medio dei portatori minoritari.
+
+---
+
+<div class="sintesi">
+  <h3 style={{ color: '#ffffff', margin: 0 }}>In Sintesi</h3>
+  La giunzione PN nasce dall'unione di due regioni a differente drogaggio. La diffusione di elettroni e lacune lascia scoperte cariche fisse d'ione, formando una regione di svuotamento (ZCS) e un campo elettrico interno che arresta l'ulteriore flusso a riposo. Applicando una tensione diretta si abbassa la barriera di potenziale permettendo una forte conduzione esponenziale; applicando una tensione inversa si allarga la ZCS bloccando il passaggio di corrente, ad eccezione della minuscola corrente di saturazione inversa $I_S$.
+</div>
+
+
