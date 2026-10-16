@@ -72,7 +72,7 @@ export const argomenti: Argomento[] = [
     titolo: 'Diodi e transistor',
     descrizione: 'I componenti a semiconduttore e le loro prime applicazioni.',
     lezioni: [
-      { titolo: 'La giunzione PN', slug: 'semiconduttori/giunzione-pn', descrizione: 'Motivazioni e principio fisico.', livello: SU },
+      { titolo: 'Giunzione PN', slug: 'semiconduttori/giunzione-pn', descrizione: 'Motivazioni e principio fisico.', livello: SU },
       { titolo: 'Diodo e raddrizzatori', slug: 'semiconduttori/diodo-raddrizzatori', descrizione: 'Caratteristica, modelli del diodo e applicazioni.', livello: SU },
       { titolo: 'Transistor BJT', slug: 'semiconduttori/bjt', descrizione: 'Motivazioni e principio fisico.', livello: U },
       { titolo: 'Transistor MOSFET', slug: 'semiconduttori/mosfet', descrizione: 'Motivazioni e principio fisico.', livello: U },

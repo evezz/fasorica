@@ -1,5 +1,5 @@
 ---
-title: La Giunzione PN
+title: Giunzione PN
 description: Analisi fisica e quantitativa della giunzione PN a partire dal semiconduttore drogato, formazione della regione di svuotamento e conduzione in polarizzazione diretta e inversa.
 ---
 
@@ -25,11 +25,11 @@ Il secondo tipo di drogaggio si dice **Tipo N** e produce un silicio con molte c
 
 
 ### Donatori, accettori e legge di azione di massa
-Quando viene fatto un drogaggio di tipo P, l'atomo inserito diventa un **accettore** di un altro elettrone, perchè avendo solo tre elettroni legati si crea una lacuna e può *accettare* un altro elettrone. La concentrazione di questi atomi si indica con $N_A$. Le lacune naturalmente presenti nel silicio puro sono pochissime. Le lacune create da un drogaggio di tipo P sono immensamente superiori a quelle naturali, quindi la concentrazione totale di lacune ($p$) è pari quasi esattamente al numero di atomi accettori inseriti ($N_A$).
+Quando viene fatto un drogaggio di tipo $P$, l'atomo inserito diventa un **accettore** di un altro elettrone, perchè avendo solo tre elettroni legati si crea una lacuna e può *accettare* un altro elettrone. La concentrazione di questi atomi si indica con $N_A$. Le lacune naturalmente presenti nel silicio puro sono pochissime. Le lacune create da un drogaggio di tipo P sono immensamente superiori a quelle naturali, quindi la concentrazione totale di lacune ($p$) è pari quasi esattamente al numero di atomi accettori inseriti ($N_A$).
 $$
 p \approx N_A
 $$
-Quando viene fatto un drogaggio di tipo N, l'atomo inserito diventa un **donatore** di un suo elettrone, perchè non trova un legame nella struttura cristallina del silicio. La concentrazione di questi atomi si indica con $N_D$ Anche per gli elettroni, il loro numero nel silicio puro è estremamente basso. Gli elettroni liberati da un drogaggio di tipo N sono immensamente superiori a quelli naturali, quindi la concentrazione totale di elettroni ($n$) è pari quasi esattamente al numero di atomi donatori inseriti ($N_D$).
+Quando viene fatto un drogaggio di tipo $N$, l'atomo inserito diventa un **donatore** di un suo elettrone, perchè non trova un legame nella struttura cristallina del silicio. La concentrazione di questi atomi si indica con $N_D$ Anche per gli elettroni, il loro numero nel silicio puro è estremamente basso. Gli elettroni liberati da un drogaggio di tipo N sono immensamente superiori a quelli naturali, quindi la concentrazione totale di elettroni ($n$) è pari quasi esattamente al numero di atomi donatori inseriti ($N_D$).
 
 $$
 n \approx N_D 
@@ -39,7 +39,7 @@ Nel materiale ci sono sempre due processi continui:
  - La **generazione**: il calore crea continuamente coppie elettrone-lacuna. In breve, li elettroni lasciano il loro posto creando una lacuna.
  - La **ricombinazione**: quando un elettrone libero incontra una lacuna vuota, ci cade dentro e entrambi "spariscono" come cariche libere (il legame si riempie e si annullano a vicenda).
 
-Ora, cosa succede se aumentiamo enormemente il numero di elettroni (drogaggio N)?<br />
+Ora, cosa succede se aumentiamo enormemente il numero di elettroni (drogaggio $N$)?<br />
 Essendoci un'enorme quantità di elettroni in giro, per una povera lacuna diventa facilissimo scontrarsi con uno di essi e ricombinarsi. Di conseguenza, il numero di lacune crolla drasticamente. In condizioni di equilibrio a temperatura costante, la quantità di cariche segue una regola matematica ferrea, detta **legge di azione di massa**: il prodotto tra elettroni ($n$) e lacune ($p$) deve rimanere sempre un numero costante, indicato con $n_i^2$ (dove $n_i$ è la concentrazione intrinseca del materiale puro):
 $$
 n \cdot p = n_i^2
@@ -92,7 +92,7 @@ Quindi appena le due regioni vengono messe a contatto, avviene questo meccanismo
 </svg>
 
 In questa situazione, gli elettroni che sono passati alla zona $P$ hanno lasciato dietro degli atomi di silicio senza un elettrone, quindi con una carica parziale positiva ($N_D^+$). Viceversa le lacune hanno lasciato una carica negativa ($N_A^-$). Si crea così la **zona di carica spaziale** (o **zona di svuotamento**). In questa regione non ci sono i *portatori mobili* (cioè elettroni e lacune) ma carica **fissa**.
-La presenza di cariche fisse genera un **campo elettrico interno** $\vec{E}$ diretto dalla regione $N$ alla regione $P$ (dalla carica fissa positiva alla carica fissa negativa). Questo campo elettrico si oppone al fenomeno precedente di diffusione, garantendo l'equilibrio. 
+La presenza di cariche fisse genera un **campo elettrico interno** $\textcolor{green}{\overrightarrow{E}}$ diretto dalla regione $N$ alla regione $P$ (dalla carica fissa positiva alla carica fissa negativa). Questo campo elettrico si oppone al fenomeno precedente di diffusione, garantendo l'equilibrio. 
 Dal campo elettrico si può calcolare il potenziale elettrico ai capi della giunzione, che risulta essere:
 
 $$
@@ -147,141 +147,232 @@ Dove $V_T = \frac{k_B T}{q} \approx 25.9\text{ mV}$ a $T = 300\text{ K}$ è la t
   <text x="395" y="494" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">x<tspan dy="5" font-size="12">n</tspan></text>
 </svg>
 
-
-## 3. Profilo di Carica, Campo Elettrico e Larghezza della ZCS
-
-Assumendo l'**approssimazione di svuotamento completo** (carica netta pari a $-q N_A$ nella zona $P$ e $+q N_D$ nella zona $N$, con bordi netti in $-x_p$ e $x_n$), possiamo risolvere l'equazione di Poisson monodimensionale:
-
-$$
-\frac{d^2 V(x)}{dx^2} = -\frac{\rho(x)}{\varepsilon_s} = -\frac{d E(x)}{dx}
-$$
-
-### Condizione di Neutralità globale della ZCS
 La carica positiva totale nella regione $N$ deve eguagliare la carica negativa totale nella regione $P$:
 
 $$
 q N_A x_p = q N_D x_n \implies \frac{x_p}{x_n} = \frac{N_D}{N_A}
 $$
 
-*La ZCS si estende maggiormente nella regione meno drogata.*
+Quindi, **la zona di carica spaziale si estende maggiormente nella regione meno drogata**. Se sono drogate allo stesso modo, la zona di carica spaziale si estende della stessa quantità (come nell'immagine).
 
-### Campo Elettrico Massimo
-Integrando $\rho(x)$, si ottiene un profilo di campo elettrico triangolare che raggiunge il suo massimo valore assoluto all'interfaccia metallurgica $x = 0$:
-
+## Polarizzazione della giunzione $\rightarrow$ il diodo
+Andiamo ora a polarizzare la giunzione, quindi cambiando le condizioni esterne. Applichiamo un potenziale ai capi della giunzione:
 $$
-|E_{\text{max}}| = \frac{q N_A x_p}{\varepsilon_s} = \frac{q N_D x_n}{\varepsilon_s}
+V = V_P - V_N
 $$
+e studiamo cosa succede quando $V\gt0$ e $V\lt0$.
 
-### Ampiezza Totale della Regione di Svuotamento $W$
-Sommando le estensioni nei due lati $W = x_p + x_n$ in funzione della tensione applicata $V$:
-
-$$
-W(V) = \sqrt{\frac{2 \varepsilon_s}{q} \left( \frac{N_A + N_D}{N_A N_D} \right) (V_0 - V)}
-$$
-
-Dove $\varepsilon_s = \varepsilon_r \varepsilon_0$ è la permittività dielettrica del semiconduttore ($\approx 11.7 \varepsilon_0$ per il silicio).
-
----
-
-## 4. La Giunzione PN in Polarizzazione
-
-Applichiamo una tensione esterna $V = V_P - V_N$ ai capi della giunzione.
-
-### A. Polarizzazione Diretta ($V > 0$)
-Collegando il morsetto positivo alla regione $P$ e il negativo alla regione $N$:
-* Il campo elettrico esterno si **oppone** al campo interno $E_{\text{int}}$.
+### Polarizzazione diretta ($V\gt0$)
+Immaginiamo di prendere un generatore di tensione positiva e collegare il morsetto positivo alla regione $P$ e il negativo alla regione $N$ (quindi $V \gt 0$):
+* Il campo elettrico esterno si **oppone** al campo interno $\textcolor{green}{\overrightarrow{E}}$.
 * La barriera di potenziale viene abbassata a $(V_0 - V)$.
-* La larghezza della ZCS diminuisce: $W(V) < W(0)$.
-* Abbassando la barriera, un grande numero di maggioritari può **diffondere** oltre la giunzione: gli elettroni iniettati in P e le lacune iniettate in N diventano portatori minoritari in eccesso e danno luogo a un'elevata **corrente diretta crescente esponenzialmente**.
+* La larghezza della zona di carica spaziale diminuisce, quindi diventa più facile per le cariche saltare dall'altra parte.
+* Abbassando la barriera, un grande numero di maggioritari può **diffondere** oltre la giunzione: gli elettroni iniettati in $P$ e le lacune iniettate in $N$ diventano portatori minoritari in eccesso e danno luogo a un'elevata **corrente diretta crescente esponenzialmente**.
 
-### B. Polarizzazione Inversa ($V < 0$)
-Collegando il morsetto positivo alla regione $N$ e il negativo alla regione $P$:
-* Il campo elettrico esterno si **somma** al campo interno.
+<svg viewBox="0 0 1000 772" width="100%" role="img" aria-labelledby="pf-t pf-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="pf-t">Giunzione PN in polarizzazione diretta</title>
+<desc id="pf-d">Con tensione V maggiore di zero la zona di carica spaziale si restringe e la barriera di potenziale diventa φ0 − V. Gli elettroni e le lacune attraversano la giunzione e si ricombinano, mentre la batteria e i contatti rimpiazzano i portatori. Sotto, i grafici del potenziale e del campo elettrico con e senza tensione applicata.</desc>
+<defs>
+<marker id="pf-ae" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d5fd1"/></marker>
+<marker id="pf-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d1342b"/></marker>
+<marker id="pf-af" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#15803d"/></marker>
+<marker id="pf-ax" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+<marker id="pf-dm" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+<marker id="pf-lk" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7785"/></marker>
+<pattern id="pf-ht" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#1f2933" stroke-width="2"/></pattern>
+<g id="pf-e"><circle r="12" fill="#1d5fd1"/><path d="M-6 0H6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
+<g id="pf-h"><circle r="12" fill="#fff" stroke="#d1342b" stroke-width="2.5"/><path d="M-6 0H6M0 -6V6" fill="none" stroke="#d1342b" stroke-width="3" stroke-linecap="round"/></g>
+<g id="pf-hs"><circle r="8" fill="#fff" stroke="#d1342b" stroke-width="2"/><path d="M-4 0H4M0 -4V4" fill="none" stroke="#d1342b" stroke-width="2.2" stroke-linecap="round"/></g>
+<g id="pf-es"><circle r="8" fill="#1d5fd1"/><path d="M-4 0H4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></g>
+<g id="pf-c1"><use href="#pf-e"/><use href="#pf-hs" x="24" y="0"/><use href="#pf-hs" x="12" y="21"/><use href="#pf-hs" x="-12" y="21"/><use href="#pf-hs" x="-24" y="0"/><use href="#pf-hs" x="-12" y="-21"/><use href="#pf-hs" x="12" y="-21"/></g>
+<g id="pf-c2"><use href="#pf-h"/><use href="#pf-es" x="24" y="0"/><use href="#pf-es" x="12" y="21"/><use href="#pf-es" x="-12" y="21"/><use href="#pf-es" x="-24" y="0"/><use href="#pf-es" x="-12" y="-21"/><use href="#pf-es" x="12" y="-21"/></g>
+</defs>
+<rect x="230" y="108" width="270" height="244" fill="#fdeceb"/>
+<rect x="500" y="108" width="270" height="244" fill="#e7f0fd"/>
+<rect x="461" y="108" width="78" height="244" fill="#fff2c2"/>
+<rect x="230" y="108" width="540" height="244" fill="none" stroke="#1f2933" stroke-width="2"/>
+<rect x="218" y="108" width="12" height="244" fill="url(#pf-ht)" stroke="#1f2933" stroke-width="2"/>
+<rect x="770" y="108" width="12" height="244" fill="url(#pf-ht)" stroke="#1f2933" stroke-width="2"/>
+<line x1="500" y1="108" x2="500" y2="352" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="6 5"/>
+<line x1="461" y1="108" x2="461" y2="352" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="539" y1="108" x2="539" y2="352" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="330" y="96" font-size="18" text-anchor="middle" font-weight="600" fill="#1f2933">Semiconduttore P</text>
+<text x="670" y="96" font-size="18" text-anchor="middle" font-weight="600" fill="#1f2933">Semiconduttore N</text>
+<line x1="540" y1="22" x2="460" y2="22" stroke="#15803d" stroke-width="4.5" marker-end="url(#pf-af)"/>
+<text x="552" y="29" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="20" font-weight="700" fill="#15803d">E</text>
+<line x1="464" y1="64" x2="536" y2="64" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pf-dm)" marker-end="url(#pf-dm)"/>
+<text x="500" y="54" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">W</text>
+<text x="482" y="222" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#1d5fd1">N</text>
+<text x="483" y="228" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">A</text>
+<text x="483" y="214" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">−</text>
+<text x="520" y="222" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#d1342b">N</text>
+<text x="521" y="228" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">D</text>
+<text x="521" y="214" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">+</text>
+<use href="#pf-c1" x="385" y="150"/>
+<use href="#pf-c2" x="615" y="290"/>
+<line x1="278" y1="150" x2="350" y2="150" stroke="#d1342b" stroke-width="3.5" marker-end="url(#pf-ah)"/>
+<line x1="730" y1="150" x2="424" y2="150" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#pf-ae)"/>
+<line x1="278" y1="290" x2="576" y2="290" stroke="#d1342b" stroke-width="3.5" marker-end="url(#pf-ah)"/>
+<line x1="730" y1="290" x2="654" y2="290" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#pf-ae)"/>
+<use href="#pf-h" x="262" y="150"/>
+<use href="#pf-e" x="745" y="150"/>
+<use href="#pf-h" x="262" y="290"/>
+<use href="#pf-e" x="745" y="290"/>
+<text x="360" y="212" font-size="16" text-anchor="middle" fill="#374151">si ricombina con una</text>
+<text x="360" y="230" font-size="16" text-anchor="middle" fill="#374151">lacuna e scompare</text>
+<text x="640" y="228" font-size="16" text-anchor="middle" fill="#374151">si ricombina con un</text>
+<text x="640" y="246" font-size="16" text-anchor="middle" fill="#374151">elettrone e scompare</text>
+<text x="20" y="146" font-size="16" fill="#374151">Rimpiazzo la</text>
+<text x="20" y="166" font-size="16" fill="#374151">lacuna</text>
+<line x1="130" y1="156" x2="248" y2="152" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+<text x="20" y="262" font-size="16" fill="#374151">Rimpiazzo la lacuna</text>
+<text x="20" y="282" font-size="16" fill="#374151">(moto di elettroni</text>
+<text x="20" y="302" font-size="16" fill="#374151">verso sinistra)</text>
+<line x1="172" y1="288" x2="248" y2="290" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+<text x="796" y="146" font-size="16" fill="#374151">Elettrone fornito</text>
+<text x="796" y="166" font-size="16" fill="#374151">dalla batteria</text>
+<line x1="790" y1="154" x2="760" y2="150" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+<text x="796" y="282" font-size="16" fill="#374151">Elettrone fornito</text>
+<text x="796" y="302" font-size="16" fill="#374151">dalla batteria</text>
+<line x1="790" y1="290" x2="760" y2="290" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+<path d="M218 330H150V392H494" fill="none" stroke="#1f2933" stroke-width="2"/>
+<path d="M782 330H850V392H506" fill="none" stroke="#1f2933" stroke-width="2"/>
+<line x1="494" y1="370" x2="494" y2="414" stroke="#1f2933" stroke-width="3"/>
+<line x1="506" y1="380" x2="506" y2="404" stroke="#1f2933" stroke-width="3"/>
+<text x="478" y="386" font-size="20" text-anchor="middle" fill="#1f2933">+</text>
+<text x="522" y="386" font-size="20" text-anchor="middle" fill="#1f2933">−</text>
+<line x1="150" y1="378" x2="150" y2="344" stroke="#1f2933" stroke-width="3.5" marker-end="url(#pf-ax)"/>
+<line x1="850" y1="342" x2="850" y2="376" stroke="#1f2933" stroke-width="3.5" marker-end="url(#pf-ax)"/>
+<text x="134" y="364" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="end" fill="#1f2933">I</text>
+<text x="866" y="364" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">I</text>
+<text x="546" y="424" font-family="Georgia, Times New Roman, serif" font-size="20" fill="#1f2933"><tspan font-style="italic">V</tspan> &gt; 0</text>
+<line x1="461" y1="470" x2="461" y2="758" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="539" y1="470" x2="539" y2="758" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="232" y1="492" x2="778" y2="492" stroke="#1f2933" stroke-width="2" marker-end="url(#pf-ax)"/>
+<line x1="500" y1="608" x2="500" y2="468" stroke="#1f2933" stroke-width="2" marker-end="url(#pf-ax)"/>
+<text x="500" y="458" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">φ(x)</text>
+<text x="790" y="498" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">x</text>
+<text x="455" y="482" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="end" fill="#1f2933">−l<tspan dy="5" font-size="12" font-style="normal">p</tspan></text>
+<text x="545" y="482" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">l<tspan dy="5" font-size="12" font-style="normal">n</tspan></text>
+<path d="M250 552H445Q472.5 552 500 522Q527.5 492 555 492H770" fill="none" stroke="#1f2933" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M250 522H461Q480.5 522 500 507Q519.5 492 539 492H770" fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+<line x1="330" y1="495" x2="330" y2="519" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pf-dm)" marker-end="url(#pf-dm)"/>
+<text x="342" y="515" font-family="Georgia, Times New Roman, serif" font-size="18" fill="#1f2933"><tspan font-style="italic">φ</tspan><tspan dy="5" font-size="12" font-style="normal">0</tspan><tspan dy="-5" dx="4">−</tspan><tspan font-style="italic" dx="4">V</tspan></text>
+<text x="240" y="556" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" text-anchor="end" fill="#1f2933">V = 0</text>
+<text x="240" y="526" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" text-anchor="end" fill="#0f766e">V &gt; 0</text>
+<line x1="232" y1="670" x2="778" y2="670" stroke="#1f2933" stroke-width="2" marker-end="url(#pf-ax)"/>
+<line x1="500" y1="758" x2="500" y2="644" stroke="#1f2933" stroke-width="2" marker-end="url(#pf-ax)"/>
+<text x="500" y="634" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">E(x)</text>
+<text x="790" y="676" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">x</text>
+<path d="M445 670L500 725L555 670" fill="none" stroke="#1f2933" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M461 670L500 709L539 670" fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+<text x="612" y="732" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V = 0</text>
+<line x1="606" y1="726" x2="521" y2="706" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+<text x="612" y="698" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#0f766e">V &gt; 0</text>
+<line x1="606" y1="692" x2="512" y2="692" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pf-lk)"/>
+</svg>
+
+### Polarizzazione inversa ($V\lt0$)
+Collegando ora il morsetto positivo alla regione $N$ e il negativo alla regione $P$ (quindi $V\lt0$):
+* Il campo elettrico esterno si **somma** al campo interno $\textcolor{green}{\overrightarrow{E}}$.
 * La barriera di potenziale aumenta a $(V_0 + |V|)$.
-* La larghezza della ZCS aumenta: $W(V) > W(0)$.
+* La larghezza della zona di carica spaziale aumenta, quindi diventa più difficile per le cariche saltare dall'altra parte.
 * La diffusione dei maggioritari viene completamente bloccata.
-* L'unica corrente presente è dovuta ai portatori minoritari generati termicamente ai bordi della ZCS che vengono trascinati dal campo elettrico, generando la piccola **corrente di saturazione inversa $I_S$**.
+* L'unica corrente presente è dovuta ai portatori minoritari generati termicamente ai bordi della zona di carica spaziale che vengono trascinati dal campo elettrico, generando la piccola **corrente di saturazione inversa $I_S$**.
 
----
-
-## 5. Equazione del Diodo Ideal (Shockley)
-
-Applicando la legge di diffusione dei portatori minoritari ai bordi della ZCS (condizioni limite di Shockley), si ricava l'equazione caratteristica tensione-corrente:
-
-$$
-I(V) = I_S \left( e^{\frac{V}{\eta V_T}} - 1 \right)
-$$
-
-Dove:
-* $I_S$ è la **corrente di saturazione inversa**:
-  $$I_S = q A n_i^2 \left( \frac{D_n}{L_n N_A} + \frac{D_p}{L_p N_D} \right)$$
-* $A$ è l'area trasversale della giunzione.
-* $D_n, D_p$ sono le costanti di diffusione di elettroni e lacune.
-* $L_n = \sqrt{D_n \tau_n}$ e $L_p = \sqrt{D_p \tau_p}$ sono le lunghezze di diffusione.
-* $\eta$ è il fattore d'idealità ($1 \le \eta \le 2$).
-
-<div class="unita-tabella">
-  <div class="unita-colonna">
-    <div class="unita-titolo">Stato</div>
-    <div class="unita-riga"><strong>Equilibrio</strong></div>
-    <div class="unita-riga"><strong>Pol. Diretta</strong></div>
-    <div class="unita-riga"><strong>Pol. Inversa</strong></div>
-  </div>
-  <div class="unita-colonna">
-    <div class="unita-titolo">Tensione $V$</div>
-    <div class="unita-riga"><span>$V = 0$</span></div>
-    <div class="unita-riga"><span>$V > 0$</span></div>
-    <div class="unita-riga"><span>$V < 0$</span></div>
-  </div>
-  <div class="unita-colonna">
-    <div class="unita-titolo">Barriera Totale</div>
-    <div class="unita-riga"><span>$V_0$</span></div>
-    <div class="unita-riga"><span>$V_0 - V$</span></div>
-    <div class="unita-riga"><span>$V_0 + |V|$</span></div>
-  </div>
-  <div class="unita-colonna">
-    <div class="unita-titolo">Larghezza ZCS ($W$)</div>
-    <div class="unita-riga"><span>$W_0$</span></div>
-    <div class="unita-riga"><span>$W < W_0$</span></div>
-    <div class="unita-riga"><span>$W > W_0$</span></div>
-  </div>
-  <div class="unita-colonna">
-    <div class="unita-titolo">Corrente $I$</div>
-    <div class="unita-riga"><span>$I = 0$</span></div>
-    <div class="unita-riga"><span>$I \approx I_S e^{V/\eta V_T}$</span></div>
-    <div class="unita-riga"><span>$I \approx -I_S$</span></div>
-  </div>
-</div>
-
----
-
-## 6. Effetti Capacitativi della Giunzione
-
-In regime dinamico o ad alta frequenza, la giunzione PN presenta due contributi capacitativi distinti:
-
-### 1. Capacità di Svuotamento (Giunzione) $C_j$
-In polarizzazione inversa, le cariche fisse $+q N_D$ e $-q N_A$ separate dal dielettrico della ZCS (larga $W$) si comportano esattamente come un condensatore a facce piane e parallele:
-
-$$
-C_j(V_R) = \frac{\varepsilon_s A}{W(V_R)} = \frac{C_{j0}}{\sqrt{1 + \frac{V_R}{V_0}}}
-$$
-
-*Questa capacità diminuisce all'aumentare della tensione inversa $V_R$ ed è alla base del funzionamento dei **diodi Varicap**.*
-
-### 2. Capacità di Diffusione $C_d$
-In polarizzazione diretta, la corrente è sostenuta dall'iniezione di portatori minoritari accumulati ai bordi della giunzione prima della loro ricombinazione. Questo accumulo variabile di carica da diffusional comporta una capacità di diffusione proporzionale alla corrente diretta $I_D$:
-
-$$
-C_d = \frac{\tau_T \cdot I_D}{\eta V_T}
-$$
-
-Dove $\tau_T$ è il tempo di transito medio dei portatori minoritari.
-
----
-
-<div class="sintesi">
-  <h3 style={{ color: '#ffffff', margin: 0 }}>In Sintesi</h3>
-  La giunzione PN nasce dall'unione di due regioni a differente drogaggio. La diffusione di elettroni e lacune lascia scoperte cariche fisse d'ione, formando una regione di svuotamento (ZCS) e un campo elettrico interno che arresta l'ulteriore flusso a riposo. Applicando una tensione diretta si abbassa la barriera di potenziale permettendo una forte conduzione esponenziale; applicando una tensione inversa si allarga la ZCS bloccando il passaggio di corrente, ad eccezione della minuscola corrente di saturazione inversa $I_S$.
-</div>
-
+<svg viewBox="0 0 1000 772" width="100%" role="img" aria-labelledby="pr-t pr-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="pr-t">Giunzione PN in polarizzazione inversa</title>
+<desc id="pr-d">Con tensione V minore di zero il campo elettrico respinge lacune ed elettroni, la zona di carica spaziale si allarga e la barriera di potenziale diventa φ0 + |V|. Le coppie generate nella zona svuotata danno una piccola corrente inversa. Sotto, i grafici del potenziale e del campo elettrico con e senza tensione applicata.</desc>
+<defs>
+<marker id="pr-ae" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d5fd1"/></marker>
+<marker id="pr-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d1342b"/></marker>
+<marker id="pr-af" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#15803d"/></marker>
+<marker id="pr-ax" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+<marker id="pr-dm" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+<marker id="pr-lk" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7785"/></marker>
+<pattern id="pr-ht" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#1f2933" stroke-width="2"/></pattern>
+<g id="pr-e"><circle r="12" fill="#1d5fd1"/><path d="M-6 0H6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
+<g id="pr-h"><circle r="12" fill="#fff" stroke="#d1342b" stroke-width="2.5"/><path d="M-6 0H6M0 -6V6" fill="none" stroke="#d1342b" stroke-width="3" stroke-linecap="round"/></g>
+</defs>
+<rect x="230" y="108" width="270" height="244" fill="#fdeceb"/>
+<rect x="500" y="108" width="270" height="244" fill="#e7f0fd"/>
+<rect x="429" y="108" width="142" height="244" fill="#fff2c2"/>
+<rect x="230" y="108" width="540" height="244" fill="none" stroke="#1f2933" stroke-width="2"/>
+<rect x="218" y="108" width="12" height="244" fill="url(#pr-ht)" stroke="#1f2933" stroke-width="2"/>
+<rect x="770" y="108" width="12" height="244" fill="url(#pr-ht)" stroke="#1f2933" stroke-width="2"/>
+<line x1="500" y1="108" x2="500" y2="352" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="6 5"/>
+<line x1="429" y1="108" x2="429" y2="352" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="571" y1="108" x2="571" y2="352" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="330" y="96" font-size="18" text-anchor="middle" font-weight="600" fill="#1f2933">Semiconduttore P</text>
+<text x="670" y="96" font-size="18" text-anchor="middle" font-weight="600" fill="#1f2933">Semiconduttore N</text>
+<line x1="540" y1="22" x2="460" y2="22" stroke="#15803d" stroke-width="4.5" marker-end="url(#pr-af)"/>
+<text x="552" y="29" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="20" font-weight="700" fill="#15803d">E</text>
+<line x1="432" y1="64" x2="568" y2="64" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pr-dm)" marker-end="url(#pr-dm)"/>
+<text x="500" y="54" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">W</text>
+<text x="482" y="222" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#1d5fd1">N</text>
+<text x="483" y="228" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">A</text>
+<text x="483" y="214" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#1d5fd1">−</text>
+<text x="520" y="222" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="22" fill="#d1342b">N</text>
+<text x="521" y="228" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">D</text>
+<text x="521" y="214" font-family="Georgia, Times New Roman, serif" font-size="14" fill="#d1342b">+</text>
+<path d="M301 155H400C448 155 448 192 400 192H330" fill="none" stroke="#d1342b" stroke-width="3.5" marker-end="url(#pr-ah)"/>
+<use href="#pr-h" x="285" y="155"/>
+<path d="M699 155H600C552 155 552 192 600 192H670" fill="none" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#pr-ae)"/>
+<use href="#pr-e" x="715" y="155"/>
+<text x="20" y="146" font-size="16" fill="#374151">Il campo E respinge</text>
+<text x="20" y="166" font-size="16" fill="#374151">le lacune</text>
+<line x1="170" y1="156" x2="270" y2="156" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pr-lk)"/>
+<text x="796" y="146" font-size="16" fill="#374151">Il campo E respinge</text>
+<text x="796" y="166" font-size="16" fill="#374151">gli elettroni</text>
+<line x1="790" y1="156" x2="730" y2="156" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pr-lk)"/>
+<ellipse cx="735" cy="238" rx="36" ry="20" fill="none" stroke="#6b7785" stroke-width="1.5" stroke-dasharray="4 3"/>
+<use href="#pr-e" x="716" y="238"/>
+<line x1="732" y1="238" x2="760" y2="238" stroke="#1d5fd1" stroke-width="3" marker-end="url(#pr-ae)"/>
+<text x="796" y="226" font-size="16" fill="#374151">L'elettrone non può</text>
+<text x="796" y="246" font-size="16" fill="#374151">uscire: nessun altro</text>
+<text x="796" y="266" font-size="16" fill="#374151">elettrone lo rimpiazza</text>
+<ellipse cx="500" cy="285" rx="42" ry="21" fill="none" stroke="#6b7785" stroke-width="1.5" stroke-dasharray="4 3"/>
+<use href="#pr-h" x="484" y="285"/>
+<use href="#pr-e" x="516" y="285"/>
+<line x1="456" y1="285" x2="246" y2="285" stroke="#d1342b" stroke-width="3.5" marker-end="url(#pr-ah)"/>
+<line x1="544" y1="285" x2="754" y2="285" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#pr-ae)"/>
+<rect x="356" y="309" width="288" height="40" rx="6" fill="#fff" fill-opacity="0.85"/>
+<text x="500" y="324" font-size="16" text-anchor="middle" fill="#374151">Più legami rotti: coppia generata</text>
+<text x="500" y="342" font-size="16" text-anchor="middle" fill="#374151">→ piccola corrente inversa <tspan font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18">I</tspan><tspan dy="5" font-size="12">R</tspan></text>
+<path d="M218 330H150V392H494" fill="none" stroke="#1f2933" stroke-width="2"/>
+<path d="M782 330H850V392H506" fill="none" stroke="#1f2933" stroke-width="2"/>
+<line x1="494" y1="380" x2="494" y2="404" stroke="#1f2933" stroke-width="3"/>
+<line x1="506" y1="370" x2="506" y2="414" stroke="#1f2933" stroke-width="3"/>
+<text x="478" y="386" font-size="20" text-anchor="middle" fill="#1f2933">−</text>
+<text x="522" y="386" font-size="20" text-anchor="middle" fill="#1f2933">+</text>
+<line x1="150" y1="342" x2="150" y2="376" stroke="#1f2933" stroke-width="3.5" marker-end="url(#pr-ax)"/>
+<line x1="850" y1="378" x2="850" y2="344" stroke="#1f2933" stroke-width="3.5" marker-end="url(#pr-ax)"/>
+<text x="134" y="364" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">I<tspan dy="5" font-size="12" font-style="normal">R</tspan></text>
+<text x="866" y="364" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">I<tspan dy="5" font-size="12" font-style="normal">R</tspan></text>
+<text x="546" y="424" font-family="Georgia, Times New Roman, serif" font-size="20" fill="#1f2933"><tspan font-style="italic">V</tspan> &lt; 0</text>
+<line x1="429" y1="470" x2="429" y2="758" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="571" y1="470" x2="571" y2="758" stroke="#b58900" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="232" y1="492" x2="778" y2="492" stroke="#1f2933" stroke-width="2" marker-end="url(#pr-ax)"/>
+<line x1="500" y1="608" x2="500" y2="468" stroke="#1f2933" stroke-width="2" marker-end="url(#pr-ax)"/>
+<text x="500" y="458" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">φ(x)</text>
+<text x="790" y="498" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">x</text>
+<text x="423" y="482" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="end" fill="#1f2933">−l<tspan dy="5" font-size="12" font-style="normal">p</tspan></text>
+<text x="577" y="482" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">l<tspan dy="5" font-size="12" font-style="normal">n</tspan></text>
+<path d="M250 552H445Q472.5 552 500 522Q527.5 492 555 492H770" fill="none" stroke="#1f2933" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M250 592H429Q464.5 592 500 542Q535.5 492 571 492H770" fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+<line x1="330" y1="495" x2="330" y2="589" stroke="#1f2933" stroke-width="1.5" marker-start="url(#pr-dm)" marker-end="url(#pr-dm)"/>
+<text x="342" y="530" font-family="Georgia, Times New Roman, serif" font-size="18" fill="#1f2933"><tspan font-style="italic">φ</tspan><tspan dy="5" font-size="12" font-style="normal">0</tspan><tspan dy="-5" dx="4">+ |</tspan><tspan font-style="italic" dy="0">V</tspan><tspan>|</tspan></text>
+<text x="240" y="556" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" text-anchor="end" fill="#1f2933">V = 0</text>
+<text x="240" y="596" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" text-anchor="end" fill="#0f766e">V &lt; 0</text>
+<line x1="232" y1="670" x2="778" y2="670" stroke="#1f2933" stroke-width="2" marker-end="url(#pr-ax)"/>
+<line x1="500" y1="758" x2="500" y2="644" stroke="#1f2933" stroke-width="2" marker-end="url(#pr-ax)"/>
+<text x="500" y="634" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" text-anchor="middle" fill="#1f2933">E(x)</text>
+<text x="790" y="676" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" fill="#1f2933">x</text>
+<path d="M445 670L500 725L555 670" fill="none" stroke="#1f2933" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M429 670L500 741L571 670" fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round"/>
+<text x="612" y="698" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#1f2933">V = 0</text>
+<line x1="606" y1="692" x2="531" y2="694" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pr-lk)"/>
+<text x="612" y="732" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="17" fill="#0f766e">V &lt; 0</text>
+<line x1="606" y1="726" x2="521" y2="721" stroke="#6b7785" stroke-width="1.3" marker-end="url(#pr-lk)"/>
+</svg>
 

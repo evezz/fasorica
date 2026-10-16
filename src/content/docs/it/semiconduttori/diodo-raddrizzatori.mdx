@@ -1,0 +1,97 @@
+---
+title: Diodo e raddrizzatori
+description: Analisi del funzionamento del diodo e i suoi vari modelli. Tipologie di diodo e applicazioni tipiche. Raddrizzatori e loro funzionamento.
+---
+Il **diodo a giunzione PN** è uno dei componenti elettronici a semiconduttore fondamentali. È un dispositivo **non lineare** e **unidirezionale**, ovvero permette il passaggio della corrente prevalentemente in un verso (conduzione) e lo blocca nel verso opposto (interdizione).
+Per la spiegazione più dettagliata del funzionamento si rimanda alla [lezione dedicata](/it/semiconduttori/giunzione-pn).
+
+## Equazione del diodo (equazione di Shockley)
+
+La relazione (semplificata) tra la tensione applicata ai capi del diodo $v_D$ e la corrente che lo attraversa $i_D$ è descritta dall'**equazione di Shockley**:
+
+$$ 
+i_D = I_s \left( e^{\frac{v_D}{V_T}} - 1 \right) 
+$$
+
+dove:
+* $I_s$: **Corrente di saturazione inversa**, dovuta ai portatori di carica minoritari generati termicamente (ordine di grandezza: $\approx 10^{-12} \text{ A}$ per il silicio).
+* $V_T$: **Tensione termica**, definita come $V_T = \frac{k_B T}{q}$. A temperatura ambiente ($T \approx 300 \text{ K}$), $V_T \approx 25\text{--}26 \text{ mV}$.
+
+### Regioni di funzionamento:
+1. **Polarizzazione diretta**: l'esponenziale domina e l'equazione si approssima con:
+   $$ i_D \approx I_s e^{\frac{v_D}{V_T}} $$
+2. **Polarizzazione inversa**: il termine esponenziale tende a zero e la corrente si stabilizza al valore di saturazione:
+   $$ i_D \approx -I_s $$
+
+## Modelli del diodo
+Con l'equazione del diodo dovremmo risolvere equazioni *trascendenti* (cioè con funzioni non algebriche contenenti l'incognita) e sarebbe troppo complicato.
+Per questo motivo si introducono dei modelli, cioè delle approssimazioni della funzione caratteristica del diodo che rendono molto più semplice la risoluzione dei circuiti arrivando abbastanza vicini alla soluzione reale.
+
+### 1. Modello ideale (interruttore)
+Considera il diodo come un interruttore perfetto privo di caduta di tensione.
+
+* **Conduzione ($v_D \ge 0$):** Il diodo equivale a un corto circuito ($i_D > 0$).
+* **Interdizione ($v_D < 0$):** Il diodo equivale a un circuito aperto ($i_D = 0$).
+
+### 2. Modello a caduta di tensione costante ($V_0$)
+Aggiunge una soglia di conduzione minima $V_{\gamma}$ (tipicamente uguale a $V_0 \approx 0{,}7\, \text{V}$).
+
+* **Se $v_D < V_{\gamma}$:** Diodo spento ($i_D = 0$, circuito aperto).
+* **Se $i_D > 0$:** Diodo acceso, modellato con un generatore di tensione ideale di valore $V_{\gamma}$.
+
+### 3. Modello lineare a tratti (con resistenza differenziale $r_D$)
+Tiene conto anche della resistenza interna del semiconduttore quando è in conduzione.
+
+* **Se $v_D < V_{\gamma}$:** Diodo spento ($i_D = 0$, circuito aperto).
+* **Se $i_D > 0$:** $v_D = V_{\gamma} + r_D \cdot i_D$, dove $r_D = \frac{\Delta v_D}{\Delta i_D}$ è la resistenza differenziale.
+
+
+### Applicazione comune: protezione da inversione di polarità
+
+Un utilizzo elementare ma cruciale del diodo è la protezione dei circuiti CC da collegamenti con polarità errata della batteria.
+
+Collocando un diodo in serie tra la sorgente di alimentazione e il carico:
+* **Polarità corretta:** Il diodo è polarizzato in diretta e conduce, alimentando il carico (con una piccola caduta pari a $V_0$).
+* **Polarità invertita:** Il diodo è polarizzato in inversa, la corrente $i_D \approx 0$ e il carico viene preservato da possibili danni.
+
+
+### Tipologie speciali di diodi
+
+| Tipo | Simbolo / Caratteristica | Principi di Funzionamento ed Usi |
+| :--- | :--- | :--- |
+| **LED (Light Emitting Diode)** | Emette fotoni in conduzione diretta | Realizzato con semiconduttori a banda diretta (es. GaAs). La ricombinazione elettrone-lacuna libera energia sotto forma di luce. $V_0$ varia da $1.8\text{ V}$ (rosso) a $>3\text{ V}$ (blu/bianco). |
+| **Diodo Zener** | Progettato per lavorare in *Breakdown* inverso | Sfrutta l'effetto Zener o l'effetto valanga per mantenere costante la tensione ai suoi capi ($V_Z$) al variare della corrente. Usato come regolatore di tensione. |
+| **Diodo Schottky** | Giunzione Metallo-Semiconduttore | Presenta una soglia di conduzione molto bassa ($V_0 \approx 0.15\text{--}0.4\text{ V}$) e tempi di commutazione ridottissimi ($t_{rr} \approx 0$). Ideale per circuiti ad alta frequenza e alimentatori switching. |
+
+
+## Raddrizzatori
+I raddrizzatori sono circuiti che convertono una tensione alternata ($V_{AC}$) in una tensione unidirezionale (continua o pulsante, $V_{DC}$).
+
+### 1. Raddrizzatore a mezza onda
+Utilizza un singolo diodo in serie al carico.
+
+* **Semionda Positiva:** Il diodo conduce $\rightarrow v_{out}(t) = v_{in}(t) - V_0$.
+* **Semionda Negativa:** Il diodo è interdetto $\rightarrow v_{out}(t) = 0$.
+
+Valore medio della tensione d'uscita (con diodo ideale):
+$$ V_{avg} = \frac{V_m}{\pi} \approx 0.318 \cdot V_m $$
+
+### 2. Raddrizzatore a onda intera con ponte di Graetz
+Utilizza una configurazione a ponte con 4 diodi ($D_1, D_2, D_3, D_4$).
+
+* **Semionda Positiva:** Conducono la coppia $D_1$ e $D_2$.
+* **Semionda Negativa:** Conducono la coppia $D_3$ e $D_4$, invertendo il percorso della corrente sul carico in modo che scorrere sempre nello stesso verso.
+
+Valore medio della tensione d'uscita (con diodi ideali):
+$$ V_{avg} = \frac{2 V_m}{\pi} \approx 0.636 \cdot V_m $$
+
+*(Tenendo conto del modello a tensione costante, la tensione di picco in uscita sarà $V_{out, peak} = V_m - 2V_0$).*
+
+### 3. Filtraggio capacitivo
+Per trasformare l'onda pulsante in una tensione continua stabile, si inserisce un condensatore $C$ in parallelo al carico $R_L$.
+
+Il condensatore si carica rapidamente al picco della tensione $V_m$ e si scarica lentamente attraverso $R_L$ quando i diodi interdicono. La tensione di ondulazione (**ripple**) residua è data approssimativamente da:
+
+$$ V_{ripple} \approx \frac{I_{DC}}{f \cdot C} = \frac{V_m}{f \cdot R_L \cdot C} $$
+
+Dove $f$ è la frequenza dell'onda raddrizzata ($50\text{ Hz}$ per mezza onda, $100\text{ Hz}$ per onda intera con rete a $50\text{ Hz}$).
