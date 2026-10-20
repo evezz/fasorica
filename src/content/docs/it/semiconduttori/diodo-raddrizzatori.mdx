@@ -2,6 +2,9 @@
 title: Diodo e raddrizzatori
 description: Analisi del funzionamento del diodo e i suoi vari modelli. Tipologie di diodo e applicazioni tipiche. Raddrizzatori e loro funzionamento.
 ---
+
+import FiguraLato from '../../../../components/FiguraLato.astro';
+
 Il **diodo a giunzione PN** è uno dei componenti elettronici a semiconduttore fondamentali. È un dispositivo **non lineare** e **unidirezionale**, ovvero permette il passaggio della corrente prevalentemente in un verso (conduzione) e lo blocca nel verso opposto (interdizione).
 Per la spiegazione più dettagliata del funzionamento si rimanda alla [lezione dedicata](/it/semiconduttori/giunzione-pn).
 
@@ -22,59 +25,195 @@ dove:
    $$ i_D \approx I_s e^{\frac{v_D}{V_T}} $$
 2. **Polarizzazione inversa**: il termine esponenziale tende a zero e la corrente si stabilizza al valore di saturazione:
    $$ i_D \approx -I_s $$
+3. **Breakdown**: se la tensione negativa è troppo elevata, il campo elettrico diventa talmente grande da creare elettroni liberi che urtano altri elettroni liberi e così via (si dice "effetto valanga", o "effetto Zener"). La corrente che ne risulta è (in modulo) elevatissima.
+
+<svg viewBox="-250 -50 900 520" width="80%" role="img" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="vi-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#0f172a"/>
+    </marker>
+  </defs>
+
+  <line x1="-50" y1="220" x2="500" y2="220" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+  <line x1="250" y1="440" x2="250" y2="10" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+
+  <text x="515" y="225" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">V<tspan dy="4" font-size="12">D</tspan></text>
+  <text x="250" y="-3" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">I<tspan dy="4" font-size="12">D</tspan></text>
+
+  <line x1="390" y1="180" x2="390" y2="380" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="390" y="405" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="15" fill="#b45309">V<tspan dy="4" font-size="11">γ</tspan> (~0.7V)</text>
+
+  <line x1="40" y1="220" x2="40" y2="380" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="40" y="205" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="15" fill="#dc2626">V<tspan dy="4" font-size="11">BR</tspan></text>
+
+  <line x1="40" y1="235" x2="250" y2="235" stroke="#b45309" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="240" y="252" text-anchor="end" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="14" fill="#b45309">−I<tspan dy="3" font-size="10">S</tspan></text>
+
+  <path d="M 40 420 L 40 235" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 40 235 L 250 222 C 320 220, 360 215, 390 180" fill="none" stroke="#b45309" stroke-width="3.5"/>
+  <path d="M 390 180 C 410 145, 430 70, 445 20" fill="none" stroke="#166534" stroke-width="3.5" stroke-linecap="round"/>
+
+  <text x="540" y="40" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#166534">POLARIZZAZIONE DIRETTA</text>
+  <text x="145" y="190" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#b45309">POLARIZZAZIONE INVERSA</text>
+  <text x="-10" y="340" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#dc2626">BREAKDOWN</text>
+
+  <circle cx="250" cy="220" r="4" fill="#0f172a"/>
+  <text x="240" y="212" text-anchor="end" font-size="14" fill="#64748b">0</text>
+</svg>   
 
 ## Modelli del diodo
 Con l'equazione del diodo dovremmo risolvere equazioni *trascendenti* (cioè con funzioni non algebriche contenenti l'incognita) e sarebbe troppo complicato.
 Per questo motivo si introducono dei modelli, cioè delle approssimazioni della funzione caratteristica del diodo che rendono molto più semplice la risoluzione dei circuiti arrivando abbastanza vicini alla soluzione reale.
 
 ### 1. Modello ideale (interruttore)
+
+  <FiguraLato src="/images/circuiti/diodo-ideale.svg" alt="Modello ideale del diodo" larghezza='12rem' posiziomne='testo'>
+    Modello ideale del diodo (interruttore).
+  </FiguraLato>
+
 Considera il diodo come un interruttore perfetto privo di caduta di tensione.
 
 * **Conduzione ($v_D \ge 0$):** Il diodo equivale a un corto circuito ($i_D > 0$).
 * **Interdizione ($v_D < 0$):** Il diodo equivale a un circuito aperto ($i_D = 0$).
+<svg viewBox="-200 -50 900 520" width="80%" role="img" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="vi-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#0f172a"/>
+    </marker>
+  </defs>
+
+  <line x1="-50" y1="360" x2="550" y2="360" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+  <line x1="250" y1="400" x2="250" y2="30" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+
+  <path d="M -50 360 L 320 360 C 360 360, 380 350, 400 300 C 420 250, 435 130, 450 45" fill="none" stroke="#053ef9" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round"/>
+  <text x="460" y="60" text-anchor="start" font-size="11" font-weight="600" fill="#053ef9">Andamento reale (esponenziale)</text>
+
+  <text x="565" y="365" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">V<tspan dy="4" font-size="12">D</tspan></text>
+  <text x="250" y="15" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">I<tspan dy="4" font-size="12">D</tspan></text>
+
+  <path d="M -50 360 L 250 360" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 250 360 L 250 45" fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round"/>
+
+  <text x="140" y="60" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#166534">POLARIZZAZIONE DIRETTA (ON)</text>
+  <text x="140" y="80" text-anchor="middle" font-size="11" fill="#475569">Cortocircuito (V<tspan dy="2" font-size="9">D</tspan> = 0, R<tspan dy="2" font-size="9">ON</tspan> = 0)</text>
+
+  <text x="100" y="315" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#b45309">INTERDIZIONE (OFF)</text>
+  <text x="100" y="333" text-anchor="middle" font-size="11" fill="#475569">Circuito aperto (I<tspan dy="2" font-size="9">D</tspan> = 0)</text>
+
+  <circle cx="250" cy="360" r="5" fill="#0f172a"/>
+  <text x="235" y="380" text-anchor="end" font-size="14" fill="#64748b">0</text>
+</svg>
+
+
 
 ### 2. Modello a caduta di tensione costante ($V_0$)
+  <FiguraLato src="/images/circuiti/diodo-ctc.svg" alt="Modello a caduta di tensione costante del diodo" larghezza='12rem' posiziomne='testo'>
+    Modello a caduta di tensione costante del diodo (generatore $V_\gamma$).
+  </FiguraLato>
+
 Aggiunge una soglia di conduzione minima $V_{\gamma}$ (tipicamente uguale a $V_0 \approx 0{,}7\, \text{V}$).
 
 * **Se $v_D < V_{\gamma}$:** Diodo spento ($i_D = 0$, circuito aperto).
 * **Se $i_D > 0$:** Diodo acceso, modellato con un generatore di tensione ideale di valore $V_{\gamma}$.
 
+<svg viewBox="-250 -50 900 520" width="80%" role="img" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="vi-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#0f172a"/>
+    </marker>
+  </defs>
+
+  <line x1="-50" y1="360" x2="500" y2="360" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+  <line x1="250" y1="400" x2="250" y2="30" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+
+  <path d="M -50 360 L 320 360 C 360 360, 380 350, 400 300 C 420 250, 435 130, 450 45" fill="none" stroke="#053ef9" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round"/>
+  <text x="460" y="60" text-anchor="start" font-size="11" font-weight="600" fill="#053ef9">Andamento reale (esponenziale)</text>
+
+  <text x="515" y="365" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">V<tspan baseline-shift="sub" font-size="12">D</tspan></text>
+  <text x="250" y="15" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">I<tspan baseline-shift="sub" font-size="12">D</tspan></text>
+
+  <line x1="380" y1="360" x2="380" y2="400" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="380" y="420" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="15" fill="#b45309">V<tspan baseline-shift="sub" font-size="11">γ</tspan> (~0.7V)</text>
+
+  <path d="M -50 360 L 380 360" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 380 360 L 380 45" fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round"/>
+
+  <text x="295" y="10" text-anchor="start" font-size="12" font-weight="700" letter-spacing="0.5" fill="#166534">POLARIZZAZIONE DIRETTA (ON)</text>
+  <text x="295" y="30" text-anchor="start" font-size="11" fill="#475569">Generatore V<tspan baseline-shift="sub" font-size="9">γ</tspan> (V<tspan baseline-shift="sub" font-size="9">D</tspan> = V<tspan baseline-shift="sub" font-size="9">γ</tspan>, R<tspan baseline-shift="sub" font-size="9">ON</tspan> = 0)</text>
+
+  <text x="100" y="315" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#b45309">INTERDIZIONE (OFF)</text>
+  <text x="100" y="333" text-anchor="middle" font-size="11" fill="#475569">Circuito aperto (I<tspan baseline-shift="sub" font-size="9">D</tspan> = 0 per V<tspan baseline-shift="sub" font-size="9">D</tspan> &lt; V<tspan baseline-shift="sub" font-size="9">γ</tspan>)</text>
+
+  <circle cx="250" cy="360" r="5" fill="#0f172a"/>
+  <text x="235" y="380" text-anchor="end" font-size="14" fill="#64748b">0</text>
+</svg>
+
+
 ### 3. Modello lineare a tratti (con resistenza differenziale $r_D$)
+  <FiguraLato src="/images/circuiti/diodo-lat.svg" alt="Modello lineare a tratti del diodo" larghezza='22rem' posiziomne='testo'>
+    Modello lineare a tratti del diodo (generatore $V_\gamma$ con resistenza $r_D$).
+  </FiguraLato>
+
 Tiene conto anche della resistenza interna del semiconduttore quando è in conduzione.
 
 * **Se $v_D < V_{\gamma}$:** Diodo spento ($i_D = 0$, circuito aperto).
-* **Se $i_D > 0$:** $v_D = V_{\gamma} + r_D \cdot i_D$, dove $r_D = \frac{\Delta v_D}{\Delta i_D}$ è la resistenza differenziale.
+* **Se $i_D > 0$:** diodo acceso, modellato con un generatore $V_\gamma$ in serie ad una resistenza. $v_D = V_{\gamma} + r_D \cdot i_D$, dove $r_D = \frac{\Delta v_D}{\Delta i_D}$ è la resistenza differenziale.
 
+<svg viewBox="-250 -50 900 520" width="80%" role="img" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="vi-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#0f172a"/>
+    </marker>
+  </defs>
 
-### Applicazione comune: protezione da inversione di polarità
+  <line x1="-50" y1="360" x2="500" y2="360" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
+  <line x1="250" y1="400" x2="250" y2="30" stroke="#0f172a" stroke-width="2" marker-end="url(#vi-arrow)"/>
 
-Un utilizzo elementare ma cruciale del diodo è la protezione dei circuiti CC da collegamenti con polarità errata della batteria.
+  <path d="M -50 360 L 320 360 C 360 360, 380 350, 400 300 C 420 250, 435 130, 450 45" fill="none" stroke="#053ef9" stroke-width="2.5" stroke-dasharray="6 4" stroke-linecap="round"/>
+  <text x="440" y="190" text-anchor="start" font-size="11" font-weight="600" fill="#053ef9">Andamento reale (esponenziale)</text>
 
-Collocando un diodo in serie tra la sorgente di alimentazione e il carico:
-* **Polarità corretta:** Il diodo è polarizzato in diretta e conduce, alimentando il carico (con una piccola caduta pari a $V_0$).
-* **Polarità invertita:** Il diodo è polarizzato in inversa, la corrente $i_D \approx 0$ e il carico viene preservato da possibili danni.
+  <text x="515" y="365" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">V<tspan baseline-shift="sub" font-size="12">D</tspan></text>
+  <text x="250" y="15" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="18" font-weight="700" fill="#0f172a">I<tspan baseline-shift="sub" font-size="12">D</tspan></text>
 
+  <line x1="380" y1="360" x2="380" y2="400" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="380" y="420" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="15" fill="#b45309">V<tspan baseline-shift="sub" font-size="11">γ</tspan> (~0.7V)</text>
+
+  <path d="M -50 360 L 380 360" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 380 360 L 450 45" fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round"/>
+
+  <text x="320" y="15" text-anchor="start" font-size="12" font-weight="700" letter-spacing="0.5" fill="#166534">POLARIZZAZIONE DIRETTA (ON)</text>
+  <text x="320" y="35" text-anchor="start" font-size="11" fill="#475569">Generatore V<tspan baseline-shift="sub" font-size="9">γ</tspan> + Resistenza r<tspan baseline-shift="sub" font-size="9">d</tspan> (pendenza = 1/r<tspan baseline-shift="sub" font-size="9">d</tspan>)</text>
+
+  <text x="100" y="315" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="#b45309">INVERSA / INTERDIZIONE (OFF)</text>
+  <text x="100" y="333" text-anchor="middle" font-size="11" fill="#475569">Circuito aperto (I<tspan baseline-shift="sub" font-size="9">D</tspan> = 0 per V<tspan baseline-shift="sub" font-size="9">D</tspan> &lt; V<tspan baseline-shift="sub" font-size="9">γ</tspan>)</text>
+
+  <circle cx="250" cy="360" r="5" fill="#0f172a"/>
+  <text x="235" y="380" text-anchor="end" font-size="14" fill="#64748b">0</text>
+</svg>
+
+Come si nota dai vari grafici, il modello lineare a tratti è il modello che più si avvicina al comportamento reale del diodo.
 
 ### Tipologie speciali di diodi
 
-| Tipo | Simbolo / Caratteristica | Principi di Funzionamento ed Usi |
+| <span style={{ color: '#252525' }}>Tipo</span> | <span style={{ color: '#252525' }}>Caratteristica</span> | <span style={{ color: '#252525' }}>Funzionamento ed applicazioni</span> |
 | :--- | :--- | :--- |
-| **LED (Light Emitting Diode)** | Emette fotoni in conduzione diretta | Realizzato con semiconduttori a banda diretta (es. GaAs). La ricombinazione elettrone-lacuna libera energia sotto forma di luce. $V_0$ varia da $1.8\text{ V}$ (rosso) a $>3\text{ V}$ (blu/bianco). |
+| **LED (Light Emitting Diode)** | Emette fotoni in conduzione diretta | La ricombinazione elettrone-lacuna libera energia sotto forma di luce. $V_0$ varia da $1.8\text{ V}$ (rosso) a $>3\text{ V}$ (blu/bianco). |
 | **Diodo Zener** | Progettato per lavorare in *Breakdown* inverso | Sfrutta l'effetto Zener o l'effetto valanga per mantenere costante la tensione ai suoi capi ($V_Z$) al variare della corrente. Usato come regolatore di tensione. |
-| **Diodo Schottky** | Giunzione Metallo-Semiconduttore | Presenta una soglia di conduzione molto bassa ($V_0 \approx 0.15\text{--}0.4\text{ V}$) e tempi di commutazione ridottissimi ($t_{rr} \approx 0$). Ideale per circuiti ad alta frequenza e alimentatori switching. |
+| **Diodo Schottky** | Diodo veloce | È una giunzione metallo-semiconduttore. Presenta una soglia di conduzione molto bassa ($V_0 \approx 0.15\text{--}0.4\text{ V}$) e tempi di commutazione ridottissimi ($t_{rr} \approx 0$). Ideale per circuiti ad alta frequenza e alimentatori switching. |
 
 
 ## Raddrizzatori
 I raddrizzatori sono circuiti che convertono una tensione alternata ($V_{AC}$) in una tensione unidirezionale (continua o pulsante, $V_{DC}$).
 
 ### 1. Raddrizzatore a mezza onda
-Utilizza un singolo diodo in serie al carico.
+  <FiguraLato src="/images/circuiti/raddrizzatore_mezzaonda.svg" alt="Modello lineare a tratti del diodo" larghezza='44rem' posiziomne='testo'>
+    Modello lineare a tratti del diodo (generatore $V_\gamma$ con resistenza $r_D$).
+  </FiguraLato>
 
-* **Semionda Positiva:** Il diodo conduce $\rightarrow v_{out}(t) = v_{in}(t) - V_0$.
+Utilizza un singolo diodo in serie al carico. Utilizzando il modello a caduta di tensione costante, si ha:
+
+* **Semionda Positiva:** Il diodo conduce $\rightarrow v_{out}(t) = v_{in}(t) - V_\gamma$.
 * **Semionda Negativa:** Il diodo è interdetto $\rightarrow v_{out}(t) = 0$.
-
-Valore medio della tensione d'uscita (con diodo ideale):
-$$ V_{avg} = \frac{V_m}{\pi} \approx 0.318 \cdot V_m $$
 
 ### 2. Raddrizzatore a onda intera con ponte di Graetz
 Utilizza una configurazione a ponte con 4 diodi ($D_1, D_2, D_3, D_4$).

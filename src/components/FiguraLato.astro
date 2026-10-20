@@ -1,7 +1,18 @@
 ---
-const { src, alt, lato = 'destra', larghezza} = Astro.props;
+// Figura laterale (affiancata al testo). Numerazione automatica.
+// Uso:  <FiguraLato id="fig-vth" src="/images/circuiti/th_vth.svg" alt="...">Calcolo di $V_{th}$</FiguraLato>
+//
+// Opzioni (tutte facoltative):
+//   lato="destra" | "sinistra"     da che parte sta la figura (predefinito: destra)
+//   posizione="testo" | "bordo"    "testo": subito dopo la fine del testo (predefinito)
+//                                  "bordo": attaccata al bordo della pagina, il testo le gira intorno
+//   larghezza="20rem"              larghezza della figura
+const { src, alt, lato = 'destra', posizione = 'bordo', larghezza } = Astro.props;
 ---
-<figure class={`fig-lato fig-${lato}`} style={larghezza ? `--fig-w:${larghezza}` : undefined}>
+
+<figure
+  class={`fig-lato fig-${lato} fig-${posizione}`}
+  style={larghezza ? `--fig-w:${larghezza}` : undefined}>
   <img src={src} alt={alt} loading="lazy" />
   <figcaption><slot /></figcaption>
 </figure>
