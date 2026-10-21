@@ -1,0 +1,22 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (3, 2) to[sinusoidal voltage source, l={$V_{in} = 5 \cos (2\pi50t) \text{V}$}] (3, 8);
+	\draw (4, 5) to[empty diode] (6, 7);
+	\draw (9, 5) to[american resistor, v^<=$V_{out}$] (9, 2.5);
+	\draw (6, 2) to[short] (3, 2);
+	\draw (6, 3) to[empty diode] (8, 5);
+	\draw (4, 5) to[empty diode] (6, 3);
+	\draw (6, 7) to[empty diode] (8, 5);
+	\draw (6, 8) to[short] (3, 8);
+	\draw (6, 7) to[short] (6, 8);
+	\draw (6, 2) to[short] (6, 3);
+	\draw (4, 2.5) to[short] (4, 5);
+	\draw (4, 2.5) to[short] (5.86, 2.5);
+	\node[jump crossing] at (6, 2.5){};
+	\draw (6.14, 2.5) to[short] (9, 2.5);
+	\draw (8, 5) to[short] (9, 5);
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.715cm] at (7.5, 6.375){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (7, 6.75){$D_1$};
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.715cm] at (4.75, 3.5){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (4.25, 3.875){$D_2$};
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.715cm] at (4.75, 6.375){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (4.25, 6.75){$D_3$};
+	\node[shape=rectangle, minimum width=0.965cm, minimum height=0.715cm] at (7.5, 3.5){} node[anchor=north west, align=left, text width=0.577cm, inner sep=6pt] at (7, 3.875){$D_4$};
+\end{tikzpicture}

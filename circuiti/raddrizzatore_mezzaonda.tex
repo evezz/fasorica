@@ -1,0 +1,7 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (5, 2) to[sinusoidal voltage source, l={$V_{in} = 5 \cos (2\pi50t) \text{V}$}] (5, 6);
+	\draw (5, 6) to[empty diode] (9, 6);
+	\draw (9, 6) to[american resistor, v^<=$V_{out}$] (9, 2);
+	\draw (9, 2) to[short] (5, 2);
+\end{tikzpicture}

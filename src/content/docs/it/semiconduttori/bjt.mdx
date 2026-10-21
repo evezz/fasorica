@@ -1,0 +1,392 @@
+---
+title: Transistor BJT (Bipolar Junction Transistor)
+description: Analisi fisica, principi di funzionamento, zone di lavoro e relazioni quantitative delle correnti nel transistor a giunzione bipolare NPN e PNP.
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+Il **transistor** nasce dalla necessità di avere un interruttore controllato elettricamente. L'idea di base è quella di fornire un segnale in tensione o in corrente e di modificare il comportamento del circuito, idealmente passando da un circuito aperto ad un cortocircuito. 
+In realtà non si riuscì a creare un vero e proprio interruttore controllato elettricamente, bensì un resistore. Da qui nasce il nome, *transfer* + *resistor*. Al giorno d'oggi è sicuramente il dispositivo più importante in elettronica: ne sono presenti milioni nel dispositivo dal quale leggi questa pagina. <br />
+Uno fra i tanti tipi di transistor è il **transistor a giunzione bipolare** (BJT, *Bipolar Junction Transistor*).
+È un dispositivo a tre terminali composto da due giunzioni PN vicine e interconnesse, in cui il flusso di corrente tra due terminali è controllato dalla corrente iniettata nel terzo terminale.
+Il termine "bipolare" deriva dal fatto che la conduzione coinvolge contemporaneamente entrambi i tipi di portatori di carica: **elettroni** e **lacune**.
+
+## Struttura fisica e simboli
+
+Un transistor BJT è realizzato alternando tre regioni di semiconduttore con diverso tipo di drogaggio:
+- **Emettitore (E)**: regione fortemente drogata ($N^+$ nel caso NPN, $P^+$ nel caso PNP), il cui scopo è iniettare portatori nella base.
+- **Base (B)**: regione centrale molto sottile e con drogaggio molto inferiore a quello dell'emettitore ($P$ nel caso NPN, $N$ nel caso PNP), progettata per lasciar transitare la maggior parte dei portatori verso il collettore senza farli ricombinare.
+- **Collettore (C)**: regione con superficie più estesa e drogaggio inferiore a quello della base, destinata a raccogliere i portatori provenienti dalla base e a sopportare la tensione inversa della giunzione BC.
+
+Esistono due configurazioni complementari: **NPN** e **PNP**.
+
+<svg viewBox="0 0 1000 570" width="100%" role="img" aria-labelledby="bjt1-t bjt1-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="bjt1-t">Struttura fisica e simboli di un BJT NPN e PNP</title>
+<desc id="bjt1-d">Confronto tra la struttura a tre strati (emettitore, base, collettore) e il simbolo circuitale del transistor NPN, in alto, e PNP, in basso. Nel simbolo NPN la freccia sull'emettitore esce dal transistor, nel PNP vi entra.</desc>
+<defs>
+<marker id="bjt1-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1f2933"/>
+</marker>
+</defs>
+
+<g transform="translate(140, 60)">
+<text x="175" y="-30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Struttura NPN</text>
+<text x="65" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Emettitore</text>
+<text x="155" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Base</text>
+<text x="265" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Collettore</text>
+<rect x="0" y="0" width="130" height="110" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="130" y="0" width="50" height="110" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="180" y="0" width="170" height="110" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<text x="65" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-8" font-size="15">+</tspan></text>
+<text x="155" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#d1342b">P</text>
+<text x="265" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#1d5fd1">N</text>
+<line x1="-40" y1="55" x2="0" y2="55" stroke="#1f2933" stroke-width="3"/>
+<line x1="155" y1="110" x2="155" y2="150" stroke="#1f2933" stroke-width="3"/>
+<line x1="350" y1="55" x2="390" y2="55" stroke="#1f2933" stroke-width="3"/>
+<text x="-48" y="61" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">E</text>
+<text x="155" y="172" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">B</text>
+<text x="398" y="61" font-size="16" font-weight="600" text-anchor="start" fill="#1f2933">C</text>
+</g>
+
+<g transform="translate(700, 60)">
+<text x="65" y="-30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Simbolo NPN</text>
+<circle cx="65" cy="100" r="58" fill="none" stroke="#1f2933" stroke-width="2"/>
+<line x1="0" y1="100" x2="40" y2="100" stroke="#1f2933" stroke-width="3"/>
+<line x1="40" y1="50" x2="40" y2="150" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="70" x2="90" y2="30" stroke="#1f2933" stroke-width="3"/>
+<line x1="90" y1="30" x2="90" y2="8" stroke="#1f2933" stroke-width="3"/>
+<line x1="40" y1="130" x2="90" y2="170" stroke="#1f2933" stroke-width="3" marker-end="url(#bjt1-arr)"/>
+<line x1="90" y1="170" x2="90" y2="192" stroke="#1f2933" stroke-width="3"/>
+<text x="-10" y="106" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">B</text>
+<text x="90" y="-2" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">C</text>
+<text x="90" y="212" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">E</text>
+</g>
+
+
+<g transform="translate(140, 330)">
+<text x="175" y="-30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Struttura PNP</text>
+<text x="65" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Emettitore</text>
+<text x="155" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Base</text>
+<text x="265" y="-8" font-size="13" text-anchor="middle" fill="#6b7785">Collettore</text>
+<rect x="0" y="0" width="130" height="110" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="130" y="0" width="50" height="110" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="180" y="0" width="170" height="110" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<text x="65" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#d1342b">P<tspan dy="-8" font-size="15">+</tspan></text>
+<text x="155" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#1d5fd1">N</text>
+<text x="265" y="64" font-size="22" font-weight="700" text-anchor="middle" fill="#d1342b">P</text>
+<line x1="-40" y1="55" x2="0" y2="55" stroke="#1f2933" stroke-width="3"/>
+<line x1="155" y1="110" x2="155" y2="150" stroke="#1f2933" stroke-width="3"/>
+<line x1="350" y1="55" x2="390" y2="55" stroke="#1f2933" stroke-width="3"/>
+<text x="-48" y="61" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">E</text>
+<text x="155" y="172" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">B</text>
+<text x="398" y="61" font-size="16" font-weight="600" text-anchor="start" fill="#1f2933">C</text>
+</g>
+
+<g transform="translate(700, 330)">
+<text x="65" y="-30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Simbolo PNP</text>
+<circle cx="65" cy="100" r="58" fill="none" stroke="#1f2933" stroke-width="2"/>
+<line x1="0" y1="100" x2="40" y2="100" stroke="#1f2933" stroke-width="3"/>
+<line x1="40" y1="50" x2="40" y2="150" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="70" x2="90" y2="30" stroke="#1f2933" stroke-width="3"/>
+<line x1="90" y1="30" x2="90" y2="8" stroke="#1f2933" stroke-width="3"/>
+<line x1="90" y1="170" x2="40" y2="130" stroke="#1f2933" stroke-width="3" marker-end="url(#bjt1-arr)"/>
+<line x1="90" y1="170" x2="90" y2="192" stroke="#1f2933" stroke-width="3"/>
+<text x="-10" y="106" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">B</text>
+<text x="90" y="-2" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">C</text>
+<text x="90" y="212" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">E</text>
+</g>
+</svg>
+
+> **Nota:** La freccia presente sul terminale di emettitore indica sempre il verso della corrente convenzionale quando la giunzione BE è polarizzata direttamente, cioè dal materiale P verso il materiale N: esce dall'emettitore nel transistor NPN ed entra nell'emettitore nel transistor PNP.
+
+## Principio di funzionamento (NPN in regione attiva diretta)
+
+Analizziamo il caso del transistor **NPN** operante in **regione attiva diretta** (FAR, *Forward Active Region*). In questa modalità:
+- La giunzione **Base-Emettitore (BE)** è polarizzata **direttamente** ($V_{BE} > 0$).
+- La giunzione **Base-Collettore (BC)** è polarizzata **inversamente** ($V_{BC} < 0$, ovvero $V_{CB} > 0$).
+
+<svg viewBox="0 0 1100 600" width="100%" role="img" aria-labelledby="bjt2-t bjt2-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="bjt2-t">Flusso dei portatori in un BJT NPN in regione attiva diretta</title>
+<desc id="bjt2-d">Gli elettroni iniettati dall'emettitore attraversano la base sottile per diffusione. Il forte campo elettrico della giunzione base-collettore, polarizzata inversamente e diretto dal collettore verso la base, li accelera verso il collettore. Una piccola frazione di elettroni si ricombina con le lacune della base: le lacune sono fornite dal contatto di base e formano, insieme alle lacune iniettate nell'emettitore, la corrente di base.</desc>
+<defs>
+<marker id="bjt2-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1d5fd1"/>
+</marker>
+<marker id="bjt2-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#d1342b"/>
+</marker>
+<marker id="bjt2-af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#b45309"/>
+</marker>
+<marker id="bjt2-ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1f2933"/>
+</marker>
+<marker id="bjt2-ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1f2933"/>
+</marker>
+<g id="bjt2-el">
+<circle r="8" fill="#1d5fd1"/>
+<line x1="-4" y1="0" x2="4" y2="0" stroke="#ffffff" stroke-width="2.2"/>
+</g>
+<g id="bjt2-ho">
+<circle r="8" fill="#d1342b"/>
+<line x1="-4" y1="0" x2="4" y2="0" stroke="#ffffff" stroke-width="2.2"/>
+<line x1="0" y1="-4" x2="0" y2="4" stroke="#ffffff" stroke-width="2.2"/>
+</g>
+</defs>
+
+<rect x="120" y="100" width="280" height="300" fill="#e7f0fd"/>
+<rect x="400" y="100" width="130" height="300" fill="#fdeceb"/>
+<rect x="530" y="100" width="450" height="300" fill="#e7f0fd"/>
+<rect x="395" y="100" width="20" height="300" fill="#ffe08a" opacity="0.6"/>
+<rect x="520" y="100" width="70" height="300" fill="#ffe08a" opacity="0.9"/>
+<rect x="120" y="100" width="860" height="300" fill="none" stroke="#1f2933" stroke-width="2"/>
+<line x1="400" y1="100" x2="400" y2="400" stroke="#1f2933" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="530" y1="100" x2="530" y2="400" stroke="#1f2933" stroke-width="1.2" stroke-dasharray="5 4"/>
+
+<text x="260" y="40" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Emettitore (N⁺)</text>
+<text x="465" y="40" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Base (P)</text>
+<text x="755" y="40" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Collettore (N)</text>
+<text x="260" y="62" font-size="13" text-anchor="middle" fill="#6b7785">drogaggio molto elevato</text>
+<text x="465" y="62" font-size="13" text-anchor="middle" fill="#6b7785">sottile, poco drogata</text>
+<text x="755" y="62" font-size="13" text-anchor="middle" fill="#6b7785">drogaggio più basso</text>
+
+<line x1="467" y1="122" x2="416" y2="122" stroke="#1f2933" stroke-width="1.5" marker-end="url(#bjt2-ad)"/>
+<line x1="467" y1="122" x2="519" y2="122" stroke="#1f2933" stroke-width="1.5" marker-end="url(#bjt2-ad)"/>
+<text x="460" y="115" font-size="13" fill="#1f2933">W<tspan dy="4" font-size="10">B</tspan></text>
+<text x="430" y="250" font-size="12" fill="#1f2933">diffusione</text>
+
+<line x1="586" y1="125" x2="528" y2="125" stroke="#b45309" stroke-width="3.5" marker-end="url(#bjt2-af)"/>
+<line x1="586" y1="375" x2="528" y2="375" stroke="#b45309" stroke-width="3.5" marker-end="url(#bjt2-af)"/>
+<text x="557" y="116" font-size="17" font-weight="700" font-style="italic" text-anchor="middle" fill="#b45309">E</text>
+<text x="557" y="394" font-size="17" font-weight="700" font-style="italic" text-anchor="middle" fill="#b45309">E</text>
+
+<polygon points="522,158 590,153 590,167 522,162" fill="#1d5fd1" opacity="0.28"/>
+<polygon points="522,193 590,188 590,202 522,197" fill="#1d5fd1" opacity="0.28"/>
+<polygon points="522,228 590,223 590,237 522,232" fill="#1d5fd1" opacity="0.28"/>
+
+<polyline points="150,160 415,160 432,154 452,166 472,155 492,165 512,158 522,160 940,160" fill="none" stroke="#1d5fd1" stroke-width="3.5" stroke-linejoin="round" marker-end="url(#bjt2-ae)"/>
+<polyline points="150,195 415,195 432,189 452,201 472,190 492,200 512,193 522,195 940,195" fill="none" stroke="#1d5fd1" stroke-width="3.5" stroke-linejoin="round" marker-end="url(#bjt2-ae)"/>
+<polyline points="150,230 415,230 432,224 452,236 472,225 492,235 512,228 522,230 940,230" fill="none" stroke="#1d5fd1" stroke-width="3.5" stroke-linejoin="round" marker-end="url(#bjt2-ae)"/>
+<polyline points="150,265 405,265 428,259 446,270 458,292 465,318 467,334" fill="none" stroke="#1d5fd1" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#bjt2-ae)"/>
+
+<use href="#bjt2-ho" x="432" y="212"/>
+<use href="#bjt2-ho" x="500" y="180"/>
+<use href="#bjt2-ho" x="500" y="248"/>
+
+<use href="#bjt2-el" x="150" y="160"/>
+<use href="#bjt2-el" x="270" y="160"/>
+<use href="#bjt2-el" x="472" y="155"/>
+<use href="#bjt2-el" x="690" y="160"/>
+<use href="#bjt2-el" x="810" y="160"/>
+<use href="#bjt2-el" x="150" y="195"/>
+<use href="#bjt2-el" x="270" y="195"/>
+<use href="#bjt2-el" x="472" y="190"/>
+<use href="#bjt2-el" x="690" y="195"/>
+<use href="#bjt2-el" x="810" y="195"/>
+<use href="#bjt2-el" x="150" y="230"/>
+<use href="#bjt2-el" x="270" y="230"/>
+<use href="#bjt2-el" x="472" y="225"/>
+<use href="#bjt2-el" x="690" y="230"/>
+<use href="#bjt2-el" x="810" y="230"/>
+<use href="#bjt2-el" x="150" y="265"/>
+<use href="#bjt2-el" x="270" y="265"/>
+
+<use href="#bjt2-ho" x="418" y="312"/>
+<line x1="404" y1="312" x2="338" y2="312" stroke="#d1342b" stroke-width="3" marker-end="url(#bjt2-ah)"/>
+<line x1="468" y1="398" x2="468" y2="364" stroke="#d1342b" stroke-width="3" marker-end="url(#bjt2-ah)"/>
+<use href="#bjt2-ho" transform="translate(468,348) scale(1.15)"/>
+
+<text x="135" y="122" font-size="15" font-weight="700" fill="#1d5fd1">Elettroni iniettati</text>
+<text x="135" y="141" font-size="14" fill="#1d5fd1">(I<tspan dy="4" font-size="11">nE</tspan><tspan dy="-4"> ≈ I</tspan><tspan dy="4" font-size="11">C</tspan><tspan dy="-4">)</tspan></text>
+
+<text x="130" y="338" font-size="14" font-weight="600" fill="#d1342b">Lacune iniettate nell'emettitore</text>
+<text x="130" y="357" font-size="13" fill="#d1342b">(I<tspan dy="4" font-size="10">pE</tspan><tspan dy="-4">, trascurabili: emettitore molto drogato)</tspan></text>
+
+<text x="610" y="122" font-size="15" font-weight="700" fill="#b45309">Forte campo elettrico della giunzione BC</text>
+<text x="610" y="141" font-size="14" fill="#b45309">(inversa): accelera gli elettroni verso il collettore</text>
+
+<text x="610" y="268" font-size="15" font-weight="700" fill="#1d5fd1">Elettroni raccolti dal collettore</text>
+<text x="610" y="287" font-size="14" fill="#1d5fd1">(corrente I<tspan dy="4" font-size="11">C</tspan><tspan dy="-4"> ≈ I</tspan><tspan dy="4" font-size="11">nE</tspan><tspan dy="-4">)</tspan></text>
+
+<line x1="602" y1="336" x2="486" y2="347" stroke="#6b7785" stroke-width="1.5" stroke-dasharray="3 3"/>
+<text x="610" y="332" font-size="15" font-weight="700" fill="#1f2933">Pochi elettroni ritornano alla base:</text>
+<text x="610" y="351" font-size="14" fill="#1f2933">si ricombinano con le lacune fornite</text>
+<text x="610" y="370" font-size="14" fill="#1f2933">dal contatto di base (corrente I<tspan dy="4" font-size="11">B</tspan><tspan dy="-4">)</tspan></text>
+
+<line x1="120" y1="200" x2="40" y2="200" stroke="#1f2933" stroke-width="3"/>
+<line x1="980" y1="200" x2="1060" y2="200" stroke="#1f2933" stroke-width="3"/>
+<line x1="468" y1="400" x2="468" y2="560" stroke="#1f2933" stroke-width="3"/>
+<polygon points="96,193 78,200 96,207" fill="#1f2933"/>
+<polygon points="1036,193 1018,200 1036,207" fill="#1f2933"/>
+<polygon points="461,466 468,448 475,466" fill="#1f2933"/>
+<text x="88" y="182" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2933">I<tspan dy="4" font-size="12">E</tspan></text>
+<text x="1026" y="182" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2933">I<tspan dy="4" font-size="12">C</tspan></text>
+<text x="486" y="466" font-size="16" font-weight="700" fill="#1f2933">I<tspan dy="4" font-size="12">B</tspan></text>
+<text x="70" y="226" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">E</text>
+<text x="1040" y="226" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">C</text>
+<text x="486" y="424" font-size="16" font-weight="600" fill="#1f2933">B</text>
+
+<polyline points="40,200 40,560 250,560" fill="none" stroke="#1f2933" stroke-width="3"/>
+<line x1="262" y1="560" x2="800" y2="560" stroke="#1f2933" stroke-width="3"/>
+<polyline points="812,560 1060,560 1060,200" fill="none" stroke="#1f2933" stroke-width="3"/>
+<circle cx="468" cy="560" r="5" fill="#1f2933"/>
+
+<line x1="250" y1="548" x2="250" y2="572" stroke="#1f2933" stroke-width="5"/>
+<line x1="262" y1="538" x2="262" y2="582" stroke="#1f2933" stroke-width="2.5"/>
+<text x="236" y="550" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">−</text>
+<text x="277" y="550" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">+</text>
+<text x="256" y="526" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">V<tspan dy="4" font-size="12">BE</tspan></text>
+
+<line x1="800" y1="548" x2="800" y2="572" stroke="#1f2933" stroke-width="5"/>
+<line x1="812" y1="538" x2="812" y2="582" stroke="#1f2933" stroke-width="2.5"/>
+<text x="786" y="550" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">−</text>
+<text x="827" y="550" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">+</text>
+<text x="806" y="526" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">V<tspan dy="4" font-size="12">CB</tspan></text>
+
+<line x1="60" y1="445" x2="96" y2="445" stroke="#1d5fd1" stroke-width="3.5" marker-end="url(#bjt2-ae)"/>
+<text x="106" y="450" font-size="14" fill="#1f2933">Elettroni</text>
+<use href="#bjt2-ho" x="205" y="445"/>
+<text x="219" y="450" font-size="14" fill="#1f2933">Lacune</text>
+<rect x="305" y="438" width="16" height="16" fill="#ffe08a" stroke="#b45309" stroke-width="1"/>
+<text x="328" y="450" font-size="14" fill="#1f2933">Svuotamento</text>
+<line x1="580" y1="445" x2="620" y2="445" stroke="#1f2933" stroke-width="3" marker-end="url(#bjt2-ax)"/>
+<text x="630" y="450" font-size="14" fill="#1f2933">Corrente convenzionale (lacune)</text>
+</svg>
+
+### Meccanismo fisico passo-passo
+1. **Iniezione dall'emettitore**: la giunzione BE polarizzata direttamente abbassa la barriera di potenziale. Poiché l'emettitore è fortemente drogato ($N^+$), un'enorme quantità di elettroni viene iniettata nella base, dove diventano portatori minoritari. Una corrente di lacune molto più piccola ($I_{pE}$) passa invece dalla base all'emettitore.
+2. **Transito nella base**: la base è molto stretta (spessore $W_B$ molto minore della lunghezza di diffusione degli elettroni) e poco drogata. Pertanto quasi tutti gli elettroni (tipicamente oltre il 99%) la attraversano per **diffusione**, spinti dal gradiente di concentrazione, senza ricombinarsi con le lacune presenti.
+3. **Raccolta al collettore**: ai bordi della giunzione BC, polarizzata inversamente, esiste un campo elettrico intenso diretto dal collettore verso la base. Gli elettroni che raggiungono la regione di svuotamento sono sottoposti alla forza $F = -qE$, che li accelera e li "spara" nel collettore, dove formano la corrente $I_C$.
+4. **Ricombinazione in base**: una piccola frazione degli elettroni in transito si ricombina con le lacune della base. Le lacune perse vengono rimpiazzate dal contatto di base: questo flusso costituisce, insieme a $I_{pE}$, la corrente di base $I_B$.
+
+## Modello quantitativo e relazioni tra le correnti
+
+Applicando la legge di Kirchhoff delle correnti al componente come nodo unico, si ha sempre:
+
+$$
+I_E = I_C + I_B
+$$
+
+### Corrente di Collettore ($I_C$)
+In regione attiva diretta, la corrente di collettore dipende in modo **esponenziale** dalla tensione applicata tra base ed emettitore $V_{BE}$, secondo la relazione di Ebers-Moll:
+
+$$
+I_C = I_S \cdot \left( e^{\frac{V_{BE}}{V_T}} - 1 \right) \approx I_S \cdot e^{\frac{V_{BE}}{V_T}}
+$$
+
+Dove:
+- $I_S$ è la **corrente di saturazione** (o di trasporto) del transistor, legata alle dimensioni geometriche e ai drogaggi della base.
+- $V_T = \frac{k_B T}{q} \approx 25{,}9\text{ mV}$ a temperatura ambiente ($300\text{ K}$).
+
+### Corrente di Base ($I_B$)
+La corrente di base è composta da due contributi principali:
+- La corrente di lacune iniettate dalla base verso l'emettitore.
+- La corrente necessaria a rimpiazzare le lacune che si ricombinano nella base con gli elettroni in transito.
+
+Essendo entrambi i contributi proporzionali alla concentrazione di portatori minoritari iniettati, $I_B$ risulta direttamente proporzionale a $I_C$ tramite il **guadagno di corrente a segnale grande ($\beta_F$)**:
+
+$$
+I_C = \beta_F \cdot I_B \implies I_B = \frac{I_C}{\beta_F}
+$$
+
+Tipicamente $\beta_F$ (indicato anche con $h_{FE}$) assume valori compresi tra **50 e 300**.
+
+### Corrente di Emettitore ($I_E$) e guadagno $\alpha_F$
+Esprimendo la corrente di emettitore in funzione di $I_C$:
+
+$$
+I_E = I_C + I_B = I_C \left( 1 + \frac{1}{\beta_F} \right) = I_C \cdot \frac{\beta_F + 1}{\beta_F}
+$$
+
+Si definisce l'alfa diretta $\alpha_F$:
+
+$$
+\alpha_F = \frac{\beta_F}{\beta_F + 1} \implies I_C = \alpha_F \cdot I_E
+$$
+
+Poiché $\beta_F \gg 1$, il valore di $\alpha_F$ è leggermente inferiore all'unità (es. $0{,}99$).
+
+## Regioni di funzionamento del BJT
+
+A seconda dello stato di polarizzazione delle due giunzioni (BE e BC), il transistor BJT può operare in **quattro regioni distinte**:
+
+| <span style={{ display: 'inline-block', minWidth: '180px', verticalAlign: 'middle', color: '#252525' }}>Regione di funzionamento</span> | <span style={{ display: 'inline-block', minWidth: '160px', verticalAlign: 'middle', color: '#252525' }}>Giunzione BE</span> | <span style={{ display: 'inline-block', minWidth: '160px', verticalAlign: 'middle', color: '#252525' }}>Giunzione BC</span> | <span style={{ display: 'inline-block', verticalAlign: 'middle', color: '#252525' }}>Descrizione e applicazione</span> |
+| :--- | :--- | :--- | :--- |
+| **Interdizione (Cut-off)** | Inversa <br />($V_{BE} < 0\, \text{ V}$) | Inversa <br />($V_{BC} < 0\, \text{ V}$) | $I_C \approx 0$, $I_B \approx 0$. Il BJT equivale ad un **interruttore aperto**. |
+| **Attiva Diretta (FAR)** | Diretta <br />($V_{BE} \approx 0{,}7\, \text{ V}$) | Inversa <br />($V_{BC} < 0\, \text{ V}$) | $I_C = \beta_F I_B$. Usata per l'**amplificazione di segnale**. |
+| **Saturazione (SAT)** | Diretta <br />($V_{BE} \approx 0{,}7\, \text{ V}$) | Diretta <br />($V_{BC} > 0\, \text{ V}$) | $V_{CE,sat} \approx 0{,}2\text{ V}$. Il BJT equivale ad un **interruttore chiuso**. |
+| **Attiva Inversa** | Inversa <br />($V_{BE} < 0\, \text{ V}$) | Diretta <br />($V_{BC} > 0\, \text{ V}$) | Funzionamento speculare con guadagno inverso $\beta_R$ molto basso (tipicamente $\beta_R \lesssim 1$). Usata raramente, in quanto funziona molto male. |
+
+### Caratteristiche di uscita $I_C - V_{CE}$
+
+Le caratteristiche di uscita descrivono l'andamento della corrente di collettore $I_C$ al variare della tensione tra collettore ed emettitore $V_{CE}$, per diversi valori fissati della corrente di base $I_B$.
+
+<svg viewBox="0 0 1000 520" width="100%" role="img" aria-labelledby="bjt3-t bjt3-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="bjt3-t">Caratteristiche di uscita Ic - Vce di un BJT NPN</title>
+<desc id="bjt3-d">Grafico qualitativo delle curve di uscita della corrente di collettore in funzione di Vce, per quattro valori crescenti ed equispaziati della corrente di base. Sono evidenziate la regione di saturazione, a sinistra di Vce,sat, la regione attiva diretta, dove la corrente è quasi costante con una lieve pendenza dovuta all'effetto Early, e la regione di interdizione, lungo l'asse Vce.</desc>
+<defs>
+<marker id="bjt3-ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1f2933"/>
+</marker>
+<marker id="bjt3-ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">
+<path d="M0 0L10 5L0 10z" fill="#1f2933"/>
+</marker>
+</defs>
+
+<rect x="100" y="50" width="60" height="390" fill="#fff2c2" opacity="0.6"/>
+<rect x="100" y="436" width="740" height="4" fill="#9aa5b1" opacity="0.6"/>
+<line x1="160" y1="440" x2="160" y2="50" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="5 4"/>
+
+<line x1="100" y1="440" x2="900" y2="440" stroke="#1f2933" stroke-width="2" marker-end="url(#bjt3-ax)"/>
+<line x1="100" y1="440" x2="100" y2="36" stroke="#1f2933" stroke-width="2" marker-end="url(#bjt3-ax)"/>
+<text x="912" y="446" font-size="18" font-style="italic" fill="#1f2933">V<tspan dy="4" font-size="12" font-style="normal">CE</tspan></text>
+<text x="68" y="46" font-size="18" font-style="italic" fill="#1f2933">I<tspan dy="4" font-size="12" font-style="normal">C</tspan></text>
+
+<line x1="160" y1="440" x2="160" y2="450" stroke="#1f2933" stroke-width="2"/>
+<text x="112" y="470" font-size="15" fill="#1f2933">V<tspan dy="4" font-size="11">CE,sat</tspan><tspan dy="-4"> ≈ 0,2 V</tspan></text>
+
+<path d="M 100 440 C 109 395 138 365 160 365 L 840 354.5" fill="none" stroke="#0f766e" stroke-width="3"/>
+<path d="M 100 440 C 118 350 138 290 160 290 L 840 269" fill="none" stroke="#0f766e" stroke-width="3"/>
+<path d="M 100 440 C 127 305 138 215 160 215 L 840 183.5" fill="none" stroke="#0f766e" stroke-width="3"/>
+<path d="M 100 440 C 136 260 138 140 160 140 L 840 98" fill="none" stroke="#0f766e" stroke-width="3"/>
+<line x1="100" y1="436" x2="840" y2="436" stroke="#6b7785" stroke-width="2" stroke-dasharray="6 4"/>
+
+<text x="852" y="359" font-size="15" font-weight="600" fill="#0f766e">I<tspan dy="4" font-size="11">B1</tspan></text>
+<text x="852" y="274" font-size="15" font-weight="600" fill="#0f766e">I<tspan dy="4" font-size="11">B2</tspan></text>
+<text x="852" y="188" font-size="15" font-weight="600" fill="#0f766e">I<tspan dy="4" font-size="11">B3</tspan></text>
+<text x="852" y="103" font-size="15" font-weight="600" fill="#0f766e">I<tspan dy="4" font-size="11">B4</tspan></text>
+<text x="852" y="140" font-size="13" fill="#6b7785">I<tspan dy="4" font-size="10">B</tspan><tspan dy="-4"> crescente</tspan></text>
+
+<text transform="rotate(-90 130 105)" x="130" y="110" font-size="15" font-weight="600" text-anchor="middle" fill="#b58900">Saturazione</text>
+
+<path d="M 160 74 L 160 66 L 840 66 L 840 74" fill="none" stroke="#0f766e" stroke-width="2"/>
+<text x="500" y="56" font-size="16" font-weight="600" text-anchor="middle" fill="#0f766e">Regione attiva diretta</text>
+<text x="360" y="90" font-size="13" fill="#1f2933">I<tspan dy="4" font-size="10">C</tspan><tspan dy="-4"> ≈ β</tspan><tspan dy="4" font-size="10">F</tspan><tspan dy="-4">·I</tspan><tspan dy="4" font-size="10">B</tspan><tspan dy="-4">, con lieve pendenza (effetto Early)</tspan></text>
+
+<text x="425" y="424" font-size="14" fill="#6b7785">Interdizione (I<tspan dy="4" font-size="10">B</tspan><tspan dy="-4"> = 0): I</tspan><tspan dy="4" font-size="10">C</tspan><tspan dy="-4"> ≈ 0</tspan></text>
+
+<text x="900" y="500" font-size="13" text-anchor="end" fill="#6b7785">Andamento qualitativo, non in scala</text>
+</svg>
+
+> **Lettura del grafico**:
+>  - l'**interdizione** equivale ad un circuito aperto, ossia per qualsiasi tensione si ha corrente nulla.
+>  - la **saturazione** si comporta *quasi* come un cortocircuito, la corrente può salire parecchio ma la tensione rimane bassa ($V_{CE,sat} \approx 0{,}2\, \text{V}$).
+>  - la **regione attiva diretta** è la zona di amplificazione, in cui la corrente di base è amplificata $\beta$ volte e il transistor si comporta come un resistore variabile.
+
+
+
+
+### Effetto Early (Modulazione dello spessore di base)
+In regione attiva, un aumento di $V_{CE}$ determina un aumento della tensione inversa $V_{CB}$ sulla giunzione di collettore. Questo allarga la regione di svuotamento BC, riducendo lo spessore effettivo della base ($W_B$). Di conseguenza:
+- Diminuisce la ricombinazione nella base.
+- Aumenta il gradiente di concentrazione dei portatori.
+- La corrente $I_C$ aumenta leggermente all'aumentare di $V_{CE}$ (infatti le linee nel grafico della caratteristica d'uscita non sono piatte).
+
+Questo fenomeno si modella introducendo la **tensione di Early ($V_A$)**, tipicamente dell'ordine di $50\text{–}200\text{ V}$:
+
+$$
+I_C = I_S \cdot e^{\frac{V_{BE}}{V_T}} \left( 1 + \frac{V_{CE}}{V_A} \right)
+$$
+
+Prolungando all'indietro i tratti quasi rettilinei delle curve in regione attiva, si incontrano tutti nel punto $V_{CE} = -V_A$.

@@ -206,31 +206,51 @@ Come si nota dai vari grafici, il modello lineare a tratti è il modello che pi�
 I raddrizzatori sono circuiti che convertono una tensione alternata ($V_{AC}$) in una tensione unidirezionale (continua o pulsante, $V_{DC}$).
 
 ### 1. Raddrizzatore a mezza onda
-  <FiguraLato src="/images/circuiti/raddrizzatore_mezzaonda.svg" alt="Modello lineare a tratti del diodo" larghezza='44rem' posiziomne='testo'>
-    Modello lineare a tratti del diodo (generatore $V_\gamma$ con resistenza $r_D$).
-  </FiguraLato>
-
 Utilizza un singolo diodo in serie al carico. Utilizzando il modello a caduta di tensione costante, si ha:
-
+  <FiguraLato src="/images/circuiti/mezzaonda_uscita.svg" alt="Grafico di ingresso e uscita del raddrizzatore a mezza onda" larghezza='40rem' posizione='testo'>
+    Grafico di ingresso e uscita del raddrizzatore a mezza onda.
+  </FiguraLato>
 * **Semionda Positiva:** Il diodo conduce $\rightarrow v_{out}(t) = v_{in}(t) - V_\gamma$.
 * **Semionda Negativa:** Il diodo è interdetto $\rightarrow v_{out}(t) = 0$.
 
+La differenza fra i picchi è proprio $V_\gamma$ ($\approx 0{,}7\, \text{V}$).
+<br />
+  <FiguraLato src="/images/circuiti/raddrizzatore_mezzaonda.svg" alt="Circuito del raddrizzatore a mezza onda" larghezza='24rem' lato='sinsitra'>
+    Circuito raddrizzatore a mezza onda.
+  </FiguraLato>
+
 ### 2. Raddrizzatore a onda intera con ponte di Graetz
 Utilizza una configurazione a ponte con 4 diodi ($D_1, D_2, D_3, D_4$).
-
+  <FiguraLato src="/images/circuiti/graetz_uscita.svg" alt="Grafico di ingresso e uscita del raddrizzatore a onda intera" larghezza='40rem' posizione='testo'>
+    Grafico di ingresso e uscita del raddrizzatore a onda intera.
+  </FiguraLato>
 * **Semionda Positiva:** Conducono la coppia $D_1$ e $D_2$.
-* **Semionda Negativa:** Conducono la coppia $D_3$ e $D_4$, invertendo il percorso della corrente sul carico in modo che scorrere sempre nello stesso verso.
+* **Semionda Negativa:** Conducono la coppia $D_3$ e $D_4$, facendo scorrere la corrente nel carico sempre nello stesso verso.
 
-Valore medio della tensione d'uscita (con diodi ideali):
-$$ V_{avg} = \frac{2 V_m}{\pi} \approx 0.636 \cdot V_m $$
-
-*(Tenendo conto del modello a tensione costante, la tensione di picco in uscita sarà $V_{out, peak} = V_m - 2V_0$).*
+La differenza fra i picchi è $2V_\gamma$ ($\approx 1{,}4\, \text{V}$).
+<br />
+  <FiguraLato src="/images/circuiti/raddrizzatore_graetz.svg" alt="Circuito del raddrizzatore a onda intera" larghezza='28rem' lato='sinsitra'>
+    Circuito raddrizzatore a onda intera.
+  </FiguraLato>
 
 ### 3. Filtraggio capacitivo
-Per trasformare l'onda pulsante in una tensione continua stabile, si inserisce un condensatore $C$ in parallelo al carico $R_L$.
+Per trasformare l'onda pulsante in una tensione continua stabile, si inserisce un condensatore $C$ in parallelo al carico resistivo. Si può fare per qualsiasi rettificatore.
 
-Il condensatore si carica rapidamente al picco della tensione $V_m$ e si scarica lentamente attraverso $R_L$ quando i diodi interdicono. La tensione di ondulazione (**ripple**) residua è data approssimativamente da:
+Il condensatore si carica rapidamente al picco della tensione $V_m$ e si scarica lentamente attraverso la resistenza quando i diodi interdicono. La tensione di ondulazione (**ripple**) residua è data approssimativamente da:
 
-$$ V_{ripple} \approx \frac{I_{DC}}{f \cdot C} = \frac{V_m}{f \cdot R_L \cdot C} $$
+$$ 
+V_{ripple} \approx \frac{V_m}{f \cdot R \cdot C}
+$$
 
-Dove $f$ è la frequenza dell'onda raddrizzata ($50\text{ Hz}$ per mezza onda, $100\text{ Hz}$ per onda intera con rete a $50\text{ Hz}$).
+Dove $f$ è la frequenza dell'onda raddrizzata ($50\text{ Hz}$ per mezza onda, $100\text{ Hz}$ per onda intera con ingresso a $50\text{ Hz}$) e $V_m$ è la tensione di picco dell'ingresso.
+Cercando di interpretare questa formula, notiamo che il ripple diminuisce se la frequenza aumenta, poichè diamo meno tempo al condensatore di scaricarsi. Se il condensatore ha una capacità maggiore il ripple sarà minore, così come se la resistenza è più alta il condensatore si scarica meno velocemente e il ripple diminuisce.
+
+<br />
+
+  <FiguraLato src="/images/circuiti/graetz_C_uscita.svg" alt="Grafico di ingresso e uscita del raddrizzatore a onda intera con condensatore in uscita" larghezza='40rem' posizione='testo'>
+    Grafico di ingresso e uscita del raddrizzatore a onda intera con condensatore in uscita <br />($R=1\,\text{k}\Omega {,}\ C=100\, \mu F$).
+  </FiguraLato>
+
+  <FiguraLato src="/images/circuiti/raddrizzatore_graetz_C.svg" alt="Circuito del raddrizzatore a onda intera con condensatore in uscita" larghezza='30rem' lato='sinsitra'>
+    Circuito raddrizzatore a onda intera con condensatore in uscita.
+  </FiguraLato>
