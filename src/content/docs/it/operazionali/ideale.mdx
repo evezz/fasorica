@@ -1,0 +1,272 @@
+---
+title: Amplificatore Operazionale
+description: Principi di funzionamento ed applicazioni dell'amplificatore operazionale ideale.
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+L'**amplificatore operazionale** (spesso abbreviato con *Op-Amp* oppure *OA*) è un amplificatore **differenziale**, cioè un circuito che amplifica la differenza di tensione fra i suoi due piedini di ingresso e la riporta sull'uscita.
+È composto da molti transistor e fornisce molti vantaggi rispetto agli amplificatori realizzati con un unico transistor, fra cui guadagno e resistenza d'ingresso più elevati, una resistenza d'uscita minore e una banda più larga (quindi può funzionare a frequenze più elevate).
+Trovano applicazioni in moltissimi circuiti, fra cui filtri, amplificatori e circuiti di acquisizione.
+
+<Figura src="/images/opamp.svg" alt="Immagine: [Op-amp symbol](https://commons.wikimedia.org/wiki/File:Op-amp_symbol.svg), di [Omegatron](https://commons.wikimedia.org/wiki/User:Omegatron), distribuita con licenza [Creative Commons Attribution-ShareAlike 3.0 International (CC BY-SA 3.0)](https://creativecommons.org/licenses/by-sa/3.0/). Immagine non modificata." larghezza='30rem'>
+  Simbolo circuitale dell'amplificatore operazionale.<br/>Le tensioni $V_{S+}$ e $V_{S-}$ sono le tensioni di alimentazione.<br/><small>Immagine: [Op-amp symbol](https://commons.wikimedia.org/wiki/File:Op-amp_symbol.svg), di [Omegatron](https://commons.wikimedia.org/wiki/User:Omegatron), distribuita con licenza [Creative Commons Attribution-ShareAlike 3.0 International (CC BY-SA 3.0)](https://creativecommons.org/licenses/by-sa/3.0/). Immagine non modificata.</small>
+</Figura>
+
+L'equazione fondamentale dell'OA è la seguente:
+$$
+V_{out} = a \cdot V_d
+$$
+dove:
+ - $a$ è il guadagno a circuito aperto (idealmente infinito, realmente attorno a qualche migliaia)
+ - $V_d$ è la tensione differenziale, ossia la differenza fra la tensione sul piedino $+$ e quella sul piedino $-$.
+
+<Figura src="/images/vo_vd_opamp.svg" alt="Caratteristica di uscita Op-Amp" larghezza='40rem'>
+    Caratteristica di uscita di un OA reale. Alimentazione $\pm 5\, \text{V}.$
+</Figura>
+
+Come si nota dalla caratteristica di uscita, l'OA ha tre zone di funzionamento principali:
+ - Zona di **saturazione positiva**: la tensione di uscita è più alta della tensione di alimentazione positiva, quindi l'uscita **satura** al valore massimo che può raggiungere. Solitamente questo valore è leggermente inferiore alla tensione di alimentazione positiva.
+ - Zona di **saturazione negativa**: la tensione di uscita è più bassa della tensione di alimentazione negativa, quindi l'uscita **satura** al valore minimo che può raggiungere. Solitamente questo valore è leggermente superiore alla tensione di alimentazione negativa.
+ - Zona **lineare**: l'uscita vale $a \cdot V_d$. La retta ha pendenza $a$.
+
+> **Osservazione**: dato che $a$ è un valore alto (nell'ordine delle migliaia, idealmente infinito) la zona lineare è molto stretta attorno a $V_d = 0\, \text{V}$. In alcuni OA, il valore di saturazione positivo e negativo coincidono con i valori delle alimentazioni: questi dispositivi si dicono **rail-to-rail**.
+
+## Utilizzo ad anello aperto
+L'operazionale può essere utilizzato senza **retroazione**, quindi nella configurazione ad **anello aperto**. In questo modo non fa altro che amplificare la tensione differenziale, funzionando come un comparatore.
+
+### Circuito comparatore di tensione
+<Figura src="/images/circuiti/comparatore.svg" alt="Circuito comparatore" larghezza='40rem'>
+    Circuito comparatore (OA in anello aperto).
+</Figura>
+
+### Funzionamento del comparatore
+
+Il comparatore confronta due tensioni e porta l'uscita a uno dei due livelli di saturazione, in base a quale ingresso ha la tensione maggiore.
+
+- Se $V_+ > V_-$, l'uscita raggiunge la saturazione positiva.
+- Se $V_+ < V_-$, l'uscita raggiunge la saturazione negativa.
+
+Supponiamo, ad esempio, di alimentare l'operazionale con tensioni $\pm 5\,\text{V}$ e di utilizzare una tensione di riferimento $V_{ref}=2\,\text{V}$. Collegando il segnale da confrontare all'ingresso non invertente e la tensione di riferimento all'ingresso invertente, si ottiene:
+
+$$
+V_{out} \approx
+\begin{cases}
+V_{sat+} & \text{se } V_{in}>V_{ref}\\
+V_{sat-} & \text{se } V_{in}<V_{ref}
+\end{cases}
+$$
+
+In questo caso, quando la tensione d'ingresso supera $2\,\text{V}$, l'uscita passa alla saturazione positiva. Quando scende al di sotto di $2\,\text{V}$, l'uscita passa alla saturazione negativa.
+La tensione di riferimento determina quindi la soglia di commutazione. Questo principio è utile, ad esempio, per attivare un circuito quando una grandezza misurata supera un determinato valore.
+Invertendo i collegamenti, cioè applicando il segnale all'ingresso invertente e la tensione di riferimento a quello non invertente, si inverte anche il comportamento dell'uscita.
+
+## OA retroazionato
+
+L'operazionale viene utilizzato soprattutto con una **retroazione**, cioè un collegamento che riporta una parte del segnale di uscita a uno degli ingressi.
+La retroazione permette di controllare il guadagno del circuito e di ottenere un funzionamento più prevedibile.
+Si distinguono due tipi principali di retroazione:
+
+- **Retroazione negativa**: l'uscita viene riportata all'ingresso invertente. È la configurazione più utilizzata negli amplificatori lineari.
+- **Retroazione positiva**: l'uscita viene riportata all'ingresso non invertente. Può favorire la commutazione e viene utilizzata, ad esempio, nei trigger di Schmitt.
+
+Per studiare i circuiti con retroazione negativa, è utile partire dal modello ideale dell'operazionale.
+
+### Regole dell'operazionale ideale
+
+Un operazionale ideale presenta tre caratteristiche fondamentali:
+
+- Guadagno a circuito aperto infinito.
+- Resistenza d'ingresso infinita.
+- Resistenza d'uscita nulla.
+
+Da queste caratteristiche derivano due regole pratiche, valide quando la retroazione negativa mantiene il circuito in funzionamento lineare:
+
+**1. Le correnti d'ingresso sono nulle**
+
+La resistenza d'ingresso infinita implica che non entra corrente nei due terminali:
+
+$$
+\boxed{I_+=I_-=0}
+$$
+
+**2. Le tensioni sui due ingressi sono uguali**
+
+Poiché il guadagno è idealmente infinito, una differenza di tensione infinitesima sarebbe sufficiente a produrre una variazione significativa dell'uscita. In condizioni lineari con retroazione negativa, quindi:
+
+$$
+\boxed{V_+ = V_-}
+$$
+
+Questa condizione viene chiamata *cortocircuito virtuale*: i due ingressi hanno praticamente la stessa tensione, ma sono elettricamente separati e non scorre corrente dall'uno all'altro.
+Queste regole sono approssimazioni molto utili per analizzare i circuiti e sono la **conseguenza della retroazione**. Per poterle applicare, è **necessario** che l'operazionale lavori in **zona lineare** (cioè che l'uscita non sia satura).
+
+## Amplificatore invertente
+
+L'amplificatore invertente è una delle configurazioni fondamentali dell'operazionale. Permette di amplificare un segnale e di invertirne il segno, utilizzando due resistenze per stabilire il guadagno.
+
+Il segnale d'ingresso viene applicato al terminale invertente attraverso una resistenza $R_{in}$. Una seconda resistenza, $R_f$, collega l'uscita al terminale invertente e realizza la **retroazione negativa**. Il terminale non invertente è collegato a massa.
+
+### Analisi del circuito
+
+Poiché l'ingresso non invertente è collegato a massa, la sua tensione vale:
+
+$$
+V_+=0\,\text{V}
+$$
+
+In presenza di retroazione negativa, l'operazionale regola la propria uscita in modo da mantenere le tensioni dei due ingressi praticamente uguali. Si ottiene quindi:
+
+$$
+V_-\approx V_+=0\,\text{V}
+$$
+
+Il terminale invertente si trova così a una tensione prossima a zero, pur essendo collegato a massa soltanto attraverso il funzionamento del circuito. Questo punto viene chiamato **massa virtuale**.
+
+La massa virtuale è utile per semplificare i calcoli: possiamo considerare $V_-\approx 0$ e applicare la legge di Ohm alle due resistenze.
+
+Inoltre, l'impedenza d'ingresso idealmente infinita dell'operazionale implica che nei suoi terminali non entra corrente:
+
+$$
+I_+=I_-=0
+$$
+
+Di conseguenza, la corrente che attraversa $R_{in}$ deve proseguire attraverso $R_f$. Applicando la legge di Ohm, la corrente che attraversa la resistenza d'ingresso vale:
+
+$$
+I=\frac{V_{in}-V_-}{R_{in}}
+\approx\frac{V_{in}}{R_{in}}
+$$
+
+La corrente che attraversa la resistenza di retroazione, considerata dal terminale invertente verso l'uscita, vale:
+
+$$
+I=\frac{V_--V_{out}}{R_f}
+\approx-\frac{V_{out}}{R_f}
+$$
+
+Uguagliando le due espressioni si ottiene:
+
+$$
+\frac{V_{in}}{R_{in}}=-\frac{V_{out}}{R_f}
+$$
+
+Ricavando la tensione d'uscita:
+
+$$
+\boxed{V_{out}=-\frac{R_f}{R_{in}}V_{in}}
+$$
+
+Il **guadagno in tensione** è definito come il rapporto tra tensione d'uscita e tensione d'ingresso:
+
+$$
+\boxed{A_v=\frac{V_{out}}{V_{in}}=-\frac{R_f}{R_{in}}}
+$$
+
+Il guadagno dipende quindi esclusivamente dal rapporto tra le due resistenze, secondo il modello ideale.
+
+Il segno negativo indica l'inversione del segnale: quando l'ingresso è positivo, l'uscita è negativa; quando l'ingresso è negativo, l'uscita è positiva. Il valore assoluto del guadagno determina invece quanto viene amplificata l'ampiezza del segnale.
+
+### Esempio numerico
+
+Consideriamo un circuito con $R_{in}=10\,\text{k}\Omega$, $R_f=100\,\text{k}\Omega$ e una tensione d'ingresso $V_{in}=0{,}2\,\text{V}$.
+
+Il guadagno vale:
+
+$$
+A_v=-\frac{100\,\text{k}\Omega}{10\,\text{k}\Omega}=-10
+$$
+
+La tensione d'uscita risulta:
+
+$$
+V_{out}=-10\cdot 0{,}2=-2\,\text{V}
+$$
+
+Il circuito amplifica quindi il segnale di un fattore 10 e ne inverte il segno. Per ottenere questo risultato, l'operazionale deve poter raggiungere una tensione d'uscita di $-2\,\text{V}$ con l'alimentazione utilizzata.
+
+## Amplificatore non invertente
+
+L'amplificatore non invertente permette di amplificare un segnale mantenendone il segno. Il segnale d'ingresso viene applicato direttamente al terminale non invertente, mentre il terminale invertente è collegato a un partitore resistivo.
+
+Il partitore è formato da due resistenze: $R_f$, collegata tra uscita e ingresso invertente, e $R_g$, collegata tra ingresso invertente e massa. La tensione riportata all'ingresso invertente costituisce la retroazione negativa.
+
+### Analisi del circuito
+
+Poiché il segnale è applicato al terminale non invertente:
+
+$$
+V_+=V_{in}
+$$
+
+In presenza di retroazione negativa e in funzionamento lineare, le tensioni dei due ingressi sono praticamente uguali:
+
+$$
+V_-\approx V_+=V_{in}
+$$
+
+La tensione $V_-$ è determinata dal partitore formato da $R_f$ e $R_g$. Poiché nell'ingresso invertente idealmente non entra corrente, la corrente che attraversa le due resistenze è la stessa. Applicando la formula del partitore di tensione:
+
+$$
+V_-=V_{out}\frac{R_g}{R_f+R_g}
+$$
+
+Sostituendo $V_-\approx V_{in}$:
+
+$$
+V_{in}=V_{out}\frac{R_g}{R_f+R_g}
+$$
+
+Ricavando la tensione d'uscita:
+
+$$
+\boxed{V_{out}=\left(1+\frac{R_f}{R_g}\right)V_{in}}
+$$
+
+Il guadagno in tensione vale quindi:
+
+$$
+\boxed{A_v=1+\frac{R_f}{R_g}}
+$$
+
+Il guadagno è positivo: ingresso e uscita hanno lo stesso segno. Il suo valore dipende dal rapporto tra le resistenze e risulta sempre maggiore o uguale a uno per resistenze positive finite.
+
+### Esempio numerico
+
+Consideriamo un circuito con $R_f=90\,\text{k}\Omega$, $R_g=10\,\text{k}\Omega$ e $V_{in}=0{,}2\,\text{V}$.
+
+Il guadagno vale:
+
+$$
+A_v=1+\frac{90\,\text{k}\Omega}{10\,\text{k}\Omega}=10
+$$
+
+La tensione d'uscita risulta:
+
+$$
+V_{out}=10\cdot 0{,}2=2\,\text{V}
+$$
+
+L'uscita è dieci volte più grande dell'ingresso e mantiene lo stesso segno. Come per l'amplificatore invertente, il risultato richiede che l'uscita rimanga entro i limiti consentiti dall'alimentazione e dalle caratteristiche dell'operazionale.
+
+## Inseguitore di tensione
+
+L'inseguitore di tensione è un caso particolare dell'amplificatore non invertente. Il segnale d'ingresso viene applicato al terminale non invertente, mentre l'uscita viene collegata direttamente al terminale invertente.
+
+Grazie alla retroazione negativa, la tensione d'uscita segue quella d'ingresso:
+
+$$
+V_{out}\approx V_{in}
+$$
+
+Il guadagno in tensione è unitario:
+
+$$
+\boxed{A_v\approx 1}
+$$
+
+In questa configurazione, l'uscita mantiene idealmente la stessa tensione dell'ingresso. Il circuito conserva quindi l'ampiezza del segnale e offre un'importante funzione di separazione tra due stadi.
+
+La resistenza d'ingresso idealmente infinita consente di prelevare un segnale assorbendo una corrente trascurabile dalla sorgente. La resistenza d'uscita idealmente nulla permette invece di pilotare un carico mantenendo stabile la tensione.
+
+L'inseguitore viene perciò utilizzato come **buffer**, ad esempio tra un sensore e un circuito di acquisizione. Il sensore vede un carico molto elevato, mentre il circuito successivo riceve il segnale attraverso un'uscita capace di fornire la corrente richiesta dal carico, entro i limiti dell'operazionale.
