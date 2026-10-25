@@ -1,0 +1,713 @@
+---
+title: MOSFET
+description: Struttura fisica, formazione del canale, regioni di funzionamento, caratteristiche e relazioni quantitative del transistor a effetto di campo MOS ad arricchimento (NMOS e PMOS).
+---
+
+import Figura from '../../../../components/Figura.astro';
+
+Nella lezione sul BJT abbiamo visto un transistor in cui una piccola **corrente** di base ne comanda una molto più grande di collettore. Il **MOSFET** (*Metal-Oxide-Semiconductor Field-Effect Transistor*) risolve lo stesso problema, cioè comandare elettricamente il passaggio della corrente, con un'idea diversa: il comando è una **tensione** e non assorbe praticamente corrente. <br />
+Il nome racconta la struttura: **M**etal è l'elettrodo di comando (il *gate*, oggi spesso in silicio policristallino), **O**xide è un sottilissimo strato isolante sotto il gate, **S**emiconductor è il silicio sottostante. *Field-Effect* significa che a creare e a regolare la "strada" su cui scorrono i portatori è un **campo elettrico**, generato dal gate, e non una corrente iniettata.
+
+Poiché il gate è isolato dall'ossido, in continua la corrente di gate è praticamente nulla ($I_G \approx 0$). Inoltre la conduzione coinvolge **un solo tipo di portatore** (elettroni nell'NMOS, lacune nel PMOS): per questo il MOSFET è un dispositivo **unipolare**, a differenza del BJT. Queste due proprietà lo rendono il mattone dei circuiti digitali (tecnologia CMOS).
+
+## Struttura fisica e simboli
+
+Il MOSFET ha **quattro** terminali:
+- **Source (S, sorgente)**: regione fortemente drogata ($N^+$ nell'NMOS, $P^+$ nel PMOS) da cui partono i portatori che formano la corrente.
+- **Drain (D, pozzo)**: regione identica al source, che raccoglie i portatori.
+- **Gate (G, cancello)**: elettrodo di comando, separato dal silicio da uno strato di ossido (SiO$_2$ oppure materiali ad alta costante dielettrica) di spessore $t_{ox}$ di pochi nanometri.
+- **Body (B, substrato)**: il blocco di silicio in cui sono ricavati source e drain, drogato in modo opposto a questi ($P$ nell'NMOS, $N$ nel PMOS). Di solito è collegato al source.
+
+Tra source e drain, sotto il gate, c'è la zona in cui si formerà il canale. Le sue dimensioni sono i parametri geometrici che il progettista sceglie: la **lunghezza** $L$ (quanta strada devono fare i portatori) e la **larghezza** $W$ (quante "corsie" ha la strada, misurata perpendicolarmente al disegno). Conta il rapporto $W/L$.
+
+<svg viewBox="0 0 1000 740" width="100%" role="img" aria-labelledby="mos1-t mos1-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="mos1-t">Struttura fisica e simboli di un MOSFET NMOS e PMOS ad arricchimento</title>
+<desc id="mos1-d">Sezione trasversale e simbolo circuitale del MOSFET. In alto l'NMOS, con substrato P e due pozzetti N+ di source e drain separati da un canale lungo L, coperto da ossido e gate. In basso il PMOS, con tipi di drogaggio scambiati. La freccia sul simbolo va sempre dal materiale P al materiale N: nell'NMOS entra nel canale, nel PMOS esce.</desc>
+<defs>
+<marker id="xna" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7785"/></marker>
+<marker id="xpa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7785"/></marker>
+<marker id="symarr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+</defs>
+<text x="340" y="30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Struttura NMOS (ad arricchimento)</text>
+<g transform="translate(80, 44)">
+<rect x="0" y="76" width="520" height="160" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="30" y="76" width="140" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="350" y="76" width="140" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="160" y="64" width="200" height="12" fill="#cfd6de" stroke="#1f2933" stroke-width="1.5"/>
+<rect x="160" y="40" width="200" height="24" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<rect x="70" y="66" width="60" height="10" fill="#9aa5b1" stroke="#1f2933" stroke-width="1.5"/>
+<rect x="390" y="66" width="60" height="10" fill="#9aa5b1" stroke="#1f2933" stroke-width="1.5"/>
+<line x1="100" y1="66" x2="100" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="260" y1="40" x2="260" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="420" y1="66" x2="420" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="260" y1="236" x2="260" y2="268" stroke="#1f2933" stroke-width="3"/>
+<text x="100" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="260" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="420" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="260" y="290" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">B</text>
+<text x="260" y="57" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2933">Gate</text>
+<text x="144" y="36" font-size="12" font-weight="400" text-anchor="end" fill="#6b7785">ossido</text>
+<line x1="148" y1="38" x2="164" y2="70" stroke="#6b7785" stroke-width="1.2"/>
+<text x="100" y="112" font-size="20" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-8.0" font-size="14">+</tspan></text>
+<text x="420" y="112" font-size="20" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-8.0" font-size="14">+</tspan></text>
+<text x="260" y="210" font-size="15" font-weight="600" text-anchor="middle" fill="#d1342b">Substrato (body) P</text>
+<line x1="170" y1="100" x2="170" y2="166" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="350" y1="100" x2="350" y2="166" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="250" y1="160" x2="172" y2="160" stroke="#1f2933" stroke-width="2" marker-end="url(#xna)"/>
+<line x1="270" y1="160" x2="348" y2="160" stroke="#1f2933" stroke-width="2" marker-end="url(#xna)"/>
+<text x="260" y="165" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">L</text>
+<text x="0" y="262" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">W = larghezza del canale</text>
+<text x="0" y="278" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">(perpendicolare al disegno)</text>
+</g>
+<text x="830" y="30" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Simbolo NMOS</text>
+<g transform="translate(770, 90)">
+<line x1="26" y1="100" x2="0" y2="100" stroke="#1f2933" stroke-width="3"/>
+<line x1="26" y1="56" x2="26" y2="144" stroke="#1f2933" stroke-width="4"/>
+<line x1="40" y1="50" x2="40" y2="78" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="90" x2="40" y2="110" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="122" x2="40" y2="150" stroke="#1f2933" stroke-width="5"/>
+<polyline points="40,64 90,64 90,24" fill="none" stroke="#1f2933" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="40,136 90,136 90,176" fill="none" stroke="#1f2933" stroke-width="3" stroke-linejoin="round"/>
+<line x1="90" y1="100" x2="90" y2="136" stroke="#1f2933" stroke-width="3"/>
+<line x1="90" y1="100" x2="45" y2="100" stroke="#1f2933" stroke-width="3" marker-end="url(#symarr)"/>
+<text x="90" y="12" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="90" y="198" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="-6" y="106" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">G</text>
+</g>
+<line x1="40" y1="372" x2="960" y2="372" stroke="#d5dbe3" stroke-width="1.5"/>
+<text x="340" y="410" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Struttura PMOS (ad arricchimento)</text>
+<g transform="translate(80, 424)">
+<rect x="0" y="76" width="520" height="160" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="30" y="76" width="140" height="60" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="350" y="76" width="140" height="60" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="160" y="64" width="200" height="12" fill="#cfd6de" stroke="#1f2933" stroke-width="1.5"/>
+<rect x="160" y="40" width="200" height="24" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<rect x="70" y="66" width="60" height="10" fill="#9aa5b1" stroke="#1f2933" stroke-width="1.5"/>
+<rect x="390" y="66" width="60" height="10" fill="#9aa5b1" stroke="#1f2933" stroke-width="1.5"/>
+<line x1="100" y1="66" x2="100" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="260" y1="40" x2="260" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="420" y1="66" x2="420" y2="22" stroke="#1f2933" stroke-width="3"/>
+<line x1="260" y1="236" x2="260" y2="268" stroke="#1f2933" stroke-width="3"/>
+<text x="100" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="260" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="420" y="14" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="260" y="290" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">B</text>
+<text x="260" y="57" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2933">Gate</text>
+<text x="144" y="36" font-size="12" font-weight="400" text-anchor="end" fill="#6b7785">ossido</text>
+<line x1="148" y1="38" x2="164" y2="70" stroke="#6b7785" stroke-width="1.2"/>
+<text x="100" y="112" font-size="20" font-weight="700" text-anchor="middle" fill="#d1342b">P<tspan dy="-8.0" font-size="14">+</tspan></text>
+<text x="420" y="112" font-size="20" font-weight="700" text-anchor="middle" fill="#d1342b">P<tspan dy="-8.0" font-size="14">+</tspan></text>
+<text x="260" y="210" font-size="15" font-weight="600" text-anchor="middle" fill="#1d5fd1">Substrato (body) N</text>
+<line x1="170" y1="100" x2="170" y2="166" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="350" y1="100" x2="350" y2="166" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="250" y1="160" x2="172" y2="160" stroke="#1f2933" stroke-width="2" marker-end="url(#xpa)"/>
+<line x1="270" y1="160" x2="348" y2="160" stroke="#1f2933" stroke-width="2" marker-end="url(#xpa)"/>
+<text x="260" y="165" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">L</text>
+<text x="0" y="262" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">W = larghezza del canale</text>
+<text x="0" y="278" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">(perpendicolare al disegno)</text>
+</g>
+<text x="830" y="410" font-size="18" font-weight="600" text-anchor="middle" fill="#1f2933">Simbolo PMOS</text>
+<g transform="translate(770, 470)">
+<g transform="translate(0, 200) scale(1, -1)">
+<line x1="26" y1="100" x2="0" y2="100" stroke="#1f2933" stroke-width="3"/>
+<line x1="26" y1="56" x2="26" y2="144" stroke="#1f2933" stroke-width="4"/>
+<line x1="40" y1="50" x2="40" y2="78" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="90" x2="40" y2="110" stroke="#1f2933" stroke-width="5"/>
+<line x1="40" y1="122" x2="40" y2="150" stroke="#1f2933" stroke-width="5"/>
+<polyline points="40,64 90,64 90,24" fill="none" stroke="#1f2933" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="40,136 90,136 90,176" fill="none" stroke="#1f2933" stroke-width="3" stroke-linejoin="round"/>
+<line x1="90" y1="100" x2="90" y2="136" stroke="#1f2933" stroke-width="3"/>
+<line x1="40" y1="100" x2="90" y2="100" stroke="#1f2933" stroke-width="3" marker-end="url(#symarr)"/>
+</g>
+<text x="90" y="12" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="90" y="198" font-size="16" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="-6" y="106" font-size="16" font-weight="600" text-anchor="end" fill="#1f2933">G</text>
+</g>
+</svg>
+
+Come nel BJT esistono due versioni complementari: **NMOS** (canale di elettroni) e **PMOS** (canale di lacune). A differenza del BJT, source e drain sono **fisicamente simmetrici**: a decidere quale sia l'uno e quale l'altro sono le tensioni. In un NMOS il source è il terminale a potenziale più basso (da lì partono gli elettroni), in un PMOS è quello a potenziale più alto (da lì partono le lacune).
+
+> **Nota:** La freccia sul simbolo va sempre dal materiale P verso il materiale N, come nel BJT. Qui collega il body al canale: nell'NMOS (body $P$, canale $N$) punta verso il canale, nel PMOS (body $N$, canale $P$) punta in verso opposto. Il simbolo disegnato ha il body collegato al source, e d'ora in poi supporremo $V_{SB} = 0$.
+
+Studiamo il MOSFET **ad arricchimento** (*enhancement*): senza tensione sul gate il canale non esiste e il dispositivo è spento; lo si "arricchisce" di portatori applicando $V_{GS}$. Esistono anche MOSFET ad impoverimento, con canale già presente, ma sono molto meno usati.
+
+## Principio di funzionamento (NMOS ad arricchimento)
+
+Con il gate a zero e una tensione $V_{DS} > 0$ tra drain e source non passa corrente. Andando da S a D si incontra infatti $N^+$ – $P$ – $N^+$, cioè **due giunzioni PN contrapposte** (due diodi schiena contro schiena): una delle due è sempre polarizzata inversamente e blocca il passaggio. Il compito del gate è convincere la zona $P$ centrale a comportarsi, per un attimo, come se fosse $N$.
+
+Ci riesce perché gate, ossido e silicio formano un **condensatore** (la "struttura MOS"): il gate è un'armatura, il silicio l'altra, l'ossido il dielettrico. Se carichi positivamente il gate, sull'altra armatura devono comparire cariche negative.
+
+<svg viewBox="0 0 1040 480" width="100%" role="img" aria-labelledby="mos2-t mos2-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="mos2-t">Formazione del canale in un NMOS al crescere di V_GS</title>
+<desc id="mos2-d">Tre pannelli. A V_GS uguale a zero sotto l'ossido ci sono solo lacune e non passa corrente. Con V_GS positiva ma minore di V_TH il gate respinge le lacune e crea una zona di svuotamento priva di elettroni liberi. Con V_GS maggiore di V_TH compare uno strato di inversione di elettroni che collega source e drain.</desc>
+<defs>
+<g id="mos2-el"><circle r="7" fill="#1d5fd1"/><line x1="-3.6" y1="0" x2="3.6" y2="0" stroke="#ffffff" stroke-width="2"/></g><g id="mos2-ho"><circle r="7" fill="#d1342b"/><line x1="-3.6" y1="0" x2="3.6" y2="0" stroke="#ffffff" stroke-width="2"/><line x1="0" y1="-3.6" x2="0" y2="3.6" stroke="#ffffff" stroke-width="2"/></g><g id="mos2-io"><rect x="-6" y="-6" width="12" height="12" rx="2" fill="#fff6d6" stroke="#b45309" stroke-width="1.4"/><line x1="-3" y1="0" x2="3" y2="0" stroke="#b45309" stroke-width="1.8"/></g>
+</defs>
+<g transform="translate(30, 54)">
+<text x="150" y="-26" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2933">① Interdizione (V<tspan dy="4.5" font-size="11">GS</tspan><tspan dy="-4.5"> = 0)</tspan></text>
+<rect x="0" y="68" width="300" height="170" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="0" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="230" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="60" y="60" width="180" height="8" fill="#cfd6de" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="60" y="40" width="180" height="20" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<line x1="35" y1="68" x2="35" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="150" y1="40" x2="150" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="265" y1="68" x2="265" y2="26" stroke="#1f2933" stroke-width="3"/>
+<text x="35" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="150" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="265" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="35" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="265" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<use href="#mos2-el" x="15" y="84"/>
+<use href="#mos2-el" x="52" y="84"/>
+<use href="#mos2-el" x="248" y="84"/>
+<use href="#mos2-el" x="285" y="84"/>
+<use href="#mos2-ho" x="35" y="150"/>
+<use href="#mos2-ho" x="100" y="105"/>
+<use href="#mos2-ho" x="150" y="148"/>
+<use href="#mos2-ho" x="205" y="110"/>
+<use href="#mos2-ho" x="265" y="150"/>
+<use href="#mos2-ho" x="80" y="195"/>
+<use href="#mos2-ho" x="130" y="205"/>
+<use href="#mos2-ho" x="190" y="190"/>
+<use href="#mos2-ho" x="235" y="210"/>
+<use href="#mos2-ho" x="50" y="215"/>
+<text x="150" y="266" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">Sotto l'ossido ci sono solo lacune.</text>
+<text x="150" y="283" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">Source e drain sono separati da due</text>
+<text x="150" y="300" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">giunzioni PN contrapposte: I<tspan dy="3.9" font-size="9">D</tspan><tspan dy="-3.9"> ≈ 0.</tspan></text>
+</g>
+<g transform="translate(370, 54)">
+<text x="150" y="-26" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2933">② Svuotamento (0 &lt; V<tspan dy="4.5" font-size="11">GS</tspan><tspan dy="-4.5"> &lt; V</tspan><tspan dy="4.5" font-size="11">TH</tspan><tspan dy="-4.5">)</tspan></text>
+<rect x="0" y="68" width="300" height="170" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="0" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="230" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="70" y="68" width="160" height="50" fill="#ffe08a" opacity="0.85"/>
+<rect x="70" y="68" width="160" height="50" fill="none" stroke="#b45309" stroke-width="1" stroke-dasharray="4 3"/>
+<rect x="60" y="60" width="180" height="8" fill="#cfd6de" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="60" y="40" width="180" height="20" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<line x1="35" y1="68" x2="35" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="150" y1="40" x2="150" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="265" y1="68" x2="265" y2="26" stroke="#1f2933" stroke-width="3"/>
+<text x="35" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="150" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="265" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="35" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="265" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<use href="#mos2-el" x="15" y="84"/>
+<use href="#mos2-el" x="52" y="84"/>
+<use href="#mos2-el" x="248" y="84"/>
+<use href="#mos2-el" x="285" y="84"/>
+<text x="95" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="150" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="205" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<use href="#mos2-ho" x="35" y="150"/>
+<use href="#mos2-ho" x="100" y="150"/>
+<use href="#mos2-ho" x="150" y="170"/>
+<use href="#mos2-ho" x="205" y="148"/>
+<use href="#mos2-ho" x="265" y="150"/>
+<use href="#mos2-ho" x="80" y="205"/>
+<use href="#mos2-ho" x="140" y="208"/>
+<use href="#mos2-ho" x="195" y="200"/>
+<use href="#mos2-ho" x="235" y="215"/>
+<use href="#mos2-ho" x="50" y="215"/>
+<use href="#mos2-io" x="92" y="82"/>
+<use href="#mos2-io" x="126" y="90"/>
+<use href="#mos2-io" x="160" y="82"/>
+<use href="#mos2-io" x="194" y="90"/>
+<use href="#mos2-io" x="216" y="82"/>
+<use href="#mos2-io" x="110" y="107"/>
+<use href="#mos2-io" x="146" y="108"/>
+<use href="#mos2-io" x="180" y="106"/>
+<text x="150" y="266" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">Il gate (+) respinge le lacune e scopre</text>
+<text x="150" y="283" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">gli ioni accettori fissi: nasce la zona</text>
+<text x="150" y="300" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">di svuotamento, ma senza elettroni</text>
+<text x="150" y="317" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">liberi. Ancora I<tspan dy="3.9" font-size="9">D</tspan><tspan dy="-3.9"> ≈ 0.</tspan></text>
+</g>
+<g transform="translate(710, 54)">
+<text x="150" y="-26" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2933">③ Inversione (V<tspan dy="4.5" font-size="11">GS</tspan><tspan dy="-4.5"> &gt; V</tspan><tspan dy="4.5" font-size="11">TH</tspan><tspan dy="-4.5">)</tspan></text>
+<rect x="0" y="68" width="300" height="170" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="0" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="230" y="68" width="70" height="56" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="70" y="68" width="160" height="50" fill="#ffe08a" opacity="0.85"/>
+<rect x="70" y="68" width="160" height="50" fill="none" stroke="#b45309" stroke-width="1" stroke-dasharray="4 3"/>
+<rect x="70" y="68" width="160" height="17" fill="#b9d3f7"/>
+<rect x="60" y="60" width="180" height="8" fill="#cfd6de" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="60" y="40" width="180" height="20" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<line x1="35" y1="68" x2="35" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="150" y1="40" x2="150" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="265" y1="68" x2="265" y2="26" stroke="#1f2933" stroke-width="3"/>
+<text x="35" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="150" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="265" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="35" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="265" y="110" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<use href="#mos2-el" x="15" y="84"/>
+<use href="#mos2-el" x="52" y="84"/>
+<use href="#mos2-el" x="248" y="84"/>
+<use href="#mos2-el" x="285" y="84"/>
+<text x="80" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="110" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="140" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="170" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="200" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<text x="225" y="57" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">+</text>
+<use href="#mos2-ho" x="35" y="150"/>
+<use href="#mos2-ho" x="100" y="165"/>
+<use href="#mos2-ho" x="150" y="185"/>
+<use href="#mos2-ho" x="205" y="163"/>
+<use href="#mos2-ho" x="265" y="150"/>
+<use href="#mos2-ho" x="80" y="210"/>
+<use href="#mos2-ho" x="140" y="215"/>
+<use href="#mos2-ho" x="195" y="205"/>
+<use href="#mos2-ho" x="235" y="218"/>
+<use href="#mos2-ho" x="50" y="218"/>
+<use href="#mos2-io" x="95" y="102"/>
+<use href="#mos2-io" x="130" y="108"/>
+<use href="#mos2-io" x="165" y="100"/>
+<use href="#mos2-io" x="200" y="108"/>
+<use href="#mos2-el" x="86" y="77"/>
+<use href="#mos2-el" x="111" y="77"/>
+<use href="#mos2-el" x="136" y="77"/>
+<use href="#mos2-el" x="161" y="77"/>
+<use href="#mos2-el" x="186" y="77"/>
+<use href="#mos2-el" x="211" y="77"/>
+<text x="150" y="266" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">Il campo è così intenso da attirare</text>
+<text x="150" y="283" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">elettroni dalle zone N<tspan dy="-5.2" font-size="9">+</tspan><tspan dy="5.2">: sotto l'ossido</tspan></text>
+<text x="150" y="300" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">si forma lo strato di inversione, un</text>
+<text x="150" y="317" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">canale N che collega source e drain.</text>
+</g>
+<use href="#mos2-el" x="70" y="452"/>
+<text x="84" y="457" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">elettrone</text>
+<use href="#mos2-ho" x="190" y="452"/>
+<text x="204" y="457" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">lacuna</text>
+<use href="#mos2-io" x="300" y="452"/>
+<text x="314" y="457" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">ione accettore fisso (carica −)</text>
+<rect x="530" y="444" width="20" height="16" fill="#ffe08a" stroke="#b45309" stroke-width="1"/>
+<text x="558" y="457" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">zona di svuotamento</text>
+<rect x="715" y="444" width="20" height="16" fill="#b9d3f7" stroke="#1d5fd1" stroke-width="1"/>
+<text x="743" y="457" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">canale (strato di inversione)</text>
+</svg>
+
+### Meccanismo fisico passo-passo
+1. **$V_{GS} = 0$, interdizione**: sotto l'ossido ci sono solo lacune, i portatori maggioritari del substrato. Nessun canale, nessuna corrente.
+2. **$0 < V_{GS} < V_{TH}$, svuotamento**: il gate positivo respinge le lacune lontano dalla superficie. Restano scoperti gli atomi droganti (ioni accettori fissi, carica negativa) che bilanciano la carica del gate. Si forma una **zona di svuotamento**, priva di portatori liberi e quindi ancora isolante.
+3. **$V_{GS} > V_{TH}$, inversione**: la zona di svuotamento ha raggiunto la sua larghezza massima e non può "coprire" altra carica del gate. Il campo comincia allora ad attirare **elettroni**, che arrivano in abbondanza dalle regioni $N^+$ di source e drain. Sotto l'ossido si forma un sottile strato (pochi nanometri) in cui gli elettroni superano le lacune: la zona è stata "invertita" da $P$ a $N$. Questo strato è il **canale**.<br />
+
+$\rightarrow V_{GS} > V_{TH}\quad \text{e}\quad V_{DS} > 0$: il campo elettrico tra drain e source spinge gli elettroni del canale verso il drain (**deriva**) e nasce la corrente $I_D$. Il gate non fa scorrere la corrente: decide **quanti elettroni** ci sono nel canale. È un rubinetto che regola l'ampiezza del tubo, non la pompa che spinge l'acqua.
+
+### Tensione di soglia ($V_{TH}$)
+La **tensione di soglia** è il valore di $V_{GS}$ oltre il quale si forma il canale. Valori tipici: $V_{TH} \approx 0{,}3\text{–}1\text{ V}$.
+
+<details style="margin: 1.5rem 0; padding: 0.8rem 1.2rem; background: var(--fa-surface, #f8f7f3); border: 1px solid var(--fa-border, #dedbd4); border-radius: 8px;">
+  <summary style="cursor: pointer; font-weight: 600; color: #252525;">
+    Approfondimento sulla fisica di $V_{TH}$
+  </summary>
+
+  <div style="margin-top: 1rem;">
+    Fisicamente corrisponde al momento in cui, alla superficie del silicio, gli elettroni diventano tanti quanti le lacune erano nel substrato, cioè quando il potenziale superficiale raggiunge $2\phi_F$:
+
+    $$
+    \phi_F = V_T \ln\left(\frac{N_A}{n_i}\right), \qquad
+    V_{TH} = V_{FB} + 2\phi_F + \frac{\sqrt{2\, q\, \varepsilon_{Si}\, N_A \,(2\phi_F)}}{C_{ox}}, \qquad C_{ox} = \frac{\varepsilon_{ox}}{t_{ox}}
+    $$
+
+    In parole povere, $V_{TH}$ è la somma di tre "costi" da pagare con la tensione di gate:
+    - $V_{FB}$ (tensione di bande piatte): compensa le imperfezioni del sistema reale, come la differenza tra i materiali di gate e silicio e le cariche intrappolate nell'ossido.
+    - $2\phi_F$: la tensione necessaria a portare la superficie da "tipo $P$" a "tipo $N$".
+    - Il termine con la radice: la tensione necessaria a **scoprire gli ioni accettori** della zona di svuotamento, divisa per la capacità dell'ossido $C_{ox}$ (carica = capacità $\times$ tensione).
+
+    Un esempio: con $N_A = 10^{17}\text{ cm}^{-3}$ e $n_i \approx 1{,}5 \cdot 10^{10}\text{ cm}^{-3}$ a $300\text{ K}$ si ha $\phi_F = 25{,}9\text{ mV} \cdot \ln(6{,}7 \cdot 10^6) \approx 0{,}41\text{ V}$, quindi $2\phi_F \approx 0{,}81\text{ V}$. Un ossido sottile ($C_{ox}$ maggiore) e un drogaggio più basso (meno ioni da scoprire) abbassano la soglia.
+
+    Se il body non è collegato al source ($V_{SB} > 0$), il campo tra source e substrato allarga la zona di svuotamento e occorre più tensione per invertire il canale: la soglia aumenta (**effetto body**). La formula di solito usata per la $V_{TH}$ è la seguente:
+
+    $$
+    V_{TH} = V_{TH_0} + \gamma\left(\sqrt{2\phi_F + V_{SB}} - \sqrt{2\phi_F}\right), \qquad \gamma = \frac{\sqrt{2\, q\, \varepsilon_{Si}\, N_A}}{C_{ox}}
+    $$
+    
+    dove $V_{TH_0}$ è la tensione di soglia quando $V_{SB} = 0$, e vale $V_{TH_0} = V_{FB} + 2\phi_F + \gamma \sqrt{2\phi_F}$ (è uguale alla prima formula in questo riquadro).
+    </div>
+</details>
+
+## Lineare e saturazione: cosa succede lungo il canale
+
+Una volta formato il canale ($V_{GS} > V_{TH}$) applichiamo una $V_{DS} > 0$. Il canale però non è un tubo uniforme, perché **il suo potenziale cambia da punto a punto**: vale $0$ al source e cresce fino a $V_{DS}$ al drain. La tensione che il gate "vede" tra sé e il canale in un punto $x$ è quindi $V_{GS} - V(x)$: massima al source (dove vale $V_{GS}$), minima al drain (dove vale $V_{GS} - V_{DS} = V_{GD}$). Dove questa tensione è alta il canale è ricco di elettroni, dove si avvicina a $V_{TH}$ si assottiglia.
+
+<svg viewBox="0 0 1000 460" width="100%" role="img" aria-labelledby="mos3-t mos3-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="mos3-t">Canale in regione di triodo e in saturazione (pinch-off)</title>
+<desc id="mos3-d">Nel triodo il canale di elettroni collega source e drain senza interruzioni. In saturazione il canale si riduce a zero in un punto vicino al drain, il punto di strozzamento; nella zona tra questo punto e il drain il forte campo elettrico accelera gli elettroni verso il drain. La lunghezza effettiva del canale diventa L meno DeltaL.</desc>
+<defs>
+<g id="mos3-el"><circle r="7" fill="#1d5fd1"/><line x1="-3.6" y1="0" x2="3.6" y2="0" stroke="#ffffff" stroke-width="2"/></g><g id="mos3-ho"><circle r="7" fill="#d1342b"/><line x1="-3.6" y1="0" x2="3.6" y2="0" stroke="#ffffff" stroke-width="2"/><line x1="0" y1="-3.6" x2="0" y2="3.6" stroke="#ffffff" stroke-width="2"/></g><g id="mos3-io"><rect x="-6" y="-6" width="12" height="12" rx="2" fill="#fff6d6" stroke="#b45309" stroke-width="1.4"/><line x1="-3" y1="0" x2="3" y2="0" stroke="#b45309" stroke-width="1.8"/></g>
+<marker id="m3e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d5fd1"/></marker>
+<marker id="m3f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+<marker id="m3d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+</defs>
+<g transform="translate(10, 56)">
+<text x="240" y="-28" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">Lineare (triodo)</text>
+<rect x="0" y="68" width="480" height="170" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="0" y="68" width="120" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="360" y="68" width="120" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<polygon points="120,84 360,77 360,118 120,118" fill="#ffe08a" opacity="0.55"/>
+<polygon points="120,68 360,68 360,77 120,84" fill="#b9d3f7" stroke="#1d5fd1" stroke-width="1" stroke-linejoin="round"/>
+<rect x="110" y="60" width="260" height="8" fill="#cfd6de" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="110" y="40" width="260" height="20" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<line x1="60" y1="68" x2="60" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="240" y1="40" x2="240" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="420" y1="68" x2="420" y2="26" stroke="#1f2933" stroke-width="3"/>
+<text x="60" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="240" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="420" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="60" y="112" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="420" y="112" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="150" y="54" font-size="14" font-weight="700" text-anchor="start" fill="#ffffff">+  +  +  +  +  +  +</text>
+<polygon points="413,40 427,40 420,54" fill="#1f2933"/>
+<polygon points="53,36 67,36 60,22" fill="#1f2933"/>
+<text x="438" y="46" font-size="14" font-weight="700" text-anchor="start" fill="#1f2933">I<tspan dy="4.2" font-size="10">D</tspan></text>
+<text x="76" y="34" font-size="14" font-weight="700" text-anchor="start" fill="#1f2933">I<tspan dy="4.2" font-size="10">D</tspan></text>
+<line x1="130" y1="74" x2="352" y2="74" stroke="#1d5fd1" stroke-width="2.5" marker-end="url(#m3e)"/>
+<use href="#mos3-el" x="150" y="74"/>
+<use href="#mos3-el" x="195" y="74"/>
+<use href="#mos3-el" x="240" y="74"/>
+<use href="#mos3-el" x="285" y="74"/>
+<use href="#mos3-el" x="330" y="74"/>
+<use href="#mos3-el" x="30" y="84"/>
+<use href="#mos3-el" x="90" y="84"/>
+<use href="#mos3-el" x="390" y="84"/>
+<use href="#mos3-el" x="450" y="84"/>
+<line x1="120" y1="138" x2="120" y2="176" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="360" y1="138" x2="360" y2="176" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="234" y1="170" x2="122" y2="170" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<line x1="244" y1="170" x2="358" y2="170" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<text x="240" y="175" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">L</text>
+<text x="240" y="205" font-size="13" font-weight="600" text-anchor="middle" fill="#1d5fd1">canale continuo da source a drain</text>
+<text x="240" y="268" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> &gt; V</tspan><tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9"> e V</tspan><tspan dy="3.9" font-size="9">DS</tspan><tspan dy="-3.9"> piccola (V</tspan><tspan dy="3.9" font-size="9">DS</tspan><tspan dy="-3.9"> &lt; V</tspan><tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> − V</tspan><tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9">):</tspan></text>
+<text x="240" y="285" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">il canale è continuo, appena più sottile verso il drain.</text>
+<text x="240" y="302" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">Si comporta come un resistore: più V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9">, più elettroni,</tspan></text>
+<text x="240" y="319" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">meno resistenza.</text>
+</g>
+<g transform="translate(510, 56)">
+<text x="240" y="-28" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2933">Saturazione</text>
+<rect x="0" y="68" width="480" height="170" fill="#fdeceb" stroke="#1f2933" stroke-width="2"/>
+<rect x="0" y="68" width="120" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<rect x="360" y="68" width="120" height="60" fill="#e7f0fd" stroke="#1f2933" stroke-width="2"/>
+<polygon points="120,84 307,68 307,118 120,118" fill="#ffe08a" opacity="0.55"/>
+<rect x="307" y="68" width="52" height="60" fill="#ffe08a" opacity="0.95"/>
+<rect x="307" y="68" width="52" height="60" fill="none" stroke="#b45309" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="120,68 307,68 120,84" fill="#b9d3f7" stroke="#1d5fd1" stroke-width="1" stroke-linejoin="round"/>
+<rect x="110" y="60" width="260" height="8" fill="#cfd6de" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="110" y="40" width="260" height="20" fill="#9aa5b1" stroke="#1f2933" stroke-width="2"/>
+<line x1="60" y1="68" x2="60" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="240" y1="40" x2="240" y2="26" stroke="#1f2933" stroke-width="3"/>
+<line x1="420" y1="68" x2="420" y2="26" stroke="#1f2933" stroke-width="3"/>
+<text x="60" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">S</text>
+<text x="240" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">G</text>
+<text x="420" y="16" font-size="15" font-weight="600" text-anchor="middle" fill="#1f2933">D</text>
+<text x="60" y="112" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="420" y="112" font-size="17" font-weight="700" text-anchor="middle" fill="#1d5fd1">N<tspan dy="-6.8" font-size="12">+</tspan></text>
+<text x="150" y="54" font-size="14" font-weight="700" text-anchor="start" fill="#ffffff">+  +  +  +  +  +  +</text>
+<polygon points="413,40 427,40 420,54" fill="#1f2933"/>
+<polygon points="53,36 67,36 60,22" fill="#1f2933"/>
+<text x="438" y="46" font-size="14" font-weight="700" text-anchor="start" fill="#1f2933">I<tspan dy="4.2" font-size="10">D</tspan></text>
+<text x="76" y="34" font-size="14" font-weight="700" text-anchor="start" fill="#1f2933">I<tspan dy="4.2" font-size="10">D</tspan></text>
+<polyline points="130,74 260,72 307,69 345,75 400,78 452,78" fill="none" stroke="#1d5fd1" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#m3e)"/>
+<use href="#mos3-el" x="150" y="74"/>
+<use href="#mos3-el" x="195" y="74"/>
+<use href="#mos3-el" x="240" y="74"/>
+<use href="#mos3-el" x="344" y="76"/>
+<use href="#mos3-el" x="380" y="76"/>
+<use href="#mos3-el" x="430" y="76"/>
+<use href="#mos3-el" x="30" y="84"/>
+<use href="#mos3-el" x="90" y="84"/>
+<use href="#mos3-el" x="395" y="100"/>
+<use href="#mos3-el" x="450" y="100"/>
+<line x1="355" y1="100" x2="313" y2="100" stroke="#b45309" stroke-width="3.5" marker-end="url(#m3f)"/>
+<line x1="355" y1="118" x2="313" y2="118" stroke="#b45309" stroke-width="3.5" marker-end="url(#m3f)"/>
+<text x="311" y="92" font-size="15" font-weight="700" text-anchor="start" fill="#b45309" font-style="italic">E</text>
+<line x1="307" y1="72" x2="307" y2="138" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="370" y="150" font-size="12" font-weight="600" text-anchor="end" fill="#1f2933">punto di strozzamento</text>
+<text x="335" y="165" font-size="12" font-weight="400" text-anchor="end" fill="#6b7785">(pinch-off)</text>
+<line x1="120" y1="176" x2="120" y2="198" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="307" y1="176" x2="307" y2="198" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="360" y1="176" x2="360" y2="198" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="303" y1="192" x2="122" y2="192" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<line x1="232" y1="192" x2="303" y2="192" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<line x1="311" y1="192" x2="358" y2="192" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<line x1="332" y1="192" x2="311" y2="192" stroke="#1f2933" stroke-width="2" marker-end="url(#m3d)"/>
+<text x="213" y="187" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2933">L' = L − ΔL</text>
+<text x="333" y="187" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2933">ΔL</text>
+<text x="240" y="218" font-size="13" font-weight="600" text-anchor="middle" fill="#1d5fd1">canale strozzato vicino al drain</text>
+<text x="240" y="268" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">V<tspan dy="3.9" font-size="9">DS</tspan><tspan dy="-3.9"> ≥ V</tspan><tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> − V</tspan><tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9">: vicino al drain la tensione tra gate e</tspan></text>
+<text x="240" y="285" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">canale scende sotto V<tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9"> e il canale si "strozza". Gli elettroni</tspan></text>
+<text x="240" y="302" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2933">arrivano all'estremità del canale e "saltano" fino al drain.</text>
+</g>
+<use href="#mos3-el" x="40" y="436"/>
+<text x="54" y="441" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">elettrone</text>
+<line x1="150" y1="436" x2="190" y2="436" stroke="#b45309" stroke-width="3.5" marker-end="url(#m3f)"/>
+<text x="198" y="441" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">campo elettrico E</text>
+<rect x="335" y="428" width="20" height="16" fill="#ffe08a" stroke="#b45309" stroke-width="1"/>
+<text x="363" y="441" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">zona di svuotamento</text>
+<rect x="520" y="428" width="20" height="16" fill="#b9d3f7" stroke="#1d5fd1" stroke-width="1"/>
+<text x="548" y="441" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">canale di elettroni</text>
+<polygon points="724,429 738,429 731,443" fill="#1f2933"/>
+<text x="746" y="441" font-size="13" font-weight="400" text-anchor="start" fill="#1f2933">corrente convenzionale I<tspan dy="3.9" font-size="9">D</tspan></text>
+</svg>
+
+- **Lineare (triodo)**: finché $V_{GD} > V_{TH}$ il canale è presente lungo tutta la sua lunghezza, solo un po' più sottile verso il drain. Il dispositivo si comporta come un **resistore** la cui resistenza è regolata da $V_{GS}$.
+- **Saturazione**: quando $V_{GD} \le V_{TH}$ e vicino al drain il canale **si strozza** (*pinch-off*). Il canale non sparisce del tutto né la corrente si ferma: gli elettroni arrivano all'estremità del canale e trovano una zona di svuotamento con un **forte campo elettrico**, che li accelera e li lancia nel drain. È lo stesso meccanismo del collettore del BJT: ai portatori basta arrivare al bordo, poi ci pensa il campo.
+
+> Sì, purtroppo la saturazione del MOSFET e quella del BJT indicano due zone diverse ☹ (regioni di funzionamento spiegate meglio sotto).
+## Modello quantitativo e relazioni tra le correnti
+
+Poiché $I_G = 0$ e la corrente di body è trascurabile, tutta la corrente che entra dal drain esce dal source:
+
+$$
+I_S = I_D, \qquad I_G \approx 0
+$$
+
+### Carica del canale
+Il canale si comporta come l'armatura di un condensatore: la carica per unità di area è capacità per tensione, $Q = C V$. Con $V_{DS} \approx 0$ si ha
+
+$$
+Q'_n = -C_{ox}\,(V_{GS} - V_{TH}) = -C_{ox}\, V_{OV}
+$$
+
+dove $V_{OV} = V_{GS} - V_{TH}$ è la **tensione di overdrive** (di quanto il gate supera la soglia). Ogni volt in più oltre la soglia aggiunge una quantità fissa di elettroni. Con $V_{DS} > 0$ la carica diminuisce verso il drain: $Q'_n(x) = -C_{ox}\,[V_{GS} - V(x) - V_{TH}]$.
+
+### Corrente in lineare
+Gli elettroni si muovono per **deriva** (cioè trascinati dal campo elettrico) con velocità $v = \mu_n E$, dove $\mu_n$ è la **mobilità** e $E(x) = \frac{dV}{dx}$ è il campo lungo il canale. La corrente è carica per unità di area, per larghezza, per velocità:
+
+$$
+I_D = W \cdot |Q'_n(x)| \cdot \mu_n \frac{dV}{dx} \implies I_D\, dx = \mu_n C_{ox} W \,[V_{GS} - V_{TH} - V]\, dV
+$$
+
+La corrente è la stessa in ogni sezione del canale (non si accumula carica), quindi si può integrare da $x = 0$ (dove $V = 0$) a $x = L$ (dove $V = V_{DS}$):
+
+$$
+\boxed{I_{D_{lin}} = \mu_n C_{ox} \frac{W}{L} \left[ (V_{GS} - V_{TH})\, V_{DS} - \frac{V_{DS}^2}{2} \right]}
+$$
+
+Si definiscono il **parametro di transconduttanza di processo** $k_n' = \mu_n C_{ox}$ (tipicamente $100\text{–}400\ \mu\text{A/V}^2$) e il **fattore di guadagno del dispositivo** $k_n = k_n' \frac{W}{L}$, misurato in $\text{A/V}^2$. Per $V_{DS}$ piccola il termine quadratico è trascurabile e il MOSFET è un resistore controllato in tensione, che richiama il nome *transfer resistor*:
+
+$$
+I_{D_{lin}} \approx k_n\, V_{OV}\, V_{DS} \implies R_{on} = \frac{V_{DS}}{I_D} = \frac{1}{k_n\, (V_{GS} - V_{TH})}
+$$
+
+### Corrente in saturazione
+La formula in lineare è una parabola in $V_{DS}$ con il massimo in $V_{DS} = V_{OV}$ (la derivata si annulla). Oltre quel punto il canale è strozzato e la corrente non cresce più: basta sostituire $V_{DS} = V_{OV}$.
+
+$$
+\boxed{I_{D_{sat}} = \frac{1}{2}\, \mu_n C_{ox} \frac{W}{L}\, (V_{GS} - V_{TH})^2 = \frac{1}{2}\, k_n\, V_{OV}^2}
+$$
+
+Notare che le formule confermano la perdita di dipendenza da $V_{DS}$. A differenza del BJT, dove $I_C$ dipende in modo esponenziale da $V_{BE}$, nel MOSFET la corrente cresce con il **quadrato** della tensione di overdrive.
+
+## Regioni di funzionamento del MOSFET
+
+Il modo più semplice di classificare le regioni è chiedersi se il canale esiste alle sue due estremità, quella del source (dove il gate vede $V_{GS}$) e quella del drain (dove vede $V_{GD}$). Le regioni sono **tre**: la quarta del BJT (attiva inversa) qui non esiste, perché source e drain sono simmetrici e scambiarli è solo questione di nomi (ma **dipende** dai dispositivi, per esempio nei MOSFET di potenza, ossia quelli che si usano in laboratorio, source e drain non sono interscambiabili).
+
+| <span style={{ display: 'inline-block', minWidth: '180px', verticalAlign: 'middle', color: '#252525' }}>Regione di funzionamento</span> | <span style={{ display: 'inline-block', minWidth: '160px', verticalAlign: 'middle', color: '#252525' }}>Canale lato source</span> | <span style={{ display: 'inline-block', minWidth: '234px', verticalAlign: 'middle', color: '#252525' }}>Canale lato drain</span> | <span style={{ display: 'inline-block', verticalAlign: 'middle', color: '#252525' }}>Descrizione e applicazione</span> |
+| :--- | :--- | :--- | :--- |
+| **Interdizione (Cut-off)** | Assente <br />($V_{GS} < V_{TH}$) | Assente <br />($V_{GD} < V_{TH}$) | $I_D \approx 0$. Il MOSFET equivale ad un **interruttore aperto**. |
+| **Lineare (triodo)** | Presente <br />($V_{GS} > V_{TH}$) | Presente <br />($V_{GD} > V_{TH}$, cioè $V_{DS} < V_{OV}$) | $I_D = k_n\left[V_{OV}\, V_{DS} - \frac{V_{DS}^2}{2}\right]$. Per $V_{DS}$ piccola è un resistore $R_{on}$ comandato da $V_{GS}$: **interruttore chiuso**. |
+| **Saturazione** | Presente <br />($V_{GS} > V_{TH}$) | Strozzato <br />($V_{GD} < V_{TH}$, cioè $V_{DS} \ge V_{OV}$) | $I_D = \frac{1}{2}\, k_n V_{OV}^2$. Usata per l'**amplificazione di segnale**. |
+> **Attenzione ai nomi:** la "saturazione" del MOSFET corrisponde alla **regione attiva diretta** del BJT, cioè la zona di amplificazione in cui la corrente non dipende dalla tensione d'uscita. La **lineare** del MOSFET assomiglia invece alla "saturazione" del BJT, ossia all'interruttore chiuso.
+
+<details style="margin: 1.5rem 0; padding: 0.8rem 1.2rem; background: var(--fa-surface, #f8f7f3); border: 1px solid var(--fa-border, #dedbd4); border-radius: 8px;">
+  <summary style="cursor: pointer; font-weight: 600; color: #252525;">
+    Perchè $V_{GD} > V_{TH} \implies V_{DS} < V_{OV}$?
+  </summary>
+    $$
+    V_{GD} > V_{TH}    
+    $$
+    espandendo $V_{GD}$ e sommando e sottraendo $V_S$ a sinistra:
+    $$
+    \textcolor{blue}{V_G} - \textcolor{red}{V_D} + \textcolor{red}{V_S} - \textcolor{blue}{V_S} > V_{TH} \implies \textcolor{blue}{V_{GS}} + \textcolor{red}{V_{SD}} > V_{TH}
+    $$
+    portando a destra $V_GS$ e cambiando i segni si ottiene:
+    $$
+    V_{DS} < V_{GS} - V_{TH}
+    $$
+    (ricordando che $V_{OV} = V_{GS} - V_{TH}$)
+  <div style="margin-top: 1rem;">
+  </div>
+</details>
+
+### Caratteristiche di uscita $I_D - V_{DS}$
+
+Le caratteristiche di uscita descrivono l'andamento della corrente di drain $I_D$ al variare della tensione tra drain e source $V_{DS}$, per diversi valori fissati della tensione di gate $V_{GS}$. Il grafico è calcolato con le formule del modello appena ricavato.
+
+<svg viewBox="0 0 1000 535" width="100%" role="img" aria-labelledby="mos4-t mos4-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="mos4-t">Caratteristiche di uscita I_D - V_DS di un NMOS</title>
+<desc id="mos4-d">Curve della corrente di drain in funzione di V_DS per quattro valori di V_GS maggiori di V_TH. A sinistra della parabola tratteggiata V_DS uguale a V_GS meno V_TH si ha la regione di triodo, con curve che partono dall'origine come un resistore; a destra la saturazione, con corrente quasi costante e lieve pendenza dovuta alla modulazione della lunghezza di canale. Le curve non sono equispaziate perche la corrente cresce con il quadrato di V_GS meno V_TH. Per V_GS minore di V_TH la corrente e nulla.</desc>
+<defs>
+<marker id="f4ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+</defs>
+<polygon points="100,440 100.0,440.0 107.6,439.9 115.2,439.7 122.8,439.4 130.4,438.9 138.0,438.3 145.6,437.5 153.2,436.6 160.8,435.6 168.4,434.4 176.0,433.1 183.6,431.7 191.2,430.0 198.8,428.3 206.4,426.4 214.0,424.4 221.6,422.2 229.2,419.8 236.8,417.3 244.4,414.7 252.0,411.9 259.6,409.0 267.2,405.9 274.8,402.6 282.4,399.3 290.0,395.7 297.6,392.0 305.2,388.1 312.8,384.1 320.4,379.9 328.0,375.6 335.6,371.1 343.2,366.5 350.8,361.6 358.4,356.7 366.0,351.5 373.6,346.2 381.2,340.8 388.8,335.1 396.4,329.3 404.0,323.4 411.6,317.2 419.2,310.9 426.8,304.5 434.4,297.8 442.0,291.0 449.6,284.0 457.2,276.9 464.8,269.6 472.4,262.0 480.0,254.4 487.6,246.5 495.2,238.5 502.8,230.3 510.4,221.9 518.0,213.4 525.6,204.6 533.2,195.7 540.8,186.6 548.4,177.3 556.0,167.8 563.6,158.2 571.2,148.4 578.8,138.3 586.4,128.1 594.0,117.7 601.6,107.2 609.2,96.4 616.8,85.4 624.4,74.3 632.0,62.9 632.0,62 100,62" fill="#fff7dc" opacity="0.9"/>
+<line x1="100" y1="440" x2="900" y2="440" stroke="#1f2933" stroke-width="2" marker-end="url(#f4ax)"/>
+<line x1="100" y1="440" x2="100" y2="36" stroke="#1f2933" stroke-width="2" marker-end="url(#f4ax)"/>
+<line x1="252" y1="440" x2="252" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="252" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">1</text>
+<line x1="404" y1="440" x2="404" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="404" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">2</text>
+<line x1="556" y1="440" x2="556" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="556" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">3</text>
+<line x1="708" y1="440" x2="708" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="708" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">4</text>
+<line x1="860" y1="440" x2="860" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="860" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">5</text>
+<line x1="93" y1="386" x2="100" y2="386" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="390" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">1</text>
+<line x1="93" y1="332" x2="100" y2="332" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="336" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">2</text>
+<line x1="93" y1="278" x2="100" y2="278" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="282" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">3</text>
+<line x1="93" y1="224" x2="100" y2="224" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="228" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">4</text>
+<line x1="93" y1="170" x2="100" y2="170" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="174" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">5</text>
+<line x1="93" y1="116" x2="100" y2="116" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="120" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">6</text>
+<text x="912" y="446" font-size="17" font-weight="400" text-anchor="start" fill="#1f2933" font-style="italic">V<tspan dy="5.1" font-size="12">DS</tspan><tspan dy="-5.1"> (V)</tspan></text>
+<text x="100" y="26" font-size="17" font-weight="400" text-anchor="middle" fill="#1f2933" font-style="italic">I<tspan dy="5.1" font-size="12">D</tspan><tspan dy="-5.1"> (mA)</tspan></text>
+<polyline points="100.0,440.0 107.6,439.9 115.2,439.7 122.8,439.4 130.4,438.9 138.0,438.3 145.6,437.5 153.2,436.6 160.8,435.6 168.4,434.4 176.0,433.1 183.6,431.7 191.2,430.0 198.8,428.3 206.4,426.4 214.0,424.4 221.6,422.2 229.2,419.8 236.8,417.3 244.4,414.7 252.0,411.9 259.6,409.0 267.2,405.9 274.8,402.6 282.4,399.3 290.0,395.7 297.6,392.0 305.2,388.1 312.8,384.1 320.4,379.9 328.0,375.6 335.6,371.1 343.2,366.5 350.8,361.6 358.4,356.7 366.0,351.5 373.6,346.2 381.2,340.8 388.8,335.1 396.4,329.3 404.0,323.4 411.6,317.2 419.2,310.9 426.8,304.5 434.4,297.8 442.0,291.0 449.6,284.0 457.2,276.9 464.8,269.6 472.4,262.0 480.0,254.4 487.6,246.5 495.2,238.5 502.8,230.3 510.4,221.9 518.0,213.4 525.6,204.6 533.2,195.7 540.8,186.6 548.4,177.3 556.0,167.8 563.6,158.2 571.2,148.4 578.8,138.3 586.4,128.1 594.0,117.7 601.6,107.2 609.2,96.4 616.8,85.4 624.4,74.3 632.0,62.9" fill="none" stroke="#6b7785" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<polyline points="100.0,440.0 107.6,437.9 115.2,435.9 122.8,434.1 130.4,432.4 138.0,430.8 145.6,429.3 153.2,428.0 160.8,426.8 168.4,425.8 176.0,424.9 183.6,424.1 191.2,423.4 198.8,422.9 206.4,422.5 214.0,422.3 221.6,422.2 860,419.3" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<text x="868" y="416.3" font-size="14" font-weight="600" text-anchor="start" fill="#0f766e">V<tspan dy="4.2" font-size="10">GS</tspan><tspan dy="-4.2"> = 1,5 V</tspan></text>
+<text x="868" y="430.3" font-size="11" font-weight="400" text-anchor="start" fill="#6b7785">V<tspan dy="3.3" font-size="8">OV</tspan><tspan dy="-3.3"> = 0,8 V</tspan></text>
+<polyline points="100.0,440.0 107.6,435.7 115.2,431.6 122.8,427.6 130.4,423.7 138.0,419.9 145.6,416.2 153.2,412.7 160.8,409.3 168.4,406.0 176.0,402.8 183.6,399.8 191.2,396.9 198.8,394.1 206.4,391.4 214.0,388.9 221.6,386.5 229.2,384.2 236.8,382.1 244.4,380.1 252.0,378.2 259.6,376.5 267.2,374.9 274.8,373.4 282.4,372.1 290.0,370.9 297.6,369.8 305.2,368.9 312.8,368.1 320.4,367.5 328.0,367.0 335.6,366.7 343.2,366.5 860,357.1" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<text x="868" y="354.1" font-size="14" font-weight="600" text-anchor="start" fill="#0f766e">V<tspan dy="4.2" font-size="10">GS</tspan><tspan dy="-4.2"> = 2,3 V</tspan></text>
+<text x="868" y="368.1" font-size="11" font-weight="400" text-anchor="start" fill="#6b7785">V<tspan dy="3.3" font-size="8">OV</tspan><tspan dy="-3.3"> = 1,6 V</tspan></text>
+<polyline points="100.0,440.0 107.6,433.6 115.2,427.3 122.8,421.1 130.4,415.0 138.0,409.0 145.6,403.1 153.2,397.4 160.8,391.7 168.4,386.2 176.0,380.8 183.6,375.5 191.2,370.3 198.8,365.3 206.4,360.3 214.0,355.5 221.6,350.8 229.2,346.3 236.8,341.8 244.4,337.5 252.0,333.3 259.6,329.2 267.2,325.3 274.8,321.5 282.4,317.8 290.0,314.2 297.6,310.8 305.2,307.5 312.8,304.3 320.4,301.2 328.0,298.3 335.6,295.6 343.2,292.9 350.8,290.4 358.4,288.0 366.0,285.8 373.6,283.7 381.2,281.7 388.8,279.9 396.4,278.2 404.0,276.7 411.6,275.3 419.2,274.1 426.8,272.9 434.4,272.0 442.0,271.1 449.6,270.5 457.2,269.9 464.8,269.6 860,253.4" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<text x="868" y="250.4" font-size="14" font-weight="600" text-anchor="start" fill="#0f766e">V<tspan dy="4.2" font-size="10">GS</tspan><tspan dy="-4.2"> = 3,1 V</tspan></text>
+<text x="868" y="264.4" font-size="11" font-weight="400" text-anchor="start" fill="#6b7785">V<tspan dy="3.3" font-size="8">OV</tspan><tspan dy="-3.3"> = 2,4 V</tspan></text>
+<polyline points="100.0,440.0 107.6,431.4 115.2,422.9 122.8,414.5 130.4,406.3 138.0,398.1 145.6,390.0 153.2,382.0 160.8,374.2 168.4,366.4 176.0,358.8 183.6,351.2 191.2,343.8 198.8,336.5 206.4,329.3 214.0,322.2 221.6,315.2 229.2,308.3 236.8,301.5 244.4,294.9 252.0,288.4 259.6,282.0 267.2,275.7 274.8,269.5 282.4,263.4 290.0,257.5 297.6,251.7 305.2,246.0 312.8,240.4 320.4,235.0 328.0,229.6 335.6,224.4 343.2,219.4 350.8,214.4 358.4,209.6 366.0,204.9 373.6,200.3 381.2,195.9 388.8,191.6 396.4,187.4 404.0,183.4 411.6,179.5 419.2,175.7 426.8,172.1 434.4,168.6 442.0,165.2 449.6,162.0 457.2,158.9 464.8,155.9 472.4,153.1 480.0,150.4 487.6,147.9 495.2,145.5 502.8,143.2 510.4,141.1 518.0,139.2 525.6,137.4 533.2,135.7 540.8,134.2 548.4,132.8 556.0,131.6 563.6,130.5 571.2,129.5 578.8,128.8 586.4,128.1 860,108.2" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<text x="868" y="105.2" font-size="14" font-weight="600" text-anchor="start" fill="#0f766e">V<tspan dy="4.2" font-size="10">GS</tspan><tspan dy="-4.2"> = 3,9 V</tspan></text>
+<text x="868" y="119.2" font-size="11" font-weight="400" text-anchor="start" fill="#6b7785">V<tspan dy="3.3" font-size="8">OV</tspan><tspan dy="-3.3"> = 3,2 V</tspan></text>
+<text x="116" y="92" font-size="15" font-weight="700" text-anchor="start" fill="#0f766e">TRIODO (lineare)</text>
+<text x="116" y="110" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">resistore controllato da V<tspan dy="3.6" font-size="9">GS</tspan></text>
+<text x="754" y="310" font-size="15" font-weight="700" text-anchor="middle" fill="#0f766e">SATURAZIONE</text>
+<text x="754" y="327" font-size="12" font-weight="400" text-anchor="middle" fill="#6b7785">(zona di amplificazione)</text>
+<text x="598" y="205" font-size="13" font-weight="600" text-anchor="start" fill="#6b7785">V<tspan dy="3.9" font-size="9">DS</tspan><tspan dy="-3.9"> = V</tspan><tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> − V</tspan><tspan dy="3.9" font-size="9">TH</tspan></text>
+<line x1="596" y1="199" x2="553" y2="180" stroke="#6b7785" stroke-width="1.2"/>
+<line x1="100" y1="440" x2="860" y2="440" stroke="#9aa5b1" stroke-width="4"/>
+<line x1="102" y1="490" x2="134" y2="490" stroke="#9aa5b1" stroke-width="4"/>
+<text x="142" y="495" font-size="13" font-weight="400" text-anchor="start" fill="#6b7785">Interdizione (V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> &lt; V</tspan><tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9">): I</tspan><tspan dy="3.9" font-size="9">D</tspan><tspan dy="-3.9"> = 0, la curva coincide con l'asse V</tspan><tspan dy="3.9" font-size="9">DS</tspan></text>
+<text x="900" y="495" font-size="12" font-weight="400" text-anchor="end" fill="#6b7785">Andamento calcolato con V<tspan dy="3.6" font-size="9">TH</tspan><tspan dy="-3.6"> = 0,7 V, k = 1 mA/V</tspan><tspan dy="-4.8" font-size="9">2</tspan><tspan dy="4.8">, λ = 0,04 V</tspan><tspan dy="-4.8" font-size="9">−1</tspan></text>
+</svg>
+
+> **Lettura del grafico**:
+>  - l'**interdizione** ($V_{GS} < V_{TH}$) coincide con l'asse orizzontale: circuito aperto, qualunque sia $V_{DS}$.
+>  - nel **triodo** ogni curva parte dall'origine come una retta, cioè come un resistore, con pendenza $\frac{1}{R_{on}} = k_n V_{OV}$ che cresce con $V_{GS}$. Poi si piega fino a diventare orizzontale. Se $I_D = 0$ allora $V_{DS} = 0$: non resta alcuna tensione residua.
+>  - la parabola tratteggiata $V_{DS} = V_{GS} - V_{TH}$ separa le due regioni: ogni curva smette di salire proprio quando la tocca.
+>  - la **saturazione** è la zona piatta, in cui la corrente è decisa da $V_{GS}$ e quasi non dipende da $V_{DS}$: qui il transistor amplifica.
+>  - a differenza del BJT le curve **non sono equispaziate**, perché $I_D \propto V_{OV}^2$: raddoppiando $V_{OV}$ da $0{,}8\text{ V}$ a $1{,}6\text{ V}$ la corrente di saturazione quadruplica, da $0{,}32\text{ mA}$ a $1{,}28\text{ mA}$.
+
+### Modulazione della lunghezza di canale
+Anche in saturazione le curve non sono perfettamente orizzontali. Aumentando $V_{DS}$ la zona di svuotamento vicino al drain si allarga e il punto di strozzamento si sposta verso il source: la lunghezza effettiva del canale diventa $L' = L - \Delta L$ (si veda la figura del triodo e della saturazione). Siccome la corrente è inversamente proporzionale alla lunghezza del canale, $I_D \propto \frac{1}{L'} \approx \frac{1}{L}\left(1 + \frac{\Delta L}{L}\right)$, un canale più corto lascia passare un po' più di corrente. In prima approssimazione si assume $\frac{\Delta L}{L} \approx \lambda V_{DS}$ e si scrive
+
+$$
+I_D = \frac{1}{2}\, k_n\, (V_{GS} - V_{TH})^2\, (1 + \lambda V_{DS})
+$$
+
+dove $\lambda$ (tipicamente $0{,}01\text{–}0{,}1\ \text{V}^{-1}$) è il **parametro di modulazione della lunghezza di canale**. Più corto è il canale, più $\Delta L$ pesa rispetto a $L$ e più $\lambda$ è grande. È l'equivalente dell'effetto Early del BJT: si può definire una tensione $V_A = \frac{1}{\lambda}$, i prolungamenti all'indietro dei tratti in saturazione si incontrano tutti nel punto $V_{DS} = -V_A$, e la pendenza finita corrisponde a una **resistenza di uscita**
+
+$$
+r_o = \left(\frac{\partial I_D}{\partial V_{DS}}\right)^{-1} \approx \frac{1}{\lambda\, I_D} = \frac{V_A}{I_D}
+$$
+
+Nel grafico $\lambda = 0{,}04\ \text{V}^{-1}$ è volutamente alto per rendere visibile la pendenza.
+
+### Caratteristica di trasferimento $I_D - V_{GS}$
+
+Fissiamo $V_{DS}$ in saturazione e guardiamo come la tensione di gate comanda la corrente. È il grafico del "comando", mentre quello d'uscita descrive la "risposta" del dispositivo.
+
+<svg viewBox="0 0 1000 535" width="100%" role="img" aria-labelledby="mos5-t mos5-d" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<title id="mos5-t">Caratteristica di trasferimento I_D - V_GS di un NMOS in saturazione</title>
+<desc id="mos5-d">La corrente di drain in saturazione in funzione di V_GS: nulla fino a V_TH, poi cresce con il quadrato di V_GS meno V_TH. Quattro punti corrispondono alle quattro curve del grafico di uscita. La tangente in un punto ha pendenza pari alla transconduttanza g_m.</desc>
+<defs>
+<marker id="f5ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f2933"/></marker>
+</defs>
+<rect x="100" y="62" width="133.0" height="378" fill="#eef1f5"/>
+<line x1="100" y1="440" x2="900" y2="440" stroke="#1f2933" stroke-width="2" marker-end="url(#f5ax)"/>
+<line x1="100" y1="440" x2="100" y2="36" stroke="#1f2933" stroke-width="2" marker-end="url(#f5ax)"/>
+<line x1="290" y1="440" x2="290" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="290" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">1</text>
+<line x1="480" y1="440" x2="480" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="480" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">2</text>
+<line x1="670" y1="440" x2="670" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="670" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">3</text>
+<line x1="860" y1="440" x2="860" y2="447" stroke="#1f2933" stroke-width="1.5"/>
+<text x="860" y="465" font-size="13" font-weight="400" text-anchor="middle" fill="#6b7785">4</text>
+<line x1="93" y1="380" x2="100" y2="380" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="384" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">1</text>
+<line x1="93" y1="320" x2="100" y2="320" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="324" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">2</text>
+<line x1="93" y1="260" x2="100" y2="260" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="264" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">3</text>
+<line x1="93" y1="200" x2="100" y2="200" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="204" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">4</text>
+<line x1="93" y1="140" x2="100" y2="140" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="144" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">5</text>
+<line x1="93" y1="80" x2="100" y2="80" stroke="#1f2933" stroke-width="1.5"/>
+<text x="88" y="84" font-size="13" font-weight="400" text-anchor="end" fill="#6b7785">6</text>
+<text x="912" y="446" font-size="17" font-weight="400" text-anchor="start" fill="#1f2933" font-style="italic">V<tspan dy="5.1" font-size="12">GS</tspan><tspan dy="-5.1"> (V)</tspan></text>
+<text x="100" y="26" font-size="17" font-weight="400" text-anchor="middle" fill="#1f2933" font-style="italic">I<tspan dy="5.1" font-size="12">D</tspan><tspan dy="-5.1"> (mA)</tspan></text>
+<line x1="233.0" y1="440" x2="233.0" y2="62" stroke="#6b7785" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="233.0" y="460" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2933">V<tspan dy="3.9" font-size="9">TH</tspan><tspan dy="-3.9"> = 0,7 V</tspan></text>
+<text x="166.5" y="96" font-size="13" font-weight="600" text-anchor="middle" fill="#6b7785">Interdizione</text>
+<text x="166.5" y="113" font-size="12" font-weight="400" text-anchor="middle" fill="#6b7785">(nessun canale)</text>
+<line x1="100" y1="440" x2="233.0" y2="440" stroke="#0f766e" stroke-width="4"/>
+<polyline points="233.0,440.0 242.5,439.9 252.0,439.7 261.5,439.3 271.0,438.8 280.5,438.1 290.0,437.3 299.5,436.3 309.0,435.2 318.5,433.9 328.0,432.5 337.5,430.9 347.0,429.2 356.5,427.3 366.0,425.3 375.5,423.1 385.0,420.8 394.5,418.3 404.0,415.7 413.5,412.9 423.0,410.0 432.5,406.9 442.0,403.7 451.5,400.3 461.0,396.8 470.5,393.1 480.0,389.3 489.5,385.3 499.0,381.2 508.5,376.9 518.0,372.5 527.5,367.9 537.0,363.2 546.5,358.3 556.0,353.3 565.5,348.1 575.0,342.8 584.5,337.3 594.0,331.7 603.5,325.9 613.0,320.0 622.5,313.9 632.0,307.7 641.5,301.3 651.0,294.8 660.5,288.1 670.0,281.3 679.5,274.3 689.0,267.2 698.5,259.9 708.0,252.5 717.5,244.9 727.0,237.2 736.5,229.3 746.0,221.3 755.5,213.1 765.0,204.8 774.5,196.3 784.0,187.7 793.5,178.9 803.0,170.0 812.5,160.9 822.0,151.7 831.5,142.3 841.0,132.8 850.5,123.1 860.0,113.3" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>
+<line x1="556.0" y1="368.0" x2="822.0" y2="166.4" stroke="#b45309" stroke-width="2.2" stroke-dasharray="7 5"/>
+<circle cx="385.0" cy="420.8" r="6" fill="#0f766e" stroke="#ffffff" stroke-width="2"/>
+<text x="373.0" y="412.8" font-size="13" font-weight="600" text-anchor="end" fill="#0f766e">V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> = 1,5 V</tspan></text>
+<circle cx="537.0" cy="363.2" r="6" fill="#0f766e" stroke="#ffffff" stroke-width="2"/>
+<text x="525.0" y="355.2" font-size="13" font-weight="600" text-anchor="end" fill="#0f766e">V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> = 2,3 V</tspan></text>
+<circle cx="689.0" cy="267.2" r="6" fill="#0f766e" stroke="#ffffff" stroke-width="2"/>
+<text x="677.0" y="259.2" font-size="13" font-weight="600" text-anchor="end" fill="#0f766e">V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> = 3,1 V</tspan></text>
+<circle cx="841.0" cy="132.8" r="6" fill="#0f766e" stroke="#ffffff" stroke-width="2"/>
+<text x="829.0" y="124.80000000000001" font-size="13" font-weight="600" text-anchor="end" fill="#0f766e">V<tspan dy="3.9" font-size="9">GS</tspan><tspan dy="-3.9"> = 3,9 V</tspan></text>
+<text x="262" y="150" font-size="16" font-weight="700" text-anchor="start" fill="#0f766e">I<tspan dy="4.8" font-size="12">D</tspan><tspan dy="-4.8"> = ½ k (V</tspan><tspan dy="4.8" font-size="12">GS</tspan><tspan dy="-4.8"> − V</tspan><tspan dy="4.8" font-size="12">TH</tspan><tspan dy="-4.8">)</tspan><tspan dy="-6.4" font-size="12">2</tspan></text>
+<text x="262" y="169" font-size="12" font-weight="400" text-anchor="start" fill="#6b7785">curva quadratica: crescita via via più ripida</text>
+<text x="772" y="318" font-size="13" font-weight="700" text-anchor="start" fill="#b45309">pendenza = g<tspan dy="3.9" font-size="9">m</tspan><tspan dy="-3.9"> = k V</tspan><tspan dy="3.9" font-size="9">OV</tspan></text>
+<text x="772" y="335" font-size="12" font-weight="400" text-anchor="start" fill="#b45309">= 2,4 mA/V in V<tspan dy="3.6" font-size="9">GS</tspan><tspan dy="-3.6"> = 3,1 V</tspan></text>
+<text x="900" y="500" font-size="12" font-weight="400" text-anchor="end" fill="#6b7785">Saturazione, senza modulazione di canale. Stessi parametri della figura precedente (k = 1 mA/V<tspan dy="-4.8" font-size="9">2</tspan><tspan dy="4.8">).</tspan></text>
+</svg>
+
+La corrente è nulla fino a $V_{TH}$ (non c'è il canale) e poi cresce secondo una parabola, sempre più ripida. I quattro punti evidenziati corrispondono alle quattro curve del grafico d'uscita.
+
+### Transconduttanza
+La pendenza della curva misura quanto cambia la corrente d'uscita per ogni volt in più sul gate. Si chiama **transconduttanza** $g_m$ ed è la "capacità di amplificare" del dispositivo:
+
+$$
+g_m = \frac{\partial I_D}{\partial V_{GS}} = k_n\, V_{OV} = \frac{2\, I_D}{V_{OV}} = \sqrt{2\, k_n\, I_D}
+$$
+
+Nel punto $V_{GS} = 3{,}1\text{ V}$ del grafico ($V_{OV} = 2{,}4\text{ V}$, $k_n = 1\text{ mA/V}^2$) vale $g_m = 2{,}4\text{ mA/V}$. Nel BJT la transconduttanza è $g_m = \frac{I_C}{V_T}$, circa $39\text{ mA/V}$ a $1\text{ mA}$. Un MOSFET con la stessa corrente e $V_{OV} = 0{,}2\text{ V}$ ha $g_m = \frac{2 \cdot 1}{0{,}2} = 10\text{ mA/V}$: **a parità di corrente il BJT amplifica di più**. In cambio il MOSFET non assorbe corrente di ingresso.
+
+## MOSFET a canale P (PMOS)
+
+Il PMOS è il gemello complementare dell'NMOS: **tutti i drogaggi e tutte le polarità sono invertiti**. Il substrato è di tipo $N$, source e drain sono $P^+$ e il canale è formato da **lacune**. Per accenderlo il gate deve essere **più negativo** del source: $V_{GS} < V_{TH}$ con $V_{TH} < 0$. Il source è il terminale a potenziale più alto e la corrente scorre dal source al drain. Per evitare i segni si usano le tensioni "rovesciate" $V_{SG} = -V_{GS}$ e $V_{SD} = -V_{DS}$, e le formule restano le stesse:
+
+$$
+I_{D_{lin}} = k_p \left[ (V_{SG} - \lvert V_{TH} \rvert)\, V_{SD} - \frac{V_{SD}^2}{2} \right]
+$$
+$$
+I_{D_{sat}} = \frac{1}{2}\, k_p\, (V_{SG} - \lvert V_{TH} \rvert)^2
+$$
+
+con $k_p = \mu_p C_{ox} \frac{W}{L}$. Le lacune sono meno mobili degli elettroni: $\mu_p \approx \frac{\mu_n}{2}$. A parità di $W/L$ un PMOS conduce quindi circa 2 volte **meno** corrente di un NMOS, e per bilanciarli nei circuiti CMOS lo si disegna 2-3 volte più largo.
+
+## Confronto tra BJT e MOSFET
+
+| <span style={{ display: 'inline-block', minWidth: '180px', verticalAlign: 'middle', color: '#252525' }}>Caratteristica</span> | <span style={{ display: 'inline-block', minWidth: '220px', verticalAlign: 'middle', color: '#252525' }}>BJT (NPN)</span> | <span style={{ display: 'inline-block', minWidth: '220px', verticalAlign: 'middle', color: '#252525' }}>MOSFET (NMOS)</span> |
+| :--- | :--- | :--- |
+| **Terminali** | Emettitore, base, collettore | Source, gate, drain (più body) |
+| **Grandezza di comando** | Corrente di base $I_B$ | Tensione di gate $V_{GS}$ |
+| **Corrente di ingresso (DC)** | $I_B = \frac{I_C}{\beta_F} \neq 0$ | $I_G \approx 0$ (ossido isolante) |
+| **Portatori** | Elettroni e lacune (bipolare) | Un solo tipo (unipolare) |
+| **Legge di controllo** | Esponenziale: $I_C \propto e^{V_{BE}/V_T}$ | Quadratica: $I_D \propto (V_{GS} - V_{TH})^2$ |
+| **Regione di amplificazione** | Attiva diretta | Saturazione |
+| **Interruttore chiuso** | Saturazione, con $V_{CE,sat} \approx 0{,}2\text{ V}$ | Lineare, resistore $R_{on}$ |
+| **Effetto della tensione d'uscita** | Effetto Early ($V_A$) | Modulazione di canale ($\lambda$, $V_A = \frac{1}{\lambda}$) |
+| **Transconduttanza** | $g_m = \frac{I_C}{V_T}$ (alta) | $g_m = \frac{2 I_D}{V_{OV}}$ (più bassa a parità di corrente) |
+
+> **✐ Regola pratica**: negli esercizi, conviene ragionare in corrente con i BJT e in tensione con i MOSFET.

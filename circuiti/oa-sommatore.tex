@@ -1,0 +1,20 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[op amp] at (10.19, 5.49){};
+	\draw (8, 6) to[short] (8, 7.52);
+	\draw (12.25, 5.5) to[short] (12.25, 7.5);
+	\draw (11.38, 5.49) to[short, l_={$V_{out}$}, label distance=0.25cm] (12.25, 5.5);
+	\node[circ](N1) at (2.75, 9){} node[anchor=east] at (N1.west){$V_1$};
+	\draw (8, 5) to[short] (9.25, 5);
+	\draw (7, 6) to[short] (9, 5.98);
+	\node[ground] at (8, 5){};
+	\draw (8, 7.5) to[american resistor, l={$R_f$}] (12.25, 7.5);
+	\draw (2.75, 9) to[american resistor, l={$R_1$}] (7, 9);
+    \draw (2.75, 7.5) to[american resistor, l={$R_2$}] (7, 7.5);
+	\draw (2.75, 6) to[american resistor, l={$R_3$}] (7, 6);
+	\node[circ](N4) at (2.75, 7.5){} node[anchor=east] at (N4.west){$V_2$};
+	\node[circ](N5) at (2.75, 6){} node[anchor=east] at (N5.west){$V_3$};
+	\draw (7, 6) to[short] (7, 9);
+	\node[circ] at (7, 6){};
+	\node[circ] at (8, 6){};
+\end{tikzpicture}

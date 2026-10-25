@@ -83,9 +83,8 @@ export const argomenti: Argomento[] = [
     titolo: 'Amplificatori operazionali',
     descrizione: "L'operazionale ideale e le configurazioni fondamentali.",
     lezioni: [
-      { titolo: 'Amplificatore operazionale ideale', slug: 'operazionali/ideale', descrizione: 'Motivazioni, ipotesi di idealità e corto circuito virtuale.', livello: SU },
-      { titolo: 'Configurazione invertente e non invertente', slug: 'operazionali/invertente-non-invertente', descrizione: 'Configurazioni di base con calcolo del guadagno.', livello: SU },
-      { titolo: 'Sommatore, integratore e derivatore', slug: 'operazionali/sommatore-integratore', descrizione: 'Applicazioni con calcolo del guadagno.', livello: SU },
+      { titolo: 'Amplificatore operazionale ideale', slug: 'operazionali/ideale', descrizione: 'Motivazioni, ipotesi di idealità e configurazioni base.', livello: SU },
+      { titolo: 'Integratore, derivatore e filtri attivi', slug: 'operazionali/filtri', descrizione: 'Applicazioni con calcolo del guadagno.', livello: SU },
       { titolo: 'Non idealità degli operazionali', slug: 'operazionali/non-ideali', descrizione: 'Principio fisico.', livello: U },
       { titolo: 'Esercizi', slug: 'operazionali/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
     ],

@@ -50,13 +50,13 @@ Il comparatore confronta due tensioni e porta l'uscita a uno dei due livelli di 
 Supponiamo, ad esempio, di alimentare l'operazionale con tensioni $\pm 5\,\text{V}$ e di utilizzare una tensione di riferimento $V_{ref}=2\,\text{V}$. Collegando il segnale da confrontare all'ingresso non invertente e la tensione di riferimento all'ingresso invertente, si ottiene:
 
 $$
-V_{out} \approx
+V_{out} =
 \begin{cases}
 V_{sat+} & \text{se } V_{in}>V_{ref}\\
 V_{sat-} & \text{se } V_{in}<V_{ref}
 \end{cases}
 $$
-
+dove $V_{sat\pm}$ vale circa quanto le tensioni di alimentazione, e coincide nel caso di OA rail-to-rail. <br />
 In questo caso, quando la tensione d'ingresso supera $2\,\text{V}$, l'uscita passa alla saturazione positiva. Quando scende al di sotto di $2\,\text{V}$, l'uscita passa alla saturazione negativa.
 La tensione di riferimento determina quindi la soglia di commutazione. Questo principio è utile, ad esempio, per attivare un circuito quando una grandezza misurata supera un determinato valore.
 Invertendo i collegamenti, cioè applicando il segnale all'ingresso invertente e la tensione di riferimento a quello non invertente, si inverte anche il comportamento dell'uscita.
@@ -104,27 +104,24 @@ Queste regole sono approssimazioni molto utili per analizzare i circuiti e sono 
 ## Amplificatore invertente
 
 L'amplificatore invertente è una delle configurazioni fondamentali dell'operazionale. Permette di amplificare un segnale e di invertirne il segno, utilizzando due resistenze per stabilire il guadagno.
-
 Il segnale d'ingresso viene applicato al terminale invertente attraverso una resistenza $R_{in}$. Una seconda resistenza, $R_f$, collega l'uscita al terminale invertente e realizza la **retroazione negativa**. Il terminale non invertente è collegato a massa.
 
+<Figura src="/images/circuiti/oa-invertente.svg" alt="Amplificatore in configurazione invertente" larghezza='40rem'>
+    Amplificatore in configurazione invertente.
+</Figura>
+
 ### Analisi del circuito
-
 Poiché l'ingresso non invertente è collegato a massa, la sua tensione vale:
-
 $$
 V_+=0\,\text{V}
 $$
-
-In presenza di retroazione negativa, l'operazionale regola la propria uscita in modo da mantenere le tensioni dei due ingressi praticamente uguali. Si ottiene quindi:
-
+È presente una retroazione negativa, quindi supponiamo che l'OA lavori in zona lineare e applichiamo le regole del cortocircuito virtuale:
 $$
-V_-\approx V_+=0\,\text{V}
+V_- = V_+=0\,\text{V}
 $$
 
-Il terminale invertente si trova così a una tensione prossima a zero, pur essendo collegato a massa soltanto attraverso il funzionamento del circuito. Questo punto viene chiamato **massa virtuale**.
-
-La massa virtuale è utile per semplificare i calcoli: possiamo considerare $V_-\approx 0$ e applicare la legge di Ohm alle due resistenze.
-
+Il terminale invertente si trova così a una tensione nulla, pur essendo "collegato" a massa soltanto attraverso il corto virtuale. Questo punto viene chiamato **massa virtuale**.
+La massa virtuale è utile per semplificare i calcoli: possiamo considerare $V_-= 0$ e applicare la legge di Ohm alle due resistenze.
 Inoltre, l'impedenza d'ingresso idealmente infinita dell'operazionale implica che nei suoi terminali non entra corrente:
 
 $$
@@ -134,18 +131,16 @@ $$
 Di conseguenza, la corrente che attraversa $R_{in}$ deve proseguire attraverso $R_f$. Applicando la legge di Ohm, la corrente che attraversa la resistenza d'ingresso vale:
 
 $$
-I=\frac{V_{in}-V_-}{R_{in}}
-\approx\frac{V_{in}}{R_{in}}
+I=\frac{V_{in}-V_-}{R_{in}} = \frac{V_{in}}{R_{in}}
 $$
 
 La corrente che attraversa la resistenza di retroazione, considerata dal terminale invertente verso l'uscita, vale:
 
 $$
-I=\frac{V_--V_{out}}{R_f}
-\approx-\frac{V_{out}}{R_f}
+I=\frac{V_--V_{out}}{R_f} =-\frac{V_{out}}{R_f}
 $$
 
-Uguagliando le due espressioni si ottiene:
+Ora eguagliamo le due espressioni poichè nell'OA non entra corrente. Si ottiene:
 
 $$
 \frac{V_{in}}{R_{in}}=-\frac{V_{out}}{R_f}
@@ -164,13 +159,11 @@ $$
 $$
 
 Il guadagno dipende quindi esclusivamente dal rapporto tra le due resistenze, secondo il modello ideale.
-
-Il segno negativo indica l'inversione del segnale: quando l'ingresso è positivo, l'uscita è negativa; quando l'ingresso è negativo, l'uscita è positiva. Il valore assoluto del guadagno determina invece quanto viene amplificata l'ampiezza del segnale.
+Il segno negativo indica l'inversione del segnale. Il valore assoluto del guadagno determina invece quanto viene amplificata l'ampiezza del segnale.
 
 ### Esempio numerico
 
 Consideriamo un circuito con $R_{in}=10\,\text{k}\Omega$, $R_f=100\,\text{k}\Omega$ e una tensione d'ingresso $V_{in}=0{,}2\,\text{V}$.
-
 Il guadagno vale:
 
 $$
@@ -183,35 +176,33 @@ $$
 V_{out}=-10\cdot 0{,}2=-2\,\text{V}
 $$
 
-Il circuito amplifica quindi il segnale di un fattore 10 e ne inverte il segno. Per ottenere questo risultato, l'operazionale deve poter raggiungere una tensione d'uscita di $-2\,\text{V}$ con l'alimentazione utilizzata.
+Il circuito amplifica quindi il segnale di un fattore 10 e ne inverte il segno. Per ottenere questo risultato, l'operazionale deve poter raggiungere una tensione d'uscita di $-2\,\text{V}$ con l'alimentazione utilizzata, per non essere in zona di saturazione (che farebbe cadere le ipotesi di corto virtuale).
 
 ## Amplificatore non invertente
 
 L'amplificatore non invertente permette di amplificare un segnale mantenendone il segno. Il segnale d'ingresso viene applicato direttamente al terminale non invertente, mentre il terminale invertente è collegato a un partitore resistivo.
+Il partitore è formato da due resistenze: $R_f$, collegata tra uscita e ingresso invertente, e $R_g$, collegata tra ingresso invertente e massa.
 
-Il partitore è formato da due resistenze: $R_f$, collegata tra uscita e ingresso invertente, e $R_g$, collegata tra ingresso invertente e massa. La tensione riportata all'ingresso invertente costituisce la retroazione negativa.
+<Figura src="/images/circuiti/oa-non-invertente.svg" alt="Amplificatore in configurazione non invertente" larghezza='40rem'>
+    Amplificatore in configurazione non invertente.
+</Figura>
 
 ### Analisi del circuito
 
 Poiché il segnale è applicato al terminale non invertente:
-
 $$
 V_+=V_{in}
 $$
-
-In presenza di retroazione negativa e in funzionamento lineare, le tensioni dei due ingressi sono praticamente uguali:
-
+È presente una retroazione negativa, quindi supponiamo che l'OA lavori in zona lineare e applichiamo le regole del cortocircuito virtuale:
 $$
-V_-\approx V_+=V_{in}
+V_- = V_+=V_{in}
 $$
-
 La tensione $V_-$ è determinata dal partitore formato da $R_f$ e $R_g$. Poiché nell'ingresso invertente idealmente non entra corrente, la corrente che attraversa le due resistenze è la stessa. Applicando la formula del partitore di tensione:
-
 $$
 V_-=V_{out}\frac{R_g}{R_f+R_g}
 $$
 
-Sostituendo $V_-\approx V_{in}$:
+Sostituendo $V_- = V_{in}$:
 
 $$
 V_{in}=V_{out}\frac{R_g}{R_f+R_g}
@@ -229,12 +220,11 @@ $$
 \boxed{A_v=1+\frac{R_f}{R_g}}
 $$
 
-Il guadagno è positivo: ingresso e uscita hanno lo stesso segno. Il suo valore dipende dal rapporto tra le resistenze e risulta sempre maggiore o uguale a uno per resistenze positive finite.
+Il guadagno è positivo: ingresso e uscita hanno lo stesso segno. Il suo valore dipende dal rapporto tra le resistenze e risulta sempre maggiore o uguale a uno.
 
 ### Esempio numerico
 
 Consideriamo un circuito con $R_f=90\,\text{k}\Omega$, $R_g=10\,\text{k}\Omega$ e $V_{in}=0{,}2\,\text{V}$.
-
 Il guadagno vale:
 
 $$
@@ -253,20 +243,37 @@ L'uscita è dieci volte più grande dell'ingresso e mantiene lo stesso segno. Co
 
 L'inseguitore di tensione è un caso particolare dell'amplificatore non invertente. Il segnale d'ingresso viene applicato al terminale non invertente, mentre l'uscita viene collegata direttamente al terminale invertente.
 
+<Figura src="/images/circuiti/oa-buffer.svg" alt="Amplificatore in configurazione buffer" larghezza='20rem'>
+    Amplificatore in configurazione inseguitore di tensione (buffer).
+</Figura>
+
 Grazie alla retroazione negativa, la tensione d'uscita segue quella d'ingresso:
 
 $$
-V_{out}\approx V_{in}
+V_{out} = V_{in}
 $$
 
 Il guadagno in tensione è unitario:
 
 $$
-\boxed{A_v\approx 1}
+\boxed{A_v = 1}
 $$
 
 In questa configurazione, l'uscita mantiene idealmente la stessa tensione dell'ingresso. Il circuito conserva quindi l'ampiezza del segnale e offre un'importante funzione di separazione tra due stadi.
-
 La resistenza d'ingresso idealmente infinita consente di prelevare un segnale assorbendo una corrente trascurabile dalla sorgente. La resistenza d'uscita idealmente nulla permette invece di pilotare un carico mantenendo stabile la tensione.
+L'inseguitore viene perciò utilizzato come **buffer**, ad esempio tra un sensore e un circuito di acquisizione. È fondamentale per eliminare l'effetto di carico, ovviamente sempre nei limiti dell'operazionale.
 
-L'inseguitore viene perciò utilizzato come **buffer**, ad esempio tra un sensore e un circuito di acquisizione. Il sensore vede un carico molto elevato, mentre il circuito successivo riceve il segnale attraverso un'uscita capace di fornire la corrente richiesta dal carico, entro i limiti dell'operazionale.
+## Sommatore
+
+L'operazionale può essere usato anche per sommare più segnali fra loro, con pesi diversi impostati grazie alle resistenze d'ingresso.
+
+<Figura src="/images/circuiti/oa-sommatore.svg" alt="Amplificatore in configurazione sommatore" larghezza='35rem'>
+    Amplificatore in configurazione sommatore.
+</Figura>
+
+La risoluzione è del tutto identica a quella dell'invertente applicando il [PSE](/it/fondamenti/pse).
+
+$$
+V_{out} = - \left( \frac{R_f}{R_1}\cdot V_1 + \frac{R_f}{R_2}\cdot V_2 + \frac{R_f}{R_3}\cdot V_3\right)
+$$
+

@@ -1,0 +1,11 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[op amp] at (10.19, 5.49){};
+	\draw (8.5, 5.98) to[short] (8.5, 7.5);
+	\draw (12.25, 5.5) to[short] (12.25, 7.5);
+	\draw (11.38, 5.49) to[short, l_={$V_{out}$}, label distance=0.25cm] (12.25, 5.5);
+	\node[circ](N1) at (8, 5){} node[anchor=east] at (N1.west){$V_{in}$};
+	\draw (8, 5) to[short] (9.25, 5);
+	\draw (8.5, 7.5) to[short] (12.25, 7.5);
+	\draw (8.5, 5.98) to[short] (9, 5.98);
+\end{tikzpicture}
