@@ -1,0 +1,287 @@
+---
+title: "Flip-flop e contatori"
+description: "Dai circuiti combinatori a quelli sequenziali: latch, flip-flop SR, D, JK, T e contatori asincroni e sincroni."
+---
+Finora abbiamo visto **circuiti combinatori**: l'uscita dipende **solo dagli ingressi di quel momento**. Una porta AND, per esempio, non "ricorda" nulla.
+
+Un **circuito sequenziale** invece ha una **memoria**: l'uscita dipende sia dagli ingressi attuali, sia dallo **stato** in cui il circuito si trova, cioè da ciò che è successo prima. È la base di tutto ciò che deve ricordare qualcosa: registri, memorie, contatori, orologi digitali.
+
+L'elemento di memoria più semplice, quello che ricorda **un bit**, è il **flip-flop**.
+
+## Il clock
+
+I circuiti sequenziali si coordinano con un segnale periodico detto **clock** (orologio), che alterna `0` e `1` a ritmo regolare.
+
+- **fronte di salita**: il momento in cui il clock passa da `0` a `1`;
+- **fronte di discesa**: il momento in cui passa da `1` a `0`.
+
+Un flip-flop **sincrono** cambia stato solo in corrispondenza di un fronte (di salita o di discesa, a seconda del modello). Tra un fronte e l'altro ignora gli ingressi. Questo rende il comportamento del circuito prevedibile.
+
+## Il latch SR: la memoria più semplice
+
+Se prendiamo due porte NOR e colleghiamo l'uscita di ciascuna a un ingresso dell'altra (**retroazione**), otteniamo un circuito che può "restare" in uno di due stati: è il **latch SR**.
+
+Ha due ingressi e un'uscita `Q` (più la sua negata `Q'`):
+
+- `S` = **Set** (porta `Q` a 1);
+- `R` = **Reset** (porta `Q` a 0).
+
+| S | R | Effetto |
+| --- | --- | --- |
+| 0 | 0 | **memoria**: `Q` resta com'è |
+| 0 | 1 | reset: `Q = 0` |
+| 1 | 0 | set: `Q = 1` |
+| 1 | 1 | **vietato** (stato non valido) |
+
+Il latch è **sensibile al livello**: cambia ogni volta che gli ingressi cambiano. Il flip-flop, invece, è **sensibile al fronte** e quindi più controllabile. Il resto della lezione usa i flip-flop.
+
+## I flip-flop
+
+Per ciascuno indichiamo con `Q` lo stato attuale e con `Q(t+1)` lo stato **dopo il prossimo fronte di clock**.
+
+### Flip-flop SR
+
+Come il latch, ma abilitato dal clock. La combinazione `S = R = 1` resta vietata.
+
+| S | R | Q(t+1) |
+| --- | --- | --- |
+| 0 | 0 | Q (non cambia) |
+| 0 | 1 | 0 |
+| 1 | 0 | 1 |
+| 1 | 1 | vietato |
+
+### Flip-flop D (Data / Delay)
+
+È il più semplice e il più usato. Ha un solo ingresso, e a ogni fronte di clock **copia** `D` sull'uscita.
+
+| D | Q(t+1) |
+| --- | --- |
+| 0 | 0 |
+| 1 | 1 |
+
+Equazione caratteristica: `Q(t+1) = D`.
+
+È l'elemento base dei **registri** (una fila di flip-flop D che memorizza una parola di più bit) e delle memorie.
+
+### Flip-flop JK
+
+Risolve il problema dello stato vietato dell'SR: la combinazione `J = K = 1` diventa utile e fa **commutare** l'uscita (*toggle*).
+
+| J | K | Q(t+1) | Effetto |
+| --- | --- | --- | --- |
+| 0 | 0 | Q | mantiene |
+| 0 | 1 | 0 | reset |
+| 1 | 0 | 1 | set |
+| 1 | 1 | Q' | commuta |
+
+Equazione caratteristica: `Q(t+1) = J·Q' + K'·Q`.
+
+### Flip-flop T (Toggle)
+
+Un flip-flop JK con `J` e `K` uniti in un unico ingresso `T`.
+
+| T | Q(t+1) |
+| --- | --- |
+| 0 | Q (mantiene) |
+| 1 | Q' (commuta) |
+
+Equazione caratteristica: `Q(t+1) = T ⊕ Q`.
+
+### Riepilogo dei flip-flop
+
+| Tipo | Ingressi | Comportamento in breve |
+| --- | --- | --- |
+| SR | S, R | set / reset / mantiene (11 vietato) |
+| D | D | copia `D` sull'uscita |
+| JK | J, K | set / reset / mantiene / commuta |
+| T | T | mantiene (`T = 0`) o commuta (`T = 1`) |
+
+### Segnali di forzatura: preset e clear
+
+Molti flip-flop hanno due ingressi extra, **asincroni** (agiscono subito, senza aspettare il clock):
+
+- **PRESET**: forza `Q = 1`;
+- **CLEAR** (o RESET): forza `Q = 0`.
+
+Servono per portare il circuito in uno stato iniziale noto, per esempio all'accensione.
+
+## Un esempio nel tempo: il divisore di frequenza
+
+Prendiamo un flip-flop T con `T = 1` e un clock a fronti di salita. A **ogni fronte di salita** l'uscita commuta. Dopo ogni fronte la forma d'onda è questa (ogni `--` è un livello alto, ogni `__` un livello basso del clock):
+
+```
+CLK:  --__--__--__--__
+Q:    ----____----____
+```
+
+`Q` cambia ogni due semiperiodi, cioè ha un periodo **doppio** di quello del clock: la sua frequenza è **la metà**. Un flip-flop T è quindi un **divisore di frequenza per 2**. Collegandone più in cascata si dividono le frequenze per 4, 8, 16, … ed è così che si ricavano i secondi da un oscillatore al quarzo (32 768 Hz = 2¹⁵).
+
+## I contatori
+
+Un **contatore** è un circuito sequenziale che, a ogni impulso di clock, passa a uno stato successivo seguendo una sequenza fissa, tipicamente quella dei numeri binari.
+
+- Un contatore a `n` bit ha `2ⁿ` stati: conta da `0` a `2ⁿ − 1` e poi ricomincia.
+- Il numero di stati si chiama **modulo**: un contatore a 3 bit è un contatore **modulo 8**.
+- Si può fare conteggio **in avanti** (up), **all'indietro** (down), o in entrambi i versi (up/down).
+
+Conteggio di un contatore a 3 bit (`Q2` è il bit più significativo):
+
+| Impulso | Q2 | Q1 | Q0 | Valore |
+| --- | --- | --- | --- | --- |
+| 0 | 0 | 0 | 0 | 0 |
+| 1 | 0 | 0 | 1 | 1 |
+| 2 | 0 | 1 | 0 | 2 |
+| 3 | 0 | 1 | 1 | 3 |
+| 4 | 1 | 0 | 0 | 4 |
+| 5 | 1 | 0 | 1 | 5 |
+| 6 | 1 | 1 | 0 | 6 |
+| 7 | 1 | 1 | 1 | 7 |
+| 8 | 0 | 0 | 0 | 0 (ricomincia) |
+
+Osserva il comportamento di ogni bit:
+
+- `Q0` commuta a **ogni** impulso;
+- `Q1` commuta ogni volta che `Q0` passa da 1 a 0 (cioè quando `Q0 = 1` e arriva un nuovo impulso);
+- `Q2` commuta quando `Q0 = 1` **e** `Q1 = 1`.
+
+Le due famiglie di contatori si differenziano per **come** sfruttano questa regola.
+
+### Contatore asincrono (ripple)
+
+Si usano flip-flop T (o JK con `J = K = 1`, quindi sempre in modalità toggle). Il clock esterno arriva solo al primo flip-flop; **l'uscita di ciascun flip-flop fa da clock al successivo**.
+
+```
+CLK  →  FF0 (Q0)  →  FF1 (Q1)  →  FF2 (Q2)
+```
+
+- **Vantaggio:** circuito semplicissimo, nessuna porta aggiuntiva.
+- **Svantaggio:** le commutazioni si propagano come un'onda (*ripple*) da un flip-flop al successivo. Ogni flip-flop aggiunge un ritardo, e per qualche istante il contatore mostra valori sbagliati (*glitch*). Per contatori lunghi o ad alta frequenza è un problema.
+
+> **Nota pratica:** con flip-flop sensibili al fronte di discesa si collega direttamente `Q` all'ingresso di clock successivo per contare in avanti; con flip-flop sensibili al fronte di salita si deve usare `Q'`.
+
+Le uscite dividono la frequenza: `Q0` ha frequenza `f/2`, `Q1` ha `f/4`, `Q2` ha `f/8`.
+
+### Contatore sincrono
+
+Tutti i flip-flop ricevono **lo stesso clock** e commutano nello stesso istante. Quello che cambia è l'ingresso `T` di ciascuno, calcolato con porte logiche dalle regole viste sopra.
+
+Per un contatore **up** a 3 bit:
+
+```
+T0 = 1
+T1 = Q0
+T2 = Q0·Q1
+```
+
+(in generale `Tk = Q0·Q1·…·Q(k−1)`: un bit commuta solo quando tutti i bit meno significativi valgono 1).
+
+Per un contatore **down** si usano le uscite negate: `T1 = Q0'`, `T2 = Q0'·Q1'`.
+
+- **Vantaggio:** niente ritardi che si accumulano, quindi niente glitch e velocità più alta.
+- **Svantaggio:** servono porte aggiuntive.
+
+| | Asincrono | Sincrono |
+| --- | --- | --- |
+| Clock | solo al primo flip-flop | a tutti i flip-flop |
+| Porte logiche extra | nessuna | sì (AND) |
+| Velocità massima | bassa (i ritardi si sommano) | alta |
+| Glitch | possibili | assenti |
+
+### Contatori con modulo diverso da 2ⁿ
+
+Non sempre vogliamo contare fino a 7 o 15. Un **contatore decimale** (BCD) deve contare da 0 a 9. Un modo semplice di ottenerlo è quello **asincrono**: si lascia contare un normale contatore a 4 bit; quando raggiunge `10 = 1010₂` una porta AND su `Q3` e `Q1` rileva la combinazione e attiva il **CLEAR** dei flip-flop, che azzera il contatore e lo fa ripartire da 0.
+
+## Progettare un contatore sincrono
+
+Con quanto visto nelle lezioni precedenti si può progettare un contatore con qualunque sequenza. La procedura è:
+
+1. **Elenca gli stati** e la sequenza voluta (tabella degli stati: stato attuale → stato successivo);
+2. **scegli il tipo di flip-flop** (D, T o JK);
+3. ricava per ogni flip-flop **i valori d'ingresso necessari** per fare quelle transizioni, usando la tabella di eccitazione;
+4. **semplifica** le espressioni di ingresso con le **mappe di Karnaugh**, sfruttando le `X` per gli stati inutilizzati;
+5. **disegna** il circuito.
+
+### Tabella di eccitazione
+
+Dice quali ingressi servono per ottenere una certa transizione `Q → Q(t+1)`.
+
+| Q → Q(t+1) | D | T | J | K |
+| --- | --- | --- | --- | --- |
+| 0 → 0 | 0 | 0 | 0 | X |
+| 0 → 1 | 1 | 1 | 1 | X |
+| 1 → 0 | 0 | 1 | X | 1 |
+| 1 → 1 | 1 | 0 | X | 0 |
+
+(La `X` significa "indifferente": per il JK ci sono due modi per ottenere certe transizioni, quindi un ingresso può valere sia 0 che 1.)
+
+### Esempio: contatore modulo 3 con flip-flop D
+
+Vogliamo la sequenza `00 → 01 → 10 → 00 → …`. Lo stato `11` non dovrebbe mai comparire, quindi per esso l'uscita è indifferente.
+
+| Stato attuale Q1 Q0 | Stato successivo Q1⁺ Q0⁺ |
+| --- | --- |
+| 0 0 | 0 1 |
+| 0 1 | 1 0 |
+| 1 0 | 0 0 |
+| 1 1 | X X |
+
+Per un flip-flop D vale `D = Q(t+1)`, quindi gli ingressi coincidono con lo stato successivo.
+
+**Ingresso `D1`** (vale 1 solo per lo stato `01`; `11` è indifferente):
+
+| Q1 \ Q0 | 0 | 1 |
+| --- | --- | --- |
+| 0 | 0 | 1 |
+| 1 | 0 | X |
+
+Raggruppando i due elementi della colonna `Q0 = 1` (usando la `X` come 1): `D1 = Q0`.
+
+**Ingresso `D0`** (vale 1 solo per lo stato `00`):
+
+| Q1 \ Q0 | 0 | 1 |
+| --- | --- | --- |
+| 0 | 1 | 0 |
+| 1 | 0 | X |
+
+Il `1` è isolato (`00` e `11` non sono adiacenti): `D0 = Q1'·Q0' = (Q1 + Q0)'`, cioè una porta NOR.
+
+Il circuito completo è di soli **due flip-flop D e una porta NOR**:
+
+```
+D1 = Q0
+D0 = (Q1 + Q0)'
+```
+
+Verifica: da `00` → `D1 = 0`, `D0 = 1` → `01` ✓; da `01` → `D1 = 1`, `D0 = 0` → `10` ✓; da `10` → `D1 = 0`, `D0 = 0` → `00` ✓. E se per un disturbo il contatore finisse nello stato `11`, tornerebbe da solo in `10`, quindi nella sequenza corretta.
+
+## Dove si usano
+
+- **Contatori:** temporizzatori, orologi digitali, conteggio di eventi, generazione di indirizzi di memoria.
+- **Registri:** gruppi di flip-flop D che memorizzano una parola; con un collegamento in cascata diventano **registri a scorrimento** (*shift register*), usati per convertire dati seriali in paralleli.
+- **Macchine a stati finiti:** controllori di semafori, distributori automatici, protocolli di comunicazione, e anche i processori.
+
+## Esercizi
+
+1. Un flip-flop JK ha `Q = 0`. Quanto vale `Q` dopo un impulso di clock con `J = 1`, `K = 1`? E dopo un secondo impulso con gli stessi ingressi?
+2. Quanti flip-flop servono per un contatore con 100 stati? Di quanto divide la frequenza di clock l'uscita del bit più significativo di un contatore a 5 bit?
+3. Scrivi le equazioni degli ingressi `T` di un contatore sincrono **up** a 4 bit.
+4. Un contatore up asincrono a 3 bit parte da `000`. Dopo 11 impulsi, quale valore mostra?
+
+<details>
+<summary>Soluzioni</summary>
+
+1. Con `J = K = 1` il flip-flop commuta: dopo il primo impulso `Q = 1`, dopo il secondo `Q = 0`.
+2. Servono `7` flip-flop (2⁶ = 64 è troppo poco, 2⁷ = 128 basta). Nel contatore a 5 bit il bit più significativo ha frequenza `f/32`, cioè il clock diviso per 2⁵.
+3. `T0 = 1`, `T1 = Q0`, `T2 = Q0·Q1`, `T3 = Q0·Q1·Q2`.
+4. Il contatore a 3 bit conta modulo 8: dopo 11 impulsi mostra `11 mod 8 = 3`, cioè `011`.
+
+</details>
+
+## Riepilogo
+
+- Un circuito sequenziale ha memoria: l'uscita dipende anche dallo stato.
+- Il flip-flop memorizza 1 bit e cambia stato solo sui fronti del clock.
+- Quattro tipi principali: **SR** (set/reset), **D** (copia), **JK** (come SR ma `11` commuta), **T** (commuta quando `T = 1`).
+- Un flip-flop T con `T = 1` divide per 2 la frequenza del clock.
+- I contatori **asincroni** sono semplici ma lenti (ritardi in cascata); quelli **sincroni** hanno un clock comune e ingressi calcolati con porte logiche.
+- Per progettare un contatore: tabella degli stati, tabella di eccitazione, mappe di Karnaugh per semplificare, circuito finale.

@@ -1,0 +1,161 @@
+---
+title: "Mappe di Karnaugh"
+description: "Un metodo grafico per semplificare le funzioni booleane fino a 4 variabili, con raggruppamenti, condizioni di indifferenza e forma prodotto di somme."
+---
+Semplificare un'espressione booleana con le leggi dell'algebra funziona, ma richiede intuito: non sempre si capisce quale regola applicare. La **mappa di Karnaugh** (K-map) è una tabella di verità disegnata in modo speciale, che permette di **vedere** i termini semplificabili e di ottenere l'espressione minima con un metodo quasi meccanico.
+
+Funziona bene fino a 4 variabili (con 5 o 6 diventa scomoda; oltre si usano programmi).
+
+## L'idea chiave
+
+Due celle **adiacenti** della mappa differiscono per **una sola variabile**. Se la funzione vale `1` in entrambe, quella variabile si può eliminare, perché `X·A + X·A' = X`.
+
+Per ottenere questa proprietà le righe e le colonne **non** sono in ordine binario, ma in **codice Gray**: `00, 01, 11, 10`. Tra due valori consecutivi cambia sempre un solo bit (nel binario non accade!).
+
+> **⚠︎ Errore frequente:** scrivere le intestazioni in binario `00, 01, 10, 11`. Così la mappa non funziona!
+
+## Mappa a 2 variabili
+
+Righe = valori di `A`, colonne = valori di `B`.
+
+| $\downarrow$A \ B$\rightarrow$ | 0 | 1 |
+| --- | --- | --- |
+| 0 | m0 | m1 |
+| 1 | m2 | m3 |
+
+Ogni cella è un **mintermine** (`m0` = combinazione `00`, `m1` = `01`, ecc.). Si scrive `1` nelle celle in cui la funzione vale 1.
+
+Esempio: `F = Σm(1, 2, 3)`, cioè la nostra funzione dà 1 nei mintermini 1,2 e 3.
+
+| $\downarrow$A \ B$\rightarrow$ | 0 | 1 |
+| --- | --- | --- |
+| 0 | 0 | 1 |
+| 1 | 1 | 1 |
+
+- il gruppo `m1, m3` (colonna `B = 1`) dà `B`;
+- il gruppo `m2, m3` (riga `A = 1`) dà `A`.
+
+Risultato: `F = A + B`.
+
+## Mappa a 3 variabili
+
+Righe = `A`, colonne = `BC` in codice Gray.
+
+| $\downarrow$A \ BC$\rightarrow$ | 00 | 01 | 11 | 10 |
+| --- | --- | --- | --- | --- |
+| 0 | m0 | m1 | m3 | m2 |
+| 1 | m4 | m5 | m7 | m6 |
+
+## Mappa a 4 variabili
+
+Righe = `AB`, colonne = `CD`, entrambe in codice Gray.
+
+| $\downarrow$AB \ CD$\rightarrow$ | 00 | 01 | 11 | 10 |
+| --- | --- | --- | --- | --- |
+| 00 | m0 | m1 | m3 | m2 |
+| 01 | m4 | m5 | m7 | m6 |
+| 11 | m12 | m13 | m15 | m14 |
+| 10 | m8 | m9 | m11 | m10 |
+
+## Le regole dei raggruppamenti
+
+Si raggruppano le celle che contengono `1`, rispettando queste regole:
+
+1. un gruppo contiene un numero di celle che è una **potenza di 2**: 1, 2, 4, 8, 16;
+2. i gruppi sono **rettangoli** (o quadrati) di celle adiacenti, **mai a L o a forma irregolare**;
+3. la mappa è "**avvolta**" su se stessa: la colonna di sinistra è adiacente a quella di destra, la riga in alto a quella in basso; anche i **quattro angoli** sono adiacenti tra loro;
+4. i gruppi devono essere **il più grandi possibile**;
+5. ogni `1` deve essere coperto da **almeno un gruppo**;
+6. i gruppi possono **sovrapporsi**; si usa il minor numero possibile di gruppi.
+
+### Come si legge un gruppo
+
+All'interno di un gruppo si guardano le variabili e si tengono solo quelle che **non cambiano**:
+
+- una variabile che vale sempre `1` nel gruppo compare *diretta* (`A`);
+- una variabile che vale sempre `0` compare *negata* (`A'`);
+- una variabile che cambia tra `0` e `1` **sparisce**.
+
+Più grande è il gruppo, più variabili verranno semplificate. Alla fine si fa l'**OR** (la somma) dei termini ottenuti da ciascun gruppo.
+
+## Esempio 1: tre variabili
+
+Riprendiamo la funzione della [lezione precedente](/it/digitale/boole-porte/#costruire-una-tabella-di-verit%C3%A0), che vale `1` per `ABC = 000, 010, 100, 110, 111`, cioè `F = Σm(0, 2, 4, 6, 7)`.
+
+| $\downarrow$A \ BC$\rightarrow$ | 00 | 01 | 11 | 10 |
+| --- | --- | --- | --- | --- |
+| 0 | 1 | 0 | 0 | 1 |
+| 1 | 1 | 0 | 1 | 1 |
+
+Gruppi:
+
+- **Gruppo da 4**: `m0, m2, m4, m6` (la colonna `00` e la colonna `10`, che sono adiacenti). Qui `A` e `B` cambiano, mentre `C = 0` sempre → termine `C'`.
+- **Gruppo da 2**: `m6, m7` (riga `A = 1`, colonne `10` e `11`). Qui `A = 1` e `B = 1` sempre, `C` cambia → termine `A·B`.
+
+Risultato:
+
+```
+F = C' + A·B
+```
+
+Lo stesso risultato ottenuto con l'algebra, ma in pochi secondi.
+
+## Esempio 2: quattro variabili
+
+`F(A, B, C, D) = Σm(0, 1, 2, 5, 8, 9, 10)`
+
+| $\downarrow$AB \ CD$\rightarrow$ | 00 | 01 | 11 | 10 |
+| --- | --- | --- | --- | --- |
+| 00 | 1 | 1 | 0 | 1 |
+| 01 | 0 | 1 | 0 | 0 |
+| 11 | 0 | 0 | 0 | 0 |
+| 10 | 1 | 1 | 0 | 1 |
+
+Gruppi:
+
+- **I quattro angoli** `m0, m2, m8, m10`: qui `B = 0` e `D = 0` sempre → `B'·D'`.
+- **Gruppo da 4** `m0, m1, m8, m9` (le due colonne di sinistra, righe `00` e `10` adiacenti per l'avvolgimento): qui `B = 0` e `C = 0` → `B'·C'`.
+- **Gruppo da 2** `m1, m5` (colonna `01`, righe `00` e `01`): qui `A = 0`, `C = 0`, `D = 1` → `A'·C'·D`.
+
+Risultato:
+
+```
+F = B'·D' + B'·C' + A'·C'·D
+```
+
+## Condizioni di indifferenza (don't care)
+
+A volte alcune combinazioni degli ingressi **non si verificano mai** (per esempio un codice a 4 bit che rappresenta solo le cifre da 0 a 9: le combinazioni da 10 a 15 non sono usate). In quei casi non importa quanto valga l'uscita. Nella mappa si segnano con `X`.
+
+**Regola:** le `X` si possono considerare `1` oppure `0`, **a seconda di cosa conviene**: le si include nei gruppi se servono a fare gruppi più grandi, altrimenti le si ignora. Non è obbligatorio coprirle.
+
+Esempio: `F(A, B, C) = Σm(1, 3, 5)` con indifferenza in `m7`.
+
+| A \ BC | 00 | 01 | 11 | 10 |
+| --- | --- | --- | --- | --- |
+| 0 | 0 | 1 | 1 | 0 |
+| 1 | 0 | 1 | X | 0 |
+
+- **Senza usare la X:** servono due gruppi da 2, `A'·C` e `B'·C`, quindi `F = A'·C + B'·C`.
+- **Usando la X come 1:** un unico gruppo da 4 (tutta la colonna `01` e la colonna `11`), con `C = 1` sempre, quindi `F = C`.
+
+L'espressione è molto più semplice.
+
+## Forma prodotto di somme (gruppi di zeri)
+
+Finora abbiamo raggruppato gli `1` ottenendo una **somma di prodotti**. Si può anche raggruppare gli **zeri**: si ottiene l'espressione di `F'`, che poi si nega con De Morgan, ottenendo un **prodotto di somme**.
+
+Con la funzione dell'[Esempio 1](/it/digitale/karnaugh/#esempio-1-tre-variabili), gli zeri sono in `m1, m3, m5`:
+
+- gruppo `m1, m3` (`A = 0`, `C = 1`) → `A'·C`;
+- gruppo `m1, m5` (`B = 0`, `C = 1`) → `B'·C`.
+
+Quindi `F' = A'·C + B'·C`, e con De Morgan:
+
+```
+F = (A + C')·(B + C')
+```
+
+Verifica con l'algebra: `(A + C')(B + C') = AB + AC' + BC' + C' = AB + C'` ✓
+
+Entrambe le forme sono corrette; si sceglie quella che richiede meno porte (in questo caso la somma di prodotti).

@@ -1,0 +1,217 @@
+---
+title: "Algebra di Boole e porte logiche"
+description: "Operatori logici, tabelle di verità, leggi dell'algebra di Boole e tecniche di semplificazione delle espressioni."
+---
+
+import FiguraLato from '../../../../components/FiguraLato.astro';
+
+L'**algebra di Boole** è un'algebra in cui le variabili possono assumere solo due valori:
+
+- `0` (falso, spento, tensione bassa);
+- `1` (vero, acceso, tensione alta).
+
+È la matematica che descrive i circuiti digitali: ogni circuito logico si può scrivere come un'espressione booleana, e ogni espressione booleana si può realizzare con un circuito. Semplificare l'espressione significa **costruire un circuito più piccolo, più veloce e più economico**.
+
+## Gli operatori fondamentali
+
+Gli operatori di base sono tre.
+
+| Operatore | Simboli comuni | Si legge | Vale 1 quando… |
+| --- | --- | --- | --- |
+| AND | `A·B`, `AB` | "A e B" | **entrambi** gli ingressi valgono 1 |
+| OR | `A + B` | "A o B" | **almeno uno** degli ingressi vale 1 |
+| NOT | `A'`, `¬A` | "non A" | l'ingresso vale 0 (inverte il valore) |
+
+> **Attenzione:** in algebra di Boole il `+` significa OR, non somma. Per questo vale `1 + 1 = 1`.
+
+### Tabelle di verità di AND, OR, NOT
+
+Una **tabella di verità** elenca tutte le combinazioni degli ingressi e dice quanto vale l'uscita per ciascuna. <br />
+La AND e la OR hanno due ingressi (A e B):
+
+| A | B | A·B (AND) | A + B (OR) |
+| --- | --- | --- | --- |
+| 0 | 0 | 0 | 0 |
+| 0 | 1 | 0 | 1 |
+| 1 | 0 | 0 | 1 |
+| 1 | 1 | 1 | 1 |
+
+La NOT ha solo un ingresso (A):
+
+| A | A' (NOT)|
+| --- | --- |
+| 0 | 1 |
+| 1 | 0 |
+
+## Gli operatori derivati
+
+Combinando i tre operatori base si ottengono altri operatori molto usati, ognuno con la sua porta logica.
+
+| Porta | Espressione | Idea |
+| --- | --- | --- |
+| NAND | `(A·B)'` | AND seguito da NOT |
+| NOR | `(A + B)'` | OR seguito da NOT |
+| XOR | `A ⊕ B = A·B' + A'·B` | vale 1 se gli ingressi sono **diversi** |
+| XNOR | `(A ⊕ B)'` | vale 1 se gli ingressi sono **uguali** |
+
+| A | B | AND | OR | NAND | NOR | XOR | XNOR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 |
+| 0 | 1 | 0 | 1 | 1 | 0 | 1 | 0 |
+| 1 | 0 | 0 | 1 | 1 | 0 | 1 | 0 |
+| 1 | 1 | 1 | 1 | 0 | 0 | 0 | 1 |
+
+### Le porte logiche
+
+  <FiguraLato src="/images/circuiti/porte-logiche.svg" alt="Simboli circuitali delle porte logiche principali" larghezza='24rem'>
+    Simboli circuitali delle porte logiche principali.
+  </FiguraLato>
+
+Una **porta logica** (*logic gate*) è il componente fisico che realizza un operatore: ha uno o più ingressi e una sola uscita. Nei circuiti sono disegnate con simboli standard (ANSI/IEEE o IEC). Per riconoscerli:
+
+- il **cerchietto** all'uscita significa negazione: NAND = AND + cerchietto, NOR = OR + cerchietto, XNOR = XOR + cerchietto;
+- il **triangolo** con un cerchietto è la porta NOT (inverter).
+
+Le porte con più di due ingressi esistono (AND a 3 ingressi, ecc.) e funzionano nello stesso modo: l'AND vale 1 solo se **tutti** gli ingressi valgono 1; l'OR vale 1 se **almeno uno** vale 1.
+
+### NAND e NOR sono "universali"
+
+Con sole porte NAND (o sole porte NOR) si può realizzare qualsiasi funzione logica. Per esempio, con i NAND:
+
+- `A'` = `(A·A)'` → un NAND con gli ingressi uniti fa da NOT;
+- `A·B` = `((A·B)')'` → un NAND seguito da un NOT fa da AND;
+- `A + B` = `(A'·B')'` → NAND di due ingressi negati fa da OR.
+
+È il motivo per cui nei chip reali si usa quasi sempre un solo tipo di porta.
+
+## Costruire una tabella di verità
+
+Con `n` variabili d'ingresso la tabella ha `2ⁿ` righe. Si elencano le combinazioni in ordine binario (000, 001, 010, …) e si calcola l'uscita riga per riga, passando per le colonne intermedie.
+
+Esempio: `F = A·B + C'`
+
+| A | B | C | A·B | C' | F |
+| --- | --- | --- | --- | --- | --- |
+| 0 | 0 | 0 | 0 | 1 | 1 |
+| 0 | 0 | 1 | 0 | 0 | 0 |
+| 0 | 1 | 0 | 0 | 1 | 1 |
+| 0 | 1 | 1 | 0 | 0 | 0 |
+| 1 | 0 | 0 | 0 | 1 | 1 |
+| 1 | 0 | 1 | 0 | 0 | 0 |
+| 1 | 1 | 0 | 1 | 1 | 1 |
+| 1 | 1 | 1 | 1 | 0 | 1 |
+
+## Le leggi dell'algebra di Boole
+
+Queste regole permettono di trasformare e semplificare le espressioni. Conviene impararle bene.
+
+| Legge | Forma AND | Forma OR |
+| --- | --- | --- |
+| Elemento neutro | `A·1 = A` | `A + 0 = A` |
+| Elemento nullo | `A·0 = 0` | `A + 1 = 1` |
+| Idempotenza | `A·A = A` | `A + A = A` |
+| Complemento | `A·A' = 0` | `A + A' = 1` |
+| Doppia negazione | `(A')' = A` | |
+| Commutativa | `A·B = B·A` | `A + B = B + A` |
+| Associativa | `(A·B)·C = A·(B·C)` | `(A + B) + C = A + (B + C)` |
+| Distributiva | `A·(B + C) = A·B + A·C` | `A + B·C = (A + B)·(A + C)` |
+| Assorbimento | `A·(A + B) = A` | `A + A·B = A` |
+
+Due osservazioni utili:
+
+- **Dualità:** ogni legge ha una "gemella" che si ottiene scambiando AND con OR e `0` con `1`. Per questo le leggi sono scritte in coppia.
+- **Distributiva dell'OR:** `A + B·C = (A + B)·(A + C)` è quella meno intuitiva perchè non esiste nell'algebra normale, ma in quella di Boole sì ed è molto utile.
+
+### I teoremi di De Morgan
+
+Sono le due regole più importanti per trasformare un'espressione negata:
+
+```
+(A·B)' = A' + B'
+(A + B)' = A'·B'
+```
+
+A parole: **negare un AND equivale a fare l'OR dei negati; negare un OR equivale a fare l'AND dei negati.** In pratica, per applicarli si toglie la negazione, si negano gli ingressi singoli e si cambia l'operatore.
+
+Si verificano facilmente con la tabella di verità (provaci per esercizio!)
+
+## Semplificare le espressioni
+
+L'obiettivo è ottenere un'espressione equivalente con meno termini e meno variabili. Non esiste una ricetta unica, ma queste mosse bastano quasi sempre:
+
+1. **Raccogliere** un fattore comune (distributiva);
+2. cercare coppie `X + X'` (che vale 1) o `X·X'` (che vale 0);
+3. applicare l'**assorbimento** o l'idempotenza;
+4. usare **De Morgan** per eliminare le negazioni su più variabili.
+
+### Esempio 1
+
+`F = A·B + A·B'`
+
+```
+F = A·(B + B')     raccolgo A
+  = A·1            perché B + B' = 1
+  = A
+```
+
+### Esempio 2
+
+`F = A + A'·B`
+
+```
+F = (A + A')·(A + B)   distributiva dell'OR
+  = 1·(A + B)          perché A + A' = 1
+  = A + B
+```
+
+È una regola molto utile da ricordare: **`A + A'·B = A + B`**.
+
+### Esempio 3: uso di De Morgan
+
+`F = (A·B)'·(A + B)`
+
+```
+F = (A' + B')·(A + B)                De Morgan sul primo fattore
+  = A'A + A'B + B'A + B'B            distributiva
+  = 0 + A'B + AB' + 0                perché A'A = 0 e B'B = 0
+  = A'B + AB'
+  = A ⊕ B
+```
+
+Abbiamo scoperto che il circuito calcola uno XOR.
+
+### Esempio 4
+
+`F = A·B·C + A·B·C' + A'·B`
+
+```
+F = A·B·(C + C') + A'·B    raccolgo AB nei primi due termini
+  = A·B·1 + A'·B           perché C + C' = 1
+  = B·(A + A')             raccolgo B
+  = B
+```
+
+## Dalla tabella di verità all'espressione
+
+Partendo dalla tabella di verità si può sempre scrivere un'espressione, in **forma canonica** (somma di prodotti):
+
+1. considera solo le righe in cui l'uscita vale `1`;
+2. per ogni riga scrivi un prodotto (detto **mintermine**) con tutte le variabili: la variabile è *diretta* se nella riga vale 1, *negata* se vale 0;
+3. fai l'OR di tutti i mintermini.
+
+Riprendiamo `F = A·B + C'`. Le righe con `F = 1` sono `000`, `010`, `100`, `110`, `111`, quindi:
+
+```
+F = A'B'C' + A'BC' + AB'C' + ABC' + ABC
+```
+
+Semplifichiamo:
+
+```
+F = C'·(A'B' + A'B + AB' + AB) + ABC     raccolgo C' nei primi quattro termini
+  = C'·1 + ABC                           i quattro termini coprono tutte le combinazioni di A e B
+  = C' + ABC
+  = C' + AB                              regola X + X'Y = X + Y, con X = C'
+```
+
+Ritroviamo l'espressione di partenza. Nella prossima lezione vedremo un metodo grafico, le [**mappe di Karnaugh**](/it/digitale/karnaugh), che fa questo lavoro di semplificazione in modo molto più rapido.

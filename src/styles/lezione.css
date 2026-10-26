@@ -789,7 +789,7 @@ body .page .content-panel:first-child {
    ========================================================= */
 
 .sl-markdown-content a {
-  color: --fa-text !important; /* Blu scuro ben visibile */
+  color: var(--fa-text) !important; /* Blu scuro ben visibile */
   text-underline-offset: 3px !important;
   transition: color 0.15s ease !important;
 }

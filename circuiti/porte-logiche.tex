@@ -1,0 +1,10 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[ieeestd and port](N1) at (6.081, 9.53){} node[anchor=center] at (N1.text){$\text{AND}$};
+	\node[ieeestd or port](N2) at (6.081, 7.97){} node[anchor=center] at (N2.text){$\text{OR}$};
+	\node[ieeestd nand port](N3) at (8.831, 9.53){} node[anchor=center] at (N3.text){$\text{NAND}$};
+	\node[ieeestd nor port](N4) at (8.973, 7.97){} node[anchor=center] at (N4.text){$\text{NOR}$};
+	\node[ieeestd not port](N5) at (7.485, 11.25){} node[anchor=center, font=\scriptsize] at (N5.text){$\text{NOT}$};
+	\node[ieeestd xor port](N6) at (6.169, 6.25){} node[anchor=center] at (N6.text){$\text{XOR}$};
+	\node[ieeestd xnor port](N7) at (9, 6.25){} node[anchor=center] at (N7.text){$\text{XNOR}$};
+\end{tikzpicture}

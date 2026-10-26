@@ -1,0 +1,181 @@
+---
+title: "Sistemi di numerazione: binario, esadecimale e conversioni"
+description: "Come i computer rappresentano i numeri e come passare da decimale a binario ed esadecimale (e viceversa)."
+---
+Noi contiamo in **base 10** (sistema decimale), probabilmente perché abbiamo dieci dita. I circuiti elettronici, invece, distinguono bene solo due situazioni: *c'è tensione* oppure *non c'è tensione*. Per questo i computer lavorano in **base 2** (sistema binario), con due sole cifre: `0` e `1`.
+
+Il binario però diventa lunghissimo da scrivere e da leggere per una persona. Per questo si usa spesso anche la **base 16** (sistema esadecimale), che è una scorciatoia compatta per scrivere numeri binari.
+
+## Come funziona un sistema posizionale
+
+In un sistema **posizionale** una cifra vale di più o di meno a seconda della posizione in cui si trova. Esempio decimale:
+
+```
+472 = 4·10² + 7·10¹ + 2·10⁰
+    = 400   + 70    + 2
+```
+
+Ogni posizione ha un **peso**, che è una potenza della base. In generale, in base `b`:
+
+- si usano le cifre da `0` a `b−1`;
+- la cifra in posizione `i` (si parte da 0, da destra) vale `cifra · bⁱ`.
+
+**Notazione:** Per non confondere `101` decimale con `101` binario si scrive la base a pedice: `101₂`, `101₁₀`, `101₁₆`. Nei linguaggi di programmazione si usano invece i prefissi `0b` (binario) e `0x` (esadecimale): `0b101`, `0x2F`.
+
+## Il sistema binario
+
+Una cifra binaria si chiama **bit** (da *<u>b</u>inary dig<u>it</u>*). Alcuni nomi utili:
+
+- **nibble**: gruppo di 4 bit;
+- **byte**: gruppo di 8 bit;
+- **MSB** (*most significant bit*): il bit più a sinistra, quello di peso maggiore;
+- **LSB** (*least significant bit*): il bit più a destra, quello di peso minore.
+
+I pesi delle posizioni sono le potenze di 2:
+
+| Posizione | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Peso | 2⁷ | 2⁶ | 2⁵ | 2⁴ | 2³ | 2² | 2¹ | 2⁰ |
+| Valore | 128 | 64 | 32 | 16 | 8 | 4 | 2 | 1 |
+
+> **Da ricordare:** con `n` bit si possono rappresentare `2ⁿ` valori diversi, da `0` a `2ⁿ − 1`.
+
+| Numero di bit | Valori possibili | Valore massimo |
+| --- | --- | --- |
+| 4 | 16 | 15 |
+| 8 | 256 | 255 |
+| 16 | 65 536 | 65 535 |
+
+## Da binario a decimale
+
+**Metodo:** scrivi i pesi sotto ogni bit e somma i pesi dei bit che valgono `1`.
+
+Esempio: convertire `1011010₂`.
+
+| Bit | 1 | 0 | 1 | 1 | 0 | 1 | 0 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Peso | 64 | 32 | 16 | 8 | 4 | 2 | 1 |
+
+```
+64 + 16 + 8 + 2 = 90
+```
+
+Quindi `1011010₂ = 90₁₀`.
+
+## Da decimale a binario
+
+Dividi il numero per 2, annota il **resto**, e ripeti sul quoziente finché non arrivi a 0. Il numero binario si legge dai resti **dal basso verso l'alto**.
+
+Esempio: convertire `45`.
+
+| Divisione | Quoziente | Resto |
+| --- | --- | --- |
+| 45 : 2 | 22 | 1 |
+| 22 : 2 | 11 | 0 |
+| 11 : 2 | 5 | 1 |
+| 5 : 2 | 2 | 1 |
+| 2 : 2 | 1 | 0 |
+| 1 : 2 | 0 | 1 |
+
+Leggendo i resti dal basso: `101101₂`.
+
+Verifica: `32 + 8 + 4 + 1 = 45` ✓
+
+## Il sistema esadecimale
+
+L'esadecimale usa 16 cifre. Dopo il 9 si usano le prime lettere dell'alfabeto:
+
+| Decimale | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Esadecimale | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B | C | D | E | F |
+| Binario | 0000 | 0001 | 0010 | 0011 | 0100 | 0101 | 0110 | 0111 | 1000 | 1001 | 1010 | 1011 | 1100 | 1101 | 1110 | 1111 |
+
+**Perché è comodo?** Perché 16 = 2⁴: **una cifra esadecimale corrisponde esattamente a 4 bit**. Un byte (8 bit) si scrive quindi con sole due cifre esadecimali.
+
+Esempio: il byte `11010111₂` è lungo da leggere, ma in esadecimale è `D7₁₆`.
+
+## Da binario a esadecimale (e viceversa)
+
+È la conversione più semplice, perché non servono calcoli.
+
+**Binario → esadecimale:** raggruppa i bit a gruppi di 4, **partendo da destra**. Se l'ultimo gruppo a sinistra è incompleto, aggiungi zeri a sinistra. Poi sostituisci ogni gruppo con la sua cifra esadecimale.
+
+Esempio: `10110111101₂`
+
+```
+0101   1011   1101      (ho aggiunto uno 0 a sinistra)
+  5      B      D
+```
+
+Quindi `10110111101₂ = 5BD₁₆`.
+
+**Esadecimale → binario:** sostituisci ogni cifra con il suo gruppo di 4 bit.
+
+Esempio: `3C₁₆` → `0011` `1100` → `00111100₂`.
+
+## Da esadecimale a decimale
+
+Come per il binario, ma con i pesi che sono potenze di 16 (1, 16, 256, 4096, …).
+
+Esempio: `2F3₁₆`
+
+```
+2·256 + 15·16 + 3·1 = 512 + 240 + 3 = 755
+```
+
+(ricorda che `F = 15`).
+
+## Da decimale a esadecimale
+
+Divisioni successive per **16**, annotando i resti (da scrivere in esadecimale) e leggendoli dal basso verso l'alto.
+
+Esempio: convertire `500`.
+
+| Divisione | Quoziente | Resto |
+| --- | --- | --- |
+| 500 : 16 | 31 | 4 |
+| 31 : 16 | 1 | 15 → F |
+| 1 : 16 | 0 | 1 |
+
+Leggendo dal basso: `1F4₁₆`.
+
+Verifica: `1·256 + 15·16 + 4 = 256 + 240 + 4 = 500` ✓
+
+> **Scorciatoia:** per passare da decimale a esadecimale spesso conviene convertire prima in binario e poi raggruppare a 4 bit.
+
+## Somma in binario
+
+Si fa come in colonna alla scuola elementare, ma con queste regole:
+
+| Operazione | Risultato |
+| --- | --- |
+| `0 + 0` | 0 |
+| `0 + 1` | 1 |
+| `1 + 1` | 0 con riporto di 1 |
+| `1 + 1 + 1` (col riporto) | 1 con riporto di 1 |
+
+Esempio: `1011₂ + 0110₂` (cioè 11 + 6).
+
+```
+  1 1 1        ← riporti
+    1 0 1 1
+  + 0 1 1 0
+  ---------
+  1 0 0 0 1
+```
+
+Risultato: `10001₂ = 17₁₀` ✓
+
+> **Attenzione all'overflow:** se il risultato non sta nel numero di bit disponibili (per esempio la somma di due numeri a 8 bit che supera 255), il bit in più viene perso. È la ragione per cui i numeri nei computer hanno sempre un limite massimo.
+
+## Cenni sui numeri negativi
+
+Per rappresentare numeri negativi in binario si usa quasi sempre il **complemento a due**. Per ottenere `−N` su `n` bit:
+
+1. scrivi `N` in binario;
+2. inverti tutti i bit (0 ↔ 1);
+3. aggiungi 1.
+
+Esempio su 8 bit, `−5`: `00000101` → `11111010` → `11111011`.
+
+Il bit più a sinistra indica il segno (`0` positivo, `1` negativo). Con 8 bit si rappresentano i numeri da `−128` a `+127`.

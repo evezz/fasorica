@@ -309,3 +309,66 @@ body .page .lz .lz-controlli input.lz-cerca {
   }
 }
 
+/* =========================================================
+   CODICE E TABELLE: colori leggibili
+   ========================================================= */
+
+/* blocchi di codice: stile macchina da scrivere, senza sfondo */
+.sl-markdown-content pre,
+.sl-markdown-content pre code,
+.sl-markdown-content pre span,
+.sl-markdown-content .expressive-code .frame {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--fa-text) !important;
+}
+
+.sl-markdown-content pre,
+.sl-markdown-content pre code,
+.sl-markdown-content pre span {
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 1.3rem !important;
+}
+
+.sl-markdown-content .expressive-code .frame {
+  border: 0 !important;
+}
+
+.sl-markdown-content pre {
+  border: 0 !important;
+  border-left: 3px solid var(--fa-border) !important;
+  border-radius: 0 !important;
+}
+
+/* codice inline: stesso stile, senza sfondo */
+.sl-markdown-content :not(pre) > code {
+  background: transparent !important;
+  color: var(--fa-text) !important;
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 1em !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* intestazioni delle tabelle: testo scuro su fondo chiaro */
+.sl-markdown-content th {
+  background: #ece9e2 !important;
+  color: var(--fa-text) !important;
+}
+
+/* tabelle: più spazio laterale nelle celle */
+.sl-markdown-content th,
+.sl-markdown-content td {
+  padding: 0.6rem 1.5rem !important;
+}
+
+/* tabelle: valori centrati */
+.sl-markdown-content th,
+.sl-markdown-content td {
+  text-align: center !important;
+}
+
+/* nascondi il pulsante "Copia" nei blocchi di codice */
+.sl-markdown-content .expressive-code .copy {
+  display: none !important;
+}
