@@ -32,7 +32,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'Leggi di Kirchhoff', slug: 'fondamenti/kirchhoff', descrizione: 'Strumenti per la risoluzione di circuiti.', livello: S },
       { titolo: 'Principio di Sovrapposizione degli Effetti', slug: 'fondamenti/pse', descrizione: 'Risoluzione di circuiti con più generatori.', livello: S },
       { titolo: 'Teoremi di Thevenin e Norton', slug: 'fondamenti/thevenin-norton', descrizione: 'Ridurre una rete complessa a un generatore equivalente.', livello: S },
-      { titolo: 'Esercizi', slug: 'fondamenti/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'fondamenti/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -43,7 +43,7 @@ export const argomenti: Argomento[] = [
       { titolo: "L'induttore", slug: 'transitori/induttore', descrizione: 'Principio fisico e legge.', livello: SU },
       { titolo: 'Transitori RC e RL', slug: 'transitori/rc-rl', descrizione: 'Costante di tempo e risposta di un circuito del primo ordine.', livello: SU },
       { titolo: 'Circuiti RLC', slug: 'transitori/rlc', descrizione: 'Smorzamento e oscillazioni nei circuiti del secondo ordine.', livello: U },
-      { titolo: 'Esercizi', slug: 'transitori/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'transitori/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -55,7 +55,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'I fasori', slug: 'fasori/fasori', descrizione: 'Rappresentazione di una sinusoide con un numero complesso.', livello: SU },
       { titolo: 'Impedenza e ammettenza', slug: 'fasori/impedenza', descrizione: 'La legge di Ohm in alternata.', livello: SU },
       { titolo: 'Potenza e rifasamento', slug: 'fasori/potenza-rifasamento', descrizione: 'Potenza attiva, reattiva ed apparente.', livello: SU },
-      { titolo: 'Esercizi', slug: 'fasori/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'fasori/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -65,7 +65,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'Filtri passivi RC', slug: 'frequenza/filtri-rc', descrizione: 'Passa-basso e passa-alto, frequenza di taglio.', livello: SU },
       { titolo: 'Funzione di trasferimento', slug: 'frequenza/funzione-di-trasferimento', descrizione: 'Poli, zeri e comportamento in frequenza.', livello: U },
       { titolo: 'Diagramma di Bode', slug: 'frequenza/bode', descrizione: 'Tracciare modulo e fase partendo da un circuito.', livello: U },
-      { titolo: 'Esercizi', slug: 'frequenza/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'frequenza/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -76,7 +76,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'Diodo e raddrizzatori', slug: 'semiconduttori/diodo-raddrizzatori', descrizione: 'Caratteristica, modelli del diodo e applicazioni.', livello: SU },
       { titolo: 'Transistor BJT', slug: 'semiconduttori/bjt', descrizione: 'Motivazioni e principio fisico.', livello: U },
       { titolo: 'Transistor MOSFET', slug: 'semiconduttori/mosfet', descrizione: 'Motivazioni e principio fisico.', livello: U },
-      { titolo: 'Esercizi', slug: 'semiconduttori/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'semiconduttori/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -84,9 +84,9 @@ export const argomenti: Argomento[] = [
     descrizione: "L'operazionale ideale e le configurazioni fondamentali.",
     lezioni: [
       { titolo: 'Amplificatore operazionale ideale', slug: 'operazionali/ideale', descrizione: 'Motivazioni, ipotesi di idealità e configurazioni base.', livello: SU },
-      { titolo: 'Integratore, derivatore e filtri attivi', slug: 'operazionali/filtri', descrizione: 'Applicazioni con calcolo del guadagno.', livello: SU },
+      { titolo: 'Integratore, derivatore e filtri attivi', slug: 'operazionali/filtri', descrizione: 'Applicazioni con calcolo del guadagno.', livello: U },
       { titolo: 'Non idealità degli operazionali', slug: 'operazionali/non-ideali', descrizione: 'Principio fisico.', livello: U },
-      { titolo: 'Esercizi', slug: 'operazionali/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'operazionali/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
   {
@@ -97,7 +97,7 @@ export const argomenti: Argomento[] = [
       { titolo: 'Algebra di Boole e porte logiche', slug: 'digitale/boole-porte', descrizione: 'Operatori, tabelle di verità e semplificazioni.', livello: SU },
       { titolo: 'Mappe di Karnaugh', slug: 'digitale/karnaugh', descrizione: 'Minimizzare le funzioni logiche in modo grafico.', livello: SU },
       { titolo: 'Flip-flop e contatori', slug: 'digitale/flip-flop-contatori', descrizione: 'Elementi di memoria e reti sequenziali.', livello: SU },
-      { titolo: 'Esercizi', slug: 'digitale/esercizi', descrizione: 'Esercizi svolti ed interattivi.', livello: SU},
+      { titolo: 'Esercizi', slug: 'digitale/esercizi', descrizione: 'Esercizi svolti.', livello: SU},
     ],
   },
 ];

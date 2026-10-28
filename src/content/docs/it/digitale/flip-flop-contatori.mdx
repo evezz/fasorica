@@ -2,6 +2,7 @@
 title: "Flip-flop e contatori"
 description: "Dai circuiti combinatori a quelli sequenziali: latch, flip-flop SR, D, JK, T e contatori asincroni e sincroni."
 ---
+
 Finora abbiamo visto **circuiti combinatori**: l'uscita dipende **solo dagli ingressi di quel momento**. Una porta AND, per esempio, non "ricorda" nulla.
 
 Un **circuito sequenziale** invece ha una **memoria**: l'uscita dipende sia dagli ingressi attuali, sia dallo **stato** in cui il circuito si trova, cioè da ciò che è successo prima. È la base di tutto ciò che deve ricordare qualcosa: registri, memorie, contatori, orologi digitali.
@@ -26,6 +27,8 @@ Ha due ingressi e un'uscita `Q` (più la sua negata `Q'`):
 - `S` = **Set** (porta `Q` a 1);
 - `R` = **Reset** (porta `Q` a 0).
 
+![Latch SR realizzato con due porte NOR collegate in retroazione](/images/circuiti/ff-latch-sr.svg)
+
 | S | R | Effetto |
 | --- | --- | --- |
 | 0 | 0 | **memoria**: `Q` resta com'è |
@@ -33,11 +36,21 @@ Ha due ingressi e un'uscita `Q` (più la sua negata `Q'`):
 | 1 | 0 | set: `Q = 1` |
 | 1 | 1 | **vietato** (stato non valido) |
 
+Come leggere lo schema: l'uscita di ciascuna porta NOR torna come ingresso dell'altra. Proviamo con `S = 1` e `R = 0`:
+
+1. la porta in basso ha un `1` in ingresso, quindi `Q' = 0`;
+2. questo `0` arriva alla porta in alto, che ora ha entrambi gli ingressi a `0`, quindi `Q = 1`;
+3. se adesso `S` torna a `0`, la porta in basso riceve `Q = 1` dall'altra parte e continua a dare `Q' = 0`: lo stato si **autoconserva**. È questa la memoria.
+
 Il latch è **sensibile al livello**: cambia ogni volta che gli ingressi cambiano. Il flip-flop, invece, è **sensibile al fronte** e quindi più controllabile. Il resto della lezione usa i flip-flop.
 
 ## I flip-flop
 
 Per ciascuno indichiamo con `Q` lo stato attuale e con `Q(t+1)` lo stato **dopo il prossimo fronte di clock**.
+
+Ecco i simboli dei quattro tipi. Il **triangolino** accanto all'ingresso di clock indica che il flip-flop è sensibile al fronte; `Q` e `Q'` sono le due uscite, una la negata dell'altra.
+
+![Simboli dei flip-flop SR, D, JK e T](/images/circuiti/ff-simboli.svg)
 
 ### Flip-flop SR
 
@@ -49,6 +62,15 @@ Come il latch, ma abilitato dal clock. La combinazione `S = R = 1` resta vietata
 | 0 | 1 | 0 |
 | 1 | 0 | 1 |
 | 1 | 1 | vietato |
+
+Il circuito si ottiene dal latch aggiungendo due porte AND, che lasciano passare `S` e `R` solo quando il clock vale `1`:
+
+![Flip-flop SR: un latch a NOR preceduto da due porte AND di abilitazione](/images/circuiti/ff-sr-clock.svg)
+
+- con `CLK = 0` le due AND danno `0` e il latch resta in **memoria**;
+- con `CLK = 1` le AND lasciano passare `S` e `R`, e il circuito si comporta come il latch di prima.
+
+> **Attenzione:** questo schema è sensibile al **livello** del clock (finché `CLK = 1` l'uscita segue gli ingressi), non al fronte. Per avere un vero flip-flop a fronte si usa la struttura a due stadi (master-slave) che vediamo nel flip-flop D.
 
 ### Flip-flop D (Data / Delay)
 
@@ -63,6 +85,18 @@ Equazione caratteristica: `Q(t+1) = D`.
 
 È l'elemento base dei **registri** (una fila di flip-flop D che memorizza una parola di più bit) e delle memorie.
 
+**Com'è fatto.** Si parte dal latch SR con clock e si collegano `S = D` e `R = D'` tramite una porta NOT. Così `S` e `R` non possono mai valere `1` insieme e lo stato vietato sparisce:
+
+![Latch D: un latch SR con clock in cui R è la negata di S, ottenuta con un inverter](/images/circuiti/ff-d-latch.svg)
+
+Questo circuito è un **latch D**: con `CLK = 1` l'uscita `Q` segue `D` (si dice che è "trasparente"), con `CLK = 0` mantiene l'ultimo valore. Per ottenere un flip-flop che cambia solo sul **fronte di salita** si mettono in serie due latch D: il primo con il clock negato (**master**), il secondo con il clock normale (**slave**).
+
+![Flip-flop D a fronte di salita: due latch D in serie, master e slave](/images/circuiti/ff-d-master-slave.svg)
+
+- con `CLK = 0` il master è trasparente e copia `D`, mentre lo slave è chiuso e tiene l'uscita;
+- quando `CLK` passa da `0` a `1`, il master si chiude e conserva il valore di `D` di quell'istante, mentre lo slave si apre e lo copia in uscita;
+- con `CLK = 1` il master è chiuso: le variazioni di `D` non passano. `Q` può quindi cambiare solo nell'istante del fronte di salita.
+
 ### Flip-flop JK
 
 Risolve il problema dello stato vietato dell'SR: la combinazione `J = K = 1` diventa utile e fa **commutare** l'uscita (*toggle*).
@@ -76,6 +110,19 @@ Risolve il problema dello stato vietato dell'SR: la combinazione `J = K = 1` div
 
 Equazione caratteristica: `Q(t+1) = J·Q' + K'·Q`.
 
+**Com'è fatto.** Dall'equazione caratteristica si vede che basta calcolare quella funzione e darla in ingresso a un flip-flop D, riportando indietro le uscite `Q` e `Q'`:
+
+![Flip-flop JK costruito con un flip-flop D, due porte AND, una OR e un inverter](/images/circuiti/ff-jk.svg)
+
+Puoi verificarlo con i quattro casi della tabella:
+
+- `J = 0, K = 0`: `D = Q`, quindi mantiene;
+- `J = 1, K = 0`: `D = 1`, quindi set;
+- `J = 0, K = 1`: `D = 0`, quindi reset;
+- `J = 1, K = 1`: `D = Q'`, quindi commuta.
+
+> **Perché non collegare semplicemente `Q` e `Q'` alle AND del flip-flop SR?** Perché con `J = K = 1` e clock a `1` l'uscita commuterebbe di continuo finché dura il livello alto (*race-around*). Con un flip-flop D a fronte, invece, l'ingresso viene letto una sola volta per ciclo di clock.
+
 ### Flip-flop T (Toggle)
 
 Un flip-flop JK con `J` e `K` uniti in un unico ingresso `T`.
@@ -86,6 +133,12 @@ Un flip-flop JK con `J` e `K` uniti in un unico ingresso `T`.
 | 1 | Q' (commuta) |
 
 Equazione caratteristica: `Q(t+1) = T ⊕ Q`.
+
+Si può realizzare in due modi: unendo gli ingressi `J` e `K` di un flip-flop JK, oppure mettendo una porta XOR davanti a un flip-flop D, perché `D = T ⊕ Q`.
+
+![Flip-flop T: (a) JK con J e K uniti, (b) flip-flop D con porta XOR](/images/circuiti/ff-t.svg)
+
+Con `T = 0` lo XOR restituisce `Q` e il flip-flop mantiene lo stato; con `T = 1` restituisce `Q'` e lo stato commuta.
 
 ### Riepilogo dei flip-flop
 

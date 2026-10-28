@@ -1,911 +1,556 @@
 ---
 title: "Filtri attivi con amplificatore operazionale"
-description: "Dai filtri RC passivi ai Sallen-Key: passa-basso, passa-alto, passa-banda e notch, con funzioni di trasferimento ricavate passo passo e diagrammi di Bode."
+description: "Perché usare un OA nei filtri, dall'integratore e dal derivatore (ideali e con perdita) fino ai filtri Sallen-Key: passa-basso, passa-alto, passa-banda e notch."
 ---
 
 import Figura from '../../../../components/Figura.astro';
 
-Un filtro è un circuito che lascia passare bene certe frequenze e ne indebolisce altre. Lo troviamo ovunque: nell'equalizzatore di un impianto audio, nel circuito che toglie il ronzio dei 50 Hz da un segnale biologico, nell'anti-aliasing davanti a un convertitore A/D. In questa pagina partiamo dal filtro più semplice che esista, la coppia resistenza-condensatore, vediamo dove si inceppa e capiamo come un amplificatore operazionale (OA) risolve i suoi problemi. Alla fine arriviamo ai filtri **Sallen-Key** del secondo ordine: passa-basso, passa-alto, passa-banda ed elimina-banda (notch).
-
-Per ogni circuito ricaviamo la funzione di trasferimento a mano, un passaggio alla volta, e ne disegniamo il diagramma di Bode.
-
-## Cosa sono i filtri
-
-Un segnale reale, per quanto complicato, si può vedere come una somma di sinusoidi di frequenze diverse. Un circuito lineare tratta ogni sinusoide per conto suo: non ne cambia la frequenza, ne cambia solo **ampiezza** e **fase**. Di quanto le cambia, frequenza per frequenza, lo dice la **funzione di trasferimento** (fdt):
-
-$$
-H(s)=\frac{V_{out}(s)}{V_{in}(s)}
-$$
-
-Per studiare il regime sinusoidale si pone $s=j\omega$ (con $\omega=2\pi f$) e si leggono due cose:
-
-- il **guadagno** $\lvert H(j\omega)\rvert$, di solito espresso in decibel: $20\log_{10}\lvert H(j\omega)\rvert$;
-- la **fase** $\angle H(j\omega)$, cioè di quanto la sinusoide in uscita è sfasata rispetto a quella in ingresso.
-
-I due grafici, con la frequenza in scala logaritmica, sono il **diagramma di Bode**.
-
-Un filtro è un circuito la cui fdt ha modulo grande in certe frequenze e piccolo in altre. I quattro tipi fondamentali sono questi.
-
-| Filtro | Lascia passare | Attenua | Esempio d'uso |
-| --- | --- | --- | --- |
-| Passa-basso (LPF) | le basse frequenze | le alte | anti-aliasing, tolgono il rumore ad alta frequenza |
-| Passa-alto (HPF) | le alte frequenze | le basse | eliminare la componente continua o la deriva lenta |
-| Passa-banda (BPF) | una banda attorno a $f_0$ | tutto il resto | selezionare un canale, un tono |
-| Elimina-banda (notch) | tutto | una banda stretta attorno a $f_0$ | togliere il ronzio di rete a 50 Hz |
-
-{/* TODO: figura con le quattro risposte in frequenza IDEALI affiancate (LPF, HPF, BPF, notch): guadagno in funzione della frequenza, con banda passante e banda attenuata evidenziate */}
-<Figura
-  src="/img/filtri-oa/risposte-ideali.svg"
-  alt="Risposte in frequenza ideali di un filtro passa-basso, passa-alto, passa-banda e notch"
-  caption="Le quattro risposte ideali. I filtri reali le approssimano: più alto è l'ordine, meglio."
-/>
-
-### Qualche parola da conoscere
-
-- **Frequenza di taglio** $f_c$: la frequenza a cui il guadagno è sceso di 3 dB rispetto alla banda passante, cioè a $1/\sqrt{2}\approx 0{,}707$ in tensione (metà della potenza). Per i filtri passa-banda e notch si parla invece di **frequenza centrale** $f_0$.
-- **Ordine**: il numero di poli della fdt. Ogni polo in più aggiunge $-20$ dB per decade di pendenza oltre il taglio: il primo ordine scende di 20 dB/dec, il secondo di 40 dB/dec, e così via.
-- **Fattore di merito** $Q$ (per i filtri del secondo ordine): dice quanto è "affilata" la risposta attorno a $f_0$. Lo definiremo con precisione tra poco.
-- **Banda** $B$: la larghezza della zona che il filtro passa (o elimina), misurata tra i punti a $-3$ dB.
+Un filtro è un circuito che lascia passare certe frequenze e ne attenua altre. I principali tipi di filtri sono: passa-basso (LPF), passa-alto (HPF), passa-banda (BPF) ed elimina-banda (notch). Abbiamo già visto le tipologie di filtri più semplici, ossia i [circuiti RC](/it/frequenza/filtri-rc/). In questa pagina vediamo perché conviene aggiungere un amplificatore operazionale (OA) e come si arriva, partendo dai due mattoni più semplici (integratore e derivatore), ai filtri **Sallen-Key** del secondo ordine.
 
 ## Perché usare un OA
 
-Un filtro si può costruire anche solo con resistenze e condensatori (filtro **passivo**). Funziona, ma ha dei limiti ben precisi, e sono proprio quelli che l'OA risolve.
+Come abbiamo visto, un filtro si può costruire anche solo con resistenze e condensatori (viene detto filtro **passivo**). Funziona, ma ha dei limiti ben precisi, e sono proprio quelli che l'OA risolve.
 
 **I problemi dei filtri RC passivi**
 
-- **Dipendono dal carico.** L'uscita di una rete RC ha un'impedenza non nulla, quindi quello che colleghiamo dopo il filtro ne cambia la risposta: guadagno e frequenza di taglio non sono più quelli del progetto. Lo dimostriamo con i conti più sotto.
-- **Non amplificano.** Un filtro passivo può solo attenuare: il guadagno in banda passante è al massimo 1 (0 dB), e in pratica meno.
-- **Non sono selettivi.** Una rete fatta solo di R e C ha poli esclusivamente reali e negativi, e questo si traduce in $Q\le 1/2$: il "ginocchio" della risposta è sempre dolce e arrotondato. Per avere una risposta più ripida e con un Q alto servirebbero induttori.
-- **Non si mettono in cascata.** Se colleghiamo due filtri RC uno dopo l'altro, il secondo carica il primo e la risposta complessiva non è il prodotto delle due. Anche questo lo vedremo con i conti.
-- **Gli induttori sono scomodi.** A basse frequenze servono valori enormi, sono ingombranti, costosi, captano disturbi magnetici e non si integrano su silicio.
+- **Effetto di carico**: l'uscita di una rete RC ha un'impedenza non nulla, quindi quello che colleghiamo dopo il filtro ne cambia la risposta: guadagno e frequenza di taglio non sono più quelli del progetto.
+- **Non amplificano**: un filtro passivo può solo attenuare: il guadagno in banda passante è al massimo 1 (0 dB).
+- **Non sono selettivi**: una rete fatta solo di R e C ha poli esclusivamente reali e negativi, e questo si traduce con il "ginocchio" della risposta sempre dolce e arrotondato. Per avere una risposta più ripida servirebbero induttori (ma a basse frequenze servono valori enormi, sono ingombranti, costosi, captano disturbi magnetici e non si integrano su silicio).
+- **Non si mettono in cascata**: ue colleghiamo due filtri RC uno dopo l'altro, il secondo carica il primo e la risposta complessiva non è il prodotto delle due.
 
-**Cosa ci dà l'OA**
+**Cosa ci dà l'OA (filtri attivi)**
 
-- **Isolamento tra gli stadi.** Un OA ha impedenza d'ingresso molto alta e impedenza d'uscita molto bassa. Usato come buffer, "stacca" il filtro da ciò che lo segue: la fdt che calcoliamo a tavolino è quella che otteniamo davvero.
-- **Guadagno.** Con una piccola rete di retroazione il filtro può amplificare invece di attenuare.
-- **Poli complessi coniugati senza induttori.** Con un po' di retroazione positiva attorno all'OA si ottengono Q a piacere usando solo R e C: è il trucco dei Sallen-Key.
-- **Ordini alti per cascata.** Con gli stadi isolati dall'OA, un filtro del quarto ordine è semplicemente due sezioni del secondo ordine una dopo l'altra.
+- **Isolamento tra gli stadi**: un OA ha impedenza d'ingresso molto alta e impedenza d'uscita molto bassa. Usato come buffer, "stacca" il filtro da ciò che lo segue.
+- **Guadagno**: con una piccola rete di retroazione il filtro può amplificare invece di attenuare.
+- **Poli complessi coniugati senza induttori**: si possono ottenere filtri molto selettivi usando solo R e C.
+- **Ordini alti per cascata**: con gli stadi isolati dall'OA, un filtro del quarto ordine è semplicemente due sezioni del secondo ordine una dopo l'altra.
 
 **Cosa ci costa**
 
-L'OA ha bisogno di alimentazione, introduce rumore, può saturare, e soprattutto ha una banda finita: il prodotto banda-guadagno (GBW) e lo slew rate limitano la frequenza massima a cui il filtro si comporta come previsto. Come ordine di grandezza prudente, il GBW dovrebbe essere almeno un centinaio di volte la frequenza $f_0$ del filtro, e ancora di più se $Q$ o il guadagno sono alti.
+L'OA ha bisogno di alimentazione, introduce rumore, può saturare, e soprattutto ha una banda finita: il **prodotto guadagno-banda (GBWP)** e lo **slew rate** limitano la frequenza massima a cui il filtro si comporta come previsto.
 
-## Strumenti del mestiere
+## Banda, ordine e $Q$
 
-Prima di partire con i circuiti, mettiamo in tasca due cose che ci servono per tutto il resto.
+Abbiamo già studiato il [diagramma di Bode](/it/frequenza/bode/) e la [funzione di trasferimento](/it/frequenza/funzione-di-trasferimento/). Qui aggiungiamo solo le tre grandezze che servono per descrivere un filtro.
 
-### Come si legge un diagramma di Bode
+### Frequenza di taglio e banda
 
-Un termine della forma $1/(1+s/\omega_p)$ è un **polo reale** in $\omega_p$. Il suo modulo è circa 0 dB fino a $\omega_p$ e poi scende di 20 dB per decade; la sua fase passa gradualmente da $0^\circ$ a $-90^\circ$, e vale esattamente $-45^\circ$ in $\omega_p$. Uno **zero** reale fa l'esatto opposto: pendenza $+20$ dB/dec e fase che sale di $90^\circ$. Uno zero nell'origine (un termine $s$ al numeratore) dà una retta con pendenza $+20$ dB/dec e fase costante di $+90^\circ$.
+La **frequenza di taglio** $f_c$ è la frequenza a cui il guadagno è sceso di 3 dB rispetto a quello in banda passante, cioè a $1/\sqrt{2}\approx0{,}707$ in tensione (metà della potenza). Passa-basso e passa-alto hanno un solo taglio.
 
-Il diagramma **asintotico** si costruisce proprio così: si traccia, per ogni polo e zero, la spezzata che cambia pendenza alla sua frequenza. La curva vera si discosta dagli asintoti soprattutto attorno ai punti di rottura.
+La **banda** $B$ è la larghezza della zona che il filtro lascia passare (passa-banda) o elimina (notch), misurata tra i due punti a $-3$ dB, $f_L$ e $f_H$:
 
-### La forma standard del secondo ordine
+$$
+B=f_H-f_L,\qquad f_0=\sqrt{f_L\,f_H}
+$$
 
-Tutti i filtri del secondo ordine che incontreremo hanno lo stesso denominatore:
+La **frequenza centrale** $f_0$ è la media geometrica dei due tagli: sull'asse logaritmico del Bode sta esattamente a metà.
+
+### Ordine
+
+L'**ordine** è il numero di poli della funzione di trasferimento. Oltre il taglio ogni polo aggiunge $-20$ dB/dec di pendenza:
+
+- primo ordine: $-20$ dB/dec, cioè una decade oltre il taglio la tensione si divide per 10;
+- secondo ordine: $-40$ dB/dec, cioè una decade oltre il taglio si divide per 100.
+
+Più alto è l'ordine, più la risposta reale somiglia a quella ideale "a gradino". Un passa-banda del secondo ordine sale di 20 dB/dec da un lato e scende di 20 dB/dec dall'altro.
+
+{/* TODO: figura con le quattro risposte in frequenza IDEALI affiancate (LPF, HPF, BPF, notch): guadagno in funzione della frequenza, con banda passante e banda attenuata evidenziate; in sovrimpressione, tratteggiata, la risposta reale di un filtro del primo ordine per confronto */}
+<Figura
+  src="/images/circuiti/risposte-ideali.svg"
+  alt="Risposte in frequenza ideali di un filtro passa-basso, passa-alto, passa-banda e notch"
+  caption="Le quattro risposte ideali. I filtri reali le approssimano: più alto è l'ordine, più vicina è la risposta reale a quella ideale."
+  larghezza='60rem'
+/>
+
+### Fattore di merito $Q$
+
+Nei filtri del secondo ordine il denominatore della fdt ha sempre la stessa forma:
 
 $$
 D(s)=s^2+\frac{\omega_0}{Q}\,s+\omega_0^2
 $$
 
-Qui $\omega_0$ è la **pulsazione naturale** e $Q$ il **fattore di merito**. I poli sono le radici di $D(s)$:
+$\omega_0$ è la pulsazione caratteristica e $Q$ il **fattore di merito**. Cosa ci dice $Q$ dipende dal tipo di filtro.
 
-$$
-s_{1,2}=-\frac{\omega_0}{2Q}\pm\omega_0\sqrt{\frac{1}{4Q^2}-1}
-$$
+**Nel passa-basso e nel passa-alto** descrive la forma del "ginocchio" intorno a $f_0$. Se $Q\le\tfrac12$ i poli sono reali (è il caso dei RC passivi) e il ginocchio è morbido; per $Q\gt\tfrac12$ i poli diventano complessi coniugati e il ginocchio si fa più deciso. Per $Q=1/\sqrt2\approx0{,}707$ si ha la risposta di **Butterworth**, la più piatta possibile in banda passante, senza picchi. Sopra questo valore compare un picco prima del taglio, tanto più alto quanto più $Q$ è grande: in $f_0$ il guadagno vale esattamente $Q$ volte quello in banda passante.
 
-Il segno dell'argomento della radice decide tutto:
-
-- se $Q\le \tfrac12$ i poli sono **reali** (coincidenti per $Q=\tfrac12$): è il territorio dei filtri RC passivi;
-- se $Q>\tfrac12$ i poli sono **complessi coniugati**: la risposta ha un ginocchio più deciso, e per $Q$ alti un picco di risonanza.
-
-Alcuni valori di $Q$ hanno un nome. Per un passa-basso, $Q=1/\sqrt{3}\approx 0{,}577$ è la risposta di **Bessel** (fase quasi lineare, nessun overshoot nel tempo), $Q=1/\sqrt{2}\approx 0{,}707$ è la risposta di **Butterworth** (la più piatta possibile in banda passante), mentre per $Q>1/\sqrt{2}$ si hanno risposte con un picco prima del taglio, come nei filtri di Chebyshev.
-
-Se la fdt è scritta come $H(s)=N(s)/(1+a_1 s+a_2 s^2)$, i due parametri si leggono subito:
-
-$$
-\omega_0=\frac{1}{\sqrt{a_2}},\qquad Q=\frac{\sqrt{a_2}}{a_1}
-$$
-
-Lo useremo di continuo.
-
-## Filtri del primo ordine
-
-### Passa-basso RC
-
-È il filtro più semplice: una resistenza in serie al segnale e un condensatore verso massa. Alle basse frequenze il condensatore è quasi un circuito aperto e il segnale passa; alle alte frequenze il condensatore diventa quasi un corto e porta l'uscita a massa.
-
-{/* TODO circuito: Vin -> R in serie -> nodo di uscita Vout; C dal nodo Vout a massa. Nessun carico. */}
-<Figura
-  src="/img/filtri-oa/rc-lpf-circuito.svg"
-  alt="Filtro RC passa-basso"
-  caption="Filtro RC passa-basso."
-/>
-
-L'uscita è prelevata ai capi di $C$, quindi è un partitore tra $R$ e l'impedenza $1/(sC)$:
-
-$$
-H(s)=\frac{\dfrac{1}{sC}}{R+\dfrac{1}{sC}}=\frac{1}{1+sRC}
-$$
-
-C'è un solo polo, in
-
-$$
-\omega_c=\frac{1}{RC}\qquad\Longleftrightarrow\qquad f_c=\frac{1}{2\pi RC}
-$$
-
-**Diagramma di Bode.** Poniamo $s=j\omega$ e $u=\omega/\omega_c$, così $sRC=ju$:
-
-$$
-H(j\omega)=\frac{1}{1+ju}
-\qquad\Longrightarrow\qquad
-\lvert H\rvert=\frac{1}{\sqrt{1+u^2}},
-\qquad
-\angle H=-\arctan u
-$$
-
-- Per $u\ll1$ il modulo vale $\approx 1$, cioè 0 dB.
-- Per $u\gg1$ il modulo vale $\approx 1/u$, cioè $-20\log_{10}u$ dB: una retta che scende di 20 dB per decade.
-- Le due rette si incontrano in $u=1$, cioè in $\omega_c$. Lì il valore vero è $-10\log_{10}2=-3{,}01$ dB e la fase è $-45^\circ$.
-
-| $u=\omega/\omega_c$ | Modulo | Fase |
+| $Q$ | Guadagno in $f_0$ (rispetto alla banda passante) | Picco massimo |
 | --- | --- | --- |
-| 0,1 | $-0{,}04$ dB | $-5{,}7^\circ$ |
-| 1 | $-3{,}01$ dB | $-45^\circ$ |
-| 10 | $-20{,}04$ dB | $-84{,}3^\circ$ |
+| 0,5 | $-6{,}02$ dB | nessuno |
+| 0,707 (Butterworth) | $-3{,}01$ dB | nessuno |
+| 1 | $0$ dB | $+1{,}25$ dB |
+| 2 | $+6{,}02$ dB | $+6{,}30$ dB |
+| 5 | $+13{,}98$ dB | $+14{,}02$ dB |
 
-{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/fc, da 0,01 a 100; sovrapporre l'asintoto del modulo (0 dB fino a fc, poi -20 dB/dec) e segnare il punto -3 dB / -45° in fc */}
+**Nel passa-banda e nel notch** $Q$ misura quanto è stretta la banda:
+
+$$
+Q=\frac{f_0}{B}
+$$
+
+$Q$ alto vuol dire banda stretta, cioè filtro molto selettivo. Un notch a 50 Hz con $Q=10$ elimina una banda larga $B=50/10=5$ Hz.
+
+## L'integratore
+
+Il modo più semplice per usare insieme un OA e un condensatore è quello di prendere un amplificatore invertente e sostituire la resistenza di retroazione con un condensatore.
+
+{/* TODO circuito: integratore ideale. Vin -> R in serie -> ingresso invertente dell'OA; C tra uscita e ingresso invertente; ingresso non invertente a massa; Vout = uscita OA */}
 <Figura
-  src="/img/filtri-oa/rc-lpf-bode.svg"
-  alt="Diagramma di Bode del filtro RC passa-basso"
-  caption="Bode del passa-basso RC: modulo con asintoto a −20 dB/dec e fase da 0° a −90°."
+  src="/images/circuiti/oa-integratore.svg"
+  alt="Integratore ideale con amplificatore operazionale"
+  caption="Integratore ideale."
 />
 
-**Esempio di dimensionamento.** Vogliamo $f_c=1$ kHz e scegliamo $C=100$ nF. Allora
+### Integratore ideale
+
+Lavoriamo con i fasori, quindi l'impedenza del condensatore è $Z_C=\dfrac{1}{j\omega C}$. L'OA è in retroazione negativa, quindi l'ingresso invertente si trova allo stesso potenziale di quello non invertente, cioè a massa (**massa virtuale**), e negli ingressi dell'OA non entra corrente.
+
+1. Con l'ingresso invertente a $0$ V, ai capi di $R$ c'è esattamente $V_{in}$:
 
 $$
-R=\frac{1}{2\pi f_c C}=\frac{1}{2\pi\cdot 1000\cdot 100\cdot10^{-9}}\approx 1{,}59\ \text{k}\Omega
+I=\frac{V_{in}-0}{R}=\frac{V_{in}}{R}
 $$
 
-### Passa-alto RC
+2. Siccome nell'OA non entra corrente, tutta la $I$ attraversa $C$. L'uscita sta alla tensione "a valle" del condensatore, quindi $V_{out}=0-I\,Z_C$:
 
-Scambiamo i due componenti: il condensatore in serie al segnale e la resistenza verso massa. Ora il condensatore blocca le basse frequenze (e la continua) e lascia passare le alte.
+$$
+V_{out}=-\frac{V_{in}}{R}\cdot\frac{1}{j\omega C}
+$$
 
-{/* TODO circuito: Vin -> C in serie -> nodo di uscita Vout; R dal nodo Vout a massa. Nessun carico. */}
+3. Dividendo per $V_{in}$ otteniamo la funzione di trasferimento:
+
+$$
+H(j\omega)=\frac{V_{out}}{V_{in}}=-\frac{1}{j\omega RC}
+$$
+
+Per leggere meglio il Bode poniamo $\omega_u=\dfrac{1}{RC}$:
+
+$$
+H(j\omega)=-\frac{\omega_u}{j\omega}=j\,\frac{\omega_u}{\omega}
+$$
+
+**Diagramma di Bode.**
+
+- **Modulo:** $\lvert H\rvert=\dfrac{\omega_u}{\omega}$, cioè $20\log_{10}\dfrac{\omega_u}{\omega}$ dB. È una retta con pendenza $-20$ dB/dec che attraversa 0 dB in $\omega=\omega_u$ (la **frequenza di guadagno unitario**, $f_u=\dfrac{1}{2\pi RC}$).
+- **Fase:** costante e pari a $+90^\circ$. Il segno meno dell'amplificatore invertente vale $180^\circ$, il termine $1/j$ vale $-90^\circ$; in totale $180^\circ-90^\circ=+90^\circ$.
+
+{/* TODO Bode: integratore ideale. Modulo (dB) in funzione di f/fu da 0,01 a 100: retta a -20 dB/dec che passa per 0 dB in fu. Fase (gradi): retta orizzontale a +90° */}
 <Figura
-  src="/img/filtri-oa/rc-hpf-circuito.svg"
-  alt="Filtro RC passa-alto"
-  caption="Filtro RC passa-alto."
+  src="/images/circuiti/bode-integratore.svg"
+  alt="Diagramma di Bode dell'integratore ideale"
+  caption="Bode dell'integratore ideale: pendenza −20 dB/dec e fase costante a +90°."
 />
 
-Di nuovo un partitore, ma l'uscita è ai capi di $R$:
+**Perché si chiama "integratore"?** Nel dominio del tempo il risultato è
 
 $$
-H(s)=\frac{R}{R+\dfrac{1}{sC}}=\frac{sRC}{1+sRC}
+v_{out}(t)=-\frac{1}{RC}\int v_{in}(t)\,dt
 $$
 
-Stesso polo di prima, $\omega_c=1/(RC)$, più uno **zero nell'origine** (il termine $s$ al numeratore). Con $u=\omega/\omega_c$:
+Il conto con i fasori lo conferma: integrare una sinusoide significa dividerla per $\omega$ (il modulo $\propto1/\omega$) e sfasarla di $90^\circ$. Se $v_{in}=V\cos\omega t$, l'uscita vale $v_{out}=-\dfrac{V}{\omega RC}\sin\omega t=\dfrac{V}{\omega RC}\cos(\omega t+90^\circ)$.
+
+**⚠︎ Attenzione**: questo circuito **non** è ancora un vero e proprio filtro. Dal Bode si vede che non c'è nessuna banda passante piatta: il guadagno cresce senza limite al diminuire della frequenza e in continua ($\omega\to0$) è infinito. Il motivo fisico è che in continua il condensatore è un circuito aperto, quindi la retroazione sparisce e l'OA lavora ad anello aperto. Anche la più piccola tensione di offset o corrente di polarizzazione viene integrata, e l'uscita deriva lentamente fino a saturare.
+
+### Integratore con perdita
+
+Mettiamo una resistenza $R_2$ in parallelo a $C$, in modo che in continua resti un percorso di retroazione. La resistenza fa "perdere" carica al condensatore, da qui il nome.
+
+{/* TODO circuito: integratore con perdita. Come l'integratore ideale, con in più una resistenza Rf in parallelo al condensatore C di retroazione */}
+<Figura
+  src="/images/circuiti/oa-integratore-perdita.svg"
+  alt="Integratore con perdita."
+  caption="Integratore con perdita."
+/>
+
+I passaggi sono gli stessi di prima, cambia solo l'impedenza di retroazione, che ora è il parallelo tra $R_2$ e $C$:
 
 $$
-H(j\omega)=\frac{ju}{1+ju}
-\qquad\Longrightarrow\qquad
-\lvert H\rvert=\frac{u}{\sqrt{1+u^2}},
-\qquad
-\angle H=90^\circ-\arctan u
+Z_f=R_2\parallel\frac{1}{j\omega C}=\frac{R_2}{1+j\omega R_2C}
 $$
 
-- Per $u\ll1$ il modulo vale $\approx u$: una retta che sale di 20 dB per decade.
-- Per $u\gg1$ il modulo vale $\approx 1$, cioè 0 dB.
-- In $u=1$: $-3{,}01$ dB e fase $+45^\circ$.
+La corrente d'ingresso è sempre $I=V_{in}/R_1$ e $V_{out}=-I\,Z_f$, quindi
 
-| $u=\omega/\omega_c$ | Modulo | Fase |
+$$
+H(j\omega)=-\frac{R_2}{R_1}\cdot\frac{1}{1+j\omega R_2C}=-\frac{R_2}{R_1}\cdot\frac{1}{1+j\dfrac{\omega}{\omega_c}}\qquad\text{con}\qquad\omega_c=\frac{1}{R_2C}
+$$
+
+Guardiamo i due casi estremi.
+
+- **$\omega\ll\omega_c$:** il condensatore è quasi un circuito aperto e rimane solo $R_2$ in retroazione. Il circuito è un normale amplificatore invertente con $H\approx-R_2/R_1$. Il guadagno in continua è finito e la deriva sparisce.
+- **$\omega\gg\omega_c$:** l'impedenza del condensatore è molto più piccola di $R_2$, quindi $R_2$ è come se non ci fosse. Torniamo all'integratore ideale, $H\approx-\dfrac{1}{j\omega R_1C}$.
+
+**Diagramma di Bode.**
+
+- **Modulo:** piatto a $20\log_{10}(R_2/R_1)$ fino a $\omega_c$, poi scende di 20 dB/dec. La retta in discesa coincide con quella dell'integratore ideale.
+- **Fase:** $180^\circ-\arctan(\omega/\omega_c)$. Parte da $180^\circ$ (amplificatore invertente), vale $135^\circ$ in $\omega_c$ e tende a $+90^\circ$, il valore dell'integratore ideale.
+
+| $\omega/\omega_c$ | Modulo (rispetto al valore in continua) | Fase |
 | --- | --- | --- |
-| 0,1 | $-20{,}04$ dB | $+84{,}3^\circ$ |
-| 1 | $-3{,}01$ dB | $+45^\circ$ |
-| 10 | $-0{,}04$ dB | $+5{,}7^\circ$ |
+| 0,1 | $-0{,}04$ dB | $174^\circ$ |
+| 1 | $-3{,}01$ dB | $135^\circ$ |
+| 10 | $-20{,}04$ dB | $96^\circ$ |
 
-{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/fc, da 0,01 a 100; asintoto +20 dB/dec fino a fc poi 0 dB; fase da +90° a 0° */}
+{/* TODO Bode: integratore con perdita. Modulo (dB) in funzione di f/fc da 0,01 a 1000: tratto piatto a 20log(Rf/R) fino a fc, poi -20 dB/dec. Sovrapporre, tratteggiata, la retta dell'integratore ideale (che coincide con la discesa e prosegue verso sinistra). Fase: da 180° a 90° passando per 135° in fc, con la fase costante +90° dell'integratore ideale tratteggiata */}
 <Figura
-  src="/img/filtri-oa/rc-hpf-bode.svg"
-  alt="Diagramma di Bode del filtro RC passa-alto"
-  caption="Bode del passa-alto RC: modulo con asintoto a +20 dB/dec e fase da +90° a 0°."
+  src="/images/circuiti/bode-integratore-perdita.svg"
+  alt="Diagramma di Bode dell'integratore con perdita confrontato con quello ideale"
+  caption="Bode dell'integratore con perdita (linea continua) e ideale (tratteggio)."
 />
 
-### Il problema del carico
+> **Cosa è cambiato?** Ora il circuito ha una banda passante piatta, una frequenza di taglio e un'attenuazione oltre il taglio: è un **passa-basso del primo ordine**, invertente, con guadagno $R_2/R_1$. Il comportamento da integratore non scompare, ma resta solo per $\omega\gg\omega_c$. Questo è il passaggio che lo fa sembrare, finalmente, un filtro. Rispetto a un semplice passa-basso RC abbiamo in più il guadagno e l'indipendenza dal carico.
 
-Finora l'uscita era "a vuoto", cioè non c'era nulla collegato. Ma un filtro serve a pilotare qualcosa. Colleghiamo al passa-basso una resistenza di carico $R_L$ e rifacciamo il conto.
+> **Cosa cambiano i componenti:** $R_2$ e $C$ fissano il taglio ($\omega_c=1/R_2C$); $R_1$ regola il guadagno ($R_2/R_1$) senza spostare il taglio. Aumentare $R_2$ abbassa il taglio, quindi allarga la zona in cui il circuito integra, ma alza anche il guadagno in continua e quindi l'offset in uscita.
 
-{/* TODO circuito: passa-basso RC (R in serie, C a massa) con una resistenza RL collegata tra Vout e massa, in parallelo a C */}
+> **Esempio:** Con $R_1=10\, \text{k}\Omega$, $C=10\, \text{nF}$ e $R_2=100\, \text{k}\Omega$ si ottiene un guadagno in continua di $R_2/R_1=10$ (20 dB), un taglio $f_c=\dfrac{1}{2\pi R_2C}\approx159\, \text{Hz}$  e una frequenza di guadagno unitario $f_u=\dfrac{1}{2\pi R_1C}\approx1{,}59\, \text{kHz}$. A $1{,}59\, \text{kHz}$, dieci volte oltre il taglio, il guadagno è già praticamente 1, come quello dell'integratore ideale.
+
+## Il derivatore
+
+Il derivatore è il circuito duale: scambiamo di posto $R$ e $C$ rispetto all'integratore.
+
+{/* TODO circuito: derivatore ideale. Vin -> C in serie -> ingresso invertente dell'OA; Rf tra uscita e ingresso invertente; ingresso non invertente a massa; Vout = uscita OA */}
 <Figura
-  src="/img/filtri-oa/rc-lpf-carico.svg"
-  alt="Filtro RC passa-basso con resistenza di carico"
-  caption="Il passa-basso RC con una resistenza di carico RL."
+  src="/images/circuiti/oa-derivatore.svg"
+  alt="Derivatore ideale con amplificatore operazionale"
+  caption="Derivatore ideale."
 />
 
-Scriviamo la legge di Kirchhoff delle correnti al nodo di uscita: la corrente che arriva da $R$ si divide tra il condensatore e il carico.
+### Derivatore ideale
+
+Anche qui massa virtuale all'ingresso invertente e nessuna corrente negli ingressi dell'OA.
+
+1. Ai capi di $C$ c'è $V_{in}$ (l'altro capo è a massa virtuale), quindi la corrente è
 
 $$
-\frac{V_{in}-V_{out}}{R}=V_{out}\,sC+\frac{V_{out}}{R_L}
+I=\frac{V_{in}-0}{Z_C}=j\omega C\,V_{in}
 $$
 
-Portiamo $V_{out}$ tutto a destra e moltiplichiamo per $R$:
+2. Tutta questa corrente attraversa $R$, e l'uscita vale $V_{out}=0-R\,I$:
 
 $$
-V_{in}=V_{out}\left(1+\frac{R}{R_L}+sRC\right)
+V_{out}=-R\,j\omega C\,V_{in}
 $$
 
-Mettiamo in evidenza $1+R/R_L=(R+R_L)/R_L$:
+3. La funzione di trasferimento è
 
 $$
-H(s)=\frac{1}{1+\dfrac{R}{R_L}+sRC}
-=\frac{\dfrac{R_L}{R+R_L}}{1+s\,(R\parallel R_L)\,C}
+H(j\omega)=-j\omega RC
 $$
 
-Il circuito non si comporta più come prima:
+Con $\omega_u=\dfrac{1}{RC}$ si scrive anche $H(j\omega)=-j\dfrac{\omega}{\omega_u}$.
 
-- il guadagno in continua non è più 1 ma $R_L/(R+R_L)$;
-- la frequenza di taglio diventa $\omega_c'=\dfrac{1}{(R\parallel R_L)\,C}=\omega_c\left(1+\dfrac{R}{R_L}\right)$, cioè **sale**.
+**Diagramma di Bode.**
 
-Con $R=R_L=10$ kΩ, per esempio, il guadagno in banda passante si dimezza ($-6$ dB) e la frequenza di taglio raddoppia. Il filtro ha una risposta diversa a seconda di cosa gli attacchiamo dopo. (Lo stesso accade all'ingresso: se la sorgente ha una resistenza interna $R_s$, questa si somma a $R$ e sposta il taglio.)
+- **Modulo:** $\lvert H\rvert=\omega/\omega_u$, una retta con pendenza $+20$ dB/dec che attraversa 0 dB in $\omega_u$ (con $f_u=\dfrac{1}{2\pi RC}$).
+- **Fase:** costante a $-90^\circ$, perché $-j$ ha esattamente quella fase.
 
-### Aggiungiamo l'OA
-
-L'idea è mettere tra il filtro e il carico un OA che faccia da **inseguitore** (buffer): uscita collegata direttamente all'ingresso invertente, quindi $V_{out}=V_+$.
-
-{/* TODO circuito: passa-basso RC (R in serie, C a massa) il cui nodo di uscita va all'ingresso non invertente di un OA; uscita OA collegata all'ingresso invertente (inseguitore); Vout = uscita OA; eventuale carico RL a massa */}
+{/* TODO Bode: derivatore ideale. Modulo (dB) in funzione di f/fu da 0,01 a 100: retta a +20 dB/dec che passa per 0 dB in fu. Fase (gradi): retta orizzontale a -90° */}
 <Figura
-  src="/img/filtri-oa/rc-lpf-buffer.svg"
-  alt="Filtro RC passa-basso seguito da un inseguitore con OA"
-  caption="Passa-basso RC seguito da un inseguitore: il filtro non vede più il carico."
+  src="/images/circuiti/bode-derivatore.svg"
+  alt="Diagramma di Bode del derivatore ideale"
+  caption="Bode del derivatore ideale: pendenza +20 dB/dec e fase costante a −90°."
 />
 
-L'ingresso non invertente non assorbe corrente, quindi la rete RC lavora a vuoto, e l'uscita dell'OA ha impedenza praticamente nulla, quindi pilota qualsiasi carico senza risentirne:
+Nel dominio del tempo:
 
 $$
-H(s)=\frac{1}{1+sRC}
+v_{out}(t)=-RC\,\frac{dv_{in}(t)}{dt}
 $$
 
-È esattamente la fdt "a vuoto" di prima, e adesso vale davvero, qualunque sia il carico.
-
-Se vogliamo anche **guadagno**, basta usare l'OA in configurazione non invertente con due resistenze $R_a$ (verso massa) e $R_b$ (di retroazione):
-
+Derivare una sinusoide significa moltiplicarla per $\omega$ e sfasarla di $-90^\circ$ (qui, ricordando il segno meno, rispetto al segnale d'ingresso): se $v_{in}=V\cos\omega t$, si ha 
 $$
-V_{out}=\left(1+\frac{R_b}{R_a}\right)V_+=K\,V_+,
-\qquad
-V_+=\frac{V_{in}}{1+sRC}
+v_{out}=\omega RC\,V\sin\omega t=\omega RC\,V\cos(\omega t-90^\circ)
 $$
 
-e quindi
+**Perché non è ancora un filtro?** Il guadagno cresce all'infinito con la frequenza, quindi qualsiasi disturbo o rumore ad alta frequenza viene amplificato sempre di più. In più, ad alta frequenza il condensatore è quasi un corto e il guadagno sale fino a incontrare la curva dell'OA reale, che ha una banda finita: lì la retroazione si avvicina a $180^\circ$ di sfasamento e il circuito tende a oscillare.
 
-$$
-H_{LP}(s)=\frac{K}{1+sRC},\qquad K=1+\frac{R_b}{R_a}
-$$
+### Derivatore con perdita
 
-Per il passa-alto il ragionamento è identico, con $V_+=V_{in}\,\dfrac{sRC}{1+sRC}$:
+Qui la cura è mettere una resistenza $R_1$ in serie al condensatore d'ingresso, per limitare il guadagno ad alta frequenza.
 
-$$
-H_{HP}(s)=K\,\frac{sRC}{1+sRC}
-$$
-
-Per il Bode non cambia nulla, a parte un fattore costante: l'intera curva del modulo si **alza** di $20\log_{10}K$ dB, mentre pendenze, frequenza di taglio e fase restano quelle di prima. Attenzione a come si legge il "$-3$ dB": è sempre rispetto al valore in banda passante. Con $K=10$ (cioè $+20$ dB) il taglio è dove il guadagno vale $+17$ dB.
-
-{/* TODO circuiti: (1) passa-basso: RC all'ingresso non invertente di un OA con Rb tra uscita e ingresso invertente e Ra tra ingresso invertente e massa; (2) passa-alto: stessa cosa ma con C in serie e R a massa all'ingresso */}
+{/* TODO circuito: derivatore con perdita. Come il derivatore ideale, con in più una resistenza Rs in serie al condensatore C all'ingresso (Vin -> Rs -> C -> ingresso invertente) */}
 <Figura
-  src="/img/filtri-oa/rc-attivo-non-invertente.svg"
-  alt="Filtri RC attivi del primo ordine con OA non invertente"
-  caption="Passa-basso e passa-alto del primo ordine con guadagno K = 1 + Rb/Ra."
+  src="/images/circuiti/oa-derivatore-perdita.svg"
+  alt="Derivatore con perdita"
+  caption="Derivatore con perdita."
 />
 
-> Esistono anche le versioni invertenti, in cui il condensatore va in parallelo alla resistenza di retroazione. Qui seguiamo la strada non invertente perché è quella che ci porta dritti ai Sallen-Key.
+L'impedenza d'ingresso ora è la serie $R_1+Z_C$:
 
-### Perché il primo ordine non basta
+$$
+Z_{in}=R_1+\frac{1}{j\omega C}=\frac{1+j\omega R_1C}{j\omega C}
+$$
 
-Un solo polo vuol dire 20 dB/dec di pendenza: spesso troppo poco. Il rimedio naturale sembra mettere due filtri RC in cascata. Proviamo, prima **senza** buffer.
+Con $I=V_{in}/Z_{in}$ e $V_{out}=-R_2\,I$:
 
-{/* TODO circuito: due celle RC passa-basso identiche collegate direttamente in cascata (R, C a massa, poi R, C a massa), senza OA; Vout sul secondo condensatore */}
+$$
+H(j\omega)=-\frac{R_2}{Z_{in}}=-\frac{j\omega R_2C}{1+j\omega R_1C}=-\frac{j\omega R_2C}{1+j\dfrac{\omega}{\omega_c}}\qquad\text{con}\qquad\omega_c=\frac{1}{R_1C}
+$$
+
+I due casi estremi:
+
+- **$\omega\ll\omega_c$:** $R_1$ è molto più piccola di $1/\omega C$, quindi è come se non ci fosse. Rimane $H\approx-j\omega R_2C$, cioè il derivatore ideale.
+- **$\omega\gg\omega_c$:** il condensatore è quasi un corto e il circuito diventa un amplificatore invertente con $H\to-\dfrac{R_2}{R_1}$. Il guadagno smette di crescere, e anche il rumore resta limitato.
+
+**Diagramma di Bode.**
+
+- **Modulo:** sale di 20 dB/dec lungo la retta del derivatore ideale fino a $\omega_c$, poi si appiattisce a $20\log_{10}(R_2/R_1)$. Anche qui $\omega_c/\omega_u=R_2/R_1$.
+- **Fase:** $-90^\circ-\arctan(\omega/\omega_c)$. Parte da $-90^\circ$ (derivatore), vale $-135^\circ$ in $\omega_c$ e tende a $-180^\circ$ (amplificatore invertente).
+
+{/* TODO Bode: derivatore con perdita. Modulo (dB) in funzione di f/fc da 0,001 a 100: salita a +20 dB/dec fino a fc, poi tratto piatto a 20log(Rf/Rs). Sovrapporre, tratteggiata, la retta del derivatore ideale (che coincide con la salita e prosegue verso destra). Fase: da -90° a -180° passando per -135° in fc, con la fase costante -90° del derivatore ideale tratteggiata */}
 <Figura
-  src="/img/filtri-oa/rc-cascata-passiva.svg"
-  alt="Due filtri RC passa-basso in cascata senza buffer"
-  caption="Due celle RC collegate direttamente: la seconda carica la prima."
+  src="/images/circuiti/bode-derivatore-perdita.svg"
+  alt="Diagramma di Bode del derivatore con perdita confrontato con quello ideale"
+  caption="Bode del derivatore con perdita (linea continua) e ideale (tratteggio)."
 />
 
-Chiamiamo $V_1$ la tensione del nodo intermedio e poniamo $x=sRC$. La corrente nel secondo condensatore è quella che arriva dalla seconda resistenza:
+> **Cosa è cambiato?** Come per l'integratore, ora c'è una banda passante piatta (verso l'alto), una frequenza di taglio e un'attenuazione verso il basso: è un **passa-alto del primo ordine**, invertente, con guadagno $R_2/R_1$. Il comportamento da derivatore resta solo per $\omega\ll\omega_c$. La regola pratica è di scegliere $\omega_c$ almeno una decade sopra la frequenza più alta che si vuole derivare.
+
+> **Cosa cambiano i componenti:** $R_1$ e $C$ fissano il taglio ($\omega_c=1/R_1C$); $R_2$ regola il guadagno ($R_2/R_1$) e la retta del derivatore ideale (la sua $f_u=1/2\pi R_2C$). Diminuire $R_1$ alza il taglio, quindi allarga la zona in cui il circuito deriva, ma lascia anche crescere di più il guadagno ad alta frequenza.
+
+> **Esempio:** Con $C=10\, \text{nf}$, $R_2=10\, \text{k}\Omega$ e $R_1=1\, \text{k}\Omega$ si ottiene una frequenza di guadagno unitario $f_u=\dfrac{1}{2\pi R_2C}\approx1{,}59\, \text{kHz}$, un taglio $f_c=\dfrac{1}{2\pi R_1C}\approx15{,}9\, \text{kHz}$ e un guadagno massimo $R_2/R_1=10$ (20 dB). Il circuito deriva bene fino a circa $1{,}6\, \text{kHz}$, una decade sotto il taglio.
+
+## I filtri Sallen-Key
+
+Integratore e derivatore con perdita sono due filtri del primo ordine. Funzionano, ma hanno dei limiti:
+
+- scendono di soli 20 dB/dec oltre il taglio, spesso troppo poco;
+- hanno un solo polo reale, quindi il ginocchio è sempre morbido e non si può regolare;
+- sono invertenti;
+- guadagno e frequenza di taglio dipendono dallo stesso componente ($R_2$);
+- ci danno soltanto passa-basso e passa-alto.
+
+Per fare meglio servono due poli, e poli **complessi coniugati**, che con soli $R$ e $C$ non esistono. Li ottiene la configurazione di Sallen e Key (1955): una rete RC del secondo ordine più un OA non invertente che riporta indietro una parte del segnale di uscita.
+
+### Cosa guadagniamo
+
+| | Integratore / derivatore con perdita | Sallen-Key |
+| --- | --- | --- |
+| Ordine | 1 | 2 |
+| Pendenza oltre il taglio | 20 dB/dec | 40 dB/dec (20 dB/dec per lato nel passa-banda) |
+| Poli | un polo reale | complessi coniugati, $Q$ regolabile |
+| Segno | invertente | non invertente |
+| Parametri | guadagno e taglio legati da $R_2$ | $f_0$ con $R$ e $C$, $Q$ con il guadagno $K$ |
+| Tipi di filtro | passa-basso, passa-alto | passa-basso, passa-alto, passa-banda, notch |
+
+In più l'uscita è quella di un OA, quindi il filtro non risente del carico e gli stadi si possono mettere in cascata per arrivare agli ordini alti.
+
+### L'idea
+
+Il circuito si legge in tre parti.
+
+1. Una **rete RC** a due resistenze e due condensatori che decide il tipo di filtro (condensatori verso massa per il passa-basso, in serie per il passa-alto, e così via).
+2. Un **OA non invertente** con guadagno $K=1+R_b/R_a$. Con $K=1$ è un semplice buffer (uscita collegata all'ingresso invertente).
+3. Un **ritorno** di una parte della tensione di uscita su un nodo interno della rete RC (il nodo $A$ nelle figure).
+
+Quest'ultimo punto è il cuore del circuito. L'OA non inverte, quindi quello che torna indietro è in fase con il segnale: è una **retroazione positiva**. Rinforza il segnale proprio attorno a $f_0$, dove la rete RC comincerebbe ad attenuarlo, e questo rende il ginocchio più deciso. Quanto rinforza lo decide $K$: più è grande, più $Q$ cresce. Oltre un valore critico il circuito diventa un oscillatore, quindi $K$ ha sempre un limite superiore.
+<br/>
+Tutti e quattro i filtri hanno numeratore diverso ma lo stesso denominatore:
 
 $$
-\frac{V_1-V_{out}}{R}=V_{out}\,sC
-\quad\Longrightarrow\quad
-V_1=(1+x)\,V_{out}
+D(s)=s^2+\frac{\omega_0}{Q}\,s+\omega_0^2
 $$
 
-Al nodo intermedio la corrente che arriva dalla prima $R$ si divide tra il primo condensatore e la seconda $R$:
+Nelle formule che seguono $\omega_0=2\pi f_0$ e $K$ è il guadagno dell'OA.
 
-$$
-\frac{V_{in}-V_1}{R}=V_1\,sC+\frac{V_1-V_{out}}{R}
-\quad\Longrightarrow\quad
-V_{in}=(2+x)\,V_1-V_{out}
-$$
+### Passa-basso
 
-Sostituiamo $V_1$:
+Due resistenze $R_1$, $R_2$ in serie al segnale, il condensatore $C_2$ da $B$ a massa e $C_1$ che riporta il nodo $A$ all'uscita.
 
-$$
-V_{in}=\big[(2+x)(1+x)-1\big]V_{out}=(x^2+3x+1)\,V_{out}
-$$
-
-$$
-H(s)=\frac{1}{1+3\,sRC+(sRC)^2}
-$$
-
-Confrontiamo con la forma standard: $a_2=(RC)^2$ e $a_1=3RC$, quindi $\omega_0=1/RC$ e $Q=\sqrt{a_2}/a_1=1/3$. Il $Q$ è sotto $1/2$, quindi i poli sono reali e distinti. Il risultato è che il ginocchio è molto più morbido del previsto: il taglio a $-3$ dB non sta in $1/RC$ ma, risolvendo $u^4+7u^2-1=0$ per $u=\omega RC$, in $u\approx0{,}374$. Ogni cella ha "spostato" l'altra.
-
-Se mettiamo un buffer tra le due celle, le celle non si caricano più a vicenda e la fdt diventa il prodotto delle due:
-
-$$
-H(s)=\frac{1}{(1+sRC)^2}
-$$
-
-Il taglio a $-3$ dB è a $u=\sqrt{\sqrt2-1}\approx0{,}644$, e la pendenza finale è di 40 dB/dec. Meglio, ma il ginocchio resta arrotondato: è un polo doppio reale, quindi $Q=1/2$ e non si va oltre. Per avere un ginocchio vero servono poli complessi coniugati, e per ottenerli senza induttori serve la retroazione positiva attorno all'OA. È l'idea di Sallen e Key.
-
-## Filtri Sallen-Key
-
-Sallen e Key la proposero nel 1955 (presso il MIT Lincoln Laboratory) e da allora è una delle strutture più usate in assoluto. L'OA è usato come amplificatore non invertente di guadagno $K$ (con $K=1$ è un semplice buffer) e una parte del segnale di uscita viene riportata, tramite un componente, al nodo interno della rete RC. Quel ritorno è una **retroazione positiva**: attorno a $\omega_0$ il segnale che torna indietro rinforza quello in ingresso, e questo "gonfia" la risposta e sposta i poli fuori dall'asse reale. L'intensità del rinforzo è regolata da $K$, e determina $Q$.
-
-Fa un po' paura parlare di retroazione positiva, perché è anche il meccanismo degli oscillatori. In effetti se $K$ supera un valore critico il circuito oscilla. Ma restando sotto quel valore il filtro è stabile, e vedremo esattamente dove sta il limite.
-
-### Una formula per tutti
-
-Invece di rifare il conto quattro volte, lo facciamo **una volta** con quattro componenti generici, descritti dalle loro ammettenze $Y_1,\dots,Y_4$. Poi per ogni filtro basterà dire chi sono $R$ e chi sono $C$.
-
-La struttura è questa: l'ingresso arriva al nodo $A$ attraverso $Y_1$; da $A$ si va al nodo $B$ attraverso $Y_2$; $B$ è l'ingresso non invertente dell'OA e va a massa attraverso $Y_4$; infine $Y_3$ collega $A$ all'uscita (la retroazione positiva).
-
-{/* TODO circuito generico: Vin -> Y1 -> nodo A; A -> Y2 -> nodo B; B -> Y4 -> massa; A -> Y3 -> Vout; B all'ingresso non invertente dell'OA; OA non invertente con guadagno K = 1 + Rb/Ra (Rb tra uscita e ingresso invertente, Ra tra ingresso invertente e massa). Etichettare i nodi A e B. */}
-<Figura
-  src="/img/filtri-oa/sk-generico.svg"
-  alt="Struttura generale del filtro Sallen-Key con quattro ammettenze generiche"
-  caption="La struttura Sallen-Key con ammettenze generiche Y1…Y4 e OA non invertente di guadagno K."
-/>
-
-Ci servono tre equazioni. L'ingresso dell'OA non assorbe corrente e l'OA amplifica di $K$:
-
-$$
-V_{out}=K\,V_B
-$$
-
-**1) Nodo $B$.** La corrente che arriva da $A$ attraverso $Y_2$ va tutta in $Y_4$:
-
-$$
-(V_A-V_B)\,Y_2=V_B\,Y_4
-\quad\Longrightarrow\quad
-V_A=V_B\,\frac{Y_2+Y_4}{Y_2}
-$$
-
-**2) Nodo $A$.** La corrente che arriva da $V_{in}$ si distribuisce tra $Y_2$ (verso $B$) e $Y_3$ (verso l'uscita):
-
-$$
-(V_{in}-V_A)\,Y_1=(V_A-V_B)\,Y_2+(V_A-V_{out})\,Y_3
-$$
-
-Nel primo termine a destra riconosciamo, per l'equazione del nodo $B$, $(V_A-V_B)Y_2=V_BY_4$. Sostituiamo e portiamo $V_A$ a sinistra:
-
-$$
-V_{in}\,Y_1=V_A\,(Y_1+Y_3)+V_B\,Y_4-V_{out}\,Y_3
-$$
-
-Ora esprimiamo tutto in funzione di $V_{out}$, usando $V_B=V_{out}/K$ e $V_A=V_{out}\dfrac{Y_2+Y_4}{K\,Y_2}$:
-
-$$
-V_{in}\,Y_1=V_{out}\left[\frac{(Y_2+Y_4)(Y_1+Y_3)}{K\,Y_2}+\frac{Y_4}{K}-Y_3\right]
-$$
-
-Moltiplichiamo tutto per $K\,Y_2$:
-
-$$
-K\,Y_1Y_2\,V_{in}=V_{out}\Big[(Y_2+Y_4)(Y_1+Y_3)+Y_2Y_4-K\,Y_2Y_3\Big]
-$$
-
-Sviluppiamo il prodotto: $(Y_2+Y_4)(Y_1+Y_3)=Y_1Y_2+Y_2Y_3+Y_1Y_4+Y_3Y_4$. I termini $Y_2Y_3$ e $-K\,Y_2Y_3$ si raccolgono in $(1-K)\,Y_2Y_3$ e otteniamo la formula che useremo per tutto il resto della pagina:
-
-$$
-\boxed{\,H(s)=\frac{K\,Y_1Y_2}{Y_1Y_2+Y_1Y_4+Y_2Y_4+Y_3Y_4+(1-K)\,Y_2Y_3}\,}
-$$
-
-Ogni resistenza ha ammettenza $1/R$, ogni condensatore $sC$. La scelta di *chi* è resistenza e *chi* è condensatore decide il tipo di filtro.
-
-### Passa-basso Sallen-Key
-
-Per un passa-basso mettiamo resistenze in serie al segnale e condensatori "di traverso":
-
-$$
-Y_1=\frac{1}{R_1},\qquad Y_2=\frac{1}{R_2},\qquad Y_3=sC_1,\qquad Y_4=sC_2
-$$
-
-Quindi $R_1$ e $R_2$ stanno in serie tra ingresso e $B$, $C_2$ va da $B$ a massa e $C_1$ riporta il nodo $A$ all'uscita.
-
-{/* TODO circuito: Vin -> R1 -> nodo A; A -> R2 -> nodo B (ingresso non invertente OA); B -> C2 -> massa; A -> C1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore, uscita collegata direttamente all'ingresso invertente. */}
+{/* TODO circuito: Vin -> R1 -> nodo A; A -> R2 -> nodo B (ingresso non invertente OA); B -> C2 -> massa; A -> C1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore, uscita collegata direttamente all'ingresso invertente */}
 <Figura
   src="/img/filtri-oa/sk-lpf-circuito.svg"
   alt="Filtro Sallen-Key passa-basso"
   caption="Sallen-Key passa-basso: R1 e R2 in serie al segnale, C2 a massa, C1 in retroazione."
 />
 
-Calcoliamo i cinque prodotti che compaiono nella formula:
-
 $$
-Y_1Y_2=\frac{1}{R_1R_2},\quad
-Y_1Y_4=\frac{sC_2}{R_1},\quad
-Y_2Y_4=\frac{sC_2}{R_2},\quad
-Y_3Y_4=s^2C_1C_2,\quad
-Y_2Y_3=\frac{sC_1}{R_2}
+H_{LP}(s)=\frac{K\,\omega_0^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
 $$
-
-Il denominatore, ordinato per potenze di $s$, è
-
-$$
-\frac{1}{R_1R_2}+s\left[\frac{C_2}{R_1}+\frac{C_2}{R_2}+(1-K)\frac{C_1}{R_2}\right]+s^2C_1C_2
-$$
-
-e il numeratore è $K/(R_1R_2)$. Moltiplichiamo numeratore e denominatore per $R_1R_2$:
-
-$$
-H_{LP}(s)=\frac{K}{1+s\Big[(R_1+R_2)\,C_2+(1-K)\,R_1C_1\Big]+s^2R_1R_2C_1C_2}
-$$
-
-Leggiamo $a_1$ e $a_2$ come visto prima:
 
 $$
 \omega_0=\frac{1}{\sqrt{R_1R_2C_1C_2}},\qquad
 Q=\frac{\sqrt{R_1R_2C_1C_2}}{(R_1+R_2)\,C_2+(1-K)\,R_1C_1}
 $$
 
-Notiamo che in $s=0$ la fdt vale $K$: il guadagno in continua è proprio il guadagno dell'OA.
+Le due scelte di progetto più comuni:
 
-**Caso 1: guadagno unitario ($K=1$).** Il termine $(1-K)R_1C_1$ sparisce e il buffer non ha bisogno di resistenze di guadagno. Con $R_1=R_2=R$:
+- **Componenti uguali** ($R_1=R_2=R$, $C_1=C_2=C$): $\omega_0=\dfrac{1}{RC}$ e $Q=\dfrac{1}{3-K}$, quindi $K=3-\dfrac{1}{Q}$. Il circuito è stabile solo per $K\lt3$.
+- **Guadagno unitario** ($K=1$, $R_1=R_2=R$): $Q=\dfrac12\sqrt{\dfrac{C_1}{C_2}}$, quindi $C_1=4Q^2\,C_2$. Per Butterworth ($Q=0{,}707$) basta $C_1=2C_2$.
 
-$$
-Q=\frac{\sqrt{R^2C_1C_2}}{2R\,C_2}=\frac12\sqrt{\frac{C_1}{C_2}}
-\quad\Longrightarrow\quad
-C_1=4Q^2\,C_2
-$$
+**Cosa cambiano i parametri.**
 
-Il condensatore di retroazione $C_1$ deve essere più grande di quello a massa. Per una risposta di Butterworth ($Q=1/\sqrt2$) basta $C_1=2C_2$. Non si può scendere sotto $Q=1/2$, che si ottiene con $C_1=C_2$.
+- **$R$ e $C$** spostano $f_0$ lungo l'asse delle frequenze senza cambiare la forma della curva: raddoppiare $R$ dimezza $f_0$.
+- **$K$** regola $Q$ e quindi il ginocchio: $K$ piccolo dà un ginocchio morbido, $K$ vicino a 3 un picco alto in $f_0$ e, a $K=3$, l'oscillazione. Con componenti uguali $K$ è anche il guadagno in banda passante, quindi guadagno e $Q$ sono legati (Butterworth: $K=1{,}586$, cioè $+4$ dB).
+- **Con $K=1$** il guadagno resta 1 e $Q$ si regola con il rapporto tra i condensatori: si perde la libertà sul guadagno ma si guadagna in semplicità e precisione.
 
-**Caso 2: componenti uguali ($R_1=R_2=R$, $C_1=C_2=C$).** Ora usiamo $K$ per regolare $Q$. Il coefficiente di $s$ vale $2RC+(1-K)RC=(3-K)\,RC$ e, con $x=sRC$:
+**Diagramma di Bode.** In banda passante il guadagno è $K$ e la fase $0^\circ$. In $f_0$ il guadagno vale $K\,Q$ e la fase esattamente $-90^\circ$. Oltre $f_0$ il modulo scende di 40 dB/dec e la fase tende a $-180^\circ$. Più $Q$ è alto, più la fase cambia in fretta attorno a $f_0$.
 
-$$
-H_{LP}(s)=\frac{K}{1+(3-K)\,x+x^2},
-\qquad
-\omega_0=\frac{1}{RC},
-\qquad
-Q=\frac{1}{3-K}
-$$
-
-Invertendo: $K=3-\dfrac1Q$. Per $K\to3$ il $Q$ tende a infinito e il circuito diventa un oscillatore: dunque $K$ deve restare **strettamente minore di 3**. Per Butterworth serve $K=3-\sqrt2\approx1{,}586$, cioè $R_b/R_a\approx0{,}586$.
-
-**Diagramma di Bode.** Scriviamo la fdt nella forma standard:
-
-$$
-H_{LP}(s)=\frac{K\,\omega_0^2}{s^2+\dfrac{\omega_0}{Q}s+\omega_0^2}
-$$
-
-e ponendo $u=\omega/\omega_0$ (così $s/\omega_0=ju$):
-
-$$
-H_{LP}(j\omega)=\frac{K}{(1-u^2)+j\,\dfrac{u}{Q}}
-\qquad\Longrightarrow\qquad
-\lvert H\rvert=\frac{K}{\sqrt{(1-u^2)^2+\dfrac{u^2}{Q^2}}},
-\qquad
-\angle H=-\operatorname{atan2}\!\left(\frac{u}{Q},\,1-u^2\right)
-$$
-
-Leggiamo il comportamento:
-
-- **Bassa frequenza** ($u\ll1$): $\lvert H\rvert\approx K$, cioè $20\log_{10}K$ dB, fase $0^\circ$.
-- **Alta frequenza** ($u\gg1$): $\lvert H\rvert\approx K/u^2$, cioè una retta con pendenza $-40$ dB/dec, fase $-180^\circ$.
-- **Le due rette si incontrano in $u=1$** a livello $K$. In $\omega_0$ il valore vero è $\lvert H(j\omega_0)\rvert=K\,Q$, cioè $20\log_{10}Q$ dB *sopra* l'intersezione degli asintoti, e la fase vale esattamente $-90^\circ$.
-
-**Il picco di risonanza.** Il modulo è massimo quando è minimo il radicando $f(u)=(1-u^2)^2+u^2/Q^2$. Con $w=u^2$:
-
-$$
-f=(1-w)^2+\frac{w}{Q^2}
-\quad\Longrightarrow\quad
-\frac{df}{dw}=-2(1-w)+\frac{1}{Q^2}=0
-\quad\Longrightarrow\quad
-w=1-\frac{1}{2Q^2}
-$$
-
-Questa soluzione ha senso ($w>0$) solo se $Q>1/\sqrt2$: per $Q\le1/\sqrt2$ il modulo non ha picco e scende in modo monotono (il caso $Q=1/\sqrt2$ è proprio la risposta di Butterworth, la più piatta possibile). Per $Q>1/\sqrt2$ il picco sta in
-
-$$
-u_p=\sqrt{1-\frac{1}{2Q^2}}
-$$
-
-e, sostituendo $1-w=1/(2Q^2)$ in $f$, si ha $f_{min}=\dfrac{1}{Q^2}\left(1-\dfrac{1}{4Q^2}\right)$, quindi
-
-$$
-\lvert H\rvert_{max}=\frac{K\,Q}{\sqrt{1-\dfrac{1}{4Q^2}}}
-$$
-
-Qualche valore (tutti da moltiplicare per il guadagno $K$ in banda passante):
-
-| $Q$ | Guadagno in $\omega_0$ | Picco massimo | Posizione del picco |
-| --- | --- | --- | --- |
-| 0,5 | $-6{,}02$ dB | nessuno | — |
-| 0,707 (Butterworth) | $-3{,}01$ dB | nessuno (piatta) | — |
-| 1 | $0$ dB | $+1{,}25$ dB | $0{,}707\,\omega_0$ |
-| 2 | $+6{,}02$ dB | $+6{,}30$ dB | $0{,}935\,\omega_0$ |
-| 5 | $+13{,}98$ dB | $+14{,}02$ dB | $0{,}990\,\omega_0$ |
-
-Anche la fase risente di $Q$: va da $0^\circ$ a $-180^\circ$ passando sempre per $-90^\circ$ in $\omega_0$, ma più $Q$ è alto più la transizione è ripida e concentrata attorno a $\omega_0$.
-
-{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un LPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5, sulla stessa figura. Asintoti: 0 dB fino a f0, poi -40 dB/dec. Fase da 0° a -180°. */}
+{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un LPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5, sulla stessa figura. Asintoti: 0 dB fino a f0, poi -40 dB/dec. Fase da 0° a -180°, sempre -90° in f0 */}
 <Figura
-  src="/img/filtri-oa/sk-lpf-bode.svg"
+  src="/images/circuiti/bode-sk-lpf.svg"
   alt="Diagrammi di Bode del Sallen-Key passa-basso per diversi valori di Q"
   caption="Bode del Sallen-Key passa-basso per Q = 0,5; 0,707; 1; 2; 5."
 />
 
-**Esempio.** Butterworth con $f_c=1$ kHz, guadagno unitario, $C_2=10$ nF e quindi $C_1=2C_2=20$ nF. Con $R_1=R_2=R$ si ha $\omega_0=1/(R\sqrt{C_1C_2})=1/(\sqrt2\,R\,C_2)$, da cui
+**Esempio.** Butterworth a $f_c=1$ kHz con $K=1$: $C_2=10$ nF, $C_1=20$ nF e
 
 $$
 R=\frac{1}{\sqrt2\,\omega_0\,C_2}=\frac{1}{\sqrt2\cdot2\pi\cdot1000\cdot10\cdot10^{-9}}\approx11{,}25\ \text{k}\Omega
 $$
 
-### Passa-alto Sallen-Key
+### Passa-alto
 
-Per il passa-alto scambiamo i ruoli di resistenze e condensatori: condensatori in serie al segnale, resistenze "di traverso".
+È il duale del precedente: scambiamo i ruoli di resistenze e condensatori. $C_1$ e $C_2$ in serie al segnale, la resistenza $R_2$ da $B$ a massa e $R_1$ che riporta il nodo $A$ all'uscita.
 
-$$
-Y_1=sC_1,\qquad Y_2=sC_2,\qquad Y_3=\frac{1}{R_1},\qquad Y_4=\frac{1}{R_2}
-$$
-
-Attenzione ai nomi: $R_1$ è la resistenza che riporta il nodo $A$ all'uscita (retroazione), $R_2$ è quella che va da $B$ a massa.
-
-{/* TODO circuito: Vin -> C1 -> nodo A; A -> C2 -> nodo B (ingresso non invertente OA); B -> R2 -> massa; A -> R1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore. */}
+{/* TODO circuito: Vin -> C1 -> nodo A; A -> C2 -> nodo B (ingresso non invertente OA); B -> R2 -> massa; A -> R1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore */}
 <Figura
   src="/img/filtri-oa/sk-hpf-circuito.svg"
   alt="Filtro Sallen-Key passa-alto"
   caption="Sallen-Key passa-alto: C1 e C2 in serie al segnale, R2 a massa, R1 in retroazione."
 />
 
-I prodotti sono:
-
 $$
-Y_1Y_2=s^2C_1C_2,\quad
-Y_1Y_4=\frac{sC_1}{R_2},\quad
-Y_2Y_4=\frac{sC_2}{R_2},\quad
-Y_3Y_4=\frac{1}{R_1R_2},\quad
-Y_2Y_3=\frac{sC_2}{R_1}
+H_{HP}(s)=\frac{K\,s^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
 $$
-
-Il numeratore è $K\,s^2C_1C_2$ e il denominatore, ordinato per potenze di $s$:
-
-$$
-\frac{1}{R_1R_2}+s\left[\frac{C_1+C_2}{R_2}+(1-K)\frac{C_2}{R_1}\right]+s^2C_1C_2
-$$
-
-Moltiplichiamo sopra e sotto per $R_1R_2$:
-
-$$
-H_{HP}(s)=\frac{K\,s^2R_1R_2C_1C_2}{1+s\Big[R_1(C_1+C_2)+(1-K)\,R_2C_2\Big]+s^2R_1R_2C_1C_2}
-$$
-
-Il denominatore ha la stessa forma di prima, quindi:
 
 $$
 \omega_0=\frac{1}{\sqrt{R_1R_2C_1C_2}},\qquad
-Q=\frac{\sqrt{R_1R_2C_1C_2}}{R_1(C_1+C_2)+(1-K)\,R_2C_2}
+Q=\frac{\sqrt{R_1R_2C_1C_2}}{R_1\,(C_1+C_2)+(1-K)\,R_2C_2}
 $$
 
-**Caso 1: $K=1$ e $C_1=C_2=C$.** Il denominatore è $2R_1C$, e
+- **Componenti uguali:** $\omega_0=\dfrac{1}{RC}$, $Q=\dfrac{1}{3-K}$, stabile per $K\lt3$.
+- **Guadagno unitario** ($K=1$, $C_1=C_2=C$): $Q=\dfrac12\sqrt{\dfrac{R_2}{R_1}}$, quindi $R_2=4Q^2\,R_1$. Per Butterworth: $R_2=2R_1$.
 
-$$
-Q=\frac{C\sqrt{R_1R_2}}{2R_1C}=\frac12\sqrt{\frac{R_2}{R_1}}
-\quad\Longrightarrow\quad
-R_2=4Q^2\,R_1
-$$
+I parametri si comportano come nel passa-basso: $R$ e $C$ spostano $f_0$, $K$ (o il rapporto tra le resistenze) regola $Q$.
 
-È il duale del passa-basso: la resistenza a massa $R_2$ deve essere più grande di quella di retroazione. Per Butterworth: $R_2=2R_1$.
+**Diagramma di Bode.** È lo specchio del passa-basso. Sotto $f_0$ il modulo sale di 40 dB/dec, sopra $f_0$ il guadagno è $K$. In $f_0$ vale $K\,Q$ con fase $+90^\circ$. La fase va da $+180^\circ$ a $0^\circ$. Se $Q\gt0{,}707$ il picco si trova poco sopra $f_0$ (nel passa-basso era poco sotto).
 
-**Caso 2: componenti uguali.** Con $R_1=R_2=R$, $C_1=C_2=C$ e $x=sRC$ otteniamo, come per il passa-basso,
-
-$$
-H_{HP}(s)=\frac{K\,x^2}{1+(3-K)\,x+x^2},
-\qquad
-\omega_0=\frac1{RC},
-\qquad
-Q=\frac{1}{3-K}
-$$
-
-**Diagramma di Bode.** In forma standard:
-
-$$
-H_{HP}(s)=\frac{K\,s^2}{s^2+\dfrac{\omega_0}{Q}s+\omega_0^2}
-\qquad\Longrightarrow\qquad
-H_{HP}(j\omega)=\frac{-K\,u^2}{(1-u^2)+j\,\dfrac{u}{Q}}
-$$
-
-Il modulo e la fase sono:
-
-$$
-\lvert H\rvert=\frac{K\,u^2}{\sqrt{(1-u^2)^2+\dfrac{u^2}{Q^2}}},
-\qquad
-\angle H=180^\circ-\operatorname{atan2}\!\left(\frac{u}{Q},\,1-u^2\right)
-$$
-
-- **Bassa frequenza** ($u\ll1$): $\lvert H\rvert\approx K\,u^2$, una retta con pendenza **$+40$ dB/dec**, fase $+180^\circ$.
-- **Alta frequenza** ($u\gg1$): $\lvert H\rvert\approx K$, cioè $20\log_{10}K$ dB, fase $0^\circ$.
-- Le rette si incontrano in $u=1$; il valore vero in $\omega_0$ è $K\,Q$ e la fase è $+90^\circ$.
-
-Il passa-alto è lo "specchio" del passa-basso: basta sostituire $u\to1/u$. Quindi valgono le stesse formule per il picco e la stessa tabella di prima, con la posizione del picco in $\omega_0/u_p=\omega_0/\sqrt{1-1/(2Q^2)}$, cioè *sopra* $\omega_0$ invece che sotto.
-
-{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un HPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5. Asintoti: +40 dB/dec fino a f0, poi 0 dB. Fase da +180° a 0°. */}
+{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un HPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5. Asintoti: +40 dB/dec fino a f0, poi 0 dB. Fase da +180° a 0°, sempre +90° in f0 */}
 <Figura
-  src="/img/filtri-oa/sk-hpf-bode.svg"
+  src="/images/circuiti/bode-sk-hpf.svg"
   alt="Diagrammi di Bode del Sallen-Key passa-alto per diversi valori di Q"
   caption="Bode del Sallen-Key passa-alto per Q = 0,5; 0,707; 1; 2; 5."
 />
 
-**Esempio.** Butterworth con $f_c=1$ kHz, $K=1$, $C_1=C_2=10$ nF. Da $\omega_0=1/(C\sqrt{R_1R_2})=1/(\sqrt2\,R_1C)$ si ricava
+**Esempio.** Butterworth a $f_c=1$ kHz con $K=1$ e $C_1=C_2=10$ nF:
 
 $$
-R_1=\frac{1}{\sqrt2\,\omega_0\,C}\approx11{,}25\ \text{k}\Omega,
-\qquad
-R_2=2R_1\approx22{,}5\ \text{k}\Omega
+R_1=\frac{1}{\sqrt2\,\omega_0\,C}\approx11{,}25\ \text{k}\Omega,\qquad R_2=2R_1\approx22{,}5\ \text{k}\Omega
 $$
 
-### Passa-banda Sallen-Key
+### Passa-banda
 
-Per un passa-banda servono entrambe le cose: tagliare le basse (un condensatore in serie) e le alte (un condensatore verso massa), lasciando passare una banda in mezzo. Nella nostra formula il numeratore $K\,Y_1Y_2$ deve contenere un solo $s$, quindi uno tra $Y_1$ e $Y_2$ è una resistenza e l'altro un condensatore. Scegliamo:
+Serve un condensatore in serie per tagliare le basse e uno verso massa per tagliare le alte. Il circuito: $R_1$ in ingresso verso il nodo $A$, $C_1$ in serie tra $A$ e $B$, il parallelo $R_2\parallel C_2$ da $B$ a massa e $R_3$ che riporta $A$ all'uscita.
 
-$$
-Y_1=\frac{1}{R_1},\qquad
-Y_2=sC_1,\qquad
-Y_3=\frac{1}{R_3},\qquad
-Y_4=\frac{1}{R_2}+sC_2
-$$
-
-Cioè: ingresso al nodo $A$ tramite $R_1$, poi $C_1$ in serie fino a $B$ (questo è l'elemento passa-alto), poi dal nodo $B$ a massa il parallelo $R_2\parallel C_2$ (l'elemento passa-basso), mentre $R_3$ riporta l'uscita sul nodo $A$.
-
-{/* TODO circuito: Vin -> R1 -> nodo A; A -> C1 -> nodo B (ingresso non invertente OA); B -> (R2 in parallelo a C2) -> massa; A -> R3 -> Vout; OA non invertente con guadagno K = 1 + Rb/Ra. */}
+{/* TODO circuito: Vin -> R1 -> nodo A; A -> C1 -> nodo B (ingresso non invertente OA); B -> (R2 in parallelo a C2) -> massa; A -> R3 -> Vout; OA non invertente con guadagno K = 1 + Rb/Ra */}
 <Figura
   src="/img/filtri-oa/sk-bpf-circuito.svg"
   alt="Filtro Sallen-Key passa-banda"
-  caption="Sallen-Key passa-banda: R1 in ingresso, C1 in serie tra i nodi A e B, R2 in parallelo a C2 verso massa, R3 in retroazione."
+  caption="Sallen-Key passa-banda: R1 in ingresso, C1 tra i nodi A e B, R2 in parallelo a C2 verso massa, R3 in retroazione."
 />
 
-Calcoliamo i prodotti:
+Con la scelta ordinata $C_1=C_2=C$, $R_2=R$, $R_1=R_3=2R$:
 
 $$
-Y_1Y_2=\frac{sC_1}{R_1},\qquad
-Y_1Y_4=\frac{1}{R_1}\left(\frac1{R_2}+sC_2\right),\qquad
-Y_3Y_4=\frac{1}{R_3}\left(\frac1{R_2}+sC_2\right)
+H_{BP}(s)=G_0\,\frac{\dfrac{\omega_0}{Q}\,s}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
 $$
-
-$$
-Y_2Y_4=sC_1\left(\frac1{R_2}+sC_2\right)=\frac{sC_1}{R_2}+s^2C_1C_2,\qquad
-Y_2Y_3=\frac{sC_1}{R_3}
-$$
-
-Raccogliamo per potenze di $s$ nel denominatore:
-
-$$
-\begin{aligned}
-s^0:&\quad \frac{1}{R_2}\left(\frac1{R_1}+\frac1{R_3}\right)\\[2pt]
-s^1:&\quad \frac{C_1}{R_1}+\frac{C_1}{R_2}+\frac{C_2}{R_1}+\frac{C_2}{R_3}+(1-K)\frac{C_1}{R_3}\\[2pt]
-s^2:&\quad C_1C_2
-\end{aligned}
-$$
-
-Il numeratore è $K\,sC_1/R_1$. Già qui si legge la pulsazione centrale (rapporto tra i coefficienti di $s^0$ e $s^2$):
-
-$$
-\omega_0=\sqrt{\frac{R_1+R_3}{R_1R_2R_3\,C_1C_2}}
-$$
-
-Per rendere il tutto maneggevole, scegliamo i componenti in modo ordinato: $C_1=C_2=C$, $R_2=R$ e $R_1=R_3=2R$. Il coefficiente di $s^0$ diventa $\dfrac{1}{R}\cdot\dfrac{1}{R}=\dfrac{1}{R^2}$, quello di $s^1$ vale
-
-$$
-\frac{C}{R}\left[\frac12+1+\frac12+\frac12+\frac{1-K}{2}\right]=\frac{C}{R}\left(3-\frac K2\right)
-$$
-
-e quello di $s^2$ è $C^2$. Moltiplicando numeratore e denominatore per $R^2$ e con $x=sRC$:
-
-$$
-H_{BP}(s)=\frac{\dfrac K2\,x}{1+\left(3-\dfrac K2\right)x+x^2}
-$$
-
-Quindi
 
 $$
 \omega_0=\frac{1}{RC},\qquad
-Q=\frac{1}{3-K/2}=\frac{2}{6-K},\qquad
-K=6-\frac{2}{Q}
+Q=\frac{2}{6-K},\qquad
+G_0=\frac{K}{6-K}=3Q-1
 $$
 
-Il guadagno al centro banda si trova valutando la fdt in $x=j$:
+Si inverte in $K=6-\dfrac{2}{Q}$. Il circuito è stabile solo per $K\lt6$.
 
-$$
-H_{BP}(j\omega_0)=\frac{\dfrac K2\,j}{(3-K/2)\,j}=\frac{K/2}{3-K/2}=\frac{K}{6-K}=:G_0
-$$
+**Cosa cambiano i parametri.**
 
-Lo stesso guadagno si può scrivere come $G_0=\dfrac{KQ}{2}$ e, sostituendo $K=6-2/Q$, come $G_0=3Q-1$. Questo è un limite noto del Sallen-Key passa-banda: **guadagno al centro e $Q$ non sono indipendenti**. Più la banda è stretta, più il filtro amplifica al centro. Il filtro è stabile per $K<6$.
+- **$R$ e $C$** spostano $f_0$.
+- **$K$** regola $Q$ e quindi la larghezza di banda $B=f_0/Q$: più $K$ si avvicina a 6, più la banda si stringe.
+- **Il guadagno $G_0$ non è libero:** è legato a $Q$ da $G_0=3Q-1$. Più il filtro è selettivo, più amplifica al centro banda. È un limite di questa struttura.
+- **La sensibilità cresce con $Q$:** per $Q=10$ serve $K=5{,}8$, e un errore dell'1% su $K$ sposta $Q$ di circa il 30%. Per $Q$ elevati si usano strutture diverse.
 
-**Diagramma di Bode.** Riscriviamo la fdt nella forma standard del passa-banda:
+**Diagramma di Bode.** Il modulo sale di 20 dB/dec fino a $f_0$, raggiunge il massimo $G_0$ e poi scende di 20 dB/dec. La fase va da $+90^\circ$ a $-90^\circ$ passando per $0^\circ$ in $f_0$. La banda tra i punti a $-3$ dB è $B=f_0/Q$.
 
-$$
-H_{BP}(s)=G_0\,\frac{\dfrac{\omega_0}{Q}\,s}{s^2+\dfrac{\omega_0}{Q}s+\omega_0^2}
-$$
-
-(si verifica dividendo numeratore e denominatore per $\omega_0^2$ e usando $G_0=KQ/2$.) Con $s=j\omega_0u$:
-
-$$
-H_{BP}(j\omega)=G_0\,\frac{j\,u/Q}{(1-u^2)+j\,u/Q}
-$$
-
-Dividendo numeratore e denominatore per $u/Q$ il modulo prende una forma molto leggibile:
-
-$$
-\lvert H\rvert=\frac{G_0}{\sqrt{1+Q^2\left(u-\dfrac1u\right)^2}},
-\qquad
-\angle H=90^\circ-\operatorname{atan2}\!\left(\frac{u}{Q},\,1-u^2\right)
-$$
-
-- In $u=1$ il termine $u-1/u$ si annulla, quindi il modulo è massimo e vale $G_0$; la fase vale $0^\circ$.
-- **Bassa frequenza** ($u\ll1$): $\lvert H\rvert\approx G_0\,u/Q$, pendenza **$+20$ dB/dec**, fase $+90^\circ$.
-- **Alta frequenza** ($u\gg1$): $\lvert H\rvert\approx G_0/(Q\,u)$, pendenza **$-20$ dB/dec**, fase $-90^\circ$.
-- Le due rette asintotiche si incontrano in $u=1$ a livello $G_0/Q$, cioè $20\log_{10}Q$ dB *sotto* il picco reale: più $Q$ è alto, più la curva vera "sporge" dagli asintoti.
-
-**Larghezza di banda.** I punti a $-3$ dB sono quelli in cui il radicando vale 2, cioè $Q^2(u-1/u)^2=1$, ovvero $u-1/u=\pm1/Q$. Moltiplicando per $u$ si ha $u^2\mp u/Q-1=0$, la cui radice positiva è
-
-$$
-u_{1,2}=\sqrt{1+\frac{1}{4Q^2}}\mp\frac{1}{2Q}
-$$
-
-Due proprietà utili: $u_1u_2=1$ (quindi $\omega_0$ è la **media geometrica** dei due punti di taglio) e $u_2-u_1=1/Q$, cioè
-
-$$
-B=\omega_2-\omega_1=\frac{\omega_0}{Q}\qquad\Longleftrightarrow\qquad Q=\frac{f_0}{B}
-$$
-
-{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un BPF con Q = 1 / 2 / 5 / 10; segnare i punti a -3 dB e la larghezza di banda B = f0/Q; asintoti +20 e -20 dB/dec. Fase da +90° a -90° passando per 0° in f0. */}
+{/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un BPF con Q = 1 / 2 / 5 / 10; segnare i punti a -3 dB e la larghezza di banda B = f0/Q; asintoti +20 e -20 dB/dec. Fase da +90° a -90° passando per 0° in f0 */}
 <Figura
-  src="/img/filtri-oa/sk-bpf-bode.svg"
+  src="/images/circuiti/bode-sk-bpf.svg"
   alt="Diagrammi di Bode del Sallen-Key passa-banda per diversi valori di Q"
   caption="Bode del Sallen-Key passa-banda: pendenze ±20 dB/dec, banda B = f0/Q, fase da +90° a −90°."
 />
 
-**Esempio.** $f_0=1$ kHz, $C=10$ nF e $Q=10$. Allora
+**Esempio.** $f_0=1$ kHz, $C=10$ nF, $Q=10$:
 
 $$
-R=\frac{1}{2\pi f_0C}\approx15{,}9\ \text{k}\Omega,
-\qquad
-R_2=R,\quad R_1=R_3=2R\approx31{,}8\ \text{k}\Omega
+R=\frac{1}{2\pi f_0C}\approx15{,}9\ \text{k}\Omega,\qquad R_2=R,\quad R_1=R_3=2R\approx31{,}8\ \text{k}\Omega
 $$
 
-Dal $Q$ ricaviamo $K=6-2/Q=5{,}8$, cioè $R_b/R_a=4{,}8$. La banda è $B=f_0/Q=100$ Hz e il guadagno al centro $G_0=K/(6-K)=29$ (circa $29{,}2$ dB).
+Servono $K=6-2/Q=5{,}8$ (cioè $R_b/R_a=4{,}8$), una banda $B=100$ Hz e un guadagno al centro banda $G_0=29$ (circa $29$ dB).
 
-> Conviene notare quanto sia "sul filo" quel $K=5{,}8$. Da $Q=2/(6-K)$ si ricava $\dfrac{\Delta Q}{Q}=\dfrac{\Delta K}{6-K}$. Con $6-K=0{,}2$, un errore dell'1% su $K$ (cioè $\Delta K\approx0{,}058$) sposta $Q$ del 29%. Per $Q$ alti, il passa-banda Sallen-Key è molto sensibile alle tolleranze dei componenti. Per applicazioni serie (Q oltre una decina) si usano altre strutture.
+### Notch
 
-### Notch (elimina-banda)
+Il notch ha una topologia leggermente diversa dagli altri tre, ma riprende la stessa idea: una rete RC passiva, un OA e una retroazione positiva che alza il $Q$. La rete è un **doppio T**:
 
-Il notch è un po' diverso dagli altri tre. Con la formula generale a quattro ammettenze non lo otteniamo: ci servono **zeri sull'asse immaginario** (per annullare esattamente il segnale a $\omega_0$) e questo richiede una rete con due percorsi che si cancellano. La rete classica è il **doppio T**:
+- un T passa-basso, con due resistenze $R$ in serie e un condensatore $2C$ dal punto centrale verso il nodo $V_r$;
+- un T passa-alto, con due condensatori $C$ in serie e una resistenza $R/2$ dal punto centrale verso lo stesso nodo $V_r$.
 
-- un T passa-basso: due resistenze $R$ in serie, con un condensatore $2C$ dal punto centrale verso un nodo di riferimento;
-- un T passa-alto: due condensatori $C$ in serie, con una resistenza $R/2$ dal punto centrale verso lo stesso nodo di riferimento.
+Entrambi i percorsi portano il segnale all'ingresso non invertente dell'OA, usato come buffer. Alla frequenza $f_0$ i due percorsi danno contributi uguali in modulo e opposti in fase, quindi si cancellano. Se $V_r$ fosse a massa avremmo un notch passivo con $Q=1/4$, larghissimo. Invece $V_r$ riceve una frazione $k$ dell'uscita, tramite un secondo buffer: questa retroazione positiva alza $Q$ senza spostare $f_0$.
 
-Entrambi i percorsi portano il segnale al nodo $X$, che è l'ingresso non invertente dell'OA. Alla frequenza $\omega_0=1/RC$ i due percorsi danno contributi uguali in modulo e opposti in fase: si cancellano. Questa è la parte "passiva" e, se il nodo di riferimento è a massa, funziona già come notch, ma con $Q=1/4$, cioè molto largo.
-
-La parte "Sallen-Key" è come nei circuiti precedenti: un OA usato come inseguitore ($K=1$) e **una frazione $k$ dell'uscita riportata, tramite un secondo buffer, sul nodo di riferimento** dei due T al posto della massa. Questa retroazione positiva alza il $Q$ senza toccare la posizione del notch. Lo si trova spesso citato come "notch Sallen-Key" o "notch attivo a doppio T".
-
-{/* TODO circuito: doppio T. Ramo passa-basso: Vin -> R -> nodo N2 -> R -> nodo X; da N2 un condensatore 2C verso il nodo Vr. Ramo passa-alto: Vin -> C -> nodo N1 -> C -> nodo X; da N1 una resistenza R/2 verso il nodo Vr. Il nodo X va all'ingresso non invertente di OA1 (inseguitore, Vout = uscita OA1). Partitore (potenziometro) con rapporto k sull'uscita Vout; la presa del partitore va a un secondo inseguitore OA2, la cui uscita è il nodo Vr. Nota: R/2 si realizza con due R in parallelo e 2C con due C in parallelo. */}
+{/* TODO circuito: doppio T. Ramo passa-basso: Vin -> R -> nodo N2 -> R -> nodo X; da N2 un condensatore 2C verso il nodo Vr. Ramo passa-alto: Vin -> C -> nodo N1 -> C -> nodo X; da N1 una resistenza R/2 verso il nodo Vr. Il nodo X va all'ingresso non invertente di OA1 (inseguitore, Vout = uscita OA1). Partitore (potenziometro) con rapporto k sull'uscita Vout; la presa del partitore va a un secondo inseguitore OA2, la cui uscita è il nodo Vr. Nota: R/2 si realizza con due R in parallelo e 2C con due C in parallelo */}
 <Figura
   src="/img/filtri-oa/sk-notch-circuito.svg"
   alt="Filtro notch attivo a doppio T con retroazione positiva"
   caption="Notch attivo a doppio T: il nodo comune Vr non è a massa ma è pilotato con una frazione k dell'uscita."
 />
 
-**Calcolo della fdt.** I nodi sono $N_1$ (centro del T passa-alto), $N_2$ (centro del T passa-basso) e $X$. Usiamo $x=sRC$; scriviamo la legge di Kirchhoff delle correnti nei tre nodi e moltiplichiamo tutto per $R$ (ricordando che la resistenza $R/2$ ha ammettenza $2/R$ e il condensatore $2C$ ha ammettenza $2sC$).
-
 $$
-\begin{aligned}
-N_1:&\quad x\,(V_{in}-V_1)=x\,(V_1-V_X)+2\,(V_1-V_r)\\[2pt]
-N_2:&\quad (V_{in}-V_2)=(V_2-V_X)+2x\,(V_2-V_r)\\[2pt]
-X:&\quad x\,(V_1-V_X)+(V_2-V_X)=0
-\end{aligned}
+H_N(s)=\frac{s^2+\omega_0^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
 $$
-
-Nell'ultima equazione la somma delle correnti che entrano in $X$ è nulla, perché l'ingresso dell'OA non assorbe corrente. Dalle prime due ricaviamo $V_1$ e $V_2$:
-
-$$
-V_1=\frac{x\,V_{in}+x\,V_X+2V_r}{2(x+1)},\qquad
-V_2=\frac{V_{in}+V_X+2x\,V_r}{2(x+1)}
-$$
-
-Dall'equazione in $X$ si ha $xV_1+V_2=(x+1)V_X$. Sostituiamo e moltiplichiamo per $2(x+1)$:
-
-$$
-x\,(xV_{in}+xV_X+2V_r)+(V_{in}+V_X+2xV_r)=2(x+1)^2\,V_X
-$$
-
-Raccogliendo $(x^2+1)$ a sinistra:
-
-$$
-(x^2+1)\,V_{in}+4x\,V_r=\Big[2(x+1)^2-(x^2+1)\Big]V_X=(x^2+4x+1)\,V_X
-$$
-
-Finora non abbiamo usato l'OA. Ora diciamo che $V_X=V_{out}$ (inseguitore) e $V_r=k\,V_{out}$ (frazione riportata):
-
-$$
-(x^2+1)\,V_{in}=\Big[x^2+4x+1-4k\,x\Big]V_{out}
-$$
-
-$$
-\boxed{\,H_N(s)=\frac{1+x^2}{1+4(1-k)\,x+x^2}\,}
-\qquad\Longleftrightarrow\qquad
-H_N(s)=\frac{s^2+\omega_0^2}{s^2+\dfrac{\omega_0}{Q}s+\omega_0^2}
-$$
-
-Confrontando con la forma standard:
 
 $$
 \omega_0=\frac{1}{RC},\qquad
-Q=\frac{1}{4(1-k)},\qquad
+Q=\frac{1}{4\,(1-k)},\qquad
 k=1-\frac{1}{4Q}
 $$
 
-Con $k=0$ (passivo) si ha $Q=1/4$; per $k\to1$ il $Q$ cresce senza limite. Come negli altri casi, $k$ deve restare minore di 1 per mantenere la stabilità.
+Qui $0\le k\lt1$: $k=0$ è il caso passivo ($Q=1/4$), mentre per $k\to1$ il $Q$ cresce senza limite.
 
-**Diagramma di Bode.** Con $s=j\omega_0u$:
+**Cosa cambiano i parametri.**
 
-$$
-H_N(j\omega)=\frac{1-u^2}{(1-u^2)+j\,u/Q}
-\qquad\Longrightarrow\qquad
-\lvert H\rvert=\frac{\lvert1-u^2\rvert}{\sqrt{(1-u^2)^2+\dfrac{u^2}{Q^2}}}=\frac{1}{\sqrt{1+\dfrac{1}{Q^2\left(u-\dfrac1u\right)^2}}}
-$$
+- **$R$ e $C$** spostano $f_0$. I rapporti del doppio T ($2C$ e $R/2$) vanno rispettati: da quelli dipende la cancellazione, quindi la profondità del notch.
+- **$k$** regola la larghezza: più $k$ si avvicina a 1, più la banda eliminata è stretta ($B=f_0/Q$).
 
-- **Lontano da $\omega_0$** ($u\ll1$ e $u\gg1$): il modulo tende a 1 (0 dB): il notch lascia passare tutto, con guadagno unitario.
-- **In $u=1$** il numeratore si annulla e il modulo vale 0, cioè $-\infty$ dB. In pratica la profondità dipende dalla precisione dei componenti: con tolleranze dell'1% si arriva tipicamente a qualche decina di dB.
-- **Larghezza.** I punti a $-3$ dB sono dove $Q\,(u-1/u)=\pm1$, gli stessi $u_{1,2}$ del passa-banda, quindi $B=\omega_0/Q$ e $Q=f_0/B$.
+**Diagramma di Bode.** Lontano da $f_0$ il guadagno è 1 (0 dB), da entrambi i lati. In $f_0$ il numeratore si annulla e il guadagno vale 0, cioè $-\infty$ dB; in pratica la profondità è limitata dalle tolleranze dei componenti (con l'1% si arriva a qualche decina di dB). La fase scende verso $-90^\circ$ un attimo prima di $f_0$, poi **salta di $180^\circ$** a $+90^\circ$ e torna a $0^\circ$ dopo. Più $Q$ è alto, più il salto è concentrato attorno a $f_0$.
 
-La fase merita attenzione. Il numeratore $1-u^2$ è reale: positivo per $u<1$, negativo per $u>1$. Il denominatore ha fase $\theta=\operatorname{atan2}(u/Q,\,1-u^2)$, che cresce da $0^\circ$ a $180^\circ$ passando per $90^\circ$ in $u=1$. Ne segue:
-
-- per $u<1$: $\angle H=-\theta$, che scende da $0^\circ$ verso $-90^\circ$;
-- in $u=1$: la fase **salta di $180^\circ$** (il numeratore passa per zero cambiando segno), da $-90^\circ$ a $+90^\circ$;
-- per $u>1$: $\angle H=180^\circ-\theta$, che torna da $+90^\circ$ verso $0^\circ$.
-
-Più $Q$ è alto, più il salto è concentrato in una zona stretta attorno a $\omega_0$.
-
-{/* TODO Bode: modulo (dB, asse da circa -60 a +5) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un notch con Q = 0,25 (passivo) / 1 / 5 / 10. Il modulo ha 0 dB ai lati e un "buco" in f0. La fase scende a -90° prima di f0, salta a +90° in f0 e torna a 0°. */}
+{/* TODO Bode: modulo (dB, asse da circa -60 a +5) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un notch con Q = 0,25 (passivo) / 1 / 5 / 10. Il modulo ha 0 dB ai lati e un "buco" in f0. La fase scende a -90° prima di f0, salta a +90° in f0 e torna a 0° */}
 <Figura
-  src="/img/filtri-oa/sk-notch-bode.svg"
+  src="/images/circuiti/bode-sk-notch.svg"
   alt="Diagrammi di Bode del notch attivo a doppio T per diversi valori di Q"
   caption="Bode del notch: guadagno unitario ai lati, zero in f0; la fase fa un salto di 180° in f0."
 />
 
-**Esempio.** Notch a 50 Hz con $C=100$ nF e $Q=10$. Allora
+**Esempio.** Notch a 50 Hz con $C=100$ nF e $Q=10$:
 
 $$
-R=\frac{1}{2\pi\cdot50\cdot100\cdot10^{-9}}\approx31{,}8\ \text{k}\Omega
+R=\frac{1}{2\pi\cdot50\cdot100\cdot10^{-9}}\approx31{,}8\ \text{k}\Omega,\qquad k=1-\frac{1}{40}=0{,}975,\qquad B=\frac{f_0}{Q}=5\ \text{Hz}
 $$
 
-Il T passa-basso usa due resistenze da $31{,}8$ kΩ e un condensatore da $200$ nF (due da 100 nF in parallelo); il T passa-alto usa due condensatori da 100 nF e una resistenza da $15{,}9$ kΩ (due da $31{,}8$ kΩ in parallelo). Per $Q=10$ si ha $k=1-1/40=0{,}975$ e la banda eliminata è larga $B=f_0/Q=5$ Hz.
+Il T passa-basso usa due resistenze da $31{,}8$ kΩ e un condensatore da $200$ nF (due da 100 nF in parallelo); il T passa-alto usa due condensatori da 100 nF e una resistenza da $15{,}9$ kΩ (due da $31{,}8$ kΩ in parallelo).
 
 ## Riepilogo
 
-Con $x=sRC$ e con le scelte di componenti usate qui (ricordiamo che per il passa-banda $R_2=R$ e $R_1=R_3=2R$):
-
-| Filtro | fdt | $\omega_0$ | $Q$ | Pendenze del Bode |
+| Filtro | Numeratore di $H(s)$ | $\omega_0$ | $Q$ | Pendenze del Bode |
 | --- | --- | --- | --- | --- |
-| Passa-basso | $\dfrac{K}{1+(3-K)\,x+x^2}$ | $\dfrac1{RC}$ | $\dfrac{1}{3-K}$ | $0\to-40$ dB/dec |
-| Passa-alto | $\dfrac{K\,x^2}{1+(3-K)\,x+x^2}$ | $\dfrac1{RC}$ | $\dfrac{1}{3-K}$ | $+40\to0$ dB/dec |
-| Passa-banda | $\dfrac{\frac K2\,x}{1+\left(3-\frac K2\right)x+x^2}$ | $\dfrac1{RC}$ | $\dfrac{2}{6-K}$ | $+20\to-20$ dB/dec |
-| Notch | $\dfrac{1+x^2}{1+4(1-k)\,x+x^2}$ | $\dfrac1{RC}$ | $\dfrac{1}{4(1-k)}$ | $0$ dB ai lati, buco in $\omega_0$ |
+| Passa-basso | $K\,\omega_0^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{3-K}$ | $0\to-40$ dB/dec |
+| Passa-alto | $K\,s^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{3-K}$ | $+40\to0$ dB/dec |
+| Passa-banda | $G_0\,\dfrac{\omega_0}{Q}\,s$ | $\dfrac{1}{RC}$ | $\dfrac{2}{6-K}$ | $+20\to-20$ dB/dec |
+| Notch | $s^2+\omega_0^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{4(1-k)}$ | 0 dB ai lati, buco in $\omega_0$ |
 
-In tutti i casi $\omega_0$ si sposta cambiando $R$ e $C$, mentre $Q$ si regola con $K$ (o con $k$ per il notch). In tutti i casi, quando ci si avvicina al limite di stabilità ($K\to3$ per LPF e HPF, $K\to6$ per il passa-banda, $k\to1$ per il notch) il $Q$ tende a infinito.
+Il denominatore è sempre $s^2+\dfrac{\omega_0}{Q}s+\omega_0^2$. Con le scelte di componenti usate qui (per il passa-banda $R_2=R$ e $R_1=R_3=2R$), $\omega_0$ si sposta con $R$ e $C$ e $Q$ si regola con $K$ (o con $k$ nel notch). Quando ci si avvicina al limite di stabilità ($K\to3$ per passa-basso e passa-alto, $K\to6$ per il passa-banda, $k\to1$ per il notch) il $Q$ tende a infinito.
 
 ## Note pratiche
 
-- **Ordini superiori.** Per un filtro del quarto ordine si mettono in cascata due sezioni Sallen-Key con $\omega_0$ uguali ma $Q$ diversi. Per un Butterworth del quarto ordine sono $Q_1\approx0{,}541$ e $Q_2\approx1{,}307$. Grazie all'OA le sezioni non si caricano a vicenda.
-- **Banda dell'OA.** Tutto quello che abbiamo ricavato assume un OA ideale. Quando $f_0$ si avvicina al GBW dell'OA, il $Q$ reale si discosta da quello di progetto (di solito aumenta) e il filtro può perfino diventare instabile.
-- **Comportamento ad alta frequenza.** Nel passa-basso Sallen-Key, il condensatore di retroazione porta una piccola parte del segnale d'ingresso direttamente all'uscita. Siccome l'impedenza d'uscita dell'OA reale cresce con la frequenza, la pendenza a $-40$ dB/dec si appiattisce molto in alto e l'attenuazione smette di aumentare.
-- **Tolleranze.** Più $Q$ è alto, più il filtro è sensibile alle tolleranze di $R$, $C$ e delle resistenze di guadagno. Per $Q$ elevati usare componenti all'1% o migliori e valutare altre strutture.
-- **Tipo di condensatori.** Per frequenze di taglio precise conviene usare condensatori a film o C0G/NP0. I ceramici di classe 2 (X7R, Y5V) cambiano valore con tensione e temperatura.
+- **Ordini superiori.** Per un filtro del quarto ordine si mettono in cascata due sezioni Sallen-Key con la stessa $f_0$ e $Q$ diversi. Per un Butterworth del quarto ordine sono $Q_1\approx0{,}541$ e $Q_2\approx1{,}307$. Grazie all'OA le sezioni non si caricano a vicenda.
+- **Banda dell'OA.** Tutto quello che abbiamo visto assume un OA ideale. Quando $f_0$ si avvicina al GBW dell'OA, il $Q$ reale si discosta da quello di progetto (di solito aumenta) e il filtro può diventare instabile.
+- **Tolleranze.** Più $Q$ è alto, più il filtro è sensibile alle tolleranze di $R$, $C$ e delle resistenze che fissano il guadagno. Per $Q$ elevati servono componenti all'1% o migliori.
+- **Condensatori.** Per frequenze di taglio precise conviene usare condensatori a film o C0G/NP0. I ceramici di classe 2 (X7R, Y5V) cambiano valore con tensione e temperatura.

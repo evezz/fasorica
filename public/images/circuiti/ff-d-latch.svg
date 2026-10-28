@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 226" width="530" height="226" role="img" aria-labelledby="t">
+<title id="t">Latch D: latch SR con clock in cui S = D e R = D negato</title>
+<g fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<path d="M 222 50 L 257 50 L 257 42 L 317 42"/>
+<path d="M 222 170 L 257 170 L 257 178 L 317 178"/>
+<path d="M 407 50 L 407 125 L 272 125 L 272 162 L 317 162"/>
+<path d="M 437 170 L 437 95 L 412 95 A 5 5 0 0 0 402 95 L 292 95 L 292 58 L 317 58"/>
+<path d="M 375 50 L 482 50"/>
+<path d="M 375 170 L 482 170"/>
+<path d="M 135 42 L 172 42"/>
+<path d="M 42 178 L 172 178"/>
+<path d="M 67 178 L 67 42 L 97 42"/>
+<path d="M 42 110 L 62 110 A 5 5 0 0 1 72 110 L 142 110"/>
+<path d="M 142 110 L 142 58 L 172 58"/>
+<path d="M 142 110 L 142 162 L 172 162"/>
+<path d="M 172 30 H 197 A 25 20 0 0 1 197 70 H 172 Z" fill="#ffffff"/>
+<path d="M 172 150 H 197 A 25 20 0 0 1 197 190 H 172 Z" fill="#ffffff"/>
+<path d="M 317 30 Q 344.5 30 367 50 Q 344.5 70 317 70 Q 329.5 50 317 30 Z" fill="#ffffff"/>
+<path d="M 317 42 L 322.25 42"/>
+<path d="M 317 58 L 322.25 58"/>
+<circle cx="371" cy="50" r="4" fill="#ffffff"/>
+<path d="M 317 150 Q 344.5 150 367 170 Q 344.5 190 317 190 Q 329.5 170 317 150 Z" fill="#ffffff"/>
+<path d="M 317 162 L 322.25 162"/>
+<path d="M 317 178 L 322.25 178"/>
+<circle cx="371" cy="170" r="4" fill="#ffffff"/>
+<path d="M 97 27 L 127 42 L 97 57 Z" fill="#ffffff"/>
+<circle cx="131" cy="42" r="4" fill="#ffffff"/>
+<circle cx="407" cy="50" r="3.5" fill="#252525" stroke="none"/>
+<circle cx="437" cy="170" r="3.5" fill="#252525" stroke="none"/>
+<circle cx="67" cy="178" r="3.5" fill="#252525" stroke="none"/>
+<circle cx="142" cy="110" r="3.5" fill="#252525" stroke="none"/>
+<text x="192" y="54" font-size="11" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">AND</text>
+<text x="192" y="174" font-size="11" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">AND</text>
+<text x="339.5" y="54" font-size="11" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">NOR</text>
+<text x="339.5" y="174" font-size="11" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">NOR</text>
+<text x="492" y="55" font-size="14" text-anchor="start" fill="#252525" font-weight="400" stroke="none">Q</text>
+<text x="492" y="175" font-size="14" text-anchor="start" fill="#252525" font-weight="400" stroke="none">Q'</text>
+<text x="197" y="214" font-size="12.5" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">porte di abilitazione</text>
+<text x="346" y="214" font-size="12.5" text-anchor="middle" fill="#686661" font-weight="400" stroke="none">latch SR</text>
+<text x="34" y="183" font-size="14" text-anchor="end" fill="#252525" font-weight="400" stroke="none">D</text>
+<text x="34" y="115" font-size="14" text-anchor="end" fill="#252525" font-weight="400" stroke="none">CLK</text>
+</g></svg>

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[op amp] at (5.19, 6.51){};
+	\draw (3.5, 9.75) to[american resistor, l={$R_2$}] (7.5, 9.75);
+	\draw (3.5, 7) to[short] (3.5, 9.75);
+	\draw (6.38, 6.51) to[short, l_={$V_{out}$}] (7.5, 6.5);
+	\draw (7.5, 6.5) to[short] (7.5, 9.75);
+	\draw (-0.25, 8.5) to[american voltage source, l_={$V_{in}$}] (-0.25, 6.5);
+	\node[ground] at (-0.25, 6.5){};
+	\node[circ] at (3.5, 8.5){};
+	\node[ground] at (3.5, 6.02){};
+	\draw (3.5, 6.02) to[short] (4, 6.02);
+	\draw (3.5, 8.5) to[capacitor, l={$C$}] (7.5, 8.5);
+	\draw (3.5, 7) to[short] (4, 7);
+	\draw (-0.25, 8.5) to[american resistor, l={$R_1$}] (3.5, 8.5);
+	\node[circ] at (7.5, 8.5){};
+\end{tikzpicture}

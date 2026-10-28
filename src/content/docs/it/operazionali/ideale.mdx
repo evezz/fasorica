@@ -277,3 +277,34 @@ $$
 V_{out} = - \left( \frac{R_f}{R_1}\cdot V_1 + \frac{R_f}{R_2}\cdot V_2 + \frac{R_f}{R_3}\cdot V_3\right)
 $$
 
+## Amplificatore alle differenze
+Questo circuito viene utilizzato per realizzare la differenza fra due tensioni e gestirne il guadagno tramite due resistenze.
+
+<Figura src="/images/circuiti/oa-differenze.svg" alt="Amplificatore in configurazione di amplificatore alle differenze" larghezza='35rem'>
+    Amplificatore in configurazione di amplificatore alle differenze.
+</Figura>
+
+Per risolvere il circuito, possiamo applicare il PSE:
+- Tenendo attivo solo $V_1$ otteniamo:
+$$
+V'_{out} = -\frac{R_2}{R_1}\cdot V_1
+$$
+- Tenendo attivo solo $V_2$ troviamo la tensione sul piedino $+$ con un partitore di tensione:
+$$
+V_+ = V_2 \cdot \frac{R_4}{R_3+R_4}
+$$
+questa tensione è applicata poi ad uno stadio non invertente:
+$$
+V''_{out} = V_+ \cdot \left(1 + \frac{R_2}{R_1}\right) = V_2 \cdot \frac{R_4}{R_3+R_4} \cdot \left(1 + \frac{R_2}{R_1}\right)
+$$
+
+Quindi la tensione d'uscita è la somma dei due contributi:
+$$
+V_{out} = V_2 \cdot \frac{R_4}{R_3+R_4} \cdot \left(1 + \frac{R_2}{R_1}\right) - \frac{R_2}{R_1}\cdot V_1
+$$
+
+Se imponiamo $R_1 = R_3$ e $R_2 = R_4$:
+
+$$
+V_{out} = \frac{R_2}{R_1}(V_2-V_1)
+$$

@@ -1,0 +1,46 @@
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\pgfplotsset{
+  bode/.style={
+    width=6.4cm, height=4.4cm, xmin=0.01, xmax=100,
+    grid=both, major grid style={gray!55}, minor grid style={gray!20},
+    tick label style={font=\footnotesize}, label style={font=\small},
+    title style={font=\small}, xlabel={$\omega/\omega_u$},
+  },
+  bode mag/.style={bode, ymin=-50, ymax=50, ytick={-40,-20,0,20,40},
+    ylabel={$|H|_{\mathrm{dB}}$}, title={Modulo}},
+  bode fase/.style={bode, ymin=-100, ymax=100, ytick={-90,-45,0,45,90},
+    ylabel={$\varphi$ [$^\circ$]}, title={Fase}},
+}
+\begin{document}
+% Integratore con perdita: H(j w) = -(R2/R1) / (1 + j w/wc),  wc = 1/(R2 C)
+% R1 in serie all'ingresso, R2 in retroazione (in parallelo a C).
+% Esempio della lezione: R2/R1 = 10  ->  wu = 1/(R1 C) = 10 wc.   x = w/wc
+\begin{tikzpicture}
+% ---------- modulo ----------
+\begin{semilogxaxis}[bode mag, name=mag, xmin=0.01, xmax=1000, xlabel={$\omega/\omega_c$},
+  ymin=-50, ymax=40, ytick={-40,-20,0,20,40}]
+  \addplot[blue, very thick, domain=-2:3, samples=201] ({10^x}, {20-10*log10(1+10^(2*x))});
+  % asintotico: piatto a 20 log(R2/R1) fino a wc, poi -20 dB/dec
+  \addplot[red, thick, dashed] coordinates {(0.01,20) (1,20) (1000,-40)};
+  \addplot[only marks, mark=*, mark size=1.5pt, blue] coordinates {(1,16.99) (10,-0.04)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:0.012,21) {$R_2/R_1=10$};
+  \node[anchor=north east, font=\footnotesize] at (axis cs:0.85,15) {$-3$ dB};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:12,1.5) {$\omega_u$};
+\end{semilogxaxis}
+% ---------- fase ----------
+\begin{semilogxaxis}[bode fase, at={(mag.south west)}, yshift=-1.7cm, anchor=north west,
+  xmin=0.01, xmax=1000, xlabel={$\omega/\omega_c$},
+  ymin=80, ymax=190, ytick={90,135,180},
+  legend style={font=\scriptsize, at={(0.97,0.97)}, anchor=north east},
+  legend cell align=left]
+  \addplot[blue, very thick, domain=-2:3, samples=201] ({10^x}, {180-atan(10^x)});
+  % asintotico: 180 fino a wc/10, rampa di -45 gradi/dec, 90 da 10 wc
+  \addplot[red, thick, dashed] coordinates {(0.01,180) (0.1,180) (10,90) (1000,90)};
+  \legend{reale, asintotico}
+  \addplot[only marks, mark=*, mark size=1.5pt, blue, forget plot] coordinates {(1,135)};
+  \node[anchor=south west, font=\footnotesize] at (axis cs:1.2,137) {$135^\circ$};
+\end{semilogxaxis}
+\end{tikzpicture}
+\end{document}
