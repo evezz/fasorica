@@ -1,10 +1,14 @@
 ---
 // Figura principale: riquadro centrato con larghezza personalizzabile.
-// Uso: <Figura src="/images/circuiti/esempio.svg" alt="..." larghezza="45rem">Didascalia</Figura>
-const { src, alt, larghezza = '34rem' } = Astro.props;
+// Uso: <Figura src="..." alt="..." larghezza="45rem" id="fig-sk">Didascalia</Figura>
+//  oppure: <Figura src="..." alt="..." caption="Didascalia" />
+const { src, alt, larghezza = '34rem', caption, id } = Astro.props;
+const haSlot = Astro.slots.has('default');
 ---
 
-<figure class="figura" style={`width: ${larghezza}; max-width: 100%; margin: 1.5rem auto; text-align: center;`}>
+<figure class="figura" id={id} style={`width: ${larghezza}; max-width: 100%; margin: 1.5rem auto; text-align: center;`}>
   <img src={src} alt={alt} loading="lazy" style="width: 100%; height: auto; display: block; margin: 0 auto;" />
-  <figcaption style="text-align: center; margin-top: 0.5rem;"><slot /></figcaption>
+  <figcaption style="text-align: center; margin-top: 0.5rem;">
+    {haSlot ? <slot /> : caption}
+  </figcaption>
 </figure>

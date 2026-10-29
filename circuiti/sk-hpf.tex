@@ -1,0 +1,26 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\node[op amp, yscale=-1] at (6.44, 7.26){};
+	\draw (3.5, 7.75) to[american resistor, l={$R_2$}] (3.5, 5.25);
+	\draw (0.75, 7.75) to[short] (0.75, 9.75);
+	\draw (7.63, 7.26) to[short, l={$V_{out}$}, label distance=-0.12cm] (8.75, 7.25);
+	\draw (8.75, 7.25) to[short] (8.75, 9.75);
+	\draw (-2.5, 7.75) to[american voltage source, l_={$V_{in}$}] (-2.5, 5.75);
+	\node[ground] at (-2.5, 5.75){};
+	\node[circ] at (3.5, 7.75){};
+	\node[ground] at (3.5, 5.25){};
+	\draw (5.25, 5.25) to[short] (5.25, 6.77);
+	\draw (0.75, 7.75) to[capacitor, l={$C_2$}] (3.5, 7.75);
+	\draw (3.5, 7.75) to[short] (5.25, 7.75);
+	\draw (0.75, 9.75) to[american resistor, l={$R_1$}] (8.75, 9.75);
+	\node[circ] at (8.75, 5.25){};
+	\draw (-2.5, 7.75) to[capacitor, l={$C_1$}] (0.75, 7.75);
+	\node[circ] at (0.75, 7.75){};
+	\draw (8.75, 7.25) to[american resistor, l={$R_b$}] (8.75, 5.25);
+	\draw (8.75, 5.25) to[american resistor, l={$R_a$}] (8.75, 3.25);
+	\draw (5.25, 5.25) to[short] (8.75, 5.25);
+	\node[circ] at (8.75, 7.25){};
+	\node[ground] at (8.75, 3.25){};
+	\node[shape=rectangle, minimum width=0.715cm, minimum height=0.465cm] at (3.5, 8.25){} node[anchor=north west, align=left, text width=0.327cm, inner sep=6pt] at (3.125, 8.5){$B$};
+	\node[shape=rectangle, minimum width=0.715cm, minimum height=0.465cm] at (0.75, 7.5){} node[anchor=north west, align=left, text width=0.327cm, inner sep=6pt] at (0.375, 7.75){$A$};
+\end{tikzpicture}

@@ -358,32 +358,53 @@ Due resistenze $R_1$, $R_2$ in serie al segnale, il condensatore $C_2$ da $B$ a 
 
 {/* TODO circuito: Vin -> R1 -> nodo A; A -> R2 -> nodo B (ingresso non invertente OA); B -> C2 -> massa; A -> C1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore, uscita collegata direttamente all'ingresso invertente */}
 <Figura
-  src="/img/filtri-oa/sk-lpf-circuito.svg"
+  src="/images/circuiti/sk-lpf.svg"
   alt="Filtro Sallen-Key passa-basso"
-  caption="Sallen-Key passa-basso: R1 e R2 in serie al segnale, C2 a massa, C1 in retroazione."
+  caption="Sallen-Key passa-basso."
 />
 
-$$
-H_{LP}(s)=\frac{K\,\omega_0^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
-$$
+**Cosa succede al variare della frequenza.** Basta ricordare che un condensatore è un circuito aperto a bassa frequenza e un corto ad alta frequenza, e che l'ingresso dell'OA non assorbe corrente.
+
+- **Bassa frequenza.** $C_1$ e $C_2$ sono aperti, quindi in $R_1$ e $R_2$ non scorre corrente e ai loro capi non cade tensione: $V_A=V_B=V_{in}$. L'OA riporta all'uscita $V_{out}=K\,V_{in}$. Il circuito si limita ad amplificare di $K$, senza sfasare: guadagno $K$ e fase $0^\circ$.
+- **Intorno a $f_0$.** Le reattanze dei condensatori sono ora confrontabili con le resistenze e succedono due cose insieme. La cella $R_2C_2$ comincia ad attenuare e a ritardare il segnale che arriva in $B$, quindi l'uscita (che segue $B$) è più piccola e in ritardo rispetto al nodo $A$. Ma $C_1$ non è più aperto e riporta su $A$ una parte di quell'uscita, senza invertirla: è la retroazione positiva. La tensione in $A$ viene sostenuta dall'uscita, le resistenze hanno meno differenza di potenziale da sostenere e attenuano meno di quanto farebbero da sole. Il ginocchio si fa più deciso e, se il ritorno è abbastanza forte, compare un picco. In $f_0$ la fase è esattamente $-90^\circ$, a metà strada tra $0^\circ$ e $-180^\circ$.
+- **Alta frequenza.** $C_2$ è un corto verso massa: $V_B\to0$ e con lui l'uscita, perché $V_{out}=K\,V_B$. Il segnale si spegne attraversando due celle RC, e ognuna aggiunge $-20$ dB/dec e $-90^\circ$: l'uscita scende a $-40$ dB/dec e la fase tende a $-180^\circ$.
+
+Il ritorno tramite $C_1$ conta quindi soltanto vicino a $f_0$: a bassa frequenza $C_1$ è aperto, ad alta frequenza l'uscita è ormai spenta e non c'è più nulla da riportare indietro.
+
+**Impostazione del calcolo.** Con l'OA ideale ($V_{out}=K\,V_B$ e nessuna corrente negli ingressi) bastano le leggi di Kirchhoff delle correnti ai nodi $B$ e $A$:
 
 $$
-\omega_0=\frac{1}{\sqrt{R_1R_2C_1C_2}},\qquad
-Q=\frac{\sqrt{R_1R_2C_1C_2}}{(R_1+R_2)\,C_2+(1-K)\,R_1C_1}
+\begin{cases}
+\dfrac{V_A-V_B}{R_2}=sC_2\,V_B & \text{(nodo } B\text{)}\\[3mm]
+\dfrac{V_{in}-V_A}{R_1}=\dfrac{V_A-V_B}{R_2}+sC_1\,(V_A-V_{out}) & \text{(nodo } A\text{)}\\[3mm]
+V_{out}=K\,V_B
+\end{cases}
 $$
 
-Le due scelte di progetto più comuni:
+Per non trascinarsi dietro quattro componenti diversi li esprimiamo in rapporto fra loro:
 
-- **Componenti uguali** ($R_1=R_2=R$, $C_1=C_2=C$): $\omega_0=\dfrac{1}{RC}$ e $Q=\dfrac{1}{3-K}$, quindi $K=3-\dfrac{1}{Q}$. Il circuito è stabile solo per $K\lt3$.
-- **Guadagno unitario** ($K=1$, $R_1=R_2=R$): $Q=\dfrac12\sqrt{\dfrac{C_1}{C_2}}$, quindi $C_1=4Q^2\,C_2$. Per Butterworth ($Q=0{,}707$) basta $C_1=2C_2$.
+$$
+R_1=R,\quad R_2=m\,R,\quad C_2=C,\quad C_1=n\,C
+\qquad\Longleftrightarrow\qquad
+m=\frac{R_2}{R_1},\quad n=\frac{C_1}{C_2}
+$$
 
-**Cosa cambiano i parametri.**
+Ricavando $V_A$ dalla prima equazione e sostituendola nella seconda, dopo un po' di algebra si arriva alla forma finale:
 
-- **$R$ e $C$** spostano $f_0$ lungo l'asse delle frequenze senza cambiare la forma della curva: raddoppiare $R$ dimezza $f_0$.
-- **$K$** regola $Q$ e quindi il ginocchio: $K$ piccolo dà un ginocchio morbido, $K$ vicino a 3 un picco alto in $f_0$ e, a $K=3$, l'oscillazione. Con componenti uguali $K$ è anche il guadagno in banda passante, quindi guadagno e $Q$ sono legati (Butterworth: $K=1{,}586$, cioè $+4$ dB).
-- **Con $K=1$** il guadagno resta 1 e $Q$ si regola con il rapporto tra i condensatori: si perde la libertà sul guadagno ma si guadagna in semplicità e precisione.
+$$
+H_{LP}(s)=\frac{K}{1+\big[1+m+(1-K)\,n\big]\,sRC+mn\,(sRC)^2}
+$$
 
-**Diagramma di Bode.** In banda passante il guadagno è $K$ e la fase $0^\circ$. In $f_0$ il guadagno vale $K\,Q$ e la fase esattamente $-90^\circ$. Oltre $f_0$ il modulo scende di 40 dB/dec e la fase tende a $-180^\circ$. Più $Q$ è alto, più la fase cambia in fretta attorno a $f_0$.
+Confrontandola con la forma standard $H_{LP}(s)=\dfrac{K\,\omega_0^2}{D(s)}$ si leggono subito frequenza caratteristica e fattore di merito:
+
+$$
+\omega_0=\frac{1}{RC\sqrt{mn}},\qquad
+Q=\frac{\sqrt{mn}}{1+m+(1-K)\,n}
+$$
+
+$\omega_0$ coincide con la frequenza di taglio a $-3$ dB solo per $Q=1/\sqrt2$ (Butterworth). Per $Q$ più alti il taglio sta sopra $\omega_0$ (con $Q=1$ a circa $1{,}27\,\omega_0$), per $Q$ più bassi sta sotto.
+
+> **⚠︎ Limite di stabilità**: il circuito è stabile finché il coefficiente di $s$ resta positivo, cioè per $K\lt1+\dfrac{1+m}{n}$. Al limite $Q\to\infty$ e il circuito oscilla.
 
 {/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un LPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5, sulla stessa figura. Asintoti: 0 dB fino a f0, poi -40 dB/dec. Fase da 0° a -180°, sempre -90° in f0 */}
 <Figura
@@ -392,38 +413,49 @@ Le due scelte di progetto più comuni:
   caption="Bode del Sallen-Key passa-basso per Q = 0,5; 0,707; 1; 2; 5."
 />
 
-**Esempio.** Butterworth a $f_c=1$ kHz con $K=1$: $C_2=10$ nF, $C_1=20$ nF e
-
-$$
-R=\frac{1}{\sqrt2\,\omega_0\,C_2}=\frac{1}{\sqrt2\cdot2\pi\cdot1000\cdot10\cdot10^{-9}}\approx11{,}25\ \text{k}\Omega
-$$
-
 ### Passa-alto
 
 È il duale del precedente: scambiamo i ruoli di resistenze e condensatori. $C_1$ e $C_2$ in serie al segnale, la resistenza $R_2$ da $B$ a massa e $R_1$ che riporta il nodo $A$ all'uscita.
 
 {/* TODO circuito: Vin -> C1 -> nodo A; A -> C2 -> nodo B (ingresso non invertente OA); B -> R2 -> massa; A -> R1 -> Vout; OA non invertente con guadagno K (Ra, Rb). Per K=1: OA inseguitore */}
 <Figura
-  src="/img/filtri-oa/sk-hpf-circuito.svg"
+  src="/images/circuiti/sk-hpf.svg"
   alt="Filtro Sallen-Key passa-alto"
-  caption="Sallen-Key passa-alto: C1 e C2 in serie al segnale, R2 a massa, R1 in retroazione."
+  caption="Sallen-Key passa-alto."
 />
 
-$$
-H_{HP}(s)=\frac{K\,s^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
-$$
+**Cosa succede al variare della frequenza.** Stesso ragionamento del passa-basso, ma ora i condensatori stanno in serie al segnale e fanno da "porta" che si apre salendo in frequenza.
+
+- **Alta frequenza.** $C_1$ e $C_2$ sono corti: il segnale arriva in $B$ senza ostacoli e l'OA lo riporta all'uscita moltiplicato per $K$. Guadagno $K$ e fase $0^\circ$.
+- **Intorno a $f_0$.** L'uscita ha cominciato a crescere e $R_1$ ne riporta una parte sul nodo $A$, senza invertirla. La tensione in $A$, e quindi in $B$, risulta più grande di quanto darebbe il semplice doppio partitore CR: il filtro blocca meno proprio dove sta per cominciare a passare. Il ginocchio si fa più deciso e, con un ritorno forte, compare un picco. In $f_0$ la fase è $+90^\circ$, a metà strada tra $+180^\circ$ e $0^\circ$.
+- **Bassa frequenza.** I condensatori sono aperti e bloccano il segnale: $B$ resta a massa tramite $R_2$, quindi $V_B\approx0$ e l'uscita ($V_{out}=K\,V_B$) è quasi nulla. Il segnale è fermato da due celle CR in cascata, e ognuna aggiunge $+20$ dB/dec e $+90^\circ$: salita a $+40$ dB/dec e fase che tende a $+180^\circ$. Anche qui il ritorno non serve a nulla, perché riporta su $A$ un'uscita quasi nulla.
+
+**Impostazione del calcolo.** Le equazioni sono le stesse del passa-basso con $R$ e $C$ scambiati:
 
 $$
-\omega_0=\frac{1}{\sqrt{R_1R_2C_1C_2}},\qquad
-Q=\frac{\sqrt{R_1R_2C_1C_2}}{R_1\,(C_1+C_2)+(1-K)\,R_2C_2}
+\begin{cases}
+(V_A-V_B)\,sC_2=\dfrac{V_B}{R_2} & \text{(nodo } B\text{)}\\[3mm]
+(V_{in}-V_A)\,sC_1=(V_A-V_B)\,sC_2+\dfrac{V_A-V_{out}}{R_1} & \text{(nodo } A\text{)}\\[3mm]
+V_{out}=K\,V_B
+\end{cases}
 $$
 
-- **Componenti uguali:** $\omega_0=\dfrac{1}{RC}$, $Q=\dfrac{1}{3-K}$, stabile per $K\lt3$.
-- **Guadagno unitario** ($K=1$, $C_1=C_2=C$): $Q=\dfrac12\sqrt{\dfrac{R_2}{R_1}}$, quindi $R_2=4Q^2\,R_1$. Per Butterworth: $R_2=2R_1$.
+Con gli stessi rapporti $m=R_2/R_1$ e $n=C_1/C_2$ (cioè $R_1=R$, $R_2=m\,R$, $C_2=C$, $C_1=n\,C$) si arriva a:
 
-I parametri si comportano come nel passa-basso: $R$ e $C$ spostano $f_0$, $K$ (o il rapporto tra le resistenze) regola $Q$.
+$$
+H_{HP}(s)=\frac{K\,mn\,(sRC)^2}{1+\big[1+n+(1-K)\,m\big]\,sRC+mn\,(sRC)^2}
+$$
 
-**Diagramma di Bode.** È lo specchio del passa-basso. Sotto $f_0$ il modulo sale di 40 dB/dec, sopra $f_0$ il guadagno è $K$. In $f_0$ vale $K\,Q$ con fase $+90^\circ$. La fase va da $+180^\circ$ a $0^\circ$. Se $Q\gt0{,}707$ il picco si trova poco sopra $f_0$ (nel passa-basso era poco sotto).
+che nella forma standard $H_{HP}(s)=\dfrac{K\,s^2}{D(s)}$ dà:
+
+$$
+\omega_0=\frac{1}{RC\sqrt{mn}},\qquad
+Q=\frac{\sqrt{mn}}{1+n+(1-K)\,m}
+$$
+
+È lo specchio del passa-basso: il taglio a $-3$ dB coincide con $\omega_0$ solo per $Q=1/\sqrt2$, per $Q$ più alti sta sotto $\omega_0$. Se $Q\gt0{,}707$ il picco si trova poco sopra $f_0$ (nel passa-basso era poco sotto).
+
+> **Limite di stabilità**: $K\lt1+\dfrac{1+n}{m}$.
 
 {/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un HPF con K=1 e più valori di Q: 0,5 / 0,707 / 1 / 2 / 5. Asintoti: +40 dB/dec fino a f0, poi 0 dB. Fase da +180° a 0°, sempre +90° in f0 */}
 <Figura
@@ -432,24 +464,33 @@ I parametri si comportano come nel passa-basso: $R$ e $C$ spostano $f_0$, $K$ (o
   caption="Bode del Sallen-Key passa-alto per Q = 0,5; 0,707; 1; 2; 5."
 />
 
-**Esempio.** Butterworth a $f_c=1$ kHz con $K=1$ e $C_1=C_2=10$ nF:
-
-$$
-R_1=\frac{1}{\sqrt2\,\omega_0\,C}\approx11{,}25\ \text{k}\Omega,\qquad R_2=2R_1\approx22{,}5\ \text{k}\Omega
-$$
-
 ### Passa-banda
 
-Serve un condensatore in serie per tagliare le basse e uno verso massa per tagliare le alte. Il circuito: $R_1$ in ingresso verso il nodo $A$, $C_1$ in serie tra $A$ e $B$, il parallelo $R_2\parallel C_2$ da $B$ a massa e $R_3$ che riporta $A$ all'uscita.
-
+È composto da una rete RC (passa-basso) seguita da una rete CR (passa-alto) per avere entrambe le risposte. La resistenza $R_3$ fornisce la retroazione positiva.
 {/* TODO circuito: Vin -> R1 -> nodo A; A -> C1 -> nodo B (ingresso non invertente OA); B -> (R2 in parallelo a C2) -> massa; A -> R3 -> Vout; OA non invertente con guadagno K = 1 + Rb/Ra */}
 <Figura
-  src="/img/filtri-oa/sk-bpf-circuito.svg"
+  src="/images/circuiti/sk-bpf.svg"
   alt="Filtro Sallen-Key passa-banda"
-  caption="Sallen-Key passa-banda: R1 in ingresso, C1 tra i nodi A e B, R2 in parallelo a C2 verso massa, R3 in retroazione."
+  caption="Filtro passa-banda KRC."
 />
 
-Con la scelta ordinata $C_1=C_2=C$, $R_2=R$, $R_1=R_3=2R$:
+**Cosa succede al variare della frequenza.** Qui i due condensatori lavorano uno contro l'altro: $C_1$ blocca le basse frequenze, $C_2$ taglia le alte, e in mezzo resta una finestra in cui il segnale passa.
+
+- **Bassa frequenza.** $C_1$ è quasi aperto: il segnale non riesce ad arrivare in $B$, che resta a massa tramite $R_2$. L'uscita, che segue $B$, è piccola e cresce con la frequenza ($+20$ dB/dec), con fase $+90^\circ$: è il comportamento di un passa-alto del primo ordine.
+- **Alta frequenza.** I condensatori sono corti e portano a massa il segnale, che cade quasi tutto su $R_1$: l'uscita scende come $1/f$ ($-20$ dB/dec) con fase $-90^\circ$, come in un passa-basso del primo ordine.
+- **Centro banda, $f_0$.** $C_1$ lascia passare abbastanza segnale e $C_2$ non lo ha ancora messo a massa. Lo sfasamento in anticipo del ramo passa-alto e quello in ritardo del ramo passa-basso si compensano: l'uscita è in fase con l'ingresso ($0^\circ$) e il guadagno è massimo. È anche qui che il ritorno tramite $R_3$ lavora di più, perché l'uscita è grande: rinforza il segnale, alza il picco e stringe la banda. Più il ritorno è forte, più la banda è stretta.
+
+**Impostazione del calcolo.** Con l'OA ideale le LKC ai nodi $B$ e $A$ sono:
+
+$$
+\begin{cases}
+(V_A-V_B)\,sC_1=V_B\left(\dfrac{1}{R_2}+sC_2\right) & \text{(nodo } B\text{)}\\[3mm]
+\dfrac{V_{in}-V_A}{R_1}=(V_A-V_B)\,sC_1+\dfrac{V_A-V_{out}}{R_3} & \text{(nodo } A\text{)}\\[3mm]
+V_{out}=K\,V_B
+\end{cases}
+$$
+
+Con la scelta ordinata $C_1=C_2=C$, $R_2=R$, $R_1=R_3=2R$ si arriva a:
 
 $$
 H_{BP}(s)=G_0\,\frac{\dfrac{\omega_0}{Q}\,s}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
@@ -461,16 +502,7 @@ Q=\frac{2}{6-K},\qquad
 G_0=\frac{K}{6-K}=3Q-1
 $$
 
-Si inverte in $K=6-\dfrac{2}{Q}$. Il circuito è stabile solo per $K\lt6$.
-
-**Cosa cambiano i parametri.**
-
-- **$R$ e $C$** spostano $f_0$.
-- **$K$** regola $Q$ e quindi la larghezza di banda $B=f_0/Q$: più $K$ si avvicina a 6, più la banda si stringe.
-- **Il guadagno $G_0$ non è libero:** è legato a $Q$ da $G_0=3Q-1$. Più il filtro è selettivo, più amplifica al centro banda. È un limite di questa struttura.
-- **La sensibilità cresce con $Q$:** per $Q=10$ serve $K=5{,}8$, e un errore dell'1% su $K$ sposta $Q$ di circa il 30%. Per $Q$ elevati si usano strutture diverse.
-
-**Diagramma di Bode.** Il modulo sale di 20 dB/dec fino a $f_0$, raggiunge il massimo $G_0$ e poi scende di 20 dB/dec. La fase va da $+90^\circ$ a $-90^\circ$ passando per $0^\circ$ in $f_0$. La banda tra i punti a $-3$ dB è $B=f_0/Q$.
+Si inverte in $K=6-\dfrac{2}{Q}$. Il circuito è stabile solo per $K\lt6$. Il guadagno al centro banda non è libero ma legato a $Q$ da $G_0=3Q-1$: più la banda è stretta ($B=f_0/Q$), più il filtro amplifica.
 
 {/* TODO Bode: modulo (dB) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un BPF con Q = 1 / 2 / 5 / 10; segnare i punti a -3 dB e la larghezza di banda B = f0/Q; asintoti +20 e -20 dB/dec. Fase da +90° a -90° passando per 0° in f0 */}
 <Figura
@@ -479,14 +511,6 @@ Si inverte in $K=6-\dfrac{2}{Q}$. Il circuito è stabile solo per $K\lt6$.
   caption="Bode del Sallen-Key passa-banda: pendenze ±20 dB/dec, banda B = f0/Q, fase da +90° a −90°."
 />
 
-**Esempio.** $f_0=1$ kHz, $C=10$ nF, $Q=10$:
-
-$$
-R=\frac{1}{2\pi f_0C}\approx15{,}9\ \text{k}\Omega,\qquad R_2=R,\quad R_1=R_3=2R\approx31{,}8\ \text{k}\Omega
-$$
-
-Servono $K=6-2/Q=5{,}8$ (cioè $R_b/R_a=4{,}8$), una banda $B=100$ Hz e un guadagno al centro banda $G_0=29$ (circa $29$ dB).
-
 ### Notch
 
 Il notch ha una topologia leggermente diversa dagli altri tre, ma riprende la stessa idea: una rete RC passiva, un OA e una retroazione positiva che alza il $Q$. La rete è un **doppio T**:
@@ -494,14 +518,33 @@ Il notch ha una topologia leggermente diversa dagli altri tre, ma riprende la st
 - un T passa-basso, con due resistenze $R$ in serie e un condensatore $2C$ dal punto centrale verso il nodo $V_r$;
 - un T passa-alto, con due condensatori $C$ in serie e una resistenza $R/2$ dal punto centrale verso lo stesso nodo $V_r$.
 
-Entrambi i percorsi portano il segnale all'ingresso non invertente dell'OA, usato come buffer. Alla frequenza $f_0$ i due percorsi danno contributi uguali in modulo e opposti in fase, quindi si cancellano. Se $V_r$ fosse a massa avremmo un notch passivo con $Q=1/4$, larghissimo. Invece $V_r$ riceve una frazione $k$ dell'uscita, tramite un secondo buffer: questa retroazione positiva alza $Q$ senza spostare $f_0$.
+Entrambi i percorsi portano il segnale all'ingresso non invertente dell'OA, usato come buffer. Il nodo $V_r$ non è a massa: riceve una frazione $k$ dell'uscita, tramite un secondo buffer.
 
 {/* TODO circuito: doppio T. Ramo passa-basso: Vin -> R -> nodo N2 -> R -> nodo X; da N2 un condensatore 2C verso il nodo Vr. Ramo passa-alto: Vin -> C -> nodo N1 -> C -> nodo X; da N1 una resistenza R/2 verso il nodo Vr. Il nodo X va all'ingresso non invertente di OA1 (inseguitore, Vout = uscita OA1). Partitore (potenziometro) con rapporto k sull'uscita Vout; la presa del partitore va a un secondo inseguitore OA2, la cui uscita è il nodo Vr. Nota: R/2 si realizza con due R in parallelo e 2C con due C in parallelo */}
 <Figura
-  src="/img/filtri-oa/sk-notch-circuito.svg"
-  alt="Filtro notch attivo a doppio T con retroazione positiva"
-  caption="Notch attivo a doppio T: il nodo comune Vr non è a massa ma è pilotato con una frazione k dell'uscita."
+  src="/images/circuiti/sk-notch.svg"
+  alt="Filtro notch KRC."
+  caption="Filtro notch KRC."
 />
+
+**Cosa succede al variare della frequenza.** Qui il segnale ha due strade per arrivare all'uscita, una con le resistenze e una con i condensatori, e il filtro funziona perché le due strade non si "vedono" nello stesso modo a tutte le frequenze.
+
+- **Bassa frequenza.** I condensatori sono aperti. Il T passa-alto è bloccato, mentre nel T passa-basso le due resistenze non portano corrente (il condensatore $2C$ è aperto e l'ingresso dell'OA non ne assorbe): il segnale arriva in uscita intatto. Guadagno $1$, fase $0^\circ$.
+- **Alta frequenza.** Situazione speculare. I condensatori sono corti: il T passa-alto trasmette il segnale senza perdite, mentre nel T passa-basso il condensatore $2C$ porta a $V_r$ il segnale che ha attraversato la prima resistenza, e quella strada è bloccata. Guadagno $1$ ancora.
+- **Intorno a $f_0$.** Le due strade passano entrambe solo in parte, ma in modo opposto: quella con le resistenze ritarda il segnale, quella con i condensatori lo anticipa. In $f_0$ portano al nodo d'uscita due correnti di uguale ampiezza e in opposizione di fase, che si cancellano, e l'uscita si annulla. In pratica la profondità è limitata dalle tolleranze dei componenti (con l'1% si arriva a qualche decina di dB). Prima di $f_0$ prevale la strada con le resistenze (fase verso $-90^\circ$), dopo prevale quella con i condensatori (fase da $+90^\circ$): in $f_0$ la fase salta di $180^\circ$.
+- **Il ruolo di $k$.** I due rami che vanno a $V_r$ sottraggono segnale alle due strade. Con $V_r$ a massa ($k=0$) ne sottraggono molto, anche lontano da $f_0$, e il notch è larghissimo (il caso passivo, $Q=1/4$). Se invece $V_r$ segue una frazione $k$ dell'uscita, che lontano da $f_0$ è quasi uguale all'ingresso, quei rami vedono ai loro capi una tensione ridotta di un fattore $1-k$ e sottraggono meno segnale: le due strade trasmettono bene anche vicino a $f_0$ e la zona di cancellazione si restringe. È il motivo per cui nella formula di $Q$ compare $1-k$. In $f_0$ l'uscita è nulla, quindi $V_r=k\,V_{out}=0$: a quella frequenza il ritorno non cambia nulla, e per questo $k$ stringe il notch senza spostarlo.
+
+**Impostazione del calcolo.** I nodi da scrivere sono $N_1$ (centro del T passa-alto), $N_2$ (centro del T passa-basso) e il nodo d'uscita $X$, con $V_X=V_{out}$ e $V_r=k\,V_{out}$. Ricordando che $R/2$ ha ammettenza $2/R$ e $2C$ ha ammettenza $2sC$:
+
+$$
+\begin{cases}
+sC\,(V_{in}-V_1)=sC\,(V_1-V_X)+\dfrac{2}{R}\,(V_1-V_r) & \text{(nodo } N_1\text{)}\\[3mm]
+\dfrac{V_{in}-V_2}{R}=\dfrac{V_2-V_X}{R}+2sC\,(V_2-V_r) & \text{(nodo } N_2\text{)}\\[3mm]
+sC\,(V_1-V_X)+\dfrac{V_2-V_X}{R}=0 & \text{(nodo } X\text{)}
+\end{cases}
+$$
+
+Risolvendo il sistema si arriva a:
 
 $$
 H_N(s)=\frac{s^2+\omega_0^2}{s^2+\dfrac{\omega_0}{Q}\,s+\omega_0^2}
@@ -515,42 +558,9 @@ $$
 
 Qui $0\le k\lt1$: $k=0$ è il caso passivo ($Q=1/4$), mentre per $k\to1$ il $Q$ cresce senza limite.
 
-**Cosa cambiano i parametri.**
-
-- **$R$ e $C$** spostano $f_0$. I rapporti del doppio T ($2C$ e $R/2$) vanno rispettati: da quelli dipende la cancellazione, quindi la profondità del notch.
-- **$k$** regola la larghezza: più $k$ si avvicina a 1, più la banda eliminata è stretta ($B=f_0/Q$).
-
-**Diagramma di Bode.** Lontano da $f_0$ il guadagno è 1 (0 dB), da entrambi i lati. In $f_0$ il numeratore si annulla e il guadagno vale 0, cioè $-\infty$ dB; in pratica la profondità è limitata dalle tolleranze dei componenti (con l'1% si arriva a qualche decina di dB). La fase scende verso $-90^\circ$ un attimo prima di $f_0$, poi **salta di $180^\circ$** a $+90^\circ$ e torna a $0^\circ$ dopo. Più $Q$ è alto, più il salto è concentrato attorno a $f_0$.
-
 {/* TODO Bode: modulo (dB, asse da circa -60 a +5) e fase (gradi) in funzione di f/f0 (da 0,1 a 10) per un notch con Q = 0,25 (passivo) / 1 / 5 / 10. Il modulo ha 0 dB ai lati e un "buco" in f0. La fase scende a -90° prima di f0, salta a +90° in f0 e torna a 0° */}
 <Figura
   src="/images/circuiti/bode-sk-notch.svg"
   alt="Diagrammi di Bode del notch attivo a doppio T per diversi valori di Q"
   caption="Bode del notch: guadagno unitario ai lati, zero in f0; la fase fa un salto di 180° in f0."
 />
-
-**Esempio.** Notch a 50 Hz con $C=100$ nF e $Q=10$:
-
-$$
-R=\frac{1}{2\pi\cdot50\cdot100\cdot10^{-9}}\approx31{,}8\ \text{k}\Omega,\qquad k=1-\frac{1}{40}=0{,}975,\qquad B=\frac{f_0}{Q}=5\ \text{Hz}
-$$
-
-Il T passa-basso usa due resistenze da $31{,}8$ kΩ e un condensatore da $200$ nF (due da 100 nF in parallelo); il T passa-alto usa due condensatori da 100 nF e una resistenza da $15{,}9$ kΩ (due da $31{,}8$ kΩ in parallelo).
-
-## Riepilogo
-
-| Filtro | Numeratore di $H(s)$ | $\omega_0$ | $Q$ | Pendenze del Bode |
-| --- | --- | --- | --- | --- |
-| Passa-basso | $K\,\omega_0^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{3-K}$ | $0\to-40$ dB/dec |
-| Passa-alto | $K\,s^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{3-K}$ | $+40\to0$ dB/dec |
-| Passa-banda | $G_0\,\dfrac{\omega_0}{Q}\,s$ | $\dfrac{1}{RC}$ | $\dfrac{2}{6-K}$ | $+20\to-20$ dB/dec |
-| Notch | $s^2+\omega_0^2$ | $\dfrac{1}{RC}$ | $\dfrac{1}{4(1-k)}$ | 0 dB ai lati, buco in $\omega_0$ |
-
-Il denominatore è sempre $s^2+\dfrac{\omega_0}{Q}s+\omega_0^2$. Con le scelte di componenti usate qui (per il passa-banda $R_2=R$ e $R_1=R_3=2R$), $\omega_0$ si sposta con $R$ e $C$ e $Q$ si regola con $K$ (o con $k$ nel notch). Quando ci si avvicina al limite di stabilità ($K\to3$ per passa-basso e passa-alto, $K\to6$ per il passa-banda, $k\to1$ per il notch) il $Q$ tende a infinito.
-
-## Note pratiche
-
-- **Ordini superiori.** Per un filtro del quarto ordine si mettono in cascata due sezioni Sallen-Key con la stessa $f_0$ e $Q$ diversi. Per un Butterworth del quarto ordine sono $Q_1\approx0{,}541$ e $Q_2\approx1{,}307$. Grazie all'OA le sezioni non si caricano a vicenda.
-- **Banda dell'OA.** Tutto quello che abbiamo visto assume un OA ideale. Quando $f_0$ si avvicina al GBW dell'OA, il $Q$ reale si discosta da quello di progetto (di solito aumenta) e il filtro può diventare instabile.
-- **Tolleranze.** Più $Q$ è alto, più il filtro è sensibile alle tolleranze di $R$, $C$ e delle resistenze che fissano il guadagno. Per $Q$ elevati servono componenti all'1% o migliori.
-- **Condensatori.** Per frequenze di taglio precise conviene usare condensatori a film o C0G/NP0. I ceramici di classe 2 (X7R, Y5V) cambiano valore con tensione e temperatura.
