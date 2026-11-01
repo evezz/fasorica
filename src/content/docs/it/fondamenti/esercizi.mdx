@@ -3,5 +3,121 @@ title: Esercizi - Fondamenti
 description: Esercizi
 ---
 
-## Esercizio 1 
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
 
+## Esercizio 1.1 
+  <Figura src="/images/circuiti/fondamenti-es1.svg" alt="Fondamenti - Esercizio 1" larghezza='30rem'>
+    Esercizio 1.1.
+  </Figura>
+Dato il circuito in figura, calcolare la tensione sul nodo A e la corrente che scorre nel resistore $R_3$.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+  <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+  </summary>
+  <div style={{ marginTop: '1rem' }}>
+    * **Calcolo di $V_A$**:
+        Per calcolare la tensione $V_A$, possiamo utilizzare il [partitore di tensione](/it/fondamenti/serie-parallelo/#partitore-di-tensione). In questo caso la resistenza inferiore è composta dal parallelo fra $R_2$ e $R_3$. Troviamo quindi:
+        $$
+        \boxed{V_A = V_g \cdot \frac{R_2 \parallel R_3}{R_2 \parallel R_3 + R_1} = 2{,}94\, \text{V}}
+        $$
+    * **Calcolo di $I_3$**:
+        Per calcolare la corrente $I_3$, possiamo prima calcolare la corrente totale (quella che esce dal generatore) e poi utilizzare il [partitore di corrente](/it/fondamenti/serie-parallelo/#partitore-di-corrente) fra $R_2$ e $R_3$. La corrente totale è data dalla legge di Ohm:
+        $$
+        I_{tot} = \frac{V_g}{R_{eq}} = \frac{V_g}{R_1 + R_2 \parallel R_3} = 2{,}06\, \text{mA}
+        $$
+        Applichiamo il partitore di corrente per ricavare $I_3$:
+        $$
+        \boxed{I_3 = I_{tot} \cdot \frac{R_2}{R_2 + R_3} = 0{,}588\, \text{mA}}
+        $$
+        Alternativamente, avendo la tensione ai capi di $R_3$ (che è $V_A$) possiamo calcolare $I_3$ con la legge di Ohm: $I_3 = \frac{V_A}{R_3} = 0{,}588\, \text{mA}$
+
+    > **Osservazioni delle leggi di Kircchoff**: 
+        * Dato che sul parallelo $R_2 \parallel R_3$ cadono $2{,}94\, \text{V}$, sulla resistenza $R_1$ *devono* cadere i restanti $5-2{,}94=2{,}06\, \text{V}$ per rispettare la [legge di Kircchhoff delle tensioni](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-tensioni-kvl).
+        * Dato che nella resistenza $R_3$ scorrono $0{,}588\, \text{mA}$, nella resistenza $R_2$ *devono* scorrere i restanti $2{,}06-0{,}588=1{,}472\, \text{mA}$ per rispettare la [legge di Kircchhoff delle correnti](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-correnti-kcl).
+
+  </div>
+</details>
+
+## Esercizio 1.2 
+  <Figura src="/images/circuiti/fondamenti-es2.svg" alt="Fondamenti - Esercizio 2" larghezza='40rem'>
+    Esercizio 1.2.
+</Figura>
+Dato il circuito in figura, calcolare:
+1. le tensioni $V_A$ e $V_B$ sui nodi A e B;
+2. le correnti $I_1$, $I_2$, $I_3$ e $I_V$, con i versi indicati in figura;
+3. la potenza di ciascun elemento, stabilendo quali generatori erogano e quali assorbono potenza, e verificare infine il bilancio delle potenze.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    * **Calcolo di $V_A$**:
+        Il generatore di tensione è collegato direttamente fra il nodo A e la massa, quindi impone la tensione sul nodo:
+        $$
+        \boxed{V_A = V_g = 8\, \text{V}}
+        $$
+    * **Calcolo di $V_B$**:
+        Qui il partitore non basta, perché nel nodo B entra anche la corrente del generatore $I_g$. Scriviamo la [legge di Kirchhoff delle correnti](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-correnti-kcl) al nodo B: entrano $I_2$ e $I_g$, esce $I_3$.
+        $$
+        I_2 + I_g = I_3
+        $$
+        Esprimiamo le correnti con la legge di Ohm, in funzione dell'unica incognita $V_B$:
+        $$
+        \frac{V_A - V_B}{R_2} + I_g = \frac{V_B}{R_3}
+        $$
+        Raccogliendo $V_B$ e ricordando che $\frac{1}{R_2} + \frac{1}{R_3} = \frac{1}{R_2 \parallel R_3}$:
+        $$
+        \boxed{V_B = (R_2 \parallel R_3) \cdot \left(\frac{V_A}{R_2} + I_g\right) = 1{,}2\, \text{k}\Omega \cdot (4 + 6)\, \text{mA} = 12\, \text{V}}
+        $$
+    * **Calcolo delle correnti**:
+        Ora che conosciamo le tensioni sui nodi, usiamo la legge di Ohm:
+        $$
+        \boxed{I_1 = \frac{V_A}{R_1} = \frac{8\, \text{V}}{8\, \text{k}\Omega} = 1\, \text{mA}}
+        \qquad
+        \boxed{I_3 = \frac{V_B}{R_3} = \frac{12\, \text{V}}{3\, \text{k}\Omega} = 4\, \text{mA}}
+        $$
+        Per $R_2$, con il verso da A verso B indicato in figura:
+        $$
+        \boxed{I_2 = \frac{V_A - V_B}{R_2} = \frac{8 - 12}{2} = -2\, \text{mA}}
+        $$
+        Il segno negativo significa che la corrente in $R_2$ scorre in realtà **da B verso A**, opposta al verso scelto. Infine, la corrente $I_V$ si ricava con la KCL al nodo A (entra $I_V$, escono $I_1$ e $I_2$):
+        $$
+        \boxed{I_V = I_1 + I_2 = 1 + (-2) = -1\, \text{mA}}
+        $$
+        Anche $I_V$ è negativa: la corrente entra nel terminale positivo del generatore di tensione invece di uscirne. Questo semplicemente significa che la nostra scelta dei versi delle correnti iniziali era sbagliata, ma risolvendo il circuito otteniamo il vero verso della corrente senza ambiguità. 
+    * **Calcolo delle potenze**:
+        I resistori dissipano sempre potenza:
+        $$
+        \begin{aligned}
+        P_{R_1} &= \frac{V_A^2}{R_1} = \frac{8^2}{8} = 8\, \text{mW} \\
+        P_{R_2} &= R_2 \cdot I_2^2 = 2 \cdot (-2)^2 = 8\, \text{mW} \\
+        P_{R_3} &= \frac{V_B^2}{R_3} = \frac{12^2}{3} = 48\, \text{mW}
+        \end{aligned}
+        $$
+        Per i generatori calcoliamo la potenza **erogata** come prodotto fra la tensione e la corrente che esce dal terminale positivo.
+        Generatore di tensione:
+        $$
+        \boxed{P_{V_g,\text{erog}} = V_g \cdot I_V = 8 \cdot (-1) = -8\, \text{mW}}
+        $$
+        La potenza erogata è negativa, quindi il generatore di tensione **assorbe** $8\, \text{mW}$ (si comporta come un carico, come una batteria in carica).
+        Sul generatore di corrente, cadono $V_B = 12\, \text{V}$, quindi la sua potenza erogata vale:
+        $$
+        \boxed{P_{I_g,\text{erog}} = V_B \cdot I_g = 12 \cdot 6 = 72\, \text{mW}}
+        $$
+        Il generatore di corrente **eroga** $72\, \text{mW}$.
+        Bilancio delle potenze: la potenza erogata deve essere uguale a quella assorbita.
+        $$
+        P_{\text{erog}} = 72\, \text{mW}
+        \qquad
+        P_{\text{ass}} = P_{R_1} + P_{R_2} + P_{R_3} + P_{V_g,\text{ass}} = 8 + 8 + 48 + 8 = 72\, \text{mW}
+        $$
+        Le due potenze coincidono, quindi il bilancio è verificato.
+
+    > **Osservazioni sul verso della tensione su $R_2$**: 
+    > * Nella maglia $V_g$, $R_2$, $R_3$ si ha $V_g = R_2 \cdot I_2 + V_B$, cioè $8 + 4 - 12 = 0\, \text{V}$: la tensione su $R_2$ è positiva, perché il potenziale *sale* da A a B.
+
+</div>
+</details>
