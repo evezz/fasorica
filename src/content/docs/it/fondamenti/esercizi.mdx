@@ -6,6 +6,8 @@ description: Esercizi
 import FiguraLato from '../../../../components/FiguraLato.astro';
 import Figura from '../../../../components/Figura.astro';
 
+In questa pagina sono riportati e svolti alcuni esercizi riguardanti i fondamenti dell'elettronica, partendo dalle leggi di Ohm e di Kircchhoff e arrivando a PSE, Thevenin e Norton.
+
 ## Esercizio 1.1 
   <Figura src="/images/circuiti/fondamenti-es1.svg" alt="Fondamenti - Esercizio 1" larghezza='30rem'>
     Esercizio 1.1.
@@ -43,7 +45,7 @@ Dato il circuito in figura, calcolare la tensione sul nodo A e la corrente che s
 ## Esercizio 1.2 
   <Figura src="/images/circuiti/fondamenti-es2.svg" alt="Fondamenti - Esercizio 2" larghezza='40rem'>
     Esercizio 1.2.
-</Figura>
+  </Figura>
 Dato il circuito in figura, calcolare:
 1. le tensioni $V_A$ e $V_B$ sui nodi A e B;
 2. le correnti $I_1$, $I_2$, $I_3$ e $I_V$, con i versi indicati in figura;
@@ -116,8 +118,142 @@ Dato il circuito in figura, calcolare:
         $$
         Le due potenze coincidono, quindi il bilancio è verificato.
 
-    > **Osservazioni sul verso della tensione su $R_2$**: 
+    > **Osservazione sul verso della tensione su $R_2$**: 
     > * Nella maglia $V_g$, $R_2$, $R_3$ si ha $V_g = R_2 \cdot I_2 + V_B$, cioè $8 + 4 - 12 = 0\, \text{V}$: la tensione su $R_2$ è positiva, perché il potenziale *sale* da A a B.
 
 </div>
 </details>
+
+## Esercizio 1.3 
+Risolvere il circuito dell'esercizio 1.2 utilizzando il principio di sovrapposizione degli effetti.
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    Ricordiamo che per applicare il PSE dobbiamo spegnere i generatori uno alla volta:
+    - un generatore di tensione diventa un **corto circuito** (tensione nulla);
+    - un generatore di corrente diventa un **circuito aperto** (corrente nulla).
+
+    * **Contributo di $V_g$ (con $I_g$ spento)**:
+
+        <FiguraLato src="/images/circuiti/fondamenti-es3-2.svg" alt="Circuito dell'esercizio 1.3 con acceso solo $V_g$" larghezza='25rem'>
+            Circuito dell'esercizio 1.3 con acceso solo $V_g$.
+        </FiguraLato>
+
+        Con $I_g$ sostituito da un circuito aperto, al nodo B restano collegati solo $R_2$ e $R_3$, che quindi sono in serie fra il nodo A (a $8\, \text{V}$) e la massa. Il resistore $R_1$ è in parallelo al generatore e non influenza le altre tensioni. Usando il [partitore di tensione](/it/fondamenti/serie-parallelo/#partitore-di-tensione):
+        $$
+        V_A' = V_g = 8\, \text{V}
+        \qquad
+        V_B' = V_g \cdot \frac{R_3}{R_2 + R_3} = 8 \cdot \frac{3}{2 + 3} = 4{,}8\, \text{V}
+        $$
+        Le correnti sono:
+        $$
+        I_1' = \frac{V_g}{R_1} = 1\, \text{mA}
+        \qquad
+        I_2' = I_3' = \frac{V_g}{R_2 + R_3} = \frac{8}{5} = 1{,}6\, \text{mA}
+        $$
+        Con la KCL al nodo A (entra $I_V$, escono $I_1$ e $I_2$):
+        $$
+        I_V' = I_1' + I_2' = 1 + 1{,}6 = 2{,}6\, \text{mA}
+        $$
+        ⚠︎ Non possiamo calcolare la potenza ora, ma solo alla fine!
+    * **Contributo di $I_g$ (con $V_g$ spento)**:
+
+        <FiguraLato src="/images/circuiti/fondamenti-es3-1.svg" alt="Circuito dell'esercizio 1.3 con acceso solo $I_g$" larghezza='25rem'>
+            Circuito dell'esercizio 1.3 con acceso solo $I_g$.
+        </FiguraLato>
+
+        Con $V_g$ sostituito da un corto circuito, il nodo A è collegato direttamente a massa, quindi $V_A'' = 0$. Di conseguenza $R_1$ ha entrambi i terminali a massa e non è attraversata da corrente: $I_1'' = 0$. Inoltre $R_2$ e $R_3$ si trovano entrambe fra il nodo B e la massa, quindi sono in parallelo:
+        $$
+        V_B'' = I_g \cdot (R_2 \parallel R_3) = 6\, \text{mA} \cdot 1{,}2\, \text{k}\Omega = 7{,}2\, \text{V}
+        $$
+        Le correnti sono:
+        $$
+        I_3'' = \frac{V_B''}{R_3} = \frac{7{,}2}{3} = 2{,}4\, \text{mA}
+        \qquad
+        I_2'' = \frac{V_A'' - V_B''}{R_2} = \frac{0 - 7{,}2}{2} = -3{,}6\, \text{mA}
+        $$
+        Il segno negativo indica che la corrente in $R_2$ scorre da B verso A, cioè opposta al verso di figura. Lo stesso risultato si ottiene con il [partitore di corrente](/it/fondamenti/serie-parallelo/#partitore-di-corrente): $I_g \cdot \frac{R_3}{R_2 + R_3} = 3{,}6\, \text{mA}$ passano in $R_2$ e $I_g \cdot \frac{R_2}{R_2 + R_3} = 2{,}4\, \text{mA}$ in $R_3$. La corrente di $R_2$ entra nel corto circuito che ha preso il posto di $V_g$:
+        $$
+        I_V'' = I_1'' + I_2'' = 0 + (-3{,}6) = -3{,}6\, \text{mA}
+        $$
+    * **Somma dei contributi**:
+        $$
+        \boxed{
+        \begin{aligned}
+        V_A &= V_A' + V_A'' = 8 + 0 = 8\, \text{V} \\
+        V_B &= V_B' + V_B'' = 4{,}8 + 7{,}2 = 12\, \text{V} \\
+        I_1 &= I_1' + I_1'' = 1 + 0 = 1\, \text{mA} \\
+        I_2 &= I_2' + I_2'' = 1{,}6 - 3{,}6 = -2\, \text{mA} \\
+        I_3 &= I_3' + I_3'' = 1{,}6 + 2{,}4 = 4\, \text{mA} \\
+        I_V &= I_V' + I_V'' = 2{,}6 - 3{,}6 = -1\, \text{mA}
+        \end{aligned}
+        }
+        $$
+        I risultati coincidono con quelli dell'esercizio 1.2.
+    * **Calcolo delle potenze**:
+        La sovrapposizione vale per tensioni e correnti, ma **non per le potenze**, perché queste dipendono dal quadrato della corrente (o della tensione). Ad esempio, per $R_3$ la somma dei contributi darebbe un risultato sbagliato:
+        $$
+        R_3 \cdot I_3'^2 + R_3 \cdot I_3''^2 = 3 \cdot 1{,}6^2 + 3 \cdot 2{,}4^2 = 24{,}96\, \text{mW} \neq 48\, \text{mW} = R_3 \cdot I_3^2
+        $$
+        La differenza è il termine doppio prodotto $2 R_3 I_3' I_3'' = 23{,}04\, \text{mW}$. Le potenze vanno quindi calcolate con i valori **totali** di tensioni e correnti:
+        $$
+        \boxed{
+        \begin{aligned}
+        P_{R_1} &= R_1 \cdot I_1^2 = 8 \cdot 1^2 = 8\, \text{mW} \\
+        P_{R_2} &= R_2 \cdot I_2^2 = 2 \cdot (-2)^2 = 8\, \text{mW} \\
+        P_{R_3} &= R_3 \cdot I_3^2 = 3 \cdot 4^2 = 48\, \text{mW} \\
+        P_{V_g,\text{erog}} &= V_g \cdot I_V = 8 \cdot (-1) = -8\, \text{mW} \\
+        P_{I_g,\text{erog}} &= V_B \cdot I_g = 12 \cdot 6 = 72\, \text{mW}
+        \end{aligned}}
+        $$
+        Il generatore di tensione **assorbe** $8\, \text{mW}$, quello di corrente **eroga** $72\, \text{mW}$, e il bilancio è verificato: $(8 + 8 + 48 + 8)\, \text{mW} = 72\, \text{mW}$.
+
+</div>
+</details>
+
+## Esercizio 1.4 
+  <Figura src="/images/circuiti/fondamenti-es4.svg" alt="Fondamenti - Esercizio 4" larghezza='35rem'>
+    Esercizio 1.4.
+  </Figura>
+Dato il circuito in figura, calcolare $I_L$.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    Utilizziamo il principio di sovrapposizione degli effetti.
+
+    * **Contributo di $V_g$ ($I_g$ spento)**:
+        <FiguraLato src="/images/circuiti/fondamenti-es4-1.svg" alt="Circuito dell'esercizio 1.4 con acceso solo $V_g$" larghezza='25rem'>
+            Circuito dell'esercizio 1.4 con acceso solo $V_g$.
+        </FiguraLato>
+        
+        Il circuito che resta spegnendo $I_g$ non è altro che un generatore di tensione in parallelo a due serie di resistori. Per calcolare la corrente $I_L$ ci serve solo la legge di Ohm:
+        $$
+        I_L' = -\frac{V_g}{R_3 + R_L} =-\frac{10\, \text{V}}{3\, \text{k}\Omega + 1\, \text{k}\Omega} = -2{,}5\, \text{mA}
+        $$
+        ⚠︎ Attenzione al segno, la corrente dovuta al contributo di $V_g$ scorre verso l'alto nel resistore $R_L$.
+    <br />
+    <br />
+    <br />
+    <br />
+    * **Contributo di $I_g$ ($V_g$ spento)**:
+        <FiguraLato src="/images/circuiti/fondamenti-es4-2.svg" alt="Circuito dell'esercizio 1.4 con acceso solo $I_g$" larghezza='25rem'>
+            Circuito dell'esercizio 1.4 con acceso solo $I_g$.
+        </FiguraLato>
+        
+        Il nodo A e il nodo B ora coincidono, e forniscono un percorso senza resistenza alla corrente. Possiamo ancora una volta ignorare le resistenze $R_1$ e $R_2$. Il circuito che rimane è un partitore di corrente:
+        $$
+        I_L''=I_g \cdot \frac{R_3}{R_3+R_L}=5\, \text{mA} \cdot \frac{3\, \text{k}\Omega}{3\, \text{k}\Omega + 1\, \text{k}\Omega} = 3{,}75\, \text{mA}
+        $$
+
+    La corrente $I_L$ totale vale:
+    $$
+    \boxed{I_L = I_L'+I_L''=-2{,}5\, \text{mA}+3{,}75\, \text{mA} = 1{,}25\, \text{mA}}
+    $$
+</div>
+</details>
+
