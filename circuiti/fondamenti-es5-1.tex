@@ -1,0 +1,19 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (7, 5) to[american resistor, l={$R_1$}] (7, 2.75);
+	\draw (9, 5) to[american resistor, l={$R_2$}] (9, 2.75);
+	\draw (7, 2.75) to[american voltage source, mirror, l={$V_{g_1}$}] (7, 1);
+	\draw (9, 2.75) to[american voltage source, mirror, l={$V_{g_2}$}] (9, 1);
+	\draw (7, 5) to[short] (11, 5);
+	\draw (7, 1) to[short] (11, 1);
+	\node[circ] at (9, 5){};
+	\node[circ] at (9, 1){};
+	\node[ground] at (7, 1){};
+	\node[circ] at (7, 1){};
+	\node[circ] at (11, 1){};
+	\node[circ] at (11, 5){};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (10.921, 5.343){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (10.671, 5.593){A};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (10.921, 1.343){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (10.671, 1.593){B};
+	\draw[-stealth] (10.6, 1.5) -- (10.6, 4.5);
+	\node[shape=rectangle, minimum width=0.665cm, minimum height=0.465cm] at (10.45, 3.25){} node[anchor=north west, align=left, text width=0.1cm, inner sep=6pt] at (10.45, 3.5){$V_{th}$};
+\end{tikzpicture}

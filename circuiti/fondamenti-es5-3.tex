@@ -1,0 +1,11 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (8, 4) to[american resistor, l_={$R_{th}$}] (5, 4);
+	\draw (8, 4) to[american resistor, l_={$R_L$}, v^<=$V_{R_L}$] (8, 1);
+	\draw (5, 1) to[short] (8, 1);
+	\node[ground] at (5, 1){};
+	\node[circ] at (5, 1){};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (7.896, 4.276){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (7.646, 4.526){A};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (7.907, 0.829){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (7.657, 1.079){B};
+	\draw (5, 4) to[american voltage source, l_={$V_{th}$}] (5, 1);
+\end{tikzpicture}

@@ -257,3 +257,131 @@ Dato il circuito in figura, calcolare $I_L$.
 </div>
 </details>
 
+## Esercizio 1.5
+  <Figura src="/images/circuiti/fondamenti-es5.svg" alt="Fondamenti - Esercizio 5" larghezza='30rem'>
+    Esercizio 1.5.
+  </Figura>
+Dato il circuito in figura, trovare il circuito equivalente di Thevenin e di Norton. Poi calcolare $V_{R_L}$ (in forma simbolica).
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+
+    #### Thevenin
+    <FiguraLato src="/images/circuiti/fondamenti-es5-1.svg" alt="Circuito dell'esercizio 1.5 a vuoto" larghezza='15rem'>
+        Circuito dell'esercizio 1.5 a vuoto.
+    </FiguraLato>
+
+    Come prima cosa si scollega $R_L$ e si indicano con $A$ (in alto) e $B$ (in basso, a massa) i morsetti rimasti aperti. Il bipolo da sostituire è formato dalle due serie $V_{g_1}/R_1$ e $V_{g_2}/R_2$ collegate in parallelo tra $A$ e $B$.
+
+    - **Tensione di Thevenin (PSE)**: $V_{th}$ è la tensione a vuoto $V_{AB}$ e si ottiene sommando i contributi dei due generatori, spegnendo ogni volta l'altro (corto circuito).
+    - *Contributo di $V_{g_1}$* (con $V_{g_2}$ spento): $R_1$ e $R_2$ formano un partitore di tensione e $V_{AB}'$ si legge ai capi di $R_2$.
+        $$
+        V_{AB}' = V_{g_1}\,\frac{R_2}{R_1 + R_2}
+        $$
+
+    - *Contributo di $V_{g_2}$* (con $V_{g_1}$ spento): analogamente, $V_{AB}''$ si legge ai capi di $R_1$.
+        $$
+        V_{AB}'' = V_{g_2}\,\frac{R_1}{R_1 + R_2}
+        $$
+
+    - *Sovrapposizione degli effetti:*
+        $$
+        V_{th} = V_{AB}' + V_{AB}'' = \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{R_1 + R_2}
+        $$
+
+    - **Resistenza di Thevenin**: Si spengono i generatori indipendenti di tensione (sostituiti da un corto circuito): $R_1$ e $R_2$ risultano in parallelo ai morsetti $A$–$B$.
+    $$
+    R_{th} = R_1 \parallel R_2 = \frac{R_1 R_2}{R_1 + R_2}
+    $$
+
+    <FiguraLato src="/images/circuiti/fondamenti-es5-3.svg" alt="Circuito equivalente di Thevenin dell'esercizio 1.5." larghezza='20rem'>
+        Circuito equivalente di Thevenin dell'esercizio 1.5.
+    </FiguraLato>
+
+    - **Equivalente di Thevenin**
+
+    $$
+    V_{th} = \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{R_1 + R_2}
+    \qquad
+    R_{th} = \frac{R_1 R_2}{R_1 + R_2}
+    $$
+
+    #### Norton
+    <FiguraLato src="/images/circuiti/fondamenti-es5-4.svg" alt="Circuito dell'esercizio 1.5 con carico in cortocircuito." larghezza='15rem'>
+        Circuito dell'esercizio 1.5 con carico in cortocircuito.
+    </FiguraLato>
+
+    - **Corrente di Norton (PSE)**: $I_n$ è la corrente di corto circuito tra $A$ e $B$ e si ottiene sommando i contributi dei due generatori, spegnendo ogni volta l'altro.
+    - *Contributo di $V_{g_1}$* (con $V_{g_2}$ spento): il corto circuito tra $A$ e $B$ cortocircuita anche $R_2$, quindi tutta la corrente circola in $R_1$.
+        $$
+        I_n' = \frac{V_{g_1}}{R_1}
+        $$
+
+    - *Contributo di $V_{g_2}$* (con $V_{g_1}$ spento): analogamente, tutta la corrente circola in $R_2$.
+        $$
+        I_n'' = \frac{V_{g_2}}{R_2}
+        $$
+
+    - *Sovrapposizione degli effetti:*
+        $$
+        I_n = I_n' + I_n'' = \frac{V_{g_1}}{R_1} + \frac{V_{g_2}}{R_2} = \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{R_1 R_2}
+        $$
+
+    <FiguraLato src="/images/circuiti/fondamenti-es5-5.svg" alt="Circuito equivalente di Norton dell'esercizio 1.5." larghezza='20rem'>
+        Circuito equivalente di Norton dell'esercizio 1.5.
+    </FiguraLato>
+    - **Equivalente di Norton**: La resistenza di Norton coincide con quella di Thevenin:
+    $$
+    R_N = R_{Th} = \frac{R_1 R_2}{R_1 + R_2}
+    $$
+
+        > Verifica: $I_n = \dfrac{V_{th}}{R_{th}}$.
+
+    #### Calcolo di $V_{R_L}$
+    Dall'equivalente di Thevenin, con il partitore di tensione:
+
+    $$
+    V_{R_L} = V_{th}\,\frac{R_L}{R_L + R_{th}}
+    = \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{R_1 + R_2}\cdot\frac{R_L}{R_L + \dfrac{R_1 R_2}{R_1 + R_2}}
+    $$
+
+    Semplificando:
+
+    $$
+    \boxed{V_{R_L} = \frac{\left(R_2\,V_{g_1} + R_1\,V_{g_2}\right) R_L}{R_1 R_2 + R_L\left(R_1 + R_2\right)}}
+    $$
+
+    Dall'equivalente di Norton, $R_n$ e $R_L$ sono in parallelo e la tensione $V_{R_L}$ è quella ai capi del parallelo, attraversato da $I_n$:
+
+    $$
+    V_{R_L} = I_n\,\big(R_n \parallel R_L\big) = I_n\,\frac{R_n R_L}{R_n + R_L}
+    $$
+
+    Si sostituiscono le espressioni di $I_n$ e $R_n$:
+
+    $$
+    V_{R_L} = \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{R_1 R_2}\cdot
+    \frac{\dfrac{R_1 R_2}{R_1 + R_2}\,R_L}{\dfrac{R_1 R_2}{R_1 + R_2} + R_L}
+    $$
+
+    Si semplifica il parallelo moltiplicando numeratore e denominatore della seconda frazione per $R_1 + R_2$:
+
+    $$
+    \frac{\dfrac{R_1 R_2}{R_1 + R_2}\,R_L}{\dfrac{R_1 R_2}{R_1 + R_2} + R_L}
+    = \frac{R_1 R_2\,R_L}{R_1 R_2 + R_L\left(R_1 + R_2\right)}
+    $$
+
+    Sostituendo nell'espressione di $V_{R_L}$ il fattore $R_1 R_2$ si semplifica:
+
+    $$
+    \begin{aligned}
+    V_{R_L} &= \frac{R_2\,V_{g_1} + R_1\,V_{g_2}}{\cancel{R_1 R_2}}\cdot\frac{\cancel{R_1 R_2}\,R_L}{R_1 R_2 + R_L\left(R_1 + R_2\right)} = \frac{\left(R_2\,V_{g_1} + R_1\,V_{g_2}\right) R_L}{R_1 R_2 + R_L\left(R_1 + R_2\right)}
+    \end{aligned}
+    $$
+
+    che coincide con l'espressione ottenuta dall'equivalente di Thevenin.
+</div>
+</details>
