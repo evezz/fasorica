@@ -1,0 +1,10 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (2, 6) to[american voltage source, l={$V_g$}, i_=$i(t)$] (2, 2);
+	\draw (3, 6) to[closing switch, l_={$t_0 $}, label distance=-0.11cm] (4, 6);
+	\draw (2, 6) to[short] (3, 6);
+	\draw (2, 2) to[short] (7, 2);
+	\draw (4, 6) to[american resistor, l={$R$}] (7, 6);
+	\draw (7, 6) to[capacitor, l_={$C$}, v^<=$v_c(t)$, voltage/distance from node=0.3, voltage/bump b=1.3, voltage/shift=1] (7, 2);
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (3.401, 6.55){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (3.151, 6.8){T};
+\end{tikzpicture}

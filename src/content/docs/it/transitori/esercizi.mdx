@@ -8,19 +8,57 @@ import Figura from '../../../../components/Figura.astro';
 
 In questa pagina sono riportati e svolti alcuni esercizi sui transitori dei circuiti del primo ordine: cinque circuiti RC (carica, scarica, commutazioni, Thevenin e doppio transitorio) e un circuito RL.
 
-In tutti gli esercizi useremo lo stesso metodo. La grandezza che ci interessa, $x(t)$ (la tensione $v_C$ sul condensatore oppure la corrente $i_L$ nell'induttore), segue sempre la legge:
+Nelle lezioni teoriche abbiamo già ricavato le equazioni della carica e scarica del condensatore ([circuito RC](/it/transitori/rc-rl/#il-circuito-rc)), e dell'induttore ([circuito RL](/it/transitori/rc-rl/#il-circuito-rl)). Qui non le ricaviamo di nuovo: vediamo invece come si adattano ai circuiti più complicati e alle condizioni iniziali diverse da zero, che sono quelli che si incontrano negli esercizi.
+
+Se un circuito contiene un solo componente reattivo, tutto ciò che gli è collegato si può sostituire con il suo equivalente di Thevenin ($V_{th}$ in serie a $R_{th}$). L'equazione della maglia diventa:
 
 $$
-x(t) = x(\infty) + \left[x(0^+) - x(\infty)\right] e^{-t/\tau}
+\begin{aligned}
+\text{RC:}\quad & V_{th} = R_{th}\, C\, \frac{dv_C}{dt} + v_C \\
+\text{RL:}\quad & V_{th} = R_{th}\, i_L + L\, \frac{di_L}{dt}
+\end{aligned}
 $$
 
-dove $0^+$ indica l'istante subito dopo la commutazione. Per applicarla bastano tre passi:
+Dividendo la seconda equazione per $R_{th}$ le due equazioni hanno la stessa forma. Indicando con $x$ l'incognita ($v_C$ oppure $i_L$):
+
+$$
+\tau\, \frac{dx}{dt} + x = x_\infty
+$$
+
+dove:
+- nel circuito RC $x = v_C$, $\tau = R_{th}\, C$ e $x_\infty = V_{th}$;
+- nel circuito RL $x = i_L$, $\tau = L / R_{th}$ e $x_\infty = V_{th} / R_{th}$.
+
+Il significato di $x_\infty$ è immediato: a regime $x$ non varia più, quindi $\dfrac{dx}{dt} = 0$ e l'equazione dà proprio $x = x_\infty$.
+
+L'equazione si risolve con la stessa separazione delle variabili vista nelle lezioni, con l'unica differenza che all'istante iniziale $x$ vale un valore qualsiasi $x(0^+)$ invece di zero ($0^+$ indica l'istante subito dopo la commutazione). Il risultato è:
+
+$$
+x(t) = x_\infty + \left[x(0^+) - x_\infty\right] e^{-t/\tau}
+$$
+
+Lo si può controllare per sostituzione: la derivata è $\dfrac{dx}{dt} = -\dfrac{x(0^+) - x_\infty}{\tau}\, e^{-t/\tau}$, quindi nel termine $\tau\, \dfrac{dx}{dt} + x$ i due termini con l'esponenziale si cancellano e resta $x_\infty$; inoltre per $t = 0$ si ha $x = x(0^+)$. La carica e la scarica delle lezioni sono due casi particolari:
+- **carica**, con $x(0^+) = 0$ e $x_\infty = V$: $\;x(t) = V\left(1 - e^{-t/\tau}\right)$;
+- **scarica**, con $x_\infty = 0$ e $x(0^+) = V_0$: $\;x(t) = V_0\, e^{-t/\tau}$.
+
+Per risolvere un esercizio servono quindi soltanto tre informazioni, che si ricavano dal circuito:
 
 1. **Valore iniziale** $x(0^+)$: la tensione sul condensatore e la corrente nell'induttore sono grandezze *continue*, quindi $x(0^+) = x(0^-)$.
-2. **Valore finale** $x(\infty)$: a regime (con generatori costanti) il condensatore si comporta come un circuito aperto e l'induttore come un corto circuito.
+2. **Valore finale** $x_\infty$: a regime (con generatori costanti) il condensatore si comporta come un circuito aperto e l'induttore come un corto circuito.
 3. **Costante di tempo** $\tau$: vale $\tau = R_{th}\, C$ nei circuiti RC e $\tau = L / R_{th}$ nei circuiti RL, dove $R_{th}$ è la resistenza vista dai morsetti del condensatore (o dell'induttore) a generatori spenti.
 
+Se nell'esercizio il circuito cambia più volte (interruttori che si chiudono e si riaprono) si ripete il procedimento per ogni intervallo: il valore raggiunto alla fine di un intervallo è il valore iniziale del successivo, per la continuità di $v_C$ e di $i_L$.
+
 ## Esercizio 2.1
+{/*
+  DISEGNO transitori-es1.svg: circuito RC serie, una sola maglia rettangolare
+  - Lato sinistro: generatore di tensione Vg = 10 V, con il + in alto.
+  - Lato superiore, da sinistra a destra: interruttore T (disegnalo aperto, con una freccia curva e la scritta "t = 0") e poi il resistore R = 5 kΩ.
+  - Lato destro: condensatore C = 20 µF in verticale, con la piastra + in alto.
+  - Lato inferiore: filo che chiude la maglia, con il simbolo di massa sotto il generatore.
+  - Da segnare: la corrente i con una freccia sul lato superiore, verso destra (cioè entrante nella piastra superiore di C); la tensione vC con una freccia accanto al condensatore, punta in alto e + sopra.
+  - Accanto al condensatore puoi scrivere vC(0) = 0 (inizialmente scarico).
+*/}
   <Figura src="/images/circuiti/transitori-es1.svg" alt="Transitori - Esercizio 1" larghezza='35rem'>
     Esercizio 2.1.
   </Figura>
@@ -29,7 +67,7 @@ Nel circuito in figura il condensatore è inizialmente scarico e l'interruttore 
 2. la tensione $v_C(t)$ sul condensatore e la corrente $i(t)$ nel circuito, per $t \ge 0$;
 3. il valore di $v_C$ agli istanti $t = \tau$, $t = 3\tau$ e $t = 5\tau$;
 4. l'istante in cui $v_C$ raggiunge $8\, \text{V}$;
-5. l'energia erogata dal generatore, quella immagazzinata nel condensatore e quella dissipata nel resistore, a transitorio concluso.
+5. la carica accumulata e l'energia immagazzinata dal condensatore a transitorio concluso.
 
 <details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
 <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
@@ -42,36 +80,23 @@ Nel circuito in figura il condensatore è inizialmente scarico e l'interruttore 
         \boxed{\tau = R \cdot C = 5 \cdot 10^{3}\, \Omega \cdot 20 \cdot 10^{-6}\, \text{F} = 0{,}1\, \text{s} = 100\, \text{ms}}
         $$
         Il prodotto ohm per farad è effettivamente un tempo, misurato in secondi.
-    * **Equazione del circuito**:
-        Scegliamo la corrente $i$ nel verso che entra nell'armatura superiore del condensatore. Con la [legge di Kirchhoff delle tensioni](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-tensioni-kvl) sull'unica maglia, e ricordando che per il condensatore $i = C \dfrac{dv_C}{dt}$, otteniamo:
-        $$
-        V_g = R\, i + v_C = R\, C\, \frac{dv_C}{dt} + v_C
-        $$
-        Separiamo le variabili, mettendo da una parte tutto ciò che dipende da $v_C$ e dall'altra il tempo:
-        $$
-        \frac{dv_C}{V_g - v_C} = \frac{dt}{RC}
-        $$
-        Integriamo dall'istante $t = 0$ (dove $v_C = 0$) a un istante generico $t$ (dove la tensione vale $v_C$). L'integrale di $\dfrac{1}{V_g - v}$ è $-\ln(V_g - v)$: il segno meno compare perché la derivata di $V_g - v$ rispetto a $v$ è $-1$.
-        $$
-        -\ln\frac{V_g - v_C}{V_g} = \frac{t}{RC}
-        $$
-        Cambiamo segno e applichiamo l'esponenziale a entrambi i membri (l'esponenziale è l'operazione inversa del logaritmo):
-        $$
-        \frac{V_g - v_C}{V_g} = e^{-t/RC}
-        $$
-        Isolando $v_C$ troviamo la tensione sul condensatore:
+    * **Calcolo di $v_C(t)$**:
+        Il circuito è la [carica del condensatore](/it/transitori/rc-rl/#carica-del-condensatore-risposta-allo-scalino) studiata nella lezione teorica. Per usarne la soluzione ci servono il valore iniziale e quello finale (la costante di tempo l'abbiamo già calcolata):
+        - **Valore iniziale**: il condensatore è scarico e la sua tensione è continua, quindi $v_C(0^+) = 0$.
+        - **Valore finale**: a regime il condensatore è un circuito aperto, non circola corrente e su $R$ non cade tensione, quindi $v_C(\infty) = V_g$.
+
+        Sostituendo nella formula:
         $$
         \boxed{v_C(t) = V_g\left(1 - e^{-t/\tau}\right) = 10\left(1 - e^{-10\,t}\right)\text{V}}
         $$
-        dove $t$ è espresso in secondi, perché $1/\tau = 10\, \text{s}^{-1}$. Lo stesso risultato si ottiene subito con la formula generale: $v_C(0^+) = 0$ perché il condensatore è scarico, e $v_C(\infty) = V_g$ perché a regime il condensatore è un circuito aperto e su $R$ non cade tensione.
+        dove $t$ è espresso in secondi, perché $1/\tau = 10\, \text{s}^{-1}$.
     * **Corrente nel circuito**:
-        Sul resistore la tensione è la differenza fra quella del generatore e quella del condensatore, quindi con la legge di Ohm:
+        Scegliamo la corrente $i$ nel verso che entra nell'armatura superiore del condensatore. Con la [legge di Kirchhoff delle tensioni](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-tensioni-kvl) sull'unica maglia $V_g = R\, i + v_C$: sul resistore cade la differenza fra la tensione del generatore e quella del condensatore, quindi con la legge di Ohm:
         $$
         \boxed{i(t) = \frac{V_g - v_C(t)}{R} = \frac{V_g}{R}\, e^{-t/\tau} = 2\, e^{-10\,t}\, \text{mA}}
         $$
         Per $t = 0^+$ il condensatore scarico è come un corto circuito e tutta la tensione cade su $R$: $i(0^+) = V_g / R = 2\, \text{mA}$. Poi la corrente decresce fino ad annullarsi, perché il condensatore si carica e la tensione su $R$ diminuisce.
 
-        > **Verifica**: calcolando $i = C \dfrac{dv_C}{dt} = C \cdot \dfrac{V_g}{\tau}\, e^{-t/\tau}$ e ricordando che $\dfrac{C}{\tau} = \dfrac{1}{R}$, si ottiene la stessa espressione.
     * **Valori a $\tau$, $3\tau$ e $5\tau$**:
         $$
         \begin{aligned}
@@ -100,24 +125,22 @@ Nel circuito in figura il condensatore è inizialmente scarico e l'interruttore 
         $$
         Q = C \cdot V_g = 20\, \mu\text{F} \cdot 10\, \text{V} = 200\, \mu\text{C}
         $$
-        Il generatore porta tutta questa carica a tensione costante $V_g$, quindi eroga l'energia $E_g = V_g \cdot Q$. L'energia immagazzinata nel condensatore è invece $\frac{1}{2} C V_g^2$:
+        L'energia immagazzinata nel condensatore è:
         $$
-        E_g = V_g \cdot Q = 10 \cdot 200\, \mu\text{J} = 2\, \text{mJ}
-        \qquad
         E_C = \tfrac{1}{2}\, C\, V_g^2 = \tfrac{1}{2} \cdot 20\, \mu\text{F} \cdot 10^2\, \text{V}^2 = 1\, \text{mJ}
         $$
-        La differenza è l'energia dissipata nel resistore sotto forma di calore:
-        $$
-        \boxed{E_R = E_g - E_C = 2 - 1 = 1\, \text{mJ}}
-        $$
-
-        > **Verifica diretta**: la potenza dissipata in $R$ è $R\, i^2 = \dfrac{V_g^2}{R}\, e^{-2t/\tau}$. L'integrale di $e^{-2t/\tau}$ fra $0$ e $\infty$ vale $\dfrac{\tau}{2}$, quindi $E_R = \dfrac{V_g^2}{R} \cdot \dfrac{\tau}{2} = \dfrac{V_g^2\, C}{2} = 1\, \text{mJ}$.
-        >
-        > Il risultato **non dipende da $R$**: metà dell'energia erogata dal generatore finisce sempre nel condensatore e metà viene dissipata, qualunque sia la resistenza. $R$ modifica soltanto la durata del transitorio.
 </div>
 </details>
 
 ## Esercizio 2.2
+{/*
+  DISEGNO transitori-es2.svg: scarica RC, un solo anello, nessun generatore
+  - Lato sinistro: condensatore C = 100 µF in verticale, con la piastra + in alto. Accanto scrivi V0 = 12 V (tensione iniziale).
+  - Lato superiore: interruttore T (aperto, con freccia curva e "t = 0") che collega la piastra superiore di C al resistore.
+  - Lato destro: resistore R = 2 kΩ in verticale.
+  - Lato inferiore: filo che chiude l'anello, con il simbolo di massa.
+  - Da segnare: la corrente i accanto a R con la freccia verso il basso (dall'alto verso il basso, come dice il testo); la tensione vC accanto a C, + in alto.
+*/}
   <Figura src="/images/circuiti/transitori-es2.svg" alt="Transitori - Esercizio 2" larghezza='30rem'>
     Esercizio 2.2.
   </Figura>
@@ -138,13 +161,13 @@ Nel circuito in figura il condensatore, di capacità $C = 100\, \mu\text{F}$, è
         $$
         \tau = R \cdot C = 2 \cdot 10^{3}\, \Omega \cdot 100 \cdot 10^{-6}\, \text{F} = 0{,}2\, \text{s}
         $$
-        Applichiamo i tre passi del metodo:
+        Questa è la [scarica del condensatore](/it/transitori/rc-rl/#scarica-del-condensatore-risposta-libera) vista nella lezione teorica. Applichiamo i tre passi del metodo:
         - **Valore iniziale**: la tensione sul condensatore è continua, quindi $v_C(0^+) = V_0 = 12\, \text{V}$.
         - **Valore finale**: non ci sono generatori che possano ricaricare il condensatore, quindi a regime si scarica completamente: $v_C(\infty) = 0$.
 
         Sostituendo nella formula generale:
         $$
-        \boxed{v_C(t) = 0 + (V_0 - 0)\, e^{-t/\tau} = 12\, e^{-5\,t}\, \text{V}}
+        \boxed{v_C(t) = 0 + (V_0 - 0)\, e^{-t/\tau} = V_0\, e^{-t/\tau} = 12\, e^{-5\,t}\, \text{V}}
         $$
         dove $t$ è in secondi, perché $1/\tau = 5\, \text{s}^{-1}$.
     * **Calcolo di $i(t)$**:
@@ -176,7 +199,6 @@ Nel circuito in figura il condensatore, di capacità $C = 100\, \mu\text{F}$, è
         \boxed{t = \tau \ln 4 = 0{,}2\, \text{s} \cdot 1{,}386 = 0{,}277\, \text{s} = 277\, \text{ms}}
         $$
 
-        > **Osservazione**: $\ln 4 = 2 \ln 2$, e $\tau \ln 2 = 139\, \text{ms}$ è il tempo che impiega la tensione a *dimezzarsi*. Da $12\, \text{V}$ a $3\, \text{V}$ la tensione si dimezza due volte ($12 \to 6 \to 3$), quindi servono $2 \cdot 139\, \text{ms} = 277\, \text{ms}$.
     * **Bilancio energetico**:
         L'energia inizialmente immagazzinata nel condensatore e la potenza iniziale dissipata nel resistore valgono:
         $$
@@ -184,7 +206,7 @@ Nel circuito in figura il condensatore, di capacità $C = 100\, \mu\text{F}$, è
         \qquad
         P(0^+) = \frac{V_0^2}{R} = \frac{144}{2000} = 72\, \text{mW}
         $$
-        La potenza dissipata in $R$ diminuisce nel tempo come $R\, i^2 = \dfrac{V_0^2}{R}\, e^{-2t/\tau}$. L'energia totale dissipata è l'integrale della potenza. L'integrale di $e^{-2t/\tau}$ fra $0$ e $\infty$ vale $\dfrac{\tau}{2}$, perché una primitiva è $-\dfrac{\tau}{2}\, e^{-2t/\tau}$, che vale $0$ all'infinito e $-\dfrac{\tau}{2}$ in $t = 0$.
+        La potenza dissipata in $R$ ha un andamento del tipo $R\, i^2 = \dfrac{V_0^2}{R}\, e^{-2t/\tau}$, cioè anch'essa diminuisce nel tempo. L'energia totale dissipata è l'integrale della potenza. L'integrale di $e^{-2t/\tau}$ fra $0$ e $\infty$ vale $\dfrac{\tau}{2}$, perché una primitiva è $-\dfrac{\tau}{2}\, e^{-2t/\tau}$, che vale $0$ all'infinito e $-\dfrac{\tau}{2}$ in $t = 0$.
         $$
         E_R = \int_0^{\infty} \frac{V_0^2}{R}\, e^{-2t/\tau}\, dt = \frac{V_0^2}{R} \cdot \frac{\tau}{2} = 72\, \text{mW} \cdot 0{,}1\, \text{s} = 7{,}2\, \text{mJ}
         $$
@@ -193,6 +215,16 @@ Nel circuito in figura il condensatore, di capacità $C = 100\, \mu\text{F}$, è
 </details>
 
 ## Esercizio 2.3
+{/*
+  DISEGNO transitori-es3.svg: circuito RC serie con deviatore e due generatori
+  - Parte sinistra: due generatori di tensione uno sopra l'altro, ciascuno con il proprio simbolo di massa (non serve collegarli fra loro con un filo).
+    - Generatore superiore V1 = 9 V: terminale + collegato al contatto 1 del deviatore, terminale - a massa.
+    - Generatore inferiore da 3 V disegnato capovolto: terminale - collegato al contatto 2 del deviatore, terminale + a massa. Vicino al contatto 2 scrivi V2 = -3 V.
+  - Al centro: deviatore T con il polo a destra e i contatti 1 (in alto) e 2 (in basso) a sinistra. Disegnalo in posizione 1, con una freccia curva verso il contatto 2 e la scritta "t = 0".
+  - Dal polo di T parte il resistore R = 6 kΩ in orizzontale, verso destra.
+  - Estremo destro: condensatore C = 50 µF in verticale, + in alto, piastra inferiore a massa.
+  - Da segnare: la corrente i sopra R, con la freccia verso destra, che poi entra nella piastra superiore di C; la tensione vC accanto a C, + in alto.
+*/}
   <Figura src="/images/circuiti/transitori-es3.svg" alt="Transitori - Esercizio 3" larghezza='40rem'>
     Esercizio 2.3.
   </Figura>
@@ -258,6 +290,15 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
 </details>
 
 ## Esercizio 2.4
+{/*
+  DISEGNO transitori-es4.svg: rete resistiva con un solo condensatore
+  - Lato sinistro: generatore Vg = 12 V, con il + in alto.
+  - Lato superiore, da sinistra a destra: interruttore T (aperto, con freccia curva e "t = 0"), resistore R1 = 4 kΩ, fino al nodo A.
+  - Dal nodo A partono due rami: verso il basso R2 = 12 kΩ (altro estremo a massa); verso destra R3 = 2 kΩ, fino al nodo B.
+  - Dal nodo B parte verso il basso il condensatore C = 10 µF, con la piastra + in alto e l'altro estremo a massa.
+  - Lato inferiore: filo di massa continuo sotto il generatore, sotto R2 e sotto C.
+  - Da segnare: i nomi dei nodi A e B; la corrente iC su R3 con la freccia verso destra (entra nella piastra superiore di C); la tensione vC accanto a C, + in alto. Puoi scrivere vC(0) = 0.
+*/}
   <Figura src="/images/circuiti/transitori-es4.svg" alt="Transitori - Esercizio 4" larghezza='40rem'>
     Esercizio 2.4.
   </Figura>
@@ -277,6 +318,13 @@ Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attrave
     * **Equivalente di Thevenin**:
         Scolleghiamo il condensatore: restano aperti il nodo $B$ (sopra il condensatore) e la massa.
 
+        {/*
+          DISEGNO transitori-es4-1.svg: equivalente di Thevenin visto dal condensatore
+          - Una sola maglia: generatore Vth = 9 V a sinistra (+ in alto), resistore Rth = 5 kΩ nel lato superiore, condensatore C = 10 µF a destra (+ in alto), filo di massa in basso.
+          - Aggiungi l'interruttore T (aperto, "t = 0") in serie a Rth.
+          - Segna il nodo B tra Rth e C, la corrente iC con la freccia verso la piastra superiore di C e la tensione vC con il + in alto.
+          - Facoltativo: se vuoi far vedere da dove nasce, disegna in tratteggio il circuito originale e racchiudi in un riquadro tratteggiato la parte sostituita da Vth e Rth.
+        */}
         <FiguraLato src="/images/circuiti/transitori-es4-1.svg" alt="Circuito equivalente di Thevenin dell'esercizio 2.4" larghezza='20rem'>
             Circuito equivalente di Thevenin dell'esercizio 2.4.
         </FiguraLato>
@@ -335,6 +383,14 @@ Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attrave
 </details>
 
 ## Esercizio 2.5
+{/*
+  DISEGNO transitori-es5.svg: circuito RL serie con deviatore
+  - Parte sinistra: generatore Vg = 12 V con il + collegato al contatto 1 (in alto) del deviatore e il - a massa. Il contatto 2 (in basso) è collegato direttamente a massa, con un simbolo di massa.
+  - Deviatore T con il polo a destra. Disegnalo in posizione 2 (situazione iniziale), con una freccia curva verso il contatto 1 e la scritta "t = 0".
+  - Dal polo di T parte il resistore R = 40 Ω in orizzontale, verso destra, fino a un nodo.
+  - Dal nodo parte verso il basso l'induttore L = 200 mH, con l'altro estremo a massa.
+  - Da segnare: la corrente iL nell'induttore con la freccia verso il basso; la tensione vL accanto a L con il + in alto (sul nodo fra R e L) e il - a massa (convenzione degli utilizzatori).
+*/}
   <Figura src="/images/circuiti/transitori-es5.svg" alt="Transitori - Esercizio 5" larghezza='40rem'>
     Esercizio 2.5.
   </Figura>
@@ -357,7 +413,6 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
         $$
         \boxed{\tau = \frac{L}{R} = \frac{0{,}2\, \text{H}}{40\, \Omega} = 5\, \text{ms}}
         $$
-        Henry diviso ohm dà secondi.
     * **Carica dell'induttore: corrente $i_L(t)$**:
         - **Valore iniziale**: $i_L(0^+) = i_L(0^-) = 0$, perché la corrente nell'induttore non può cambiare di colpo.
         - **Valore finale**: a regime l'induttore è un corto circuito e tutta la tensione del generatore cade su $R$, quindi $i_L(\infty) = \dfrac{V_g}{R} = \dfrac{12}{40} = 0{,}3\, \text{A}$.
@@ -416,6 +471,14 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
 </details>
 
 ## Esercizio 2.6
+{/*
+  DISEGNO transitori-es6.svg: RC con interruttore che si chiude e si riapre
+  - Lato sinistro: generatore Vg = 15 V, con il + in alto.
+  - Lato superiore: interruttore T (aperto, con le scritte "si chiude a t = 0" e "si riapre a t = T1 = 40 ms"), poi il resistore R1 = 6 kΩ, fino al nodo A.
+  - Dal nodo A partono verso il basso, in parallelo fra loro, due rami: il resistore R2 = 12 kΩ e il condensatore C = 10 µF (piastra + in alto). Entrambi finiscono a massa.
+  - Lato inferiore: filo di massa continuo.
+  - Da segnare: il nodo A; la tensione vC accanto a C, + in alto; la corrente iC sul ramo del condensatore con la freccia verso il basso (entrante nella piastra superiore). Puoi scrivere vC(0) = 0.
+*/}
   <Figura src="/images/circuiti/transitori-es6.svg" alt="Transitori - Esercizio 6" larghezza='40rem'>
     Esercizio 2.6.
   </Figura>
@@ -466,6 +529,13 @@ Nel circuito in figura il condensatore è inizialmente scarico. L'interruttore $
     #### Fase 2: interruttore aperto ($t \ge T_1$)
 
     * **Nuovo circuito**:
+
+        {/*
+          DISEGNO transitori-es6-1.svg: circuito con T aperto
+          - Restano solo R2 = 12 kΩ e C = 10 µF in parallelo: due rami verticali collegati fra loro in alto (nodo A) e in basso (massa).
+          - Il ramo del generatore (Vg, T, R1) si può omettere, oppure disegnare in grigio e tratteggiato con T aperto, per far vedere che è staccato.
+          - Segna la tensione vC con il + in alto, il valore iniziale vC(T1) = 6,32 V e la corrente iC con la freccia verso il basso nel ramo del condensatore.
+        */}
         <FiguraLato src="/images/circuiti/transitori-es6-1.svg" alt="Circuito dell'esercizio 2.6 con interruttore aperto" larghezza='15rem'>
             Circuito dell'esercizio 2.6 con interruttore aperto.
         </FiguraLato>
@@ -513,10 +583,19 @@ Nel circuito in figura il condensatore è inizialmente scarico. L'interruttore $
         $$
         La tensione sul condensatore è continua ($6{,}32\, \text{V}$ prima e dopo), mentre la **corrente salta** da $+0{,}92\, \text{mA}$ a $-0{,}527\, \text{mA}$, cambiando anche verso: prima il condensatore si stava caricando, ora si scarica. Solo la tensione sul condensatore deve essere continua, la corrente no.
     * **Grafico di $v_C(t)$**:
+
+        {/*
+          DISEGNO transitori-es6-2.svg: grafico di vC(t), non un circuito
+          - Asse orizzontale t in ms con le tacche 0, 40 (T1), 100 e 261,3; asse verticale vC in V con le tacche 1, 3,83, 6,32 e 10.
+          - Fino a T1: arco di esponenziale crescente da 0 a 6,32 V. La tangente nell'origine arriva a 10 V proprio in t = tau1 = 40 ms (puoi disegnarla tratteggiata). Facoltativo: linea tratteggiata a 10 V, che sarebbe il valore finale se T restasse chiuso.
+          - Dopo T1: arco di esponenziale decrescente da 6,32 V verso 0, più lento (tau2 = 120 ms contro tau1 = 40 ms). La tangente in T1 incontra l'asse in t = T1 + tau2 = 160 ms.
+          - Metti un pallino sui punti (40; 6,32), (100; 3,83) e (261,3; 1), con linee sottili tratteggiate verso gli assi.
+          - Il punto (40; 6,32) è un punto angoloso: pendenza positiva a sinistra, negativa a destra, nessun salto verticale.
+        */}
         <FiguraLato src="/images/circuiti/transitori-es6-2.svg" alt="Andamento della tensione sul condensatore dell'esercizio 2.6" larghezza='28rem'>
             Andamento di $v_C(t)$: carica fino a $T_1$ e successiva scarica.
         </FiguraLato>
 
-        Il grafico è formato da due archi di esponenziale: per $t \le T_1$ la tensione sale da $0$ verso $10\, \text{V}$, senza raggiungerli, fino a $6{,}32\, \text{V}$; per $t \ge T_1$ scende verso $0$ con pendenza più dolce, perché $\tau_2 > \tau_1$. Nel punto $t = T_1$ il grafico presenta un punto angoloso ma non un salto.
+        Il grafico è formato da due archi di esponenziale: per $t \le T_1$ la tensione sale da $0$ verso $10\, \text{V}$, senza raggiungerli, fino a $6{,}32\, \text{V}$; per $t \ge T_1$ scende verso $0$ con pendenza più dolce, perché $\tau_2 \gt \tau_1$. Nel punto $t = T_1$ il grafico presenta un punto angoloso ma non un salto.
 </div>
 </details>

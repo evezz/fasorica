@@ -1,0 +1,15 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (1, 6) to[american voltage source, l={$V_1$}] (1, 1);
+	\draw (3, 1) to[american voltage source, l_={$V_2$}] (3, 5.37);
+	\draw (1, 6) to[short] (4, 6);
+	\node[spdt, xscale=-1](N1) at (4.595, 5.685){} node[anchor=south west] at ([xshift=-0.12cm, yshift=-0.12cm]N1.south){$t_0$};
+	\draw (3, 5.37) to[short] (4, 5.37);
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (4.092, 6.317){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (3.842, 6.567){1};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (4.101, 5.637){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (3.851, 5.887){2};
+	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.465cm] at (4.601, 6.137){} node[anchor=north west, align=left, text width=0.077cm, inner sep=6pt] at (4.351, 6.387){T};
+	\draw (5.19, 5.685) to[american resistor, l={$R$}, i>^=$i(t)$] (9.99, 5.685);
+	\draw (10, 1) to[capacitor, l={$C$}, v=$v_c(t)$, voltage/distance from node=0.3, voltage/bump b=1.3, voltage/shift=1] (9.99, 5.685);
+	\draw (1, 1) to[short] (10, 1);
+	\node[circ] at (3, 1){};
+\end{tikzpicture}
