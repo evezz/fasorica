@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 474 332" width="474" height="332" role="img" aria-labelledby="t7 d7">
+  <title id="t7">Esercizio 2.6: corrente nel condensatore</title>
+  <desc id="d7">La corrente parte da 2,5 mA, scende a 0,92 mA e in T1 salta a -0,527 mA, poi tende a zero.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --v: #0f766e;     /* tensioni */
+  --v2: #d1342b;    /* seconda tensione (solo es. 2.4) */
+  --i: #1d5fd1;     /* correnti */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .4; fill: none; }
+.gr .asym  { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve e punti */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .jump  { fill: none; stroke-width: 2.2; stroke-dasharray: 2 4; stroke-linecap: round; }
+.gr .c-v  { stroke: var(--v); }
+.gr .c-v2 { stroke: var(--v2); }
+.gr .c-i  { stroke: var(--i); }
+.gr .p-v  { fill: var(--v); }
+.gr .p-v2 { fill: var(--v2); }
+.gr .p-i  { fill: var(--i); }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+  </style>
+
+  <defs>
+    <marker id="ah-ax7" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="pannello">
+    <!-- assi -->
+    <line class="axis" x1="64.0" y1="262.0" x2="64.0" y2="60.0" marker-end="url(#ah-ax7)"/>
+    <line class="axis" x1="64.0" y1="198.6" x2="404.0" y2="198.6" marker-end="url(#ah-ax7)"/>
+    <text class="t-lab" x="28.0" y="44.0"><tspan class="it">i</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) (mA)</text>
+    <text class="t-lab" x="414.0" y="203.6"><tspan class="it">t</tspan> (ms)</text>
+    <path class="tick" d="M59.0 240.9H69.0"/>
+    <text class="t-num t-end" x="54.0" y="245.9">−1</text>
+    <path class="tick" d="M59.0 198.6H69.0"/>
+    <text class="t-num t-end" x="54.0" y="203.6">0</text>
+    <path class="tick" d="M59.0 156.4H69.0"/>
+    <text class="t-num t-end" x="54.0" y="161.4">1</text>
+    <path class="tick" d="M59.0 114.1H69.0"/>
+    <text class="t-num t-end" x="54.0" y="119.1">2</text>
+    <text class="t-num t-mid" x="64.0" y="302.0">0</text>
+    <path class="tick" d="M104.8 193.6V203.6"/>
+    <line class="grid" x1="104.8" y1="203.6" x2="104.8" y2="262.0"/>
+    <text class="t-num t-mid" x="104.8" y="284.0"><tspan class="it">T</tspan><tspan class="sm" dy="4.5">1</tspan></text>
+    <text class="t-num t-mid" x="104.8" y="302.0">40</text>
+    <path class="tick" d="M165.9 193.6V203.6"/>
+    <line class="grid" x1="165.9" y1="203.6" x2="165.9" y2="262.0"/>
+    <text class="t-num t-mid" x="165.9" y="302.0">100</text>
+    <path class="tick" d="M267.8 193.6V203.6"/>
+    <line class="grid" x1="267.8" y1="203.6" x2="267.8" y2="262.0"/>
+    <text class="t-num t-mid" x="267.8" y="302.0">200</text>
+    <path class="tick" d="M369.6 193.6V203.6"/>
+    <line class="grid" x1="369.6" y1="203.6" x2="369.6" y2="262.0"/>
+    <text class="t-num t-mid" x="369.6" y="302.0">300</text>
+    <path class="curve c-i" d="M64.0 93.0 L64.8 95.1 L65.6 97.2 L66.4 99.2 L67.3 101.1 L68.1 103.1 L68.9 105.0 L69.7 106.8 L70.5 108.6 L71.3 110.4 L72.2 112.2 L73.0 113.9 L73.8 115.5 L74.6 117.2 L75.4 118.8 L76.2 120.4 L77.0 121.9 L77.9 123.5 L78.7 124.9 L79.5 126.4 L80.3 127.8 L81.1 129.2 L81.9 130.6 L82.7 132.0 L83.6 133.3 L84.4 134.6 L85.2 135.8 L86.0 137.1 L86.8 138.3 L87.6 139.5 L88.5 140.7 L89.3 141.8 L90.1 142.9 L90.9 144.0 L91.7 145.1 L92.5 146.2 L93.3 147.2 L94.2 148.2 L95.0 149.2 L95.8 150.2 L96.6 151.2 L97.4 152.1 L98.2 153.0 L99.0 153.9 L99.9 154.8 L100.7 155.7 L101.5 156.5 L102.3 157.4 L103.1 158.2 L103.9 159.0 L104.8 159.8"/>
+    <path class="curve c-i" d="M104.8 220.9 L106.8 220.5 L108.8 220.2 L110.9 219.8 L112.9 219.4 L114.9 219.1 L117.0 218.8 L119.0 218.4 L121.0 218.1 L123.1 217.8 L125.1 217.5 L127.2 217.2 L129.2 216.8 L131.2 216.5 L133.3 216.3 L135.3 216.0 L137.4 215.7 L139.4 215.4 L141.4 215.1 L143.5 214.8 L145.5 214.6 L147.5 214.3 L149.6 214.1 L151.6 213.8 L153.7 213.5 L155.7 213.3 L157.7 213.1 L159.8 212.8 L161.8 212.6 L163.8 212.4 L165.9 212.1 L167.9 211.9 L169.9 211.7 L172.0 211.5 L174.0 211.3 L176.1 211.0 L178.1 210.8 L180.1 210.6 L182.2 210.4 L184.2 210.2 L186.2 210.1 L188.3 209.9 L190.3 209.7 L192.4 209.5 L194.4 209.3 L196.4 209.1 L198.5 209.0 L200.5 208.8 L202.5 208.6 L204.6 208.5 L206.6 208.3 L208.7 208.1 L210.7 208.0 L212.7 207.8 L214.8 207.7 L216.8 207.5 L218.8 207.4 L220.9 207.2 L222.9 207.1 L225.0 207.0 L227.0 206.8 L229.0 206.7 L231.1 206.5 L233.1 206.4 L235.2 206.3 L237.2 206.2 L239.2 206.0 L241.3 205.9 L243.3 205.8 L245.3 205.7 L247.4 205.6 L249.4 205.4 L251.4 205.3 L253.5 205.2 L255.5 205.1 L257.6 205.0 L259.6 204.9 L261.6 204.8 L263.7 204.7 L265.7 204.6 L267.8 204.5 L269.8 204.4 L271.8 204.3 L273.9 204.2 L275.9 204.1 L277.9 204.0 L280.0 203.9 L282.0 203.8 L284.1 203.8 L286.1 203.7 L288.1 203.6 L290.2 203.5 L292.2 203.4 L294.2 203.4 L296.3 203.3 L298.3 203.2 L300.4 203.1 L302.4 203.0 L304.4 203.0 L306.5 202.9 L308.5 202.8 L310.5 202.8 L312.6 202.7 L314.6 202.6 L316.6 202.6 L318.7 202.5 L320.7 202.4 L322.8 202.4 L324.8 202.3 L326.8 202.2 L328.9 202.2 L330.9 202.1 L332.9 202.1 L335.0 202.0 L337.0 202.0 L339.1 201.9 L341.1 201.8 L343.1 201.8 L345.2 201.7 L347.2 201.7 L349.2 201.6 L351.3 201.6 L353.3 201.5 L355.4 201.5 L357.4 201.4 L359.4 201.4 L361.5 201.4 L363.5 201.3 L365.6 201.3 L367.6 201.2 L369.6 201.2 L371.7 201.1 L373.7 201.1 L375.7 201.1 L377.8 201.0 L379.8 201.0 L381.8 200.9 L383.9 200.9 L385.9 200.9 L388.0 200.8 L390.0 200.8"/>
+    <line class="jump c-i" x1="104.8" y1="159.8" x2="104.8" y2="220.9"/>
+    <circle class="p-i" cx="64.0" cy="93.0" r="5.5"/>
+    <text class="t-val" x="74.0" y="84.0">2,5 mA</text>
+    <circle class="p-i" cx="104.8" cy="159.8" r="5.5"/>
+    <text class="t-val" x="114.8" y="150.8">0,92 mA</text>
+    <circle class="p-i" cx="104.8" cy="220.9" r="5.5"/>
+    <text class="t-val" x="114.8" y="241.9">−0,527</text>
+    <text class="t-val" x="114.8" y="258.9">mA</text>
+  </g>
+</svg>

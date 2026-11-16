@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 800 332" width="800" height="332" role="img" aria-labelledby="t5 d5">
+  <title id="t5">Esercizio 2.5: corrente e tensione sull’induttore in carica e in scarica</title>
+  <desc id="d5">La corrente sale verso 300 mA e poi scende senza salti; la tensione sull'induttore parte da 12 V, si annulla e al ritorno del deviatore salta a -12 V.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --v: #0f766e;     /* tensioni */
+  --v2: #d1342b;    /* seconda tensione (solo es. 2.4) */
+  --i: #1d5fd1;     /* correnti */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .4; fill: none; }
+.gr .asym  { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve e punti */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .jump  { fill: none; stroke-width: 2.2; stroke-dasharray: 2 4; stroke-linecap: round; }
+.gr .c-v  { stroke: var(--v); }
+.gr .c-v2 { stroke: var(--v2); }
+.gr .c-i  { stroke: var(--i); }
+.gr .p-v  { fill: var(--v); }
+.gr .p-v2 { fill: var(--v2); }
+.gr .p-i  { fill: var(--i); }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+  </style>
+
+  <defs>
+    <marker id="ah-ax5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="pannello-sinistro">
+    <!-- assi -->
+    <line class="axis" x1="64.0" y1="262.0" x2="64.0" y2="60.0" marker-end="url(#ah-ax5)"/>
+    <line class="axis" x1="64.0" y1="262.0" x2="318.0" y2="262.0" marker-end="url(#ah-ax5)"/>
+    <text class="t-lab" x="28.0" y="44.0"><tspan class="it">i</tspan><tspan class="it sm" dy="4.5">L</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) (mA)</text>
+    <text class="t-lab" x="328.0" y="267.0"><tspan class="it">t</tspan>, <tspan class="it">t</tspan>′ (ms)</text>
+    <path class="tick" d="M59.0 262.0H69.0"/>
+    <text class="t-num t-end" x="54.0" y="267.0">0</text>
+    <path class="tick" d="M59.0 207.5H69.0"/>
+    <text class="t-num t-end" x="54.0" y="212.5">100</text>
+    <path class="tick" d="M59.0 153.0H69.0"/>
+    <text class="t-num t-end" x="54.0" y="158.0">200</text>
+    <path class="tick" d="M59.0 98.5H69.0"/>
+    <text class="t-num t-end" x="54.0" y="103.5">300</text>
+    <text class="t-num t-mid" x="64.0" y="302.0">0</text>
+    <path class="tick" d="M104.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="104.0" y="302.0">10</text>
+    <path class="tick" d="M144.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="144.0" y="302.0">20</text>
+    <path class="tick" d="M184.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="184.0" y="302.0">30</text>
+    <path class="tick" d="M224.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="224.0" y="302.0">10′</text>
+    <path class="tick" d="M264.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="264.0" y="302.0">20′</text>
+    <path class="tick" d="M304.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="304.0" y="302.0">30′</text>
+    <line class="asym" x1="64.0" y1="98.5" x2="304.0" y2="98.5"/>
+    <path class="curve c-i" d="M64.0 262.0 L65.1 253.3 L66.2 245.1 L67.3 237.3 L68.4 230.0 L69.5 223.0 L70.5 216.4 L71.6 210.1 L72.7 204.2 L73.8 198.6 L74.9 193.3 L76.0 188.2 L77.1 183.5 L78.2 179.0 L79.3 174.7 L80.4 170.7 L81.5 166.8 L82.5 163.2 L83.6 159.8 L84.7 156.5 L85.8 153.4 L86.9 150.5 L88.0 147.8 L89.1 145.1 L90.2 142.7 L91.3 140.3 L92.4 138.1 L93.5 136.0 L94.5 134.0 L95.6 132.1 L96.7 130.3 L97.8 128.7 L98.9 127.1 L100.0 125.5 L101.1 124.1 L102.2 122.8 L103.3 121.5 L104.4 120.2 L105.5 119.1 L106.5 118.0 L107.6 117.0 L108.7 116.0 L109.8 115.1 L110.9 114.2 L112.0 113.4 L113.1 112.6 L114.2 111.8 L115.3 111.1 L116.4 110.4 L117.5 109.8 L118.5 109.2 L119.6 108.6 L120.7 108.1 L121.8 107.6 L122.9 107.1 L124.0 106.7 L125.1 106.2 L126.2 105.8 L127.3 105.4 L128.4 105.1 L129.5 104.7 L130.5 104.4 L131.6 104.1 L132.7 103.8 L133.8 103.5 L134.9 103.2 L136.0 103.0 L137.1 102.8 L138.2 102.5 L139.3 102.3 L140.4 102.1 L141.5 101.9 L142.5 101.7 L143.6 101.6 L144.7 101.4 L145.8 101.3 L146.9 101.1 L148.0 101.0 L149.1 100.8 L150.2 100.7 L151.3 100.6 L152.4 100.5 L153.5 100.4 L154.5 100.3 L155.6 100.2 L156.7 100.1 L157.8 100.0 L158.9 99.9 L160.0 99.9 L161.1 99.8 L162.2 99.7 L163.3 99.7 L164.4 99.6 L165.5 99.5 L166.5 99.5 L167.6 99.4 L168.7 99.4 L169.8 99.3 L170.9 99.3 L172.0 99.3 L173.1 99.2 L174.2 99.2 L175.3 99.1 L176.4 99.1 L177.5 99.1 L178.5 99.1 L179.6 99.0 L180.7 99.0 L181.8 99.0 L182.9 98.9 L184.0 98.9 L184.0 98.5 L185.1 107.2 L186.2 115.4 L187.3 123.2 L188.4 130.6 L189.5 137.5 L190.5 144.2 L191.6 150.4 L192.7 156.3 L193.8 161.9 L194.9 167.3 L196.0 172.3 L197.1 177.0 L198.2 181.6 L199.3 185.8 L200.4 189.9 L201.5 193.7 L202.5 197.3 L203.6 200.8 L204.7 204.0 L205.8 207.1 L206.9 210.0 L208.0 212.8 L209.1 215.4 L210.2 217.9 L211.3 220.2 L212.4 222.4 L213.5 224.5 L214.5 226.5 L215.6 228.4 L216.7 230.2 L217.8 231.9 L218.9 233.5 L220.0 235.0 L221.1 236.4 L222.2 237.8 L223.3 239.1 L224.4 240.3 L225.5 241.4 L226.5 242.5 L227.6 243.6 L228.7 244.5 L229.8 245.5 L230.9 246.3 L232.0 247.2 L233.1 248.0 L234.2 248.7 L235.3 249.4 L236.4 250.1 L237.5 250.7 L238.5 251.3 L239.6 251.9 L240.7 252.4 L241.8 252.9 L242.9 253.4 L244.0 253.9 L245.1 254.3 L246.2 254.7 L247.3 255.1 L248.4 255.5 L249.5 255.8 L250.5 256.1 L251.6 256.4 L252.7 256.7 L253.8 257.0 L254.9 257.3 L256.0 257.5 L257.1 257.8 L258.2 258.0 L259.3 258.2 L260.4 258.4 L261.5 258.6 L262.5 258.8 L263.6 259.0 L264.7 259.1 L265.8 259.3 L266.9 259.4 L268.0 259.5 L269.1 259.7 L270.2 259.8 L271.3 259.9 L272.4 260.0 L273.5 260.1 L274.5 260.2 L275.6 260.3 L276.7 260.4 L277.8 260.5 L278.9 260.6 L280.0 260.7 L281.1 260.7 L282.2 260.8 L283.3 260.9 L284.4 260.9 L285.5 261.0 L286.5 261.0 L287.6 261.1 L288.7 261.1 L289.8 261.2 L290.9 261.2 L292.0 261.3 L293.1 261.3 L294.2 261.3 L295.3 261.4 L296.4 261.4 L297.5 261.4 L298.5 261.5 L299.6 261.5 L300.7 261.5 L301.8 261.5 L302.9 261.6 L304.0 261.6"/>
+    <line class="asym" x1="184.0" y1="74.0" x2="184.0" y2="262.0"/>
+    <text class="t-num t-mid" x="184.0" y="320.0"><tspan class="it">t</tspan>′ = 0</text>
+    <line class="guide" x1="110.1" y1="114.9" x2="110.1" y2="262.0"/>
+    <circle class="p-i" cx="110.1" cy="114.9" r="5.5"/>
+    <text class="t-small" x="119.1" y="135.9">270 mA</text>
+    <text class="t-small" x="119.1" y="152.9"><tspan class="it">t</tspan> = 11,5 ms</text>
+    <line class="guide" x1="219.8" y1="234.8" x2="219.8" y2="262.0"/>
+    <circle class="p-i" cx="219.8" cy="234.8" r="5.5"/>
+    <text class="t-val" x="228.8" y="207.8">50 mA</text>
+    <text class="t-val" x="228.8" y="224.8"><tspan class="it">t</tspan>′ = 8,96 ms</text>
+  </g>
+
+  <g id="pannello-destro">
+    <!-- assi -->
+    <line class="axis" x1="454.0" y1="262.0" x2="454.0" y2="60.0" marker-end="url(#ah-ax5)"/>
+    <line class="axis" x1="454.0" y1="168.0" x2="708.0" y2="168.0" marker-end="url(#ah-ax5)"/>
+    <text class="t-lab" x="418.0" y="44.0"><tspan class="it">v</tspan><tspan class="it sm" dy="4.5">L</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) (V)</text>
+    <text class="t-lab" x="718.0" y="173.0"><tspan class="it">t</tspan>, <tspan class="it">t</tspan>′ (ms)</text>
+    <path class="tick" d="M449.0 240.8H459.0"/>
+    <text class="t-num t-end" x="444.0" y="245.8">−12</text>
+    <path class="tick" d="M449.0 204.4H459.0"/>
+    <text class="t-num t-end" x="444.0" y="209.4">−6</text>
+    <path class="tick" d="M449.0 168.0H459.0"/>
+    <text class="t-num t-end" x="444.0" y="173.0">0</text>
+    <path class="tick" d="M449.0 131.6H459.0"/>
+    <text class="t-num t-end" x="444.0" y="136.6">6</text>
+    <path class="tick" d="M449.0 95.2H459.0"/>
+    <text class="t-num t-end" x="444.0" y="100.2">12</text>
+    <text class="t-num t-mid" x="454.0" y="302.0">0</text>
+    <path class="tick" d="M494.0 163.0V173.0"/>
+    <line class="grid" x1="494.0" y1="173.0" x2="494.0" y2="262.0"/>
+    <text class="t-num t-mid" x="494.0" y="302.0">10</text>
+    <path class="tick" d="M534.0 163.0V173.0"/>
+    <line class="grid" x1="534.0" y1="173.0" x2="534.0" y2="262.0"/>
+    <text class="t-num t-mid" x="534.0" y="302.0">20</text>
+    <path class="tick" d="M574.0 163.0V173.0"/>
+    <line class="grid" x1="574.0" y1="173.0" x2="574.0" y2="262.0"/>
+    <text class="t-num t-mid" x="574.0" y="302.0">30</text>
+    <path class="tick" d="M614.0 163.0V173.0"/>
+    <line class="grid" x1="614.0" y1="173.0" x2="614.0" y2="262.0"/>
+    <text class="t-num t-mid" x="614.0" y="302.0">10′</text>
+    <path class="tick" d="M654.0 163.0V173.0"/>
+    <line class="grid" x1="654.0" y1="173.0" x2="654.0" y2="262.0"/>
+    <text class="t-num t-mid" x="654.0" y="302.0">20′</text>
+    <path class="tick" d="M694.0 163.0V173.0"/>
+    <line class="grid" x1="694.0" y1="173.0" x2="694.0" y2="262.0"/>
+    <text class="t-num t-mid" x="694.0" y="302.0">30′</text>
+    <path class="curve c-v" d="M454.0 95.2 L455.1 99.1 L456.2 102.7 L457.3 106.2 L458.4 109.5 L459.5 112.6 L460.5 115.5 L461.6 118.3 L462.7 121.0 L463.8 123.5 L464.9 125.8 L466.0 128.1 L467.1 130.2 L468.2 132.2 L469.3 134.1 L470.4 135.9 L471.5 137.6 L472.5 139.2 L473.6 140.7 L474.7 142.2 L475.8 143.6 L476.9 144.9 L478.0 146.1 L479.1 147.2 L480.2 148.3 L481.3 149.4 L482.4 150.4 L483.5 151.3 L484.5 152.2 L485.6 153.0 L486.7 153.8 L487.8 154.6 L488.9 155.3 L490.0 156.0 L491.1 156.6 L492.2 157.2 L493.3 157.8 L494.4 158.3 L495.5 158.8 L496.5 159.3 L497.6 159.8 L498.7 160.2 L499.8 160.6 L500.9 161.0 L502.0 161.4 L503.1 161.7 L504.2 162.1 L505.3 162.4 L506.4 162.7 L507.5 163.0 L508.5 163.2 L509.6 163.5 L510.7 163.7 L511.8 164.0 L512.9 164.2 L514.0 164.4 L515.1 164.6 L516.2 164.8 L517.3 164.9 L518.4 165.1 L519.5 165.2 L520.5 165.4 L521.6 165.5 L522.7 165.7 L523.8 165.8 L524.9 165.9 L526.0 166.0 L527.1 166.1 L528.2 166.2 L529.3 166.3 L530.4 166.4 L531.5 166.5 L532.5 166.6 L533.6 166.6 L534.7 166.7 L535.8 166.8 L536.9 166.8 L538.0 166.9 L539.1 167.0 L540.2 167.0 L541.3 167.1 L542.4 167.1 L543.5 167.2 L544.5 167.2 L545.6 167.3 L546.7 167.3 L547.8 167.3 L548.9 167.4 L550.0 167.4 L551.1 167.4 L552.2 167.5 L553.3 167.5 L554.4 167.5 L555.5 167.5 L556.5 167.6 L557.6 167.6 L558.7 167.6 L559.8 167.6 L560.9 167.7 L562.0 167.7 L563.1 167.7 L564.2 167.7 L565.3 167.7 L566.4 167.7 L567.5 167.7 L568.5 167.8 L569.6 167.8 L570.7 167.8 L571.8 167.8 L572.9 167.8 L574.0 167.8"/>
+    <path class="curve c-v" d="M574.0 240.8 L575.1 236.9 L576.2 233.3 L577.3 229.8 L578.4 226.5 L579.5 223.4 L580.5 220.5 L581.6 217.7 L582.7 215.0 L583.8 212.5 L584.9 210.2 L586.0 207.9 L587.1 205.8 L588.2 203.8 L589.3 201.9 L590.4 200.1 L591.5 198.4 L592.5 196.8 L593.6 195.3 L594.7 193.8 L595.8 192.4 L596.9 191.1 L598.0 189.9 L599.1 188.8 L600.2 187.7 L601.3 186.6 L602.4 185.6 L603.5 184.7 L604.5 183.8 L605.6 183.0 L606.7 182.2 L607.8 181.4 L608.9 180.7 L610.0 180.0 L611.1 179.4 L612.2 178.8 L613.3 178.2 L614.4 177.7 L615.5 177.2 L616.5 176.7 L617.6 176.2 L618.7 175.8 L619.8 175.4 L620.9 175.0 L622.0 174.6 L623.1 174.3 L624.2 173.9 L625.3 173.6 L626.4 173.3 L627.5 173.0 L628.5 172.8 L629.6 172.5 L630.7 172.3 L631.8 172.0 L632.9 171.8 L634.0 171.6 L635.1 171.4 L636.2 171.2 L637.3 171.1 L638.4 170.9 L639.5 170.8 L640.5 170.6 L641.6 170.5 L642.7 170.3 L643.8 170.2 L644.9 170.1 L646.0 170.0 L647.1 169.9 L648.2 169.8 L649.3 169.7 L650.4 169.6 L651.5 169.5 L652.5 169.4 L653.6 169.4 L654.7 169.3 L655.8 169.2 L656.9 169.2 L658.0 169.1 L659.1 169.0 L660.2 169.0 L661.3 168.9 L662.4 168.9 L663.5 168.8 L664.5 168.8 L665.6 168.7 L666.7 168.7 L667.8 168.7 L668.9 168.6 L670.0 168.6 L671.1 168.6 L672.2 168.5 L673.3 168.5 L674.4 168.5 L675.5 168.5 L676.5 168.4 L677.6 168.4 L678.7 168.4 L679.8 168.4 L680.9 168.3 L682.0 168.3 L683.1 168.3 L684.2 168.3 L685.3 168.3 L686.4 168.3 L687.5 168.3 L688.5 168.2 L689.6 168.2 L690.7 168.2 L691.8 168.2 L692.9 168.2 L694.0 168.2"/>
+    <line class="jump c-v" x1="574.0" y1="168.0" x2="574.0" y2="240.8"/>
+    <line class="asym" x1="574.0" y1="74.0" x2="574.0" y2="262.0"/>
+    <text class="t-num t-mid" x="574.0" y="320.0"><tspan class="it">t</tspan>′ = 0</text>
+    <circle class="p-v" cx="454.0" cy="95.2" r="5.5"/>
+    <text class="t-val" x="464.0" y="86.2">12 V</text>
+    <circle class="p-v" cx="574.0" cy="240.8" r="5.5"/>
+    <text class="t-val" x="584.0" y="245.8">−12 V</text>
+  </g>
+</svg>

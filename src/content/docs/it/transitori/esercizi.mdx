@@ -10,7 +10,7 @@ In questa pagina sono riportati e svolti alcuni esercizi sui transitori dei circ
 
 Nelle lezioni teoriche abbiamo già ricavato le equazioni della carica e scarica del condensatore ([circuito RC](/it/transitori/rc-rl/#il-circuito-rc)), e dell'induttore ([circuito RL](/it/transitori/rc-rl/#il-circuito-rl)). Qui non le ricaviamo di nuovo: vediamo invece come si adattano ai circuiti più complicati e alle condizioni iniziali diverse da zero, che sono quelli che si incontrano negli esercizi.
 
-Se un circuito contiene un solo componente reattivo, tutto ciò che gli è collegato si può sostituire con il suo equivalente di Thevenin ($V_{th}$ in serie a $R_{th}$). L'equazione della maglia diventa:
+Se un circuito contiene un solo componente reattivo, tutto ciò che gli è collegato si può sostituire con il suo equivalente di Thevenin (ovviamente si può usare anche Norton, ma qui useremo Thevenin). L'equazione della maglia diventa:
 
 $$
 \begin{aligned}
@@ -34,7 +34,7 @@ Il significato di $x_\infty$ è immediato: a regime $x$ non varia più, quindi $
 L'equazione si risolve con la stessa separazione delle variabili vista nelle lezioni, con l'unica differenza che all'istante iniziale $x$ vale un valore qualsiasi $x(0^+)$ invece di zero ($0^+$ indica l'istante subito dopo la commutazione). Il risultato è:
 
 $$
-x(t) = x_\infty + \left[x(0^+) - x_\infty\right] e^{-t/\tau}
+\boxed{x(t) = x_\infty + \left[x(0^+) - x_\infty\right] e^{-t/\tau}}
 $$
 
 Lo si può controllare per sostituzione: la derivata è $\dfrac{dx}{dt} = -\dfrac{x(0^+) - x_\infty}{\tau}\, e^{-t/\tau}$, quindi nel termine $\tau\, \dfrac{dx}{dt} + x$ i due termini con l'esponenziale si cancellano e resta $x_\infty$; inoltre per $t = 0$ si ha $x = x(0^+)$. La carica e la scarica delle lezioni sono due casi particolari:
@@ -129,6 +129,13 @@ Nel circuito in figura il condensatore è inizialmente scarico e l'interruttore 
         $$
         E_C = \tfrac{1}{2}\, C\, V_g^2 = \tfrac{1}{2} \cdot 20\, \mu\text{F} \cdot 10^2\, \text{V}^2 = 1\, \text{mJ}
         $$
+    * **Grafici**:    
+        <Figura src="/images/circuiti/transitori-es1-grafici.svg" alt="Andamento della tensione sul condensatore e della corrente nel circuito dell'esercizio 2.1" larghezza='45rem'>
+            Esercizio 2.1: andamento di $v_C(t)$ e di $i(t)$, con i valori richiesti a $\tau$, $3\tau$ e $5\tau$ e l'istante di tempo in cui $v_C = 8\, \text{V}$.
+        </Figura>
+
+        La tensione sale rapidamente all'inizio e poi sempre più lentamente: già a $3\tau$ ha raggiunto il $95\,\%$ di $V_g$. La corrente fa il contrario, parte dal valore massimo $V_g / R = 2\, \text{mA}$ e si spegne. La tangente tratteggiata nell'origine incontra l'asse orizzontale proprio in $t = \tau$: è un modo rapido per leggere $\tau$ da un grafico.
+
 </div>
 </details>
 
@@ -211,6 +218,14 @@ Nel circuito in figura il condensatore, di capacità $C = 100\, \mu\text{F}$, è
         E_R = \int_0^{\infty} \frac{V_0^2}{R}\, e^{-2t/\tau}\, dt = \frac{V_0^2}{R} \cdot \frac{\tau}{2} = 72\, \text{mW} \cdot 0{,}1\, \text{s} = 7{,}2\, \text{mJ}
         $$
         $E_R$ coincide con $E_0$: tutta l'energia immagazzinata nel condensatore viene dissipata nel resistore.
+
+    * **Grafici**:
+        <Figura src="/images/circuiti/transitori-es2-grafici.svg" alt="Andamento della tensione sul condensatore e della corrente nel resistore dell'esercizio 2.2" larghezza='45rem'>
+            Esercizio 2.2: andamento di $v_C(t)$ e di $i(t)$, con i valori richiesti a $t = 0{,}5\, \text{s}$ e nell'istante in cui $v_C = 3\, \text{V}$.
+        </Figura>
+ 
+        Tensione e corrente hanno la stessa forma, perché $i = v_C / R$: cambia solo la scala dell'asse verticale. Dopo $5\tau = 1\, \text{s}$ la tensione è già scesa sotto $0{,}1\, \text{V}$.
+
 </div>
 </details>
 
@@ -286,6 +301,14 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
         v_C(1\, \text{s}) = -3 + 12\, e^{-3{,}33} = -3 + 12 \cdot 0{,}0357 = -2{,}57\, \text{V}
         $$
         Dopo $1\, \text{s} \approx 3{,}3\,\tau$ il condensatore è ormai vicinissimo al valore finale $-3\, \text{V}$.
+
+    * **Grafici**:
+        <Figura src="/images/circuiti/transitori-es3-grafici.svg" alt="Andamento della tensione sul condensatore e della corrente nel circuito dell'esercizio 2.3" larghezza='45rem'>
+            Esercizio 2.3: andamento di $v_C(t)$ e di $i(t)$, con i valori richiesti a $t = 416\, \text{ms}$ e a $t = 1\, \text{s}$.
+        </Figura>
+ 
+        La tensione parte da $9\, \text{V}$, attraversa lo zero a $t = 416\, \text{ms}$ e si assesta a $-3\, \text{V}$ senza oltrepassarlo. La corrente resta negativa per tutto il transitorio: non cambia mai verso, perché $v_C$ non scende mai sotto il valore finale $V_2$.
+
 </div>
 </details>
 
@@ -303,10 +326,8 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
     Esercizio 2.4.
   </Figura>
 Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attraverso l'interruttore $T$, che si chiude all'istante $t = 0$. Il condensatore è inizialmente scarico. Con $R_1 = 4\, \text{k}\Omega$, $R_2 = 12\, \text{k}\Omega$, $R_3 = 2\, \text{k}\Omega$ e $C = 10\, \mu\text{F}$ calcolare:
-1. il circuito equivalente di Thevenin visto dai morsetti del condensatore;
-2. la tensione $v_C(t)$ e la corrente $i_C(t)$ nel condensatore (entrante nell'armatura superiore), per $t \ge 0$;
-3. la tensione $V_A(t)$ sul nodo $A$, in particolare $V_A(0^+)$ e $V_A(\infty)$;
-4. l'istante in cui $v_C$ raggiunge $6\, \text{V}$.
+1. la tensione $v_C(t)$ e la corrente $i_C(t)$ nel condensatore (entrante nell'armatura superiore), per $t \ge 0$;
+2. la tensione $V_A(t)$ sul nodo $A$, in particolare $V_A(0^+)$ e $V_A(\infty)$;
 
 <details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
 <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
@@ -316,8 +337,6 @@ Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attrave
     Il circuito non è un semplice RC serie, ma tutto ciò che è collegato al condensatore può essere sostituito dal suo equivalente di Thevenin. Il problema si riduce così a quello dell'esercizio 2.1.
 
     * **Equivalente di Thevenin**:
-        Scolleghiamo il condensatore: restano aperti il nodo $B$ (sopra il condensatore) e la massa.
-
         {/*
           DISEGNO transitori-es4-1.svg: equivalente di Thevenin visto dal condensatore
           - Una sola maglia: generatore Vth = 9 V a sinistra (+ in alto), resistore Rth = 5 kΩ nel lato superiore, condensatore C = 10 µF a destra (+ in alto), filo di massa in basso.
@@ -329,14 +348,15 @@ Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attrave
             Circuito equivalente di Thevenin dell'esercizio 2.4.
         </FiguraLato>
 
-        Con il condensatore scollegato, in $R_3$ non scorre corrente e quindi su $R_3$ non cade tensione: $V_B = V_A$. La tensione a vuoto è quella ai capi di $R_2$ e si ricava con il [partitore di tensione](/it/fondamenti/serie-parallelo/#partitore-di-tensione) fra $R_1$ e $R_2$:
+        Con il condensatore scollegato, in $R_3$ non scorre corrente e quindi su $R_3$ non cade tensione. La tensione a vuoto è quella ai capi di $R_2$ e si ricava con il [partitore di tensione](/it/fondamenti/serie-parallelo/#partitore-di-tensione) fra $R_1$ e $R_2$:
         $$
         V_{th} = V_g \cdot \frac{R_2}{R_1 + R_2} = 12 \cdot \frac{12}{4 + 12} = 9\, \text{V}
         $$
-        Per la resistenza di Thevenin spegniamo il generatore (corto circuito): guardando dal nodo $B$ verso il circuito, $R_3$ è in serie al parallelo fra $R_1$ e $R_2$.
+        Per la resistenza di Thevenin spegniamo il generatore (corto circuito): $R_3$ è in serie al parallelo fra $R_1$ e $R_2$.
         $$
         R_{th} = R_3 + R_1 \parallel R_2 = 2 + \frac{4 \cdot 12}{4 + 12} = 2 + 3 = 5\, \text{k}\Omega
         $$
+        Ora la risoluzione è identica al caso dell'esercizio 2.1, con $V_g = V_{th} = 9\, \text{V}$, $R = R_{th} = 5\, \text{k}\Omega$ e $C = 10\, \mu\text{F}$.
     * **Costante di tempo**:
         $$
         \tau = R_{th} \cdot C = 5 \cdot 10^{3}\, \Omega \cdot 10 \cdot 10^{-6}\, \text{F} = 0{,}05\, \text{s} = 50\, \text{ms}
@@ -369,16 +389,15 @@ Il circuito in figura è alimentato dal generatore $V_g = 12\, \text{V}$ attrave
         > V_A(0^+) = V_g \cdot \frac{R_2 \parallel R_3}{R_1 + R_2 \parallel R_3} = 12 \cdot \frac{1{,}714}{4 + 1{,}714} = 3{,}6\, \text{V}
         > $$
         > * Per $t = \infty$ il condensatore è un **circuito aperto**: in $R_3$ non scorre corrente e $V_A = V_{th} = 9\, \text{V}$.
-    * **Istante in cui $v_C = 6\, \text{V}$**:
-        $$
-        6 = 9\left(1 - e^{-t/\tau}\right)
-        \quad\Longrightarrow\quad
-        e^{-t/\tau} = 1 - \frac{6}{9} = \frac{1}{3}
-        $$
-        Con il logaritmo naturale, ricordando che $\ln \dfrac{1}{3} = -\ln 3$:
-        $$
-        \boxed{t = \tau \ln 3 = 50\, \text{ms} \cdot 1{,}0986 = 54{,}9\, \text{ms}}
-        $$
+
+    * **Grafici**:
+        <Figura src="/images/circuiti/transitori-es4-grafici.svg" alt="Andamento delle tensioni sul condensatore e sul nodo A e della corrente nel condensatore dell'esercizio 2.4" larghezza='45rem'>
+            Esercizio 2.4: andamento di $v_C(t)$, $V_A(t)$ e $i_C(t)$, con il valore di $V_A(0^+)$ e l'istante in cui $v_C = 6\, \text{V}$.
+        </Figura>
+ 
+        Le due tensioni partono da valori diversi ($0$ per $v_C$, $3{,}6\, \text{V}$ per $V_A$) e arrivano allo stesso valore $V_{th} = 9\, \text{V}$. La loro differenza è la tensione su $R_3$, $V_A - v_C = R_3\, i_C$, e infatti si annulla insieme alla corrente.
+
+
 </div>
 </details>
 
@@ -467,6 +486,17 @@ Nel circuito in figura il deviatore $T$ si trova da molto tempo nella posizione 
         $$
 
     > **Osservazione sul deviatore**: abbiamo supposto che il deviatore commuti senza mai interrompere la maglia. Se la corrente $i_L$ venisse interrotta di colpo, la variazione $\dfrac{di_L}{dt}$ sarebbe enorme e la tensione $v_L = L \dfrac{di_L}{dt}$ altissima: è la scintilla che si vede quando si apre un circuito fortemente induttivo.
+
+    * **Grafici**:
+        <Figura src="/images/circuiti/transitori-es5-grafici.svg" alt="Andamento della corrente e della tensione sull'induttore dell'esercizio 2.5, durante la carica e la scarica" larghezza='45rem'>
+            Esercizio 2.5: andamento di $i_L$ e di $v_L$ durante la carica (da $t = 0$) e la scarica (da $t' = 0$), con i valori richiesti.
+        </Figura>
+ 
+        Nel grafico il deviatore torna in posizione 2 dopo $30\, \text{ms} = 6\tau$, un tempo sufficiente a concludere il transitorio di carica. La corrente prosegue senza salti da $300\, \text{mA}$, mentre la tensione sull'induttore passa di colpo da $0$ a $-12\, \text{V}$.
+ 
+    > **Osservazione sul deviatore**: abbiamo supposto che il deviatore commuti senza mai interrompere la maglia. Se la corrente $i_L$ venisse interrotta di colpo, la variazione $\dfrac{di_L}{dt}$ sarebbe enorme e la tensione $v_L = L \dfrac{di_L}{dt}$ altissima: è la scintilla che si vede quando si apre un circuito fortemente induttivo.
+
+
 </div>
 </details>
 
@@ -527,19 +557,6 @@ Nel circuito in figura il condensatore è inizialmente scarico. L'interruttore $
         Il transitorio è stato interrotto quando il condensatore aveva raggiunto il $63{,}2\,\%$ del valore finale $V_{th}$ che avrebbe raggiunto se l'interruttore fosse rimasto chiuso.
 
     #### Fase 2: interruttore aperto ($t \ge T_1$)
-
-    * **Nuovo circuito**:
-
-        {/*
-          DISEGNO transitori-es6-1.svg: circuito con T aperto
-          - Restano solo R2 = 12 kΩ e C = 10 µF in parallelo: due rami verticali collegati fra loro in alto (nodo A) e in basso (massa).
-          - Il ramo del generatore (Vg, T, R1) si può omettere, oppure disegnare in grigio e tratteggiato con T aperto, per far vedere che è staccato.
-          - Segna la tensione vC con il + in alto, il valore iniziale vC(T1) = 6,32 V e la corrente iC con la freccia verso il basso nel ramo del condensatore.
-        */}
-        <FiguraLato src="/images/circuiti/transitori-es6-1.svg" alt="Circuito dell'esercizio 2.6 con interruttore aperto" larghezza='15rem'>
-            Circuito dell'esercizio 2.6 con interruttore aperto.
-        </FiguraLato>
-
         Con l'interruttore aperto il ramo del generatore è staccato: in $R_1$ non scorre più corrente e il condensatore resta collegato soltanto a $R_2$. Il condensatore si scarica attraverso $R_2$ con una nuova costante di tempo:
         $$
         \tau_2 = R_2 \cdot C = 12 \cdot 10^{3}\, \Omega \cdot 10 \cdot 10^{-6}\, \text{F} = 0{,}12\, \text{s} = 120\, \text{ms}
@@ -582,20 +599,19 @@ Nel circuito in figura il condensatore è inizialmente scarico. L'interruttore $
         i_C(T_1^+) = -\frac{v_C(T_1)}{R_2} = -\frac{6{,}32}{12\, \text{k}\Omega} = -0{,}527\, \text{mA}
         $$
         La tensione sul condensatore è continua ($6{,}32\, \text{V}$ prima e dopo), mentre la **corrente salta** da $+0{,}92\, \text{mA}$ a $-0{,}527\, \text{mA}$, cambiando anche verso: prima il condensatore si stava caricando, ora si scarica. Solo la tensione sul condensatore deve essere continua, la corrente no.
-    * **Grafico di $v_C(t)$**:
 
-        {/*
-          DISEGNO transitori-es6-2.svg: grafico di vC(t), non un circuito
-          - Asse orizzontale t in ms con le tacche 0, 40 (T1), 100 e 261,3; asse verticale vC in V con le tacche 1, 3,83, 6,32 e 10.
-          - Fino a T1: arco di esponenziale crescente da 0 a 6,32 V. La tangente nell'origine arriva a 10 V proprio in t = tau1 = 40 ms (puoi disegnarla tratteggiata). Facoltativo: linea tratteggiata a 10 V, che sarebbe il valore finale se T restasse chiuso.
-          - Dopo T1: arco di esponenziale decrescente da 6,32 V verso 0, più lento (tau2 = 120 ms contro tau1 = 40 ms). La tangente in T1 incontra l'asse in t = T1 + tau2 = 160 ms.
-          - Metti un pallino sui punti (40; 6,32), (100; 3,83) e (261,3; 1), con linee sottili tratteggiate verso gli assi.
-          - Il punto (40; 6,32) è un punto angoloso: pendenza positiva a sinistra, negativa a destra, nessun salto verticale.
-        */}
-        <FiguraLato src="/images/circuiti/transitori-es6-2.svg" alt="Andamento della tensione sul condensatore dell'esercizio 2.6" larghezza='28rem'>
+ 
+        <Figura src="/images/circuiti/transitori-es6-2.svg" alt="Andamento della tensione sul condensatore dell'esercizio 2.6" larghezza='30rem'>
             Andamento di $v_C(t)$: carica fino a $T_1$ e successiva scarica.
-        </FiguraLato>
-
+        </Figura>
+     * **Grafico di $v_C(t)$**:
         Il grafico è formato da due archi di esponenziale: per $t \le T_1$ la tensione sale da $0$ verso $10\, \text{V}$, senza raggiungerli, fino a $6{,}32\, \text{V}$; per $t \ge T_1$ scende verso $0$ con pendenza più dolce, perché $\tau_2 \gt \tau_1$. Nel punto $t = T_1$ il grafico presenta un punto angoloso ma non un salto.
+        <Figura src="/images/circuiti/transitori-es6-3.svg" alt="Andamento della corrente nel condensatore dell'esercizio 2.6" larghezza='30rem'>
+            Andamento di $i_C(t)$: la corrente salta nell'istante $T_1$.
+        </Figura>
+    * **Grafico di $i_C(t)$**:
+         La corrente parte da $V_{th} / R_{th} = 2{,}5\, \text{mA}$ e decresce con costante di tempo $\tau_1$ fino a $0{,}92\, \text{mA}$. In $T_1$ il circuito cambia e la corrente salta a $-0{,}527\, \text{mA}$, cioè cambia verso. Poi tende a zero con costante di tempo $\tau_2$. La tensione $v_C$ è continua in $T_1$, la corrente no.
+
+
 </div>
 </details>

@@ -6,7 +6,33 @@ description: Esercizi
 import FiguraLato from '../../../../components/FiguraLato.astro';
 import Figura from '../../../../components/Figura.astro';
 
-In questa pagina sono riportati e svolti alcuni esercizi riguardanti i fondamenti dell'elettronica, partendo dalle leggi di Ohm e di Kircchhoff e arrivando a PSE, Thevenin e Norton.
+In questa pagina sono riportati e svolti alcuni esercizi riguardanti i fondamenti dell'elettronica, partendo dalle resistenze equivalenti, leggi di Ohm e di Kircchhoff e arrivando a PSE, Thevenin e Norton.
+
+## Esercizio 1.0 
+  <Figura src="/images/circuiti/fondamenti-es0.svg" alt="Fondamenti - Esercizio 0" larghezza='30rem'>
+    Esercizio 1.0.
+  </Figura>
+Dato il circuito in figura, calcolare la resistenza equivalente vista da sinistra ($R_S$) e da destra ($R_D$).
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+  <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+  </summary>
+  <div style={{ marginTop: '1rem' }}>
+    * **Calcolo di $R_S$**: 
+        $R_2$ e $R_3$ sono in serie, poichè nel terminale in alto a destra non scorre corrente. La serie fra $R_2$ e $R_3$ è in parallelo con $R_1$. La resistenza risultante è poi in serie con $R_4$.
+        $$
+        R_S = R_1 \parallel (R_2 + R_3) + R_4 = 4{,}22\, \text{k}\Omega
+        $$
+    * **Calcolo di $R_D$**: 
+        Il calcolo è identico ma questa volta è la serie fra $R_1$ ed $R_3$ ad essere in parallelo a $R_2$.
+        $$
+        R_D = R_2 \parallel (R_1 + R_3) + R_4 = 2{,}89\, \text{k}\Omega
+        $$
+
+  </div>
+</details>
+
 
 ## Esercizio 1.1 
   <Figura src="/images/circuiti/fondamenti-es1.svg" alt="Fondamenti - Esercizio 1" larghezza='30rem'>

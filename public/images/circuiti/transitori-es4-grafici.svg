@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 800 332" width="800" height="332" role="img" aria-labelledby="t4 d4">
+  <title id="t4">Esercizio 2.4: tensioni v_C e V_A e corrente nel condensatore</title>
+  <desc id="d4">v_C e V_A partono da valori diversi e tendono entrambe a 9 V; la corrente decresce da 1,8 mA a zero.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --v: #0f766e;     /* tensioni */
+  --v2: #d1342b;    /* seconda tensione (solo es. 2.4) */
+  --i: #1d5fd1;     /* correnti */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .4; fill: none; }
+.gr .asym  { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve e punti */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .jump  { fill: none; stroke-width: 2.2; stroke-dasharray: 2 4; stroke-linecap: round; }
+.gr .c-v  { stroke: var(--v); }
+.gr .c-v2 { stroke: var(--v2); }
+.gr .c-i  { stroke: var(--i); }
+.gr .p-v  { fill: var(--v); }
+.gr .p-v2 { fill: var(--v2); }
+.gr .p-i  { fill: var(--i); }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+  </style>
+
+  <defs>
+    <marker id="ah-ax4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="pannello-sinistro">
+    <!-- assi -->
+    <line class="axis" x1="64.0" y1="262.0" x2="64.0" y2="60.0" marker-end="url(#ah-ax4)"/>
+    <line class="axis" x1="64.0" y1="262.0" x2="340.0" y2="262.0" marker-end="url(#ah-ax4)"/>
+    <text class="t-lab" x="28.0" y="44.0"><tspan class="it">v</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) e <tspan class="it">V</tspan><tspan class="it sm" dy="4.5">A</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) (V)</text>
+    <text class="t-lab" x="350.0" y="267.0"><tspan class="it">t</tspan> (ms)</text>
+    <path class="tick" d="M59.0 262.0H69.0"/>
+    <text class="t-num t-end" x="54.0" y="267.0">0</text>
+    <path class="tick" d="M59.0 198.2H69.0"/>
+    <text class="t-num t-end" x="54.0" y="203.2">3,6</text>
+    <path class="tick" d="M59.0 155.6H69.0"/>
+    <text class="t-num t-end" x="54.0" y="160.6">6</text>
+    <path class="tick" d="M59.0 102.4H69.0"/>
+    <text class="t-num t-end" x="54.0" y="107.4">9</text>
+    <text class="t-num t-mid" x="64.0" y="302.0">0</text>
+    <path class="tick" d="M107.7 257.0V267.0"/>
+    <text class="t-num t-mid" x="107.7" y="284.0"><tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="107.7" y="302.0">50</text>
+    <path class="tick" d="M151.3 257.0V267.0"/>
+    <text class="t-num t-mid" x="151.3" y="284.0">2<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="151.3" y="302.0">100</text>
+    <path class="tick" d="M195.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="195.0" y="284.0">3<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="195.0" y="302.0">150</text>
+    <path class="tick" d="M238.7 257.0V267.0"/>
+    <text class="t-num t-mid" x="238.7" y="284.0">4<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="238.7" y="302.0">200</text>
+    <path class="tick" d="M282.3 257.0V267.0"/>
+    <text class="t-num t-mid" x="282.3" y="284.0">5<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="282.3" y="302.0">250</text>
+    <path class="tick" d="M326.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="326.0" y="284.0">6<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="326.0" y="302.0">300</text>
+    <line class="asym" x1="64.0" y1="102.4" x2="326.0" y2="102.4"/>
+    <text class="t-val t-end" x="326.0" y="94.4"><tspan class="it">V</tspan><tspan class="sm" dy="4.5">th</tspan><tspan dy="-4.5"> = 9 V</tspan></text>
+    <path class="curve c-v2" d="M64.0 198.2 L66.4 193.1 L68.8 188.3 L71.1 183.7 L73.5 179.4 L75.9 175.3 L78.3 171.4 L80.7 167.8 L83.1 164.3 L85.4 161.0 L87.8 157.9 L90.2 154.9 L92.6 152.1 L95.0 149.5 L97.3 147.0 L99.7 144.6 L102.1 142.4 L104.5 140.3 L106.9 138.3 L109.3 136.4 L111.6 134.5 L114.0 132.8 L116.4 131.2 L118.8 129.7 L121.2 128.2 L123.5 126.9 L125.9 125.6 L128.3 124.3 L130.7 123.2 L133.1 122.1 L135.5 121.0 L137.8 120.0 L140.2 119.1 L142.6 118.2 L145.0 117.4 L147.4 116.6 L149.7 115.8 L152.1 115.1 L154.5 114.4 L156.9 113.8 L159.3 113.2 L161.7 112.6 L164.0 112.1 L166.4 111.6 L168.8 111.1 L171.2 110.6 L173.6 110.2 L175.9 109.8 L178.3 109.4 L180.7 109.0 L183.1 108.6 L185.5 108.3 L187.9 108.0 L190.2 107.7 L192.6 107.4 L195.0 107.1 L197.4 106.9 L199.8 106.7 L202.1 106.4 L204.5 106.2 L206.9 106.0 L209.3 105.8 L211.7 105.6 L214.1 105.5 L216.4 105.3 L218.8 105.1 L221.2 105.0 L223.6 104.9 L226.0 104.7 L228.3 104.6 L230.7 104.5 L233.1 104.4 L235.5 104.3 L237.9 104.2 L240.3 104.1 L242.6 104.0 L245.0 103.9 L247.4 103.8 L249.8 103.7 L252.2 103.7 L254.5 103.6 L256.9 103.5 L259.3 103.5 L261.7 103.4 L264.1 103.4 L266.5 103.3 L268.8 103.3 L271.2 103.2 L273.6 103.2 L276.0 103.1 L278.4 103.1 L280.7 103.0 L283.1 103.0 L285.5 103.0 L287.9 102.9 L290.3 102.9 L292.7 102.9 L295.0 102.9 L297.4 102.8 L299.8 102.8 L302.2 102.8 L304.6 102.8 L306.9 102.7 L309.3 102.7 L311.7 102.7 L314.1 102.7 L316.5 102.7 L318.9 102.7 L321.2 102.6 L323.6 102.6 L326.0 102.6"/>
+    <path class="curve c-v" d="M64.0 262.0 L66.4 253.5 L68.8 245.5 L71.1 237.9 L73.5 230.7 L75.9 223.9 L78.3 217.4 L80.7 211.3 L83.1 205.6 L85.4 200.1 L87.8 194.9 L90.2 190.0 L92.6 185.3 L95.0 180.9 L97.3 176.8 L99.7 172.8 L102.1 169.1 L104.5 165.5 L106.9 162.2 L109.3 159.0 L111.6 156.0 L114.0 153.2 L116.4 150.5 L118.8 147.9 L121.2 145.5 L123.5 143.2 L125.9 141.0 L128.3 139.0 L130.7 137.0 L133.1 135.2 L135.5 133.5 L137.8 131.8 L140.2 130.2 L142.6 128.8 L145.0 127.4 L147.4 126.0 L149.7 124.8 L152.1 123.6 L154.5 122.5 L156.9 121.4 L159.3 120.4 L161.7 119.4 L164.0 118.5 L166.4 117.7 L168.8 116.9 L171.2 116.1 L173.6 115.4 L175.9 114.7 L178.3 114.0 L180.7 113.4 L183.1 112.8 L185.5 112.3 L187.9 111.7 L190.2 111.2 L192.6 110.8 L195.0 110.3 L197.4 109.9 L199.8 109.5 L202.1 109.1 L204.5 108.8 L206.9 108.4 L209.3 108.1 L211.7 107.8 L214.1 107.5 L216.4 107.2 L218.8 107.0 L221.2 106.7 L223.6 106.5 L226.0 106.3 L228.3 106.1 L230.7 105.9 L233.1 105.7 L235.5 105.5 L237.9 105.4 L240.3 105.2 L242.6 105.0 L245.0 104.9 L247.4 104.8 L249.8 104.6 L252.2 104.5 L254.5 104.4 L256.9 104.3 L259.3 104.2 L261.7 104.1 L264.1 104.0 L266.5 103.9 L268.8 103.8 L271.2 103.8 L273.6 103.7 L276.0 103.6 L278.4 103.6 L280.7 103.5 L283.1 103.4 L285.5 103.4 L287.9 103.3 L290.3 103.3 L292.7 103.2 L295.0 103.2 L297.4 103.1 L299.8 103.1 L302.2 103.1 L304.6 103.0 L306.9 103.0 L309.3 103.0 L311.7 102.9 L314.1 102.9 L316.5 102.9 L318.9 102.8 L321.2 102.8 L323.6 102.8 L326.0 102.8"/>
+    <circle class="p-v2" cx="64.0" cy="198.2" r="5.5"/>
+    <line class="guide" x1="112.0" y1="155.6" x2="112.0" y2="262.0"/>
+    <line class="guide" x1="64.0" y1="155.6" x2="112.0" y2="155.6"/>
+    <circle class="p-v" cx="112.0" cy="155.6" r="5.5"/>
+    <text class="t-val" x="122.0" y="179.6"><tspan class="it">t</tspan> = 54,9 ms</text>
+    <line class="curve c-v2" x1="214.0" y1="208.0" x2="240.0" y2="208.0"/>
+    <text class="t-val" x="248.0" y="213.0"><tspan class="it">V</tspan><tspan class="it sm" dy="4.5">A</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>)</text>
+    <line class="curve c-v" x1="214.0" y1="230.0" x2="240.0" y2="230.0"/>
+    <text class="t-val" x="248.0" y="235.0"><tspan class="it">v</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>)</text>
+  </g>
+
+  <g id="pannello-destro">
+    <!-- assi -->
+    <line class="axis" x1="454.0" y1="262.0" x2="454.0" y2="60.0" marker-end="url(#ah-ax4)"/>
+    <line class="axis" x1="454.0" y1="262.0" x2="730.0" y2="262.0" marker-end="url(#ah-ax4)"/>
+    <text class="t-lab" x="418.0" y="44.0"><tspan class="it">i</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5">(</tspan><tspan class="it">t</tspan>) (mA)</text>
+    <text class="t-lab" x="740.0" y="267.0"><tspan class="it">t</tspan> (ms)</text>
+    <path class="tick" d="M449.0 262.0H459.0"/>
+    <text class="t-num t-end" x="444.0" y="267.0">0</text>
+    <path class="tick" d="M449.0 218.3H459.0"/>
+    <text class="t-num t-end" x="444.0" y="223.3">0,5</text>
+    <path class="tick" d="M449.0 174.6H459.0"/>
+    <text class="t-num t-end" x="444.0" y="179.6">1</text>
+    <path class="tick" d="M449.0 130.8H459.0"/>
+    <text class="t-num t-end" x="444.0" y="135.8">1,5</text>
+    <path class="tick" d="M449.0 87.1H459.0"/>
+    <text class="t-num t-end" x="444.0" y="92.1">2</text>
+    <text class="t-num t-mid" x="454.0" y="302.0">0</text>
+    <path class="tick" d="M497.7 257.0V267.0"/>
+    <text class="t-num t-mid" x="497.7" y="284.0"><tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="497.7" y="302.0">50</text>
+    <path class="tick" d="M541.3 257.0V267.0"/>
+    <text class="t-num t-mid" x="541.3" y="284.0">2<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="541.3" y="302.0">100</text>
+    <path class="tick" d="M585.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="585.0" y="284.0">3<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="585.0" y="302.0">150</text>
+    <path class="tick" d="M628.7 257.0V267.0"/>
+    <text class="t-num t-mid" x="628.7" y="284.0">4<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="628.7" y="302.0">200</text>
+    <path class="tick" d="M672.3 257.0V267.0"/>
+    <text class="t-num t-mid" x="672.3" y="284.0">5<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="672.3" y="302.0">250</text>
+    <path class="tick" d="M716.0 257.0V267.0"/>
+    <text class="t-num t-mid" x="716.0" y="284.0">6<tspan class="it">τ</tspan></text>
+    <text class="t-num t-mid" x="716.0" y="302.0">300</text>
+    <path class="curve c-i" d="M454.0 104.6 L456.4 113.0 L458.8 120.9 L461.1 128.4 L463.5 135.5 L465.9 142.2 L468.3 148.5 L470.7 154.6 L473.1 160.3 L475.4 165.7 L477.8 170.8 L480.2 175.6 L482.6 180.2 L485.0 184.5 L487.3 188.7 L489.7 192.6 L492.1 196.2 L494.5 199.7 L496.9 203.0 L499.3 206.2 L501.6 209.1 L504.0 211.9 L506.4 214.6 L508.8 217.1 L511.2 219.5 L513.5 221.7 L515.9 223.9 L518.3 225.9 L520.7 227.8 L523.1 229.6 L525.5 231.4 L527.8 233.0 L530.2 234.5 L532.6 236.0 L535.0 237.4 L537.4 238.7 L539.7 239.9 L542.1 241.1 L544.5 242.2 L546.9 243.2 L549.3 244.2 L551.7 245.2 L554.0 246.1 L556.4 246.9 L558.8 247.7 L561.2 248.5 L563.6 249.2 L565.9 249.9 L568.3 250.5 L570.7 251.1 L573.1 251.7 L575.5 252.3 L577.9 252.8 L580.2 253.3 L582.6 253.7 L585.0 254.2 L587.4 254.6 L589.8 255.0 L592.1 255.3 L594.5 255.7 L596.9 256.0 L599.3 256.4 L601.7 256.7 L604.1 256.9 L606.4 257.2 L608.8 257.5 L611.2 257.7 L613.6 257.9 L616.0 258.1 L618.3 258.3 L620.7 258.5 L623.1 258.7 L625.5 258.9 L627.9 259.1 L630.3 259.2 L632.6 259.4 L635.0 259.5 L637.4 259.6 L639.8 259.8 L642.2 259.9 L644.5 260.0 L646.9 260.1 L649.3 260.2 L651.7 260.3 L654.1 260.4 L656.5 260.5 L658.8 260.6 L661.2 260.6 L663.6 260.7 L666.0 260.8 L668.4 260.8 L670.7 260.9 L673.1 261.0 L675.5 261.0 L677.9 261.1 L680.3 261.1 L682.7 261.2 L685.0 261.2 L687.4 261.2 L689.8 261.3 L692.2 261.3 L694.6 261.4 L696.9 261.4 L699.3 261.4 L701.7 261.5 L704.1 261.5 L706.5 261.5 L708.9 261.5 L711.2 261.6 L713.6 261.6 L716.0 261.6"/>
+    <line class="asym" x1="454.0" y1="104.6" x2="497.7" y2="262.0"/>
+    <text class="t-small t-end" x="716.0" y="93.0">tangente in 0<tspan class="sm" dy="-6.5">+</tspan><tspan dy="6.5">:</tspan></text>
+    <text class="t-small t-end" x="716.0" y="110.0">incontra l’asse in <tspan class="it">t</tspan> = <tspan class="it">τ</tspan></text>
+    <circle class="p-i" cx="454.0" cy="104.6" r="5.5"/>
+    <text class="t-val" x="464.0" y="95.6">1,8 mA</text>
+  </g>
+</svg>

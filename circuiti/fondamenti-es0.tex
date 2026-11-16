@@ -1,0 +1,20 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (6, 4) to[american resistor, l={$R_1\ 5\, \text{k}\Omega$}] (9, 4);
+	\draw (9, 4) to[american resistor, l={$R_2\ 1\, \text{k}\Omega$}] (12, 4);
+	\draw (6, 5) to[american resistor, l={$R_3\ 3\, \text{k}\Omega$}] (12, 5);
+	\draw (6, 5) to[short] (6, 4);
+	\draw (12, 5) to[short] (12, 4);
+	\draw (9, 4) to[american resistor, l={$R_4\ 2\, \text{k}\Omega$}] (9, 1);
+	\draw (5.4, 1) to[short] (12.6, 1);
+	\node[circ] at (9, 4){};
+	\node[circ] at (9, 1){};
+	\node[circ] at (6, 4){};
+	\node[circ] at (12, 4){};
+	\draw[-stealth] (5.4, 2.4) -- (6.6, 2.4);
+	\node[shape=rectangle, minimum width=0.565cm, minimum height=0.365cm] at (5.8, 2.8){} node[anchor=north west, align=left, text width=0.177cm, inner sep=6pt] at (5.5, 3){$R_S$};
+	\draw[stealth-] (11.4, 2.4) -- (12.6, 2.4);
+	\node[shape=rectangle, minimum width=0.565cm, minimum height=0.365cm] at (11.8, 2.8){} node[anchor=north west, align=left, text width=0.177cm, inner sep=6pt] at (11.5, 3){$R_D$};
+	\draw (12.6, 4) to[short] (12, 4);
+	\draw (6, 4) to[short] (5.4, 4);
+\end{tikzpicture}

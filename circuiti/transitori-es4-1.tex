@@ -1,0 +1,7 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (9, 4) to[american voltage source, l_={$V_{th}$}] (9, 1);
+	\draw (12, 1) to[capacitor, l={$C$}, v=$v_c(t)$, voltage/distance from node=0.3, voltage/bump b=1.3, voltage/shift=1] (12, 4);
+	\draw (9, 1) to[short] (12, 1);
+	\draw (9, 4) to[american resistor, l={$R_{th}$}, i>^=$i_c(t)$] (12, 4);
+\end{tikzpicture}
