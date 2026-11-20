@@ -59,7 +59,7 @@ export const argomenti: Argomento[] = [
     ],
   },
   {
-    titolo: 'Risposta in frequenza e filtri',
+    titolo: 'Risposta in frequenza e filtri passivi',
     descrizione: 'Come un circuito risponde al variare della frequenza.',
     lezioni: [
       { titolo: 'Filtri passivi RC', slug: 'frequenza/filtri-rc', descrizione: 'Passa-basso e passa-alto, frequenza di taglio.', livello: SU },
