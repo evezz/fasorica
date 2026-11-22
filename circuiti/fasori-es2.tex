@@ -1,0 +1,13 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (8, -0) to[sinusoidal voltage source, l={$v_2(t)$}] (8, 2);
+	\draw (8, 2) to[sinusoidal voltage source, l={$v_1(t)$}] (8, 4);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (7.6, 3.8){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (7.4, 4){$+$};
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (7.6, 1.75){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (7.4, 1.95){$+$};
+	\draw (8, 4) to[short] (10, 4);
+	\draw (8, -0) to[short] (10, -0);
+	\node[ocirc] at (10, 4){};
+	\node[ocirc] at (10, -0){};
+	\draw[-stealth] (10, 0.4) -- (10, 3.6);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.2, 2.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9, 2.4){$v(t)$};
+\end{tikzpicture}

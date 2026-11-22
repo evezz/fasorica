@@ -1,0 +1,14 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (10, 0.6) to[sinusoidal voltage source, l={$v_g(t)$}] (10, 4.4);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.6, 3.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9.4, 3.4){$+$};
+	\draw (10, 4.4) to[short, i^>=$i(t)$] (12, 4.4);
+	\draw (10, 0.6) to[short] (14.4, 0.6);
+	\draw (13, 4.4) to[generic, l_={$\begin{aligned} \text{carico}\\ P=2\, \text{kW}\\ \cos(\varphi)=0.8 \end{aligned}$}] (13, 0.6);
+	\draw (12, 4.4) to[short] (14.4, 4.4);
+	\draw (14.4, 3) to[capacitor, l={$C$}] (14.4, 2);
+	\draw[dash pattern={on 1.6pt off 0.8pt}] (14.4, 3) -- (14.4, 4.4);
+	\draw[dash pattern={on 1.6pt off 0.8pt}] (14.4, 0.6) -- (14.4, 2);
+	\node[circ] at (13, 4.4){};
+	\node[circ] at (13, 0.6){};
+\end{tikzpicture}

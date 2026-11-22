@@ -90,7 +90,7 @@ Abbiamo già affrontato i [segnali sinusoidali](/it/fasori/segnali-sinusoidali/)
   - Dal + del generatore superiore parte un filo verso destra che termina nel morsetto A (pallino vuoto). Dal - del generatore inferiore parte un filo verso destra che termina nel morsetto B (pallino vuoto). I due morsetti restano aperti.
   - Da segnare: la tensione v(t) fra A e B con una freccia a destra dei morsetti, con la punta verso A (+ in A).
 */}
-  <Figura src="/images/circuiti/sinusoidale-es2.svg" alt="Regime sinusoidale - Esercizio 2" larghezza='25rem'>
+  <Figura src="/images/circuiti/fasori-es2.svg" alt="Regime sinusoidale - Esercizio 2" larghezza='25rem'>
     Esercizio 3.2.
   </Figura>
 Due generatori di tensione sinusoidale, con la stessa pulsazione $\omega$, sono collegati in serie come in figura. Le loro tensioni sono 
@@ -170,7 +170,7 @@ Calcolare:
   - Lato inferiore: filo che chiude la maglia, con il simbolo di massa sotto il generatore.
   - Da segnare: la corrente i con una freccia sul lato superiore, verso destra, vicino al generatore. Sopra R e sopra L le tensioni vR e vL, con una freccia da sinistra a destra (+ a sinistra). Accanto a C la tensione vC, con la freccia verso l'alto (+ in alto).
 */}
-  <Figura src="/images/circuiti/sinusoidale-es3.svg" alt="Regime sinusoidale - Esercizio 3" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es3.svg" alt="Regime sinusoidale - Esercizio 3" larghezza='35rem'>
     Esercizio 3.3.
   </Figura>
 Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 20 \sin(1000\, t)\, \text{V}$, con $t$ in secondi. Con $R = 100\, \Omega$, $L = 100\, \text{mH}$ e $C = 5\, \mu\text{F}$ calcolare, in regime sinusoidale:
@@ -274,7 +274,7 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 20 \s
   - A destra del generatore, collegati fra i due fili, tre rami verticali in parallelo. Da sinistra a destra: resistore R = 250 Ω, induttore L = 1 H, condensatore C = 4 µF.
   - Da segnare: la corrente totale i sul filo superiore, subito dopo il generatore, con la freccia verso destra. In ogni ramo la corrente (iR, iL, iC) con la freccia verso il basso, sopra al componente. La tensione vg è la stessa ai capi di tutti i rami.
 */}
-  <Figura src="/images/circuiti/sinusoidale-es4.svg" alt="Regime sinusoidale - Esercizio 4" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es4.svg" alt="Regime sinusoidale - Esercizio 4" larghezza='35rem'>
     Esercizio 3.4.
   </Figura>
 Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 10 \sin(1000\, t)\, \text{V}$, con $t$ in secondi. Con $R = 250\, \Omega$, $L = 1\, \text{H}$ e $C = 4\, \mu\text{F}$ calcolare, in regime sinusoidale:
@@ -352,7 +352,6 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 10 \s
         $$
         Il modulo è $\sqrt{40^2 + 30^2} = 50\, \text{mA}$ e la fase è $\arctan\dfrac{30}{40} = 36{,}87^\circ$: la somma coincide con $\mathbf{I}$ e la [legge di Kirchhoff delle correnti](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-correnti-kcl) è verificata. Come per le tensioni, i moduli non si sommano ($40 + 10 + 40 = 90\, \text{mA} \neq 50\, \text{mA}$), perché $\mathbf{I}_L$ e $\mathbf{I}_C$ hanno fasi opposte e si compensano in parte: $-j\, 10 + j\, 40 = j\, 30\, \text{mA}$.
 
-    > **Verifica di coerenza**: il prodotto $\mathbf{Z}\, \mathbf{Y} = 200 \angle -36{,}87^\circ \cdot 0{,}005 \angle 36{,}87^\circ = 1$ come deve essere, perché i moduli si moltiplicano ($200 \cdot 0{,}005 = 1$) e le fasi opposte si annullano.
 </div>
 </details>
 
@@ -364,11 +363,11 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 10 \s
   - Lato destro e lato inferiore: fili che chiudono la maglia.
   - Da segnare: la corrente i sul lato superiore, con la freccia verso destra; la tensione v ai capi del carico (freccia verso l'alto, a destra del carico, + in alto).
 */}
-  <Figura src="/images/circuiti/sinusoidale-es5.svg" alt="Regime sinusoidale - Esercizio 5" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es5.svg" alt="Regime sinusoidale - Esercizio 5" larghezza='35rem'>
     Esercizio 3.5.
   </Figura>
-Un carico formato da un resistore $R = 30\, \Omega$ in serie a un induttore è alimentato da un generatore sinusoidale di valore efficace $V = 230\, \text{V}$ e frequenza $f = 50\, \text{Hz}$. A questa frequenza l'induttore ha reattanza $X_L = 40\, \Omega$ (cioè $L = 127{,}3\, \text{mH}$). Calcolare:
-1. l'impedenza $\mathbf{Z}$ del carico e il valore efficace $I$ della corrente, con la sua fase rispetto alla tensione;
+Un carico formato da un resistore $R = 30\, \Omega$ in serie a un induttore è alimentato da un generatore sinusoidale $v_g(t)$ di valore efficace $V = 230\, \text{V}$ e frequenza $f = 50\, \text{Hz}$. A questa frequenza l'induttore ha reattanza $X_L = 40\, \Omega$ (cioè $L = 127{,}3\, \text{mH}$). Calcolare:
+1. l'impedenza $\mathbf{Z}$ del carico e il valore efficace $I$ della corrente $i(t)$, con la sua fase rispetto alla tensione;
 2. le potenze attiva $P$, reattiva $Q$ e apparente $S$ e il fattore di potenza $\cos\varphi$;
 3. la verifica dei risultati con il triangolo delle potenze, $S^2 = P^2 + Q^2$;
 
@@ -429,7 +428,7 @@ Un carico formato da un resistore $R = 30\, \Omega$ in serie a un induttore è a
     - il condensatore di rifasamento C (da calcolare), disegnato con il tratto tratteggiato perché è l'elemento da aggiungere.
   - Da segnare: la corrente I sul filo superiore subito dopo il generatore (freccia verso destra); la corrente del carico I1 e quella del condensatore IC, con le frecce verso il basso nei due rami.
 */}
-  <Figura src="/images/circuiti/sinusoidale-es6.svg" alt="Regime sinusoidale - Esercizio 6" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es6.svg" alt="Regime sinusoidale - Esercizio 6" larghezza='35rem'>
     Esercizio 3.6.
   </Figura>
 Un carico induttivo assorbe la potenza attiva $P = 2{,}4\, \text{kW}$ con fattore di potenza $\cos\varphi_1 = 0{,}8$ (induttivo). È alimentato dalla tensione di rete, di valore efficace $V = 230\, \text{V}$ e frequenza $f = 50\, \text{Hz}$. Per ridurre la corrente assorbita dalla rete si collega in parallelo al carico un condensatore (rifasamento). Calcolare:
@@ -529,7 +528,7 @@ Un carico induttivo assorbe la potenza attiva $P = 2{,}4\, \text{kW}$ con fattor
     - condensatore di rifasamento C (da calcolare), disegnato con il tratto tratteggiato perché va aggiunto nella seconda parte dell'esercizio.
   - Da segnare: la corrente di linea i sul filo superiore, fra il generatore e RL, con la freccia verso destra; la tensione V = 230 V ai capi dei carichi (fra A e B), con la freccia verso l'alto (+ in A).
 */}
-  <Figura src="/images/circuiti/sinusoidale-es7.svg" alt="Regime sinusoidale - Esercizio 7" larghezza='40rem'>
+  <Figura src="/images/circuiti/fasori-es7.svg" alt="Regime sinusoidale - Esercizio 7" larghezza='40rem'>
     Esercizio 3.7.
   </Figura>
 Un impianto è alimentato da una linea monofase la cui resistenza totale (conduttori di andata e di ritorno) è $R_L = 0{,}4\, \Omega$. All'estremità della linea sono collegati in parallelo due carichi, che funzionano alla tensione $V = 230\, \text{V}$ (valore efficace, frequenza $f = 50\, \text{Hz}$): un carico resistivo (stufe) con $P_1 = 2\, \text{kW}$ e $\cos\varphi_1 = 1$, e un motore con $P_2 = 3\, \text{kW}$ e $\cos\varphi_2 = 0{,}6$ (induttivo). Si suppone che il generatore compensi la caduta di tensione in linea, in modo che ai carichi arrivino sempre $230\, \text{V}$. Calcolare:

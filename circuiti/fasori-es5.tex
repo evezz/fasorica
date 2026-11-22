@@ -1,0 +1,13 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (10, 0.6) to[sinusoidal voltage source, l={$v_g(t)$}] (10, 4.4);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.6, 3.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9.4, 3.4){$+$};
+	\draw (12, 4) to[american resistor, l={$R$}] (12, 2.6);
+	\draw (10, 4.4) to[short, i^>=$i(t)$] (12, 4.4);
+	\draw (10, 0.6) to[short] (12, 0.6);
+	\draw (12, 2.6) to[cute inductor, l={$L$}] (12, 1);
+	\draw (12, 1) to[short] (12, 0.6);
+	\draw (12, 4.4) to[short] (12, 4);
+	\node[shape=rectangle, draw={rgb,255:red,58;green,118;blue,231}, dash pattern={on 1.6pt off 0.8pt}, minimum width=1.386cm, minimum height=3.386cm] at (12.1, 2.5){};
+	\node[shape=rectangle, minimum width=1.365cm, minimum height=0.365cm] at (12.7, 4.503){} node[anchor=north west, align=left, text width=0.977cm, inner sep=6pt] at (12, 4.703){\textcolor{rgb,255:red,58;green,118;blue,231}{carico}};
+\end{tikzpicture}
