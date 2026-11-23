@@ -1,0 +1,312 @@
+---
+title: Esercizi - Risposta in frequenza e filtri passivi
+description: Esercizi
+---
+
+import FiguraLato from '../../../../components/FiguraLato.astro';
+import Figura from '../../../../components/Figura.astro';
+
+In questa pagina sono riportati e svolti alcuni esercizi sulla risposta in frequenza, funzioni di trasferimento, diagrammi di Bode e filtri passivi.
+
+Si rimanda alle lezioni teoriche ([filtri passivi RC](/it/frequenza/filtri-rc/), [Funzione di trasferimento](/it/frequenza/funzione-di-trasferimento/) e [Diagramma di Bode](/it/frequenza/diagramma-di-bode/)) per le formule e le spiegazioni. In questa pagina ci limitiamo a svolgere alcuni esercizi pratici.
+
+## Esercizio 4.1
+Tracciare il diagramma di Bode della seguente funzione di trasferimento:
+
+<div className="formula-numerata">
+$$
+H(j\omega) = \overset{\text{①}}{-10}\ \frac{\overset{\text{②}}{j\omega R_1 C_1}}{\underset{\text{③}}{1+j\omega(R_1+R_2)C_1}}
+$$
+</div>
+con $R_1 = 1\, \text{k}\Omega$, $R_2 = 99\, \text{k}\Omega$, $C_1 = 10\, \text{nF}$.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    Per tracciare il diagramma di Bode, analizziamo il comportamento in frequenza di ogni singolo componente della funzione. Il diagramma sarà poi la somma di tutti i contributi.
+    * ① **Costante $k = -10$**: non dipende dalla frequenza, e la plottiamo sul grafico del modulo in decibel: $20\log(10)=20\, \text{dB}$. Nel grafico della fase è ancora una costante: $-180^\circ$ (perché il segno meno inverte la fase).
+    * ② **Zero nell'origine**: questo termine è uno zero nell'origine e si annulla (in $\text{dB}$) in $\omega_z = \frac{1}{R_1C_1} = 10^5\, \frac{\text{rad}}{\text{s}}$. Il modulo sale di $20\, \text{dB/dec}$ (annullandosi in $\omega_z$) e la fase è costante a $90^\circ$. 
+    * ③ **Polo non nell'origine**: questo termine è un polo alla frequenza $\omega_p = \frac{1}{(R_1+R_2)C_1} = 10^3\, \frac{\text{rad}}{\text{s}}$. Il modulo è zero fino a $\omega_p$, poi scende di $20\, \text{dB/dec}$, mentre la fase è costante a $0^\circ$ fino a $\omega_p/10$, poi scende di $45^\circ$ per decade (arrivando a $-90^\circ$ da $10\,\omega_p$ in poi).
+
+    * **Diagramma di Bode**:
+        <Figura src="/images/circuiti/bode-es1-diagrammi.svg" alt="Diagramma di Bode di modulo e fase dell'esercizio 4.1" larghezza='40rem'>
+            Esercizio 4.1: diagramma di Bode di $H(j\omega)$. Le linee tratteggiate sono i contributi ①, ② e ③, la linea continua blu è la loro somma, cioè il diagramma finale.
+        </Figura>
+
+                Il modulo in dB è la somma dei tre contributi. Fino a $\omega_p = 10^3\, \text{rad/s}$ vale $20 + 20\log\dfrac{\omega}{\omega_z} + 0$ e sale di $20\, \text{dB/dec}$. In $\omega_p$ vale $20 - 40 + 0 = -20\, \text{dB}$. Poi il polo ③ scende di $20\, \text{dB/dec}$ e compensa la salita dello zero ②, quindi la somma resta piatta a $-20\, \text{dB}$. Per la fase, la costante negativa ① contribuisce con $-180^\circ$ (è lo stesso angolo di $+180^\circ$), lo zero nell'origine ② con $+90^\circ$ e il polo ③ con un angolo da $0^\circ$ a $-90^\circ$. La somma vale $-90^\circ$ fino a $\omega_p/10$, scende di $45^\circ$ per decade (vale $-135^\circ$ in $\omega_p$) e arriva a $-180^\circ$ da $10\,\omega_p$.    
+</div>
+</details>
+
+
+## Esercizio 4.2
+{/*
+  DISEGNO bode-es2.svg: filtro RL (passa-alto), una sola maglia con l'uscita ai capi dell'induttore
+  - Lato sinistro: generatore di tensione sinusoidale (cerchio con una "~" dentro) vin(t), con il + in alto.
+  - Dal + del generatore un filo orizzontale verso destra, con il resistore R = 100 Ω in serie.
+  - A destra di R c'è il nodo di uscita (un pallino). Da quel nodo un filo scende in verticale e porta l'induttore L = 1 mH, che arriva al filo inferiore.
+  - Filo inferiore continuo dal generatore fino sotto L, con il simbolo di massa sotto il generatore.
+  - Dal nodo di uscita un breve filo verso destra termina in un cerchietto (terminale aperto). Un altro breve filo parte dal filo inferiore e termina in un secondo cerchietto: uscita a vuoto.
+  - Da segnare: vin accanto al generatore (freccia verso l'alto, + in alto) e vout ai capi di L (freccia verso l'alto, + sul nodo di uscita).
+  - È lo stesso schema dell'esercizio 4.2 con L al posto di C.
+*/}
+  <Figura src="/images/circuiti/bode-es2.svg" alt="Diagrammi di Bode - Esercizio 2" larghezza='30rem'>
+    Esercizio 4.2.
+  </Figura>
+Il circuito in figura è alimentato da un generatore sinusoidale $v_{\text{in}}(t)$ e l'uscita, presa ai capi dell'induttore, è lasciata a vuoto. Con $R = 100\, \Omega$ e $L = 1\, \text{mH}$:
+1. ricavare la funzione di trasferimento $H(j\omega) = \dfrac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}}$ e scriverla nella forma adatta al diagramma di Bode;
+2. tracciare i diagrammi di Bode del modulo (in dB) e della fase;
+3. trovare la pulsazione alla quale il segnale in uscita è attenuato di $20\, \text{dB}$, prima con il diagramma e poi con il calcolo esatto.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    * **Funzione di trasferimento**:
+        Il procedimento è lo stesso dell'esercizio precedente, con l'impedenza dell'induttore $Z_L = j\omega L$ al posto di quella del condensatore. L'uscita è ai capi di $L$, quindi il partitore dà:
+        $$
+        H(j\omega) = \frac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}} = \frac{Z_L}{R + Z_L} = \frac{j\omega L}{R + j\omega L}
+        $$
+        Per riportare la funzione alla forma con un $1$ nel denominatore dividiamo numeratore e denominatore per $R$:
+        $$
+        \boxed{H(j\omega) = \frac{j\omega \dfrac{L}{R}}{1 + j\omega \dfrac{L}{R}}}
+        $$
+    * **Forma per il diagramma di Bode**:
+        Il rapporto $\dfrac{L}{R} = \dfrac{10^{-3}\, \text{H}}{100\, \Omega} = 10^{-5}\, \text{s}$ compare in tutti e due i termini. Con i fattori numerati:
+        <div className="formula-numerata">
+        $$
+        H(j\omega) = \overset{\text{①}}{1}\ \frac{\overset{\text{②}}{j\omega \dfrac{L}{R}}}{\underset{\text{③}}{1 + j\omega \dfrac{L}{R}}}
+        $$
+        </div>
+    * ①**Costante $k = 1$**: $0\, \text{dB}$ e fase $0^\circ$. Non modifica il diagramma.
+    * ②**Zero nell'origine**: confrontando $j\omega \dfrac{L}{R}$ con $\dfrac{j\omega}{\omega_z}$ si trova la pulsazione in cui il suo modulo vale $0\, \text{dB}$ (cioè $1$):
+        $$
+        \omega_z = \frac{R}{L} = \frac{100}{10^{-3}} = 10^5\, \frac{\text{rad}}{\text{s}}
+        $$
+        Sale di $20\, \text{dB/dec}$ e ha fase costante $+90^\circ$.
+    * ③**Polo**: confrontando $1 + j\omega \dfrac{L}{R}$ con $1 + \dfrac{j\omega}{\omega_p}$:
+        $$
+        \omega_p = \frac{R}{L} = 10^5\, \frac{\text{rad}}{\text{s}}
+        \qquad\Longrightarrow\qquad
+        f_p = \frac{\omega_p}{2\pi} = 15{,}9\, \text{kHz}
+        $$
+        Lo zero nell'origine e il polo cadono alla **stessa pulsazione** $10^5\, \text{rad/s}$.
+    * **Diagramma del modulo**:
+        Fino a $10^5\, \text{rad/s}$ il polo ③ vale $0\, \text{dB}$ e il modulo coincide con quello dello zero ②: una retta che sale di $20\, \text{dB/dec}$ e raggiunge $0\, \text{dB}$ proprio in $10^5\, \text{rad/s}$ (quindi vale $-20\, \text{dB}$ a $10^4\, \text{rad/s}$ e $-40\, \text{dB}$ a $10^3\, \text{rad/s}$). Da $10^5\, \text{rad/s}$ in poi il polo scende di $20\, \text{dB/dec}$ e compensa esattamente la salita dello zero: la pendenza totale è nulla e il modulo resta a $0\, \text{dB}$. Il circuito blocca le basse frequenze e lascia passare le alte: è un filtro **passa-alto**.
+    * **Diagramma della fase**:
+        Lo zero ② contribuisce con $+90^\circ$ costanti. Il polo ③ vale $0^\circ$ fino a $\omega_p/10 = 10^4\, \text{rad/s}$, poi scende di $45^\circ$ per decade fino a $-90^\circ$ in $10\,\omega_p = 10^6\, \text{rad/s}$. La somma è quindi $+90^\circ$ fino a $10^4\, \text{rad/s}$, poi scende di $45^\circ$ per decade, vale $+90^\circ - 45^\circ = +45^\circ$ in $10^5\, \text{rad/s}$ e arriva a $0^\circ$ in $10^6\, \text{rad/s}$, dove resta.
+    * **Attenuazione di $20\, \text{dB}$ dal diagramma**:
+        Per $\omega < \omega_p$ il modulo è quello dello zero, che sale di $20\, \text{dB}$ a ogni decade e arriva a $0\, \text{dB}$ in $\omega_p$. Per stare $20\, \text{dB}$ sotto $0\, \text{dB}$ bisogna scendere di una decade:
+        $$
+        \omega \simeq \frac{\omega_p}{10} = 10^4\, \frac{\text{rad}}{\text{s}}
+        \qquad\Longrightarrow\qquad
+        f \simeq 1{,}6\, \text{kHz}
+        $$
+    * **Calcolo esatto**:
+        Chiamiamo $x = \omega \dfrac{L}{R}$, così $|H| = \dfrac{x}{\sqrt{1 + x^2}}$. Un'attenuazione di $20\, \text{dB}$ significa $|H| = 10^{-20/20} = 0{,}1$:
+        $$
+        \frac{x}{\sqrt{1 + x^2}} = 0{,}1
+        \quad\Longrightarrow\quad
+        x^2 = 0{,}01\,(1 + x^2)
+        \quad\Longrightarrow\quad
+        0{,}99\, x^2 = 0{,}01
+        \quad\Longrightarrow\quad
+        x = \sqrt{\frac{0{,}01}{0{,}99}} = 0{,}1005
+        $$
+        $$
+        \boxed{\omega = x\, \frac{R}{L} = 0{,}1005 \cdot 10^5 = 1{,}005 \cdot 10^4\, \frac{\text{rad}}{\text{s}}}
+        $$
+        Il diagramma dà il risultato con un errore di $0{,}5\,\%$.
+
+    > **Osservazione**: il comportamento si capisce anche dal circuito. A frequenza bassa l'induttore si comporta come un cortocircuito ($Z_L = j\omega L \to 0$) e la tensione ai suoi capi si annulla, quindi il modulo scende. A frequenza alta l'induttore è come un circuito aperto ($Z_L \to \infty$), tutta la tensione cade su di lui e $|H| \to 1$, cioè $0\, \text{dB}$.
+</div>
+</details>
+
+## Esercizio 4.3
+{/*
+  DISEGNO bode-es3.svg: rete RC con un ramo serie R2-C a massa
+  - Lato sinistro: generatore di tensione sinusoidale (cerchio con una "~" dentro) vin(t), con il + in alto.
+  - Dal + del generatore un filo orizzontale verso destra, con il resistore R1 = 90 kΩ in serie.
+  - A destra di R1 c'è il nodo di uscita (un pallino). Da quel nodo un filo scende in verticale e porta, uno sotto l'altro, il resistore R2 = 10 kΩ e il condensatore C = 100 nF, in serie. C arriva al filo inferiore.
+  - Filo inferiore continuo dal generatore fino sotto C, con il simbolo di massa sotto il generatore.
+  - Dal nodo di uscita un breve filo verso destra termina in un cerchietto (terminale aperto). Un altro breve filo parte dal filo inferiore e termina in un secondo cerchietto: uscita a vuoto.
+  - Da segnare: vin accanto al generatore (freccia verso l'alto, + in alto) e vout ai capi della serie R2-C (freccia verso l'alto, + sul nodo di uscita).
+*/}
+  <Figura src="/images/circuiti/bode-es3.svg" alt="Diagrammi di Bode - Esercizio 3" larghezza='30rem'>
+    Esercizio 4.3.
+  </Figura>
+Il circuito in figura è alimentato da un generatore sinusoidale $v_{\text{in}}(t)$ e l'uscita, presa ai capi della serie di $R_2$ e $C$, è lasciata a vuoto. Con $R_1 = 90\, \text{k}\Omega$, $R_2 = 10\, \text{k}\Omega$ e $C = 100\, \text{nF}$:
+1. ricavare la funzione di trasferimento $H(j\omega) = \dfrac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}}$ e scriverla nella forma adatta al diagramma di Bode, individuando zero e polo;
+2. tracciare i diagrammi di Bode del modulo (in dB) e della fase;
+3. verificare i valori del modulo a frequenza molto bassa e molto alta ragionando direttamente sul circuito.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    * **Funzione di trasferimento**:
+        Il ramo che porta a massa è la serie di $R_2$ e $C$, di impedenza:
+        $$
+        Z_2 = R_2 + \frac{1}{j\omega C}
+        $$
+        L'uscita è presa ai capi di questo ramo, quindi di nuovo un partitore di tensione, con $R_1$ in alto e $Z_2$ in basso:
+        $$
+        H(j\omega) = \frac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}} = \frac{Z_2}{R_1 + Z_2} = \frac{R_2 + \dfrac{1}{j\omega C}}{R_1 + R_2 + \dfrac{1}{j\omega C}}
+        $$
+        Moltiplichiamo numeratore e denominatore per $j\omega C$, per eliminare la frazione:
+        $$
+        \boxed{H(j\omega) = \frac{j\omega R_2 C + 1}{j\omega (R_1 + R_2) C + 1} = \frac{1 + j\omega R_2 C}{1 + j\omega (R_1 + R_2) C}}
+        $$
+    * **Forma per il diagramma di Bode**:
+        Calcoliamo i due prodotti che compaiono: $R_2 C = 10^4 \cdot 10^{-7} = 10^{-3}\, \text{s}$ e $(R_1 + R_2)\, C = 10^5 \cdot 10^{-7} = 10^{-2}\, \text{s}$. Con i fattori numerati:
+        <div className="formula-numerata">
+        $$
+        H(j\omega) = \overset{\text{①}}{1}\ \frac{\overset{\text{②}}{1 + j\omega R_2 C}}{\underset{\text{③}}{1 + j\omega (R_1 + R_2) C}}
+        $$
+        </div>
+    * ①**Costante $k = 1$**: $0\, \text{dB}$ e fase $0^\circ$. Non modifica il diagramma.
+    * ②**Zero non nell'origine**: confrontando $1 + j\omega R_2 C$ con $1 + \dfrac{j\omega}{\omega_z}$:
+        $$
+        \omega_z = \frac{1}{R_2 C} = \frac{1}{10^{-3}} = 10^3\, \frac{\text{rad}}{\text{s}}
+        $$
+    * ③**Polo**: confrontando $1 + j\omega (R_1 + R_2)\, C$ con $1 + \dfrac{j\omega}{\omega_p}$:
+        $$
+        \omega_p = \frac{1}{(R_1 + R_2)\, C} = \frac{1}{10^{-2}} = 10^2\, \frac{\text{rad}}{\text{s}}
+        $$
+        Il polo viene *prima* dello zero ($10^2 < 10^3\, \text{rad/s}$), perché la sua costante di tempo, $(R_1 + R_2)\, C$, è maggiore di quella dello zero, $R_2 C$.
+    * **Diagramma del modulo**:
+        Il termine ① non conta. Seguiamo i due contributi al crescere di $\omega$:
+        * fino a $\omega_p = 10^2\, \text{rad/s}$ sono entrambi a $0\, \text{dB}$: il modulo è piatto a $0\, \text{dB}$;
+        * fra $10^2$ e $10^3\, \text{rad/s}$ è attivo solo il polo, che scende di $20\, \text{dB/dec}$: in una decade il modulo arriva a $-20\, \text{dB}$;
+        * da $\omega_z = 10^3\, \text{rad/s}$ in poi lo zero sale di $20\, \text{dB/dec}$ e compensa la discesa del polo: la pendenza totale è nulla e il modulo resta piatto a $-20\, \text{dB}$.
+
+        Il diagramma è un «gradino» di $20\, \text{dB}$ verso il basso: un'attenuazione $\dfrac{\omega_p}{\omega_z} = \dfrac{1}{10}$, cioè $20\log_{10}\dfrac{1}{10} = -20\, \text{dB}$.
+    * **Diagramma della fase**:
+        Il polo ③ scende da $0^\circ$ a $-90^\circ$ fra $\omega_p/10 = 10\, \text{rad/s}$ e $10\,\omega_p = 10^3\, \text{rad/s}$. Lo zero ② sale da $0^\circ$ a $+90^\circ$ fra $\omega_z/10 = 10^2\, \text{rad/s}$ e $10\,\omega_z = 10^4\, \text{rad/s}$. Sommiamo i due andamenti nei vari intervalli:
+        * fino a $10\, \text{rad/s}$ la fase è $0^\circ$;
+        * fra $10$ e $10^2\, \text{rad/s}$ cambia solo il polo: la fase scende di $45^\circ$ per decade e arriva a $-45^\circ$;
+        * fra $10^2$ e $10^3\, \text{rad/s}$ il polo continua a scendere di $45^\circ$ per decade ma lo zero ora sale di $45^\circ$ per decade: i due effetti si compensano e la fase resta a $-45^\circ$ (in $10^3\, \text{rad/s}$ si ha infatti $-90^\circ$ del polo $+ 45^\circ$ dello zero);
+        * fra $10^3$ e $10^4\, \text{rad/s}$ il polo è fermo a $-90^\circ$ e cambia solo lo zero: la fase sale di $45^\circ$ per decade e torna a $0^\circ$;
+        * da $10^4\, \text{rad/s}$ in poi la fase è di nuovo $0^\circ$.
+
+        La fase è sempre negativa (l'uscita è in *ritardo* rispetto all'ingresso), per questo la rete si chiama anche *ritardatrice*.
+    * **Verifica sul circuito**:
+        A frequenza molto bassa il condensatore si comporta come un circuito aperto ($Z_C \to \infty$): nel ramo di uscita non passa corrente, su $R_1$ non cade tensione e $\mathbf{V}_{\text{out}} = \mathbf{V}_{\text{in}}$, cioè $|H| = 1 = 0\, \text{dB}$, come nel diagramma. A frequenza molto alta il condensatore si comporta come un cortocircuito ($Z_C \to 0$): il circuito diventa un semplice partitore resistivo fra $R_1$ e $R_2$:
+        $$
+        |H| = \frac{R_2}{R_1 + R_2} = \frac{10}{100} = 0{,}1
+        \qquad\Longrightarrow\qquad
+        20\log_{10}(0{,}1) = -20\, \text{dB}
+        $$
+        Il valore coincide con quello del diagramma.
+
+    > **Osservazione**: nel diagramma asintotico la fase minima è $-45^\circ$. Il valore esatto è più grande in valore assoluto: si ha un minimo di $-\arcsin\dfrac{\omega_z - \omega_p}{\omega_z + \omega_p} = -\arcsin\dfrac{900}{1100} = -54{,}9^\circ$ alla pulsazione $\sqrt{\omega_p\, \omega_z} = 316\, \text{rad/s}$. Quando polo e zero sono vicini (qui distano una sola decade), il diagramma della fase è meno preciso di quello del modulo.
+</div>
+</details>
+
+## Esercizio 4.4
+{/*
+  DISEGNO bode-es4.svg: circuito RLC serie, con l'uscita ai capi del resistore
+  - Lato sinistro: generatore di tensione sinusoidale (cerchio con una "~" dentro) vin(t), con il + in alto.
+  - Lato superiore, da sinistra a destra: induttore L = 1 mH e condensatore C = 1 µF in serie, collegati al generatore.
+  - Lato destro: dopo C, un filo scende in verticale e porta il resistore R = 1 kΩ, che arriva al filo inferiore. Il nodo fra C e R è il nodo di uscita (un pallino).
+  - Filo inferiore continuo dal generatore fino sotto R, con il simbolo di massa sotto il generatore.
+  - Dal nodo di uscita un breve filo verso destra termina in un cerchietto (terminale aperto). Un altro breve filo parte dal filo inferiore e termina in un secondo cerchietto: uscita a vuoto.
+  - Da segnare: vin accanto al generatore (freccia verso l'alto, + in alto) e vout ai capi di R (freccia verso l'alto, + sul nodo di uscita).
+*/}
+  <Figura src="/images/circuiti/bode-es4.svg" alt="Diagrammi di Bode - Esercizio 4" larghezza='35rem'>
+    Esercizio 4.4.
+  </Figura>
+Il circuito in figura è un circuito RLC serie alimentato da un generatore sinusoidale $v_{\text{in}}(t)$. L'uscita è presa ai capi del resistore ed è lasciata a vuoto. Con $R = 1\, \text{k}\Omega$, $L = 1\, \text{mH}$ e $C = 1\, \mu\text{F}$:
+1. ricavare la funzione di trasferimento $H(j\omega) = \dfrac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}}$;
+2. scrivere il denominatore, che è di secondo grado, come prodotto di due fattori del primo grado, e ricavare la forma adatta al diagramma di Bode;
+3. tracciare i diagrammi di Bode del modulo (in dB) e della fase;
+4. verificare il risultato alla pulsazione $\omega_0 = \dfrac{1}{\sqrt{LC}}$, ragionando direttamente sul circuito.
+
+<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
+<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
+    Soluzione
+</summary>
+<div style={{ marginTop: '1rem' }}>
+    * **Funzione di trasferimento**:
+        I tre componenti sono in serie, quindi la loro impedenza totale è $Z = R + j\omega L + \dfrac{1}{j\omega C}$. L'uscita è ai capi di $R$ ed è un partitore di tensione:
+        $$
+        H(j\omega) = \frac{\mathbf{V}_{\text{out}}}{\mathbf{V}_{\text{in}}} = \frac{R}{R + j\omega L + \dfrac{1}{j\omega C}}
+        $$
+        Moltiplichiamo numeratore e denominatore per $j\omega C$:
+        $$
+        H(j\omega) = \frac{j\omega RC}{j\omega RC + (j\omega)^2 LC + 1}
+        \qquad\Longrightarrow\qquad
+        \boxed{H(j\omega) = \frac{j\omega RC}{1 + j\omega RC + (j\omega)^2 LC}}
+        $$
+        I due prodotti che compaiono valgono $RC = 10^3 \cdot 10^{-6} = 10^{-3}\, \text{s}$ e $LC = 10^{-3} \cdot 10^{-6} = 10^{-9}\, \text{s}^2$.
+    * **Fattorizzazione del denominatore**:
+        Il denominatore $1 + j\omega RC + (j\omega)^2 LC$ è un polinomio di secondo grado in $j\omega$. Per usare i fattori elementari (i poli) vogliamo scriverlo come prodotto di due termini del tipo $(1 + j\omega \tau_1)(1 + j\omega \tau_2)$. Proviamo con $\tau_1 = RC$ e $\tau_2 = \dfrac{L}{R}$ e sviluppiamo il prodotto:
+        $$
+        \left(1 + j\omega RC\right)\left(1 + j\omega \frac{L}{R}\right) = 1 + j\omega \left(RC + \frac{L}{R}\right) + (j\omega)^2\, RC \cdot \frac{L}{R}
+        $$
+        L'ultimo termine è esattamente $(j\omega)^2\, LC$, perché $R$ si semplifica. Il termine centrale differisce da quello del denominatore soltanto per $\dfrac{L}{R}$, da confrontare con $RC$:
+        $$
+        RC = 10^{-3}\, \text{s}
+        \qquad\text{e}\qquad
+        \frac{L}{R} = \frac{10^{-3}}{10^3} = 10^{-6}\, \text{s}
+        $$
+        $\dfrac{L}{R}$ è mille volte più piccolo di $RC$ (differenza dello $0{,}1\,\%$), quindi si può trascurare:
+        $$
+        1 + j\omega RC + (j\omega)^2 LC \simeq \left(1 + j\omega RC\right)\left(1 + j\omega \frac{L}{R}\right)
+        $$
+        Il procedimento funziona quando le due costanti di tempo sono molto diverse fra loro, cioè quando i due poli sono ben separati. È il caso di questo circuito.
+    * **Forma per il diagramma di Bode**:
+        Sostituendo la fattorizzazione e numerando i fattori:
+        <div className="formula-numerata">
+        $$
+        H(j\omega) \simeq \overset{\text{①}}{1}\ \frac{\overset{\text{②}}{j\omega RC}}{\underset{\text{③}}{\left(1 + j\omega RC\right)}\ \underset{\text{④}}{\left(1 + j\omega \dfrac{L}{R}\right)}}
+        $$
+        </div>
+    * ①**Costante $k = 1$**: $0\, \text{dB}$ e fase $0^\circ$. Non modifica il diagramma.
+    * ②**Zero nell'origine**: confrontando $j\omega RC$ con $\dfrac{j\omega}{\omega_z}$:
+        $$
+        \omega_z = \frac{1}{RC} = 10^3\, \frac{\text{rad}}{\text{s}}
+        $$
+        Sale di $20\, \text{dB/dec}$, vale $0\, \text{dB}$ in $10^3\, \text{rad/s}$ e ha fase costante $+90^\circ$.
+    * ③**Primo polo**: confrontando $1 + j\omega RC$ con $1 + \dfrac{j\omega}{\omega_1}$:
+        $$
+        \omega_1 = \frac{1}{RC} = 10^3\, \frac{\text{rad}}{\text{s}}
+        $$
+    * ④**Secondo polo**: confrontando $1 + j\omega \dfrac{L}{R}$ con $1 + \dfrac{j\omega}{\omega_2}$:
+        $$
+        \omega_2 = \frac{R}{L} = \frac{10^3}{10^{-3}} = 10^6\, \frac{\text{rad}}{\text{s}}
+        $$
+    * **Diagramma del modulo**:
+        Il termine ① non conta. Seguiamo i contributi al crescere di $\omega$:
+        * fino a $10^3\, \text{rad/s}$ è attivo solo lo zero ②, che sale di $20\, \text{dB/dec}$ e raggiunge $0\, \text{dB}$ in $10^3\, \text{rad/s}$ (vale $-40\, \text{dB}$ a $10\, \text{rad/s}$, $-20\, \text{dB}$ a $10^2\, \text{rad/s}$);
+        * in $10^3\, \text{rad/s}$ entra il primo polo ③, che scende di $20\, \text{dB/dec}$ e compensa la salita dello zero: il modulo resta piatto a $0\, \text{dB}$;
+        * in $10^6\, \text{rad/s}$ entra il secondo polo ④: la pendenza totale diventa $-20\, \text{dB/dec}$ e il modulo scende ($-20\, \text{dB}$ a $10^7\, \text{rad/s}$).
+
+        Il circuito lascia passare solo una fascia di pulsazioni, fra circa $10^3$ e $10^6\, \text{rad/s}$ (da $159\, \text{Hz}$ a $159\, \text{kHz}$) e attenua sia le basse sia le alte frequenze: è un filtro **passa-banda**.
+    * **Diagramma della fase**:
+        Lo zero ② contribuisce con $+90^\circ$ costanti. Il polo ③ scende da $0^\circ$ a $-90^\circ$ fra $10^2$ e $10^4\, \text{rad/s}$, il polo ④ fra $10^5$ e $10^7\, \text{rad/s}$. Sommiamo nei vari intervalli:
+        * fino a $10^2\, \text{rad/s}$ la fase è $+90^\circ$;
+        * fra $10^2$ e $10^4\, \text{rad/s}$ scende di $45^\circ$ per decade per effetto di ③: vale $+90^\circ - 45^\circ = +45^\circ$ in $10^3\, \text{rad/s}$ e arriva a $0^\circ$ in $10^4\, \text{rad/s}$;
+        * fra $10^4$ e $10^5\, \text{rad/s}$ nessun termine cambia: la fase resta a $0^\circ$;
+        * fra $10^5$ e $10^7\, \text{rad/s}$ scende di $45^\circ$ per decade per effetto di ④, passa per $-45^\circ$ in $10^6\, \text{rad/s}$ e arriva a $-90^\circ$;
+        * da $10^7\, \text{rad/s}$ in poi la fase resta a $-90^\circ$.
+    * **Verifica a $\omega_0 = \dfrac{1}{\sqrt{LC}}$**:
+        Con i valori del problema $\omega_0 = \dfrac{1}{\sqrt{10^{-9}}} = 3{,}16 \cdot 10^4\, \text{rad/s}$. A questa pulsazione le reattanze di induttore e condensatore valgono:
+        $$
+        \omega_0 L = 3{,}16 \cdot 10^4 \cdot 10^{-3} = 31{,}6\, \Omega
+        \qquad
+        \frac{1}{\omega_0 C} = \frac{1}{3{,}16 \cdot 10^4 \cdot 10^{-6}} = 31{,}6\, \Omega
+        $$
+        Sono uguali e opposte ($+j\, 31{,}6$ e $-j\, 31{,}6\, \Omega$), quindi si annullano: l'impedenza totale è $Z = R$, tutta la tensione cade su $R$ e
+        $$
+        H(j\omega_0) = \frac{R}{R} = 1 = 0\, \text{dB}
+        \qquad\text{con fase } 0^\circ
+        $$
+        Nel diagramma, $\omega_0 = 10^{4{,}5}\, \text{rad/s}$ si trova proprio a metà del tratto in cui il modulo è piatto a $0\, \text{dB}$ e la fase è $0^\circ$: i due risultati coincidono.
+
+    > **Osservazione**: la fattorizzazione è un'approssimazione, ma molto buona. Risolvendo l'equazione di secondo grado $1 + 10^{-3}\, s + 10^{-9}\, s^2 = 0$ si trovano le pulsazioni dei poli esatte, $1001\, \text{rad/s}$ e $9{,}99 \cdot 10^5\, \text{rad/s}$, che differiscono dello $0{,}1\,\%$ dai valori $10^3$ e $10^6\, \text{rad/s}$ usati sopra. Questo vale perché $R$ è grande: se $R$ fosse molto piccola (sotto $2\sqrt{L/C} = 63\, \Omega$) i due poli diventerebbero complessi coniugati e il diagramma avrebbe un picco di risonanza. Quel caso è più complicato e non lo trattiamo qui.
+</div>
+</details>

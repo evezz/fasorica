@@ -1,5 +1,5 @@
 ---
-title: Esercizi - Segnali sinusoidali, fasori e potenza
+title: Esercizi - Corrente alternata e fasori
 description: Esercizi
 ---
 
@@ -90,7 +90,7 @@ Abbiamo già affrontato i [segnali sinusoidali](/it/fasori/segnali-sinusoidali/)
   - Dal + del generatore superiore parte un filo verso destra che termina nel morsetto A (pallino vuoto). Dal - del generatore inferiore parte un filo verso destra che termina nel morsetto B (pallino vuoto). I due morsetti restano aperti.
   - Da segnare: la tensione v(t) fra A e B con una freccia a destra dei morsetti, con la punta verso A (+ in A).
 */}
-  <Figura src="/images/circuiti/fasori-es2.svg" alt="Regime sinusoidale - Esercizio 2" larghezza='25rem'>
+  <Figura src="/images/circuiti/fasori-es2.svg" alt="Regime sinusoidale - Esercizio 2" larghezza='20rem'>
     Esercizio 3.2.
   </Figura>
 Due generatori di tensione sinusoidale, con la stessa pulsazione $\omega$, sono collegati in serie come in figura. Le loro tensioni sono 
@@ -157,6 +157,12 @@ Calcolare:
     * **Perché non $12 + 5 = 17\, \text{V}$**:
         Le due tensioni non raggiungono il massimo nello stesso istante. $v_1$ è massima per $\omega t = 60^\circ$ e $v_2$ per $\omega t = 150^\circ$: lo sfasamento è $30^\circ - (-60^\circ) = 90^\circ$. Le due tensioni sono quindi **perpendicolari** (o "in quadratura").
 
+        <Figura src="/images/circuiti/sinusoidale-es2-grafici.svg" alt="Andamento delle tensioni v1 e v2 e della loro somma v in funzione di ωt, esercizio 3.2" larghezza='36rem'>
+            Esercizio 3.2: le tensioni $v_1(t)$, $v_2(t)$ e la loro somma $v(t)$ in funzione di $\omega t$, con i valori a $t = 0$.
+        </Figura>
+ 
+        Il grafico di $v(t)$ si ottiene sommando punto per punto $v_1$ e $v_2$: a $t = 0$ si legge $6{,}00 - 4{,}33 = 1{,}67\, \text{V}$, proprio il valore di $13 \sin 7{,}38^\circ$. Il massimo di $v$, $13\, \text{V}$, si ha per $\omega t = 82{,}62^\circ$, fra il massimo di $v_1$ ($60^\circ$) e quello di $v_2$ ($150^\circ$), e più vicino al primo perché $v_1$ ha l'ampiezza maggiore.
+
     > **Attenzione**: le ampiezze si sommano soltanto se le tensioni sono *in fase* (sfasamento $0^\circ$, ampiezza $17\, \text{V}$). Se sono in *opposizione di fase* (sfasamento $180^\circ$) si sottraggono (ampiezza $12 - 5 = 7\, \text{V}$). In tutti gli altri casi il risultato sta in mezzo e si trova solo con i fasori.
 </div>
 </details>
@@ -170,7 +176,7 @@ Calcolare:
   - Lato inferiore: filo che chiude la maglia, con il simbolo di massa sotto il generatore.
   - Da segnare: la corrente i con una freccia sul lato superiore, verso destra, vicino al generatore. Sopra R e sopra L le tensioni vR e vL, con una freccia da sinistra a destra (+ a sinistra). Accanto a C la tensione vC, con la freccia verso l'alto (+ in alto).
 */}
-  <Figura src="/images/circuiti/fasori-es3.svg" alt="Regime sinusoidale - Esercizio 3" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es3.svg" alt="Regime sinusoidale - Esercizio 3" larghezza='30rem'>
     Esercizio 3.3.
   </Figura>
 Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 20 \sin(1000\, t)\, \text{V}$, con $t$ in secondi. Con $R = 100\, \Omega$, $L = 100\, \text{mH}$ e $C = 5\, \mu\text{F}$ calcolare, in regime sinusoidale:
@@ -262,6 +268,14 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 20 \s
         $$
         La legge di Kirchhoff delle tensioni è verificata, ma *con i fasori*: i moduli non si sommano ($14{,}14 + 14{,}14 + 28{,}28 = 56{,}6\, \text{V} \neq 20\, \text{V}$).
 
+        * **Diagramma fasoriale**:
+        <Figura src="/images/circuiti/sinusoidale-es3-fasori.svg" alt="Fasori delle tensioni del circuito RLC serie dell'esercizio 3.3 nel piano complesso" larghezza='32rem'>
+            Esercizio 3.3: fasori di $\mathbf{V}_g$, $\mathbf{V}_R$, $\mathbf{V}_L$ e $\mathbf{V}_C$ nel piano complesso. Il tratteggio mostra la somma testa-coda che dà $\mathbf{V}_g$.
+        </Figura>
+ 
+    I fasori sono disegnati con la stessa scala sui due assi, quindi gli angoli sono quelli veri. $\mathbf{V}_R$ (in fase con la corrente) è a $45^\circ$, $\mathbf{V}_L$ è $90^\circ$ in anticipo su di essa e $\mathbf{V}_C$ è $90^\circ$ in ritardo: i due ultimi stanno sulla stessa retta, con versi opposti, e si compensano in parte. Mettendo i fasori uno di seguito all'altro (tratteggio), a partire da $\mathbf{V}_L$ e poi $\mathbf{V}_R$ e $\mathbf{V}_C$, si arriva esattamente alla punta di $\mathbf{V}_g$, sull'asse reale a $20\, \text{V}$: è la legge di Kirchhoff delle tensioni in forma grafica.
+
+
     > **Osservazione**: la tensione sul condensatore, $28{,}3\, \text{V}$, è maggiore di quella del generatore, $20\, \text{V}$. Non è un errore. $\mathbf{V}_L$ e $\mathbf{V}_C$ hanno fasi opposte ($135^\circ$ e $-45^\circ$ differiscono di $180^\circ$) e si compensano in parte: $\mathbf{V}_L + \mathbf{V}_C = 10 - j\, 10 = 14{,}14 \angle -45^\circ\, \text{V}$. Il generatore deve fornire soltanto la somma di questo contributo e di $\mathbf{V}_R$, che sono perpendicolari a loro volta: $14{,}14 \angle 45^\circ + 14{,}14 \angle -45^\circ = 20\, \text{V}$.
 </div>
 </details>
@@ -352,6 +366,16 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 10 \s
         $$
         Il modulo è $\sqrt{40^2 + 30^2} = 50\, \text{mA}$ e la fase è $\arctan\dfrac{30}{40} = 36{,}87^\circ$: la somma coincide con $\mathbf{I}$ e la [legge di Kirchhoff delle correnti](/it/fondamenti/kirchhoff/#legge-di-kirchhoff-delle-correnti-kcl) è verificata. Come per le tensioni, i moduli non si sommano ($40 + 10 + 40 = 90\, \text{mA} \neq 50\, \text{mA}$), perché $\mathbf{I}_L$ e $\mathbf{I}_C$ hanno fasi opposte e si compensano in parte: $-j\, 10 + j\, 40 = j\, 30\, \text{mA}$.
 
+    * **Diagramma fasoriale**:
+        <Figura src="/images/circuiti/sinusoidale-es4-fasori.svg" alt="Fasori delle correnti del circuito RLC parallelo dell'esercizio 3.4 nel piano complesso" larghezza='32rem'>
+            Esercizio 3.4: fasori di $\mathbf{I}_R$, $\mathbf{I}_L$, $\mathbf{I}_C$ e della corrente totale $\mathbf{I}$ nel piano complesso.
+        </Figura>
+ 
+        La tensione $\mathbf{V}_g$ ha fase $0^\circ$ ed è presa come riferimento. $\mathbf{I}_R$ è sull'asse reale (in fase con la tensione), mentre $\mathbf{I}_C$ ($+90^\circ$) e $\mathbf{I}_L$ ($-90^\circ$) stanno sull'asse immaginario con versi opposti, quindi la loro somma $\mathbf{I}_C + \mathbf{I}_L = j\, 30\, \text{mA}$ (tratteggio verticale) è più corta di $\mathbf{I}_C$. La corrente totale è la diagonale del rettangolo di lati $40\, \text{mA}$ e $30\, \text{mA}$: modulo $50\, \text{mA}$ e fase $36{,}87^\circ$, positiva, cioè la corrente è in anticipo sulla tensione.
+ 
+    > **Verifica di coerenza**: il prodotto $\mathbf{Z}\, \mathbf{Y} = 200 \angle -36{,}87^\circ \cdot 0{,}005 \angle 36{,}87^\circ = 1$ come deve essere, perché i moduli si moltiplicano ($200 \cdot 0{,}005 = 1$) e le fasi opposte si annullano.
+
+
 </div>
 </details>
 
@@ -363,7 +387,7 @@ Il circuito in figura è alimentato da un generatore sinusoidale $v_g(t) = 10 \s
   - Lato destro e lato inferiore: fili che chiudono la maglia.
   - Da segnare: la corrente i sul lato superiore, con la freccia verso destra; la tensione v ai capi del carico (freccia verso l'alto, a destra del carico, + in alto).
 */}
-  <Figura src="/images/circuiti/fasori-es5.svg" alt="Regime sinusoidale - Esercizio 5" larghezza='35rem'>
+  <Figura src="/images/circuiti/fasori-es5.svg" alt="Regime sinusoidale - Esercizio 5" larghezza='30rem'>
     Esercizio 3.5.
   </Figura>
 Un carico formato da un resistore $R = 30\, \Omega$ in serie a un induttore è alimentato da un generatore sinusoidale $v_g(t)$ di valore efficace $V = 230\, \text{V}$ e frequenza $f = 50\, \text{Hz}$. A questa frequenza l'induttore ha reattanza $X_L = 40\, \Omega$ (cioè $L = 127{,}3\, \text{mH}$). Calcolare:
@@ -415,6 +439,15 @@ Un carico formato da un resistore $R = 30\, \Omega$ in serie a un induttore è a
         \sqrt{P^2 + Q^2} = \sqrt{634{,}8^2 + 846{,}4^2} = \sqrt{402\,971 + 716\,393} = \sqrt{1\,119\,364} = 1058\, \text{VA} = S
         $$
         Anche l'angolo è coerente: $\tan\varphi = \dfrac{Q}{P} = \dfrac{846{,}4}{634{,}8} = 1{,}333$, cioè $\varphi = 53{,}13^\circ$.
+    
+    * **Triangolo delle potenze**:
+        <Figura src="/images/circuiti/sinusoidale-es5-potenze.svg" alt="Triangolo delle potenze del carico dell'esercizio 3.5" larghezza='28rem'>
+            Esercizio 3.5: triangolo delle potenze del carico: <br /> $P = 634{,}8\, \text{W}$, $Q = 846{,}4\, \text{var}$ e $S = 1058\, \text{VA}$.
+        </Figura>
+ 
+        Le potenze sono i lati di un triangolo rettangolo: $P$ è il cateto orizzontale, $Q$ quello verticale e $S$ l'ipotenusa. L'angolo $\varphi = 53{,}13^\circ$ è lo sfasamento fra tensione e corrente (lo stesso dell'impedenza) e il suo coseno è il rapporto fra il cateto adiacente e l'ipotenusa, $\cos\varphi = P/S = 0{,}6$, cioè il fattore di potenza. È simile al triangolo di lati $R$, $X_L$ e $|\mathbf{Z}|$, cioè $30$, $40$ e $50\, \Omega$: si passa dall'uno all'altro moltiplicando tutti i lati per $I^2 = 21{,}16\, \text{A}^2$.
+
+    
     </div>
 </details>
 
@@ -508,108 +541,19 @@ Un carico induttivo assorbe la potenza attiva $P = 2{,}4\, \text{kW}$ con fattor
     * **Rifasamento completo**:
         Per avere $\cos\varphi = 1$ il condensatore deve fornire tutta la potenza reattiva del carico, $Q_C = Q_1 = 1800\, \text{var}$:
         $$
-        C = \frac{Q_C}{\omega V^2} = \frac{1800}{314{,}2 \cdot 230^2} = 108{,}3\, \mu\text{F}
+        \boxed{C = \frac{Q_C}{\omega V^2} = \frac{1800}{314{,}2 \cdot 230^2} = 108{,}3\, \mu\text{F}}
         \qquad
         I = \frac{P}{V} = \frac{2400}{230} = 10{,}43\, \text{A}
         $$
 
+    * **Triangoli delle potenze**:
+        <Figura src="/images/circuiti/sinusoidale-es6-potenze.svg" alt="Triangoli delle potenze del carico dell'esercizio 3.6 prima e dopo il rifasamento" larghezza='40rem'>
+            Esercizio 3.6: triangoli delle potenze prima e dopo il rifasamento. Nel triangolo di destra il tratteggio indica la situazione iniziale.
+        </Figura>
+ 
+        A sinistra il triangolo del carico, a destra quello visto dalla rete dopo il rifasamento. Il cateto $P = 2400\, \text{W}$ non cambia, perché il condensatore non consuma potenza attiva. Il condensatore fornisce $Q_C = 1011\, \text{var}$, che si sottrae a $Q_1 = 1800\, \text{var}$ e lascia alla rete soltanto $Q_2 = 1800 - 1011 = 789\, \text{var}$. L'angolo scende da $36{,}87^\circ$ a $18{,}19^\circ$ e l'ipotenusa, cioè la potenza apparente, da $S_1 = 3000\, \text{VA}$ a $S_2 = P/\cos\varphi_2 = 2526\, \text{VA}$. Poiché $S = V I$ e la tensione è costante, la corrente si riduce nello stesso rapporto, $2526 / 3000 = 0{,}842$, cioè del $15{,}8\,\%$.
+
+
     > **Osservazione**: passando da $\cos\varphi = 0{,}95$ a $1$ la corrente scende di un ulteriore $5\,\%$ soltanto ($10{,}98 \to 10{,}43\, \text{A}$), ma serve un condensatore di capacità circa $1{,}8$ volte più grande. Se poi il carico varia (per esempio un motore che lavora a vuoto) un condensatore troppo grande rende il circuito capacitivo. Per questo nella pratica ci si ferma di solito a valori di $\cos\varphi$ compresi fra $0{,}9$ e $0{,}95$.
-</div>
-</details>
-
-## Esercizio 3.7
-{/*
-  DISEGNO sinusoidale-es7.svg: linea monofase che alimenta due carichi in parallelo, con condensatore di rifasamento
-  - Lato sinistro: generatore di tensione sinusoidale (cerchio con una "~" dentro), + in alto, simbolo di massa sotto.
-  - Filo superiore: dal + del generatore verso destra, attraversa il resistore RL = 0,4 Ω (resistenza della linea, che comprende andata e ritorno) e arriva al nodo A. Il filo inferiore va dritto dal generatore al nodo B.
-  - Fra A e B, in parallelo fra loro, tre rami verticali:
-    - carico 1: un rettangolo con la scritta "carico 1" e sotto P1 = 2 kW, cosφ1 = 1;
-    - carico 2 (motore): un rettangolo con la scritta "carico 2" e sotto P2 = 3 kW, cosφ2 = 0,6 (induttivo);
-    - condensatore di rifasamento C (da calcolare), disegnato con il tratto tratteggiato perché va aggiunto nella seconda parte dell'esercizio.
-  - Da segnare: la corrente di linea i sul filo superiore, fra il generatore e RL, con la freccia verso destra; la tensione V = 230 V ai capi dei carichi (fra A e B), con la freccia verso l'alto (+ in A).
-*/}
-  <Figura src="/images/circuiti/fasori-es7.svg" alt="Regime sinusoidale - Esercizio 7" larghezza='40rem'>
-    Esercizio 3.7.
-  </Figura>
-Un impianto è alimentato da una linea monofase la cui resistenza totale (conduttori di andata e di ritorno) è $R_L = 0{,}4\, \Omega$. All'estremità della linea sono collegati in parallelo due carichi, che funzionano alla tensione $V = 230\, \text{V}$ (valore efficace, frequenza $f = 50\, \text{Hz}$): un carico resistivo (stufe) con $P_1 = 2\, \text{kW}$ e $\cos\varphi_1 = 1$, e un motore con $P_2 = 3\, \text{kW}$ e $\cos\varphi_2 = 0{,}6$ (induttivo). Si suppone che il generatore compensi la caduta di tensione in linea, in modo che ai carichi arrivino sempre $230\, \text{V}$. Calcolare:
-1. la potenza attiva, reattiva e apparente complessive dei due carichi e il loro fattore di potenza;
-2. la corrente nella linea, la potenza dissipata nella linea e il rendimento della linea, definito come $\eta = \dfrac{P_{carichi}}{P_{carichi} + P_{linea}}$;
-3. la capacità del condensatore da collegare in parallelo ai carichi per portare il fattore di potenza complessivo a $0{,}95$;
-4. la nuova corrente di linea, la nuova potenza dissipata nella linea e il nuovo rendimento;
-5. di quanto si riducono la corrente e le perdite in linea.
-
-<details style={{ clear: 'both', margin: '1.5rem 0', padding: '0.8rem 1.2rem', background: 'var(--fa-surface, #f8f7f3)', border: '1px solid var(--fa-border, #dedbd4)', borderRadius: '8px' }}>
-<summary style={{ cursor: 'pointer', fontWeight: 600, color: '#252525' }}>
-    Soluzione
-</summary>
-<div style={{ marginTop: '1rem' }}>
-    Il procedimento è quello dell'esercizio 3.6, ma qui ci sono due carichi e una linea. I moduli dei fasori e delle correnti sono **valori efficaci**.
-
-    * **Potenze di ciascun carico**:
-        Il carico 1 è resistivo, quindi $\varphi_1 = 0$, $Q_1 = 0$ e $S_1 = P_1 = 2000\, \text{VA}$. Per il motore:
-        $$
-        S_2 = \frac{P_2}{\cos\varphi_2} = \frac{3000}{0{,}6} = 5000\, \text{VA}
-        \qquad
-        \sin\varphi_2 = \sqrt{1 - 0{,}6^2} = 0{,}8
-        \qquad
-        Q_2 = S_2 \sin\varphi_2 = 4000\, \text{var}
-        $$
-    * **Potenze complessive**:
-        Le potenze attive si sommano, e si sommano anche le potenze reattive (è il teorema di Boucherot). Le potenze apparenti invece *non* si sommano:
-        $$
-        P = P_1 + P_2 = 2000 + 3000 = 5000\, \text{W}
-        \qquad
-        Q = Q_1 + Q_2 = 0 + 4000 = 4000\, \text{var}
-        $$
-        La potenza apparente complessiva si ricava dal triangolo delle potenze:
-        $$
-        \boxed{S = \sqrt{P^2 + Q^2} = \sqrt{5000^2 + 4000^2} = \sqrt{41 \cdot 10^{6}} = 6403\, \text{VA}}
-        $$
-        $$
-        \boxed{\cos\varphi = \frac{P}{S} = \frac{5000}{6403} = 0{,}781}
-        $$
-        ⚠︎ Sommando le potenze apparenti dei due carichi si otterrebbe $2000 + 5000 = 7000\, \text{VA}$, un valore sbagliato. Le correnti dei due carichi non sono in fase (quella del motore è in ritardo, quella delle stufe no) e quindi i loro moduli non si sommano, come abbiamo visto con le tensioni e le correnti degli esercizi precedenti.
-    * **Corrente di linea**:
-        La linea porta la corrente di entrambi i carichi, quindi dalla potenza apparente complessiva, $S = V I$:
-        $$
-        \boxed{I = \frac{S}{V} = \frac{6403}{230} = 27{,}84\, \text{A}}
-        $$
-    * **Perdite e rendimento della linea**:
-        La potenza dissipata nella linea è quella del resistore $R_L$, attraversato dalla corrente $I$:
-        $$
-        \boxed{P_L = R_L\, I^2 = 0{,}4 \cdot 27{,}84^2 = 0{,}4 \cdot 775{,}1 = 310\, \text{W}}
-        $$
-        La potenza attiva ceduta dal generatore è la somma di quella ricevuta dai carichi e di quella persa in linea:
-        $$
-        \eta = \frac{P}{P + P_L} = \frac{5000}{5000 + 310} = 0{,}942 = 94{,}2\,\%
-        $$
-    * **Capacità di rifasamento**:
-        Il condensatore va collegato in parallelo ai carichi. Come nell'esercizio 3.6, $P$ non cambia e la potenza reattiva che deve fornire il condensatore è $Q_C = P\left(\tan\varphi - \tan\varphi'\right)$. Prima del rifasamento $\tan\varphi = \dfrac{Q}{P} = \dfrac{4000}{5000} = 0{,}8$. Dopo il rifasamento $\cos\varphi' = 0{,}95$, quindi $\tan\varphi' = 0{,}3287$ (come nell'esercizio 3.6):
-        $$
-        Q_C = 5000 \cdot (0{,}8 - 0{,}3287) = 5000 \cdot 0{,}4713 = 2357\, \text{var}
-        $$
-        Con $\omega = 2\pi \cdot 50 = 314{,}2\, \text{rad/s}$ e $Q_C = \omega C V^2$:
-        $$
-        \boxed{C = \frac{Q_C}{\omega V^2} = \frac{2357}{314{,}2 \cdot 230^2} = 141{,}8\, \mu\text{F}}
-        $$
-    * **Nuova corrente, perdite e rendimento**:
-        $P = 5000\, \text{W}$ è invariata e il fattore di potenza è $0{,}95$, quindi:
-        $$
-        I' = \frac{P}{V \cos\varphi'} = \frac{5000}{230 \cdot 0{,}95} = 22{,}88\, \text{A}
-        $$
-        $$
-        P_L' = R_L\, I'^2 = 0{,}4 \cdot 22{,}88^2 = 0{,}4 \cdot 523{,}5 = 209\, \text{W}
-        \qquad
-        \eta' = \frac{5000}{5000 + 209} = 0{,}960 = 96{,}0\,\%
-        $$
-    * **Confronto**:
-        $$
-        \text{corrente:}\quad \frac{27{,}84 - 22{,}88}{27{,}84} = 17{,}8\,\%
-        \qquad
-        \text{perdite:}\quad \frac{310 - 209}{310} \simeq 32\,\%
-        $$
-        Le perdite diminuiscono molto più della corrente, perché sono proporzionali al *quadrato* della corrente: il rapporto fra le perdite è il quadrato del rapporto fra le correnti, $\left(\dfrac{22{,}88}{27{,}84}\right)^2 = 0{,}822^2 = 0{,}676$, cioè una riduzione di circa il $32\,\%$. Con lo stesso carico utile ($5\, \text{kW}$) si risparmiano circa $100\, \text{W}$ di energia dissipata nella linea.
-
-    > **Osservazione**: conviene collegare il condensatore *vicino ai carichi*, come in figura. In questo modo la corrente reattiva richiesta dal motore circola solo nel breve tratto fra il motore e il condensatore, e non lungo tutta la linea, dove darebbe luogo a perdite $R_L\, I^2$.
 </div>
 </details>

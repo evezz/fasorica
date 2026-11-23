@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 800 332" width="800" height="332" role="img" aria-labelledby="t6 d6">
+  <title id="t6">Esercizio 3.6: triangoli delle potenze prima e dopo il rifasamento</title>
+  <desc id="d6">A sinistra il triangolo del carico (P = 2400 W, Q = 1800 var, S = 3000 VA); a destra quello dopo il rifasamento (Q = 789 var, S = 2526 VA), dove il condensatore fornisce Q_C = 1011 var.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --R: #0f766e;      /* resistore, potenza attiva P */
+  --L: #a16207;      /* induttore, potenza reattiva Q */
+  --C: #d1342b;      /* condensatore, potenza reattiva del condensatore Q_C */
+  --u1: #0f766e;     /* es. 3.2: prima tensione */
+  --u2: #d1342b;     /* es. 3.2: seconda tensione */
+  --us: #1d5fd1;     /* es. 3.2: somma */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .45; fill: none; }
+.gr .dim   { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve, fasori, lati dei triangoli */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .curve.thin { stroke-width: 2.6; }
+.gr .vec   { fill: none; stroke-width: 3.6; stroke-linecap: round; }
+.gr .ghost { fill: none; stroke-width: 2.4; stroke-dasharray: 7 5; stroke-linecap: round; opacity: .6; }
+.gr .side  { fill: none; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+.gr .wash  { fill: var(--ink); opacity: .045; stroke: none; }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-title { font-size: 16px; font-weight: 700; }
+.gr .t-mute  { fill: var(--muted); }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+.gr .u   { text-decoration: underline; }
+.gr .s-ink { stroke: var(--ink); }
+.gr .f-ink { fill: var(--ink); }
+.gr .t-ink { fill: var(--ink); }
+.gr .mk-ink { fill: var(--ink); }
+.gr .s-R { stroke: var(--R); }
+.gr .f-R { fill: var(--R); }
+.gr .t-R { fill: var(--R); }
+.gr .mk-R { fill: var(--R); }
+.gr .s-L { stroke: var(--L); }
+.gr .f-L { fill: var(--L); }
+.gr .t-L { fill: var(--L); }
+.gr .mk-L { fill: var(--L); }
+.gr .s-C { stroke: var(--C); }
+.gr .f-C { fill: var(--C); }
+.gr .t-C { fill: var(--C); }
+.gr .mk-C { fill: var(--C); }
+.gr .s-u1 { stroke: var(--u1); }
+.gr .f-u1 { fill: var(--u1); }
+.gr .t-u1 { fill: var(--u1); }
+.gr .mk-u1 { fill: var(--u1); }
+.gr .s-u2 { stroke: var(--u2); }
+.gr .f-u2 { fill: var(--u2); }
+.gr .t-u2 { fill: var(--u2); }
+.gr .mk-u2 { fill: var(--u2); }
+.gr .s-us { stroke: var(--us); }
+.gr .f-us { fill: var(--us); }
+.gr .t-us { fill: var(--us); }
+.gr .mk-us { fill: var(--us); }
+  </style>
+
+  <defs>
+    <marker id="ah-ax6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-ink6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-R6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-R" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-L6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-L" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-C6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-C" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u16" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u1" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u26" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u2" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-us6" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-us" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="prima">
+    <text class="t-title" x="44.0" y="34.0">Prima del rifasamento</text>
+    <text class="t-small t-mute" x="44.0" y="52.0">cos <tspan class="it">φ</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 0,8</tspan></text>
+    <path class="wash" d="M44.0 268.0L272.0 268.0L272.0 97.0z"/>
+    <line class="side s-R" x1="44.0" y1="268.0" x2="272.0" y2="268.0"/>
+    <line class="side s-L" x1="272.0" y1="268.0" x2="272.0" y2="97.0"/>
+    <line class="side s-ink" x1="44.0" y1="268.0" x2="272.0" y2="97.0"/>
+    <path class="dim" d="M260.0 268.0V256.0H272.0"/>
+    <path class="dim" d="M92.0 268.0 A48 48 0 0 0 82.4 239.2"/>
+    <text class="t-val" x="122.0" y="256.0"><tspan class="it">φ</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 36,87°</tspan></text>
+    <text class="t-val t-mid t-R" x="158.0" y="294.0"><tspan class="it">P</tspan> = 2400 W</text>
+    <text class="t-val t-L" x="284.0" y="187.5"><tspan class="it">Q</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 1800 var</tspan></text>
+    <text class="t-val t-mid t-ink" x="152.6" y="175.3" transform="rotate(-36.87 152.6 175.3)"><tspan class="it">S</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 3000 VA</tspan></text>
+  </g>
+
+  <g id="dopo">
+    <text class="t-title" x="436.0" y="34.0">Dopo il rifasamento</text>
+    <text class="t-small t-mute" x="436.0" y="52.0">cos <tspan class="it">φ</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5"> = 0,95</tspan></text>
+    <line class="ghost s-ink" x1="436.0" y1="268.0" x2="664.0" y2="97.0"/>
+    <line class="ghost s-ink" x1="664.0" y1="268.0" x2="664.0" y2="97.0"/>
+    <path class="wash" d="M436.0 268.0L664.0 268.0L664.0 193.1z"/>
+    <line class="side s-R" x1="436.0" y1="268.0" x2="664.0" y2="268.0"/>
+    <line class="side s-L" x1="664.0" y1="268.0" x2="664.0" y2="193.1"/>
+    <line class="side s-ink" x1="436.0" y1="268.0" x2="664.0" y2="193.1"/>
+    <path class="dim" d="M652.0 268.0V256.0H664.0"/>
+    <line class="vec s-C" x1="664.0" y1="97.0" x2="664.0" y2="184.0" marker-end="url(#ah-C6)"/>
+    <path class="dim" d="M506.0 268.0 A70 70 0 0 0 502.5 246.1"/>
+    <text class="t-val" x="534.0" y="259.0"><tspan class="it">φ</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5"> = 18,19°</tspan></text>
+    <text class="t-val t-mid t-R" x="550.0" y="294.0"><tspan class="it">P</tspan> = 2400 W</text>
+    <text class="t-val t-L" x="676.0" y="235.5"><tspan class="it">Q</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5"> = 789 var</tspan></text>
+    <text class="t-val t-C" x="676.0" y="150.0"><tspan class="it">Q</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5"> = 1011 var</tspan></text>
+    <text class="t-small t-mute" x="676.0" y="102.0"><tspan class="it">Q</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 1800 var</tspan></text>
+    <text class="t-val t-mid t-ink" x="574.5" y="213.0" transform="rotate(-18.19 574.5 213.0)"><tspan class="it">S</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5"> = 2526 VA</tspan></text>
+    <text class="t-val t-mid t-ink t-mute" x="572.0" y="154.8" transform="rotate(-36.87 572.0 154.8)"><tspan class="it">S</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 3000 VA</tspan></text>
+  </g>
+</svg>

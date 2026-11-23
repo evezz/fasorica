@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 560 452" width="560" height="452" role="img" aria-labelledby="t4 d4">
+  <title id="t4">Esercizio 3.4: fasori delle correnti</title>
+  <desc id="d4">Fasori di IR (40 mA, 0°), IL (10 mA, -90°), IC (40 mA, 90°) e I (50 mA, 36,87°) nel piano complesso.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --R: #0f766e;      /* resistore, potenza attiva P */
+  --L: #a16207;      /* induttore, potenza reattiva Q */
+  --C: #d1342b;      /* condensatore, potenza reattiva del condensatore Q_C */
+  --u1: #0f766e;     /* es. 3.2: prima tensione */
+  --u2: #d1342b;     /* es. 3.2: seconda tensione */
+  --us: #1d5fd1;     /* somma: v(t) in 3.2, fasore somma in 3.3 e 3.4 */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .45; fill: none; }
+.gr .dim   { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve, fasori, lati dei triangoli */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .curve.thin { stroke-width: 2.6; }
+.gr .vec   { fill: none; stroke-width: 3.6; stroke-linecap: round; }
+.gr .ghost { fill: none; stroke-width: 2.4; stroke-dasharray: 7 5; stroke-linecap: round; opacity: .6; }
+.gr .side  { fill: none; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+.gr .wash  { fill: var(--ink); opacity: .045; stroke: none; }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-title { font-size: 16px; font-weight: 700; }
+.gr .t-mute  { fill: var(--muted); }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+.gr .b   { font-weight: 700; }
+.gr .s-ink { stroke: var(--ink); }
+.gr .f-ink { fill: var(--ink); }
+.gr .t-ink { fill: var(--ink); }
+.gr .mk-ink { fill: var(--ink); }
+.gr .s-R { stroke: var(--R); }
+.gr .f-R { fill: var(--R); }
+.gr .t-R { fill: var(--R); }
+.gr .mk-R { fill: var(--R); }
+.gr .s-L { stroke: var(--L); }
+.gr .f-L { fill: var(--L); }
+.gr .t-L { fill: var(--L); }
+.gr .mk-L { fill: var(--L); }
+.gr .s-C { stroke: var(--C); }
+.gr .f-C { fill: var(--C); }
+.gr .t-C { fill: var(--C); }
+.gr .mk-C { fill: var(--C); }
+.gr .s-u1 { stroke: var(--u1); }
+.gr .f-u1 { fill: var(--u1); }
+.gr .t-u1 { fill: var(--u1); }
+.gr .mk-u1 { fill: var(--u1); }
+.gr .s-u2 { stroke: var(--u2); }
+.gr .f-u2 { fill: var(--u2); }
+.gr .t-u2 { fill: var(--u2); }
+.gr .mk-u2 { fill: var(--u2); }
+.gr .s-us { stroke: var(--us); }
+.gr .f-us { fill: var(--us); }
+.gr .t-us { fill: var(--us); }
+.gr .mk-us { fill: var(--us); }
+  </style>
+
+  <defs>
+    <marker id="ah-ax4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-ink4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-R4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-R" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-L4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-L" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-C4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-C" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u14" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u1" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u24" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u2" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-us4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-us" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="piano">
+    <line class="grid" x1="168.0" y1="411.6" x2="168.0" y2="64.4"/>
+    <line class="grid" x1="224.0" y1="411.6" x2="224.0" y2="64.4"/>
+    <line class="grid" x1="280.0" y1="411.6" x2="280.0" y2="64.4"/>
+    <line class="grid" x1="336.0" y1="411.6" x2="336.0" y2="64.4"/>
+    <line class="grid" x1="392.0" y1="411.6" x2="392.0" y2="64.4"/>
+    <line class="grid" x1="44.8" y1="378.0" x2="425.6" y2="378.0"/>
+    <line class="grid" x1="44.8" y1="266.0" x2="425.6" y2="266.0"/>
+    <line class="grid" x1="44.8" y1="210.0" x2="425.6" y2="210.0"/>
+    <line class="grid" x1="44.8" y1="154.0" x2="425.6" y2="154.0"/>
+    <line class="grid" x1="44.8" y1="98.0" x2="425.6" y2="98.0"/>
+    <line class="axis" x1="44.8" y1="322.0" x2="437.6" y2="322.0" marker-end="url(#ah-ax4)"/>
+    <line class="axis" x1="112.0" y1="411.6" x2="112.0" y2="52.4" marker-end="url(#ah-ax4)"/>
+    <text class="t-lab" x="447.6" y="327.0">Re (mA)</text>
+    <text class="t-lab" x="122.0" y="44.4">Im (mA)</text>
+    <path class="tick" d="M168.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="168.0" y="432.6">10</text>
+    <path class="tick" d="M224.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="224.0" y="432.6">20</text>
+    <path class="tick" d="M280.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="280.0" y="432.6">30</text>
+    <path class="tick" d="M336.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="336.0" y="432.6">40</text>
+    <path class="tick" d="M392.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="392.0" y="432.6">50</text>
+    <path class="tick" d="M107.0 378.0H117.0"/>
+    <text class="t-num t-end" x="35.8" y="383.0">−10</text>
+    <path class="tick" d="M107.0 266.0H117.0"/>
+    <text class="t-num t-end" x="35.8" y="271.0">10</text>
+    <path class="tick" d="M107.0 210.0H117.0"/>
+    <text class="t-num t-end" x="35.8" y="215.0">20</text>
+    <path class="tick" d="M107.0 154.0H117.0"/>
+    <text class="t-num t-end" x="35.8" y="159.0">30</text>
+    <path class="tick" d="M107.0 98.0H117.0"/>
+    <text class="t-num t-end" x="35.8" y="103.0">40</text>
+    <line class="ghost s-ink" x1="336.0" y1="322.0" x2="336.0" y2="163.1" marker-end="url(#ah-ink4)"/>
+    <line class="guide" x1="112.0" y1="154.0" x2="336.0" y2="154.0"/>
+    <path class="dim" d="M178.0 322.0 A66 66 0 0 0 164.8 282.4"/>
+    <text class="t-small t-mid" x="205.0" y="296.0">36,87°</text>
+    <line class="vec s-L" x1="112.0" y1="322.0" x2="112.0" y2="368.9" marker-end="url(#ah-L4)"/>
+    <line class="vec s-C" x1="112.0" y1="322.0" x2="112.0" y2="107.1" marker-end="url(#ah-C4)"/>
+    <line class="vec s-R" x1="112.0" y1="322.0" x2="326.9" y2="322.0" marker-end="url(#ah-R4)"/>
+    <line class="vec s-us" x1="112.0" y1="322.0" x2="328.7" y2="159.5" marker-end="url(#ah-us4)"/>
+    <circle class="f-ink" cx="112.0" cy="322.0" r="3.5"/>
+    <text class="t-val t-R" x="348.0" y="313.0"><tspan class="b">I</tspan><tspan class="it sm" dy="4.5">R</tspan><tspan dy="-4.5"> = 40 mA</tspan></text>
+    <text class="t-val t-us" x="348.0" y="150.0"><tspan class="b">I</tspan> = 50 mA</text>
+    <text class="t-val t-C" x="126.0" y="103.0"><tspan class="b">I</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5"> = 40 mA</tspan></text>
+    <text class="t-val t-L" x="126.0" y="383.0"><tspan class="b">I</tspan><tspan class="it sm" dy="4.5">L</tspan><tspan dy="-4.5"> = 10 mA</tspan></text>
+    <text class="t-small t-mute" x="348.0" y="243.0"><tspan class="b">I</tspan><tspan class="it sm" dy="4.5">C</tspan><tspan dy="-4.5"> + </tspan><tspan class="b">I</tspan><tspan class="it sm" dy="4.5">L</tspan><tspan dy="-4.5"> = j30 mA</tspan></text>
+    <text class="t-small t-end t-mute" x="425.6" y="355.6">riferimento:</text>
+    <text class="t-small t-end t-mute" x="425.6" y="371.6"><tspan class="b">V</tspan><tspan class="it sm" dy="4.5">g</tspan><tspan dy="-4.5"> ha fase 0°</tspan></text>
+  </g>
+</svg>

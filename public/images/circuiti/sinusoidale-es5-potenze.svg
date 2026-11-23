@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 470 372" width="470" height="372" role="img" aria-labelledby="t5 d5">
+  <title id="t5">Esercizio 3.5: triangolo delle potenze</title>
+  <desc id="d5">Triangolo delle potenze del carico: P = 634,8 W, Q = 846,4 var, S = 1058 VA, angolo 53,13 gradi.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle figure della giunzione PN) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --R: #0f766e;      /* resistore, potenza attiva P */
+  --L: #a16207;      /* induttore, potenza reattiva Q */
+  --C: #d1342b;      /* condensatore, potenza reattiva del condensatore Q_C */
+  --u1: #0f766e;     /* es. 3.2: prima tensione */
+  --u2: #d1342b;     /* es. 3.2: seconda tensione */
+  --us: #1d5fd1;     /* es. 3.2: somma */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 2; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .45; fill: none; }
+.gr .dim   { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* curve, fasori, lati dei triangoli */
+.gr .curve { fill: none; stroke-width: 3.6; stroke-linejoin: round; stroke-linecap: round; }
+.gr .curve.thin { stroke-width: 2.6; }
+.gr .vec   { fill: none; stroke-width: 3.6; stroke-linecap: round; }
+.gr .ghost { fill: none; stroke-width: 2.4; stroke-dasharray: 7 5; stroke-linecap: round; opacity: .6; }
+.gr .side  { fill: none; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+.gr .wash  { fill: var(--ink); opacity: .045; stroke: none; }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-title { font-size: 16px; font-weight: 700; }
+.gr .t-mute  { fill: var(--muted); }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+.gr .u   { text-decoration: underline; }
+.gr .s-ink { stroke: var(--ink); }
+.gr .f-ink { fill: var(--ink); }
+.gr .t-ink { fill: var(--ink); }
+.gr .mk-ink { fill: var(--ink); }
+.gr .s-R { stroke: var(--R); }
+.gr .f-R { fill: var(--R); }
+.gr .t-R { fill: var(--R); }
+.gr .mk-R { fill: var(--R); }
+.gr .s-L { stroke: var(--L); }
+.gr .f-L { fill: var(--L); }
+.gr .t-L { fill: var(--L); }
+.gr .mk-L { fill: var(--L); }
+.gr .s-C { stroke: var(--C); }
+.gr .f-C { fill: var(--C); }
+.gr .t-C { fill: var(--C); }
+.gr .mk-C { fill: var(--C); }
+.gr .s-u1 { stroke: var(--u1); }
+.gr .f-u1 { fill: var(--u1); }
+.gr .t-u1 { fill: var(--u1); }
+.gr .mk-u1 { fill: var(--u1); }
+.gr .s-u2 { stroke: var(--u2); }
+.gr .f-u2 { fill: var(--u2); }
+.gr .t-u2 { fill: var(--u2); }
+.gr .mk-u2 { fill: var(--u2); }
+.gr .s-us { stroke: var(--us); }
+.gr .f-us { fill: var(--us); }
+.gr .t-us { fill: var(--us); }
+.gr .mk-us { fill: var(--us); }
+  </style>
+
+  <defs>
+    <marker id="ah-ax5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-ink5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-R5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-R" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-L5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-L" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-C5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-C" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u15" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u1" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-u25" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-u2" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-us5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-us" d="M0 0L10 5L0 10z"/></marker>
+  </defs>
+
+  <g id="triangolo">
+    <path class="wash" d="M70.0 330.0L298.5 330.0L298.5 25.3z"/>
+    <line class="side s-R" x1="70.0" y1="330.0" x2="298.5" y2="330.0"/>
+    <line class="side s-L" x1="298.5" y1="330.0" x2="298.5" y2="25.3"/>
+    <line class="side s-ink" x1="70.0" y1="330.0" x2="298.5" y2="25.3"/>
+    <path class="dim" d="M286.5 330.0V318.0H298.5"/>
+    <path class="dim" d="M124.0 330.0 A54 54 0 0 0 102.4 286.8"/>
+    <text class="t-val" x="154.0" y="282.0"><tspan class="it">φ</tspan> = 53,13°</text>
+    <text class="t-small t-mute" x="154.0" y="300.0">cos <tspan class="it">φ</tspan> = <tspan class="it">P</tspan>/<tspan class="it">S</tspan> = 0,6</text>
+    <text class="t-val t-mid t-R" x="184.3" y="356.0"><tspan class="it">P</tspan> = 634,8 W</text>
+    <text class="t-val t-L" x="310.5" y="182.6"><tspan class="it">Q</tspan> = 846,4 var</text>
+    <text class="t-val t-mid t-ink" x="177.1" y="172.2" transform="rotate(-53.13 177.1 172.2)"><tspan class="it">S</tspan> = 1058 VA</text>
+  </g>
+</svg>
