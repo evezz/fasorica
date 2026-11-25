@@ -1,0 +1,9 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (10, -0) to[sinusoidal voltage source, l={$v_{in}(t)$}] (10, 3);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.6, 2.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9.4, 2.4){$+$};
+	\draw (10, -0) to[short] (14, -0);
+	\draw (14, 3) to[american resistor, l={$R$}, label distance=-0.09cm, v^<=$v_{out}(t)$, voltage/shift=2] (14, -0);
+	\draw (12, 3) to[capacitor, l={$C$}] (14, 3);
+	\draw (10, 3) to[cute inductor, l={$L$}] (12, 3);
+\end{tikzpicture}

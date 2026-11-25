@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="gr" viewBox="0 0 680 694" width="680" height="694" role="img" aria-labelledby="t4 d4">
+  <title id="t4">Esercizio 4.4: diagramma di Bode del circuito RLC passa-banda</title>
+  <desc id="d4">Diagramma di Bode asintotico di H(jω) = jωRC / ((1 + jωRC)(1 + jωL/R)) con R = 1 kΩ, L = 1 mH e C = 1 µF. Modulo in dB e fase in gradi in funzione di ω, in scala logaritmica. I contributi (costante 1, zero nell'origine che vale 0 dB in 10^3 rad/s, poli in 10^3 e 10^6 rad/s) sono tratteggiati e numerati 1, 2, 3, 4; la loro somma, in blu, è il diagramma finale: sale di 20 dB/dec fino a 0 dB in 10^3 rad/s, resta a 0 dB fino a 10^6 rad/s e poi scende di 20 dB/dec. La fase scende da 90° a -90°, con 0° fra 10^4 e 10^5 rad/s.</desc>
+
+  <style>
+.gr {
+  /* colori (stessa palette delle altre figure) */
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --b1: #0f766e;     /* contributo 1 (la costante) */
+  --b2: #a16207;     /* contributo 2 */
+  --b3: #d1342b;     /* contributo 3 */
+  --b4: #8a3ea8;     /* contributo 4 (solo es. 4.4) */
+  --us: #1d5fd1;     /* somma = diagramma finale */
+  font-family: Georgia, "Times New Roman", serif;
+}
+.gr text { fill: var(--ink); }
+
+/* assi e riferimenti */
+.gr .axis  { stroke: var(--ink); stroke-width: 1.7; fill: none; }
+.gr .tick  { stroke: var(--ink); stroke-width: 1.7; fill: none; }
+.gr .guide { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .85; fill: none; }
+.gr .grid  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 5; opacity: .45; fill: none; }
+.gr .mk-ink { fill: var(--ink); }
+
+/* contributi (tratteggiati) e somma (piu' spessa) */
+.gr .comp { fill: none; stroke-width: 2.1; stroke-dasharray: 6.5 5.5; stroke-linecap: butt; }
+/* linee che si sovrappongono: "alt" sfasa il tratteggio, cosi' due linee uguali si vedono a trattini alterni;
+   con tre linee sovrapposte si usa il tratteggio "comp3" e le fasi d1 e d2 */
+.gr .alt   { stroke-dashoffset: 6; }
+.gr .comp3 { stroke-dasharray: 4.5 9; }
+.gr .d1    { stroke-dashoffset: 4.5; }
+.gr .d2    { stroke-dashoffset: 9; }
+.gr .sum  { fill: none; stroke-width: 3.8; stroke-linejoin: round; stroke-linecap: round; }
+
+/* testi */
+.gr .t-num   { font-size: 14px; }
+.gr .t-val   { font-size: 15px; }
+.gr .t-small { font-size: 13.5px; }
+.gr .t-lab   { font-size: 17px; }
+.gr .t-sum   { font-size: 16px; font-weight: 700; }
+.gr .t-wh    { font-size: 13px; font-weight: 700; fill: #fff; }
+.gr .t-mute  { fill: var(--muted); }
+.gr .t-end   { text-anchor: end; }
+.gr .t-mid   { text-anchor: middle; }
+.gr .it  { font-style: italic; }
+.gr .sm  { font-size: .75em; }
+.gr .b   { font-weight: 700; }
+.gr .s-ink { stroke: var(--ink); }
+.gr .f-ink { fill: var(--ink); }
+.gr .t-ink { fill: var(--ink); }
+.gr .mk-ink { fill: var(--ink); }
+.gr .s-b1 { stroke: var(--b1); }
+.gr .f-b1 { fill: var(--b1); }
+.gr .t-b1 { fill: var(--b1); }
+.gr .mk-b1 { fill: var(--b1); }
+.gr .s-b2 { stroke: var(--b2); }
+.gr .f-b2 { fill: var(--b2); }
+.gr .t-b2 { fill: var(--b2); }
+.gr .mk-b2 { fill: var(--b2); }
+.gr .s-b3 { stroke: var(--b3); }
+.gr .f-b3 { fill: var(--b3); }
+.gr .t-b3 { fill: var(--b3); }
+.gr .mk-b3 { fill: var(--b3); }
+.gr .s-b4 { stroke: var(--b4); }
+.gr .f-b4 { fill: var(--b4); }
+.gr .t-b4 { fill: var(--b4); }
+.gr .mk-b4 { fill: var(--b4); }
+.gr .s-us { stroke: var(--us); }
+.gr .f-us { fill: var(--us); }
+.gr .t-us { fill: var(--us); }
+.gr .mk-us { fill: var(--us); }
+  </style>
+
+  <defs>
+    <marker id="ah-ax4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-ink4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-ink" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-b14" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-b1" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-b24" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-b2" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-b34" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-b3" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-b44" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-b4" d="M0 0L10 5L0 10z"/></marker>
+    <marker id="ah-us4" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path class="mk-us" d="M0 0L10 5L0 10z"/></marker>
+    <clipPath id="cl-4"><rect x="90.0" y="62.0" width="552.0" height="260.0"/></clipPath>
+  </defs>
+
+  <g id="modulo">
+    <!-- reticolo: una linea per decade, piu' marcate quelle delle frequenze notevoli -->
+    <line class="grid" x1="168.9" y1="322.0" x2="168.9" y2="62.0"/>
+    <line class="guide" x1="247.7" y1="322.0" x2="247.7" y2="62.0"/>
+    <line class="grid" x1="326.6" y1="322.0" x2="326.6" y2="62.0"/>
+    <line class="grid" x1="405.4" y1="322.0" x2="405.4" y2="62.0"/>
+    <line class="guide" x1="484.3" y1="322.0" x2="484.3" y2="62.0"/>
+    <line class="grid" x1="563.1" y1="322.0" x2="563.1" y2="62.0"/>
+    <line class="grid" x1="642.0" y1="322.0" x2="642.0" y2="62.0"/>
+    <line class="grid" x1="90.0" y1="270.0" x2="642.0" y2="270.0"/>
+    <line class="grid" x1="90.0" y1="218.0" x2="642.0" y2="218.0"/>
+    <line class="guide" x1="90.0" y1="166.0" x2="642.0" y2="166.0"/>
+    <line class="grid" x1="90.0" y1="114.0" x2="642.0" y2="114.0"/>
+    <line class="grid" x1="90.0" y1="62.0" x2="642.0" y2="62.0"/>
+    <!-- assi -->
+    <line class="axis" x1="90.0" y1="322.0" x2="90.0" y2="48.0" marker-end="url(#ah-ax4)"/>
+    <line class="axis" x1="90.0" y1="322.0" x2="656.0" y2="322.0" marker-end="url(#ah-ax4)"/>
+    <text class="t-lab" x="38.0" y="30.0">|<tspan class="it">H</tspan>| (dB)</text>
+    <text class="t-lab t-end" x="656.0" y="368.0"><tspan class="it">ω</tspan> (rad/s)</text>
+    <path class="tick" d="M85.0 270.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="275.0">−40</text>
+    <path class="tick" d="M85.0 218.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="223.0">−20</text>
+    <path class="tick" d="M85.0 166.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="171.0">0</text>
+    <path class="tick" d="M85.0 114.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="119.0">20</text>
+    <path class="tick" d="M85.0 62.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="67.0">40</text>
+    <path class="tick" d="M90.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="90.0" y="347.0">10<tspan class="sm" dy="-6.5">1</tspan></text>
+    <path class="tick" d="M168.9 317.0V327.0"/>
+    <text class="t-num t-mid" x="168.9" y="347.0">10<tspan class="sm" dy="-6.5">2</tspan></text>
+    <path class="tick" d="M247.7 317.0V327.0"/>
+    <text class="t-num t-mid" x="247.7" y="347.0">10<tspan class="sm" dy="-6.5">3</tspan></text>
+    <path class="tick" d="M326.6 317.0V327.0"/>
+    <text class="t-num t-mid" x="326.6" y="347.0">10<tspan class="sm" dy="-6.5">4</tspan></text>
+    <path class="tick" d="M405.4 317.0V327.0"/>
+    <text class="t-num t-mid" x="405.4" y="347.0">10<tspan class="sm" dy="-6.5">5</tspan></text>
+    <path class="tick" d="M484.3 317.0V327.0"/>
+    <text class="t-num t-mid" x="484.3" y="347.0">10<tspan class="sm" dy="-6.5">6</tspan></text>
+    <path class="tick" d="M563.1 317.0V327.0"/>
+    <text class="t-num t-mid" x="563.1" y="347.0">10<tspan class="sm" dy="-6.5">7</tspan></text>
+    <path class="tick" d="M642.0 317.0V327.0"/>
+    <text class="t-num t-mid" x="642.0" y="347.0">10<tspan class="sm" dy="-6.5">8</tspan></text>
+    <!-- somma -->
+    <path class="sum s-us" d="M90.0 270.0 L247.7 166.0 L484.3 166.0 L642.0 270.0"/>
+    <!-- contributi -->
+    <path class="comp comp3 s-b1" d="M90.0 166.0 L642.0 166.0" clip-path="url(#cl-4)"/>
+    <path class="comp comp3 s-b2" d="M90.0 270.0 L642.0 -94.0" clip-path="url(#cl-4)"/>
+    <path class="comp comp3 d1 s-b3" d="M90.0 166.0 L247.7 166.0 L642.0 426.0" clip-path="url(#cl-4)"/>
+    <path class="comp comp3 d2 s-b4" d="M90.0 166.0 L484.3 166.0 L642.0 270.0" clip-path="url(#cl-4)"/>
+    <text class="t-small t-mid t-mute" x="247.7" y="50.0"><tspan class="it">ω</tspan><tspan class="it sm" dy="4.5">z</tspan><tspan dy="-4.5"> = </tspan><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5"> = 10</tspan><tspan class="sm" dy="-6.5">3</tspan><tspan dy="6.5"> rad/s</tspan></text>
+    <text class="t-small t-mid t-mute" x="484.3" y="50.0"><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5"> = 10</tspan><tspan class="sm" dy="-6.5">6</tspan><tspan dy="6.5"> rad/s</tspan></text>
+    <circle class="f-us" cx="247.7" cy="166.0" r="4.5"/>
+    <circle class="f-us" cx="484.3" cy="166.0" r="4.5"/>
+    <circle class="f-b1" cx="594.7" cy="166.0" r="10"/>
+    <text class="t-wh t-mid" x="594.7" y="170.6">1</text>
+    <circle class="f-b2" cx="373.9" cy="82.8" r="10"/>
+    <text class="t-wh t-mid" x="373.9" y="87.4">2</text>
+    <circle class="f-b3" cx="373.9" cy="249.2" r="10"/>
+    <text class="t-wh t-mid" x="373.9" y="253.8">3</text>
+    <circle class="f-b4" cx="602.6" cy="244.0" r="10"/>
+    <text class="t-wh t-mid" x="602.6" y="248.6">4</text>
+    <text class="t-small t-mid t-us" x="164.5" y="211.3" transform="rotate(-33.40 164.5 211.3)">+20 dB/dec</text>
+    <text class="t-small t-mid t-b2" x="295.4" y="125.0" transform="rotate(-33.40 295.4 125.0)">+20 dB/dec</text>
+    <text class="t-small t-mid t-b3" x="308.2" y="228.7" transform="rotate(33.40 308.2 228.7)">−20 dB/dec</text>
+    <text class="t-small t-mid t-us" x="437.0" y="183.0">0 dB/dec</text>
+    <text class="t-small t-mid t-us" x="551.8" y="200.9" transform="rotate(33.40 551.8 200.9)">−20 dB/dec</text>
+    <text class="t-sum t-us" x="318.7" y="151.0">somma</text>
+    <circle class="f-b1" cx="390.7" cy="146.0" r="9.5"/>
+    <text class="t-wh t-mid" x="390.7" y="150.6">1</text>
+    <text class="t-val t-mid t-us" x="408.7" y="151.0">+</text>
+    <circle class="f-b2" cx="426.7" cy="146.0" r="9.5"/>
+    <text class="t-wh t-mid" x="426.7" y="150.6">2</text>
+    <text class="t-val t-mid t-us" x="444.7" y="151.0">+</text>
+    <circle class="f-b3" cx="462.7" cy="146.0" r="9.5"/>
+    <text class="t-wh t-mid" x="462.7" y="150.6">3</text>
+    <text class="t-val t-mid t-us" x="480.7" y="151.0">+</text>
+    <circle class="f-b4" cx="498.7" cy="146.0" r="9.5"/>
+    <text class="t-wh t-mid" x="498.7" y="150.6">4</text>
+  </g>
+
+  <g id="fase">
+    <!-- reticolo: una linea per decade, piu' marcate quelle delle frequenze notevoli -->
+    <line class="grid" x1="168.9" y1="638.0" x2="168.9" y2="418.0"/>
+    <line class="guide" x1="247.7" y1="638.0" x2="247.7" y2="418.0"/>
+    <line class="grid" x1="326.6" y1="638.0" x2="326.6" y2="418.0"/>
+    <line class="grid" x1="405.4" y1="638.0" x2="405.4" y2="418.0"/>
+    <line class="guide" x1="484.3" y1="638.0" x2="484.3" y2="418.0"/>
+    <line class="grid" x1="563.1" y1="638.0" x2="563.1" y2="418.0"/>
+    <line class="grid" x1="642.0" y1="638.0" x2="642.0" y2="418.0"/>
+    <line class="grid" x1="90.0" y1="618.0" x2="642.0" y2="618.0"/>
+    <line class="grid" x1="90.0" y1="573.0" x2="642.0" y2="573.0"/>
+    <line class="guide" x1="90.0" y1="528.0" x2="642.0" y2="528.0"/>
+    <line class="grid" x1="90.0" y1="483.0" x2="642.0" y2="483.0"/>
+    <line class="grid" x1="90.0" y1="438.0" x2="642.0" y2="438.0"/>
+    <!-- assi -->
+    <line class="axis" x1="90.0" y1="638.0" x2="90.0" y2="404.0" marker-end="url(#ah-ax4)"/>
+    <line class="axis" x1="90.0" y1="638.0" x2="656.0" y2="638.0" marker-end="url(#ah-ax4)"/>
+    <text class="t-lab" x="38.0" y="386.0"><tspan class="it">φ</tspan> (°)</text>
+    <text class="t-lab t-end" x="656.0" y="684.0"><tspan class="it">ω</tspan> (rad/s)</text>
+    <path class="tick" d="M85.0 618.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="623.0">−90</text>
+    <path class="tick" d="M85.0 573.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="578.0">−45</text>
+    <path class="tick" d="M85.0 528.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="533.0">0</text>
+    <path class="tick" d="M85.0 483.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="488.0">45</text>
+    <path class="tick" d="M85.0 438.0H95.0"/>
+    <text class="t-num t-end" x="80.0" y="443.0">90</text>
+    <path class="tick" d="M90.0 633.0V643.0"/>
+    <text class="t-num t-mid" x="90.0" y="663.0">10<tspan class="sm" dy="-6.5">1</tspan></text>
+    <path class="tick" d="M168.9 633.0V643.0"/>
+    <text class="t-num t-mid" x="168.9" y="663.0">10<tspan class="sm" dy="-6.5">2</tspan></text>
+    <path class="tick" d="M247.7 633.0V643.0"/>
+    <text class="t-num t-mid" x="247.7" y="663.0">10<tspan class="sm" dy="-6.5">3</tspan></text>
+    <path class="tick" d="M326.6 633.0V643.0"/>
+    <text class="t-num t-mid" x="326.6" y="663.0">10<tspan class="sm" dy="-6.5">4</tspan></text>
+    <path class="tick" d="M405.4 633.0V643.0"/>
+    <text class="t-num t-mid" x="405.4" y="663.0">10<tspan class="sm" dy="-6.5">5</tspan></text>
+    <path class="tick" d="M484.3 633.0V643.0"/>
+    <text class="t-num t-mid" x="484.3" y="663.0">10<tspan class="sm" dy="-6.5">6</tspan></text>
+    <path class="tick" d="M563.1 633.0V643.0"/>
+    <text class="t-num t-mid" x="563.1" y="663.0">10<tspan class="sm" dy="-6.5">7</tspan></text>
+    <path class="tick" d="M642.0 633.0V643.0"/>
+    <text class="t-num t-mid" x="642.0" y="663.0">10<tspan class="sm" dy="-6.5">8</tspan></text>
+    <!-- somma -->
+    <path class="sum s-us" d="M90.0 438.0 L168.9 438.0 L326.6 528.0 L405.4 528.0 L563.1 618.0 L642.0 618.0"/>
+    <!-- contributi -->
+    <path class="comp comp3 s-b1" d="M90.0 528.0 L642.0 528.0"/>
+    <path class="comp comp3 s-b2" d="M90.0 438.0 L642.0 438.0"/>
+    <path class="comp comp3 d1 s-b3" d="M90.0 528.0 L168.9 528.0 L326.6 618.0 L642.0 618.0"/>
+    <path class="comp comp3 d2 s-b4" d="M90.0 528.0 L405.4 528.0 L563.1 618.0 L642.0 618.0"/>
+    <text class="t-small t-mid t-mute" x="168.9" y="406.0"><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">1</tspan><tspan dy="-4.5">/10</tspan></text>
+    <text class="t-small t-mid t-mute" x="247.7" y="406.0"><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">1</tspan></text>
+    <text class="t-small t-mid t-mute" x="326.6" y="406.0">10 <tspan class="it">ω</tspan><tspan class="sm" dy="4.5">1</tspan></text>
+    <text class="t-small t-mid t-mute" x="405.4" y="406.0"><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">2</tspan><tspan dy="-4.5">/10</tspan></text>
+    <text class="t-small t-mid t-mute" x="484.3" y="406.0"><tspan class="it">ω</tspan><tspan class="sm" dy="4.5">2</tspan></text>
+    <text class="t-small t-mid t-mute" x="563.1" y="406.0">10 <tspan class="it">ω</tspan><tspan class="sm" dy="4.5">2</tspan></text>
+    <circle class="f-us" cx="168.9" cy="438.0" r="4.5"/>
+    <circle class="f-us" cx="326.6" cy="528.0" r="4.5"/>
+    <circle class="f-us" cx="405.4" cy="528.0" r="4.5"/>
+    <circle class="f-us" cx="563.1" cy="618.0" r="4.5"/>
+    <circle class="f-us" cx="247.7" cy="483.0" r="4.5"/>
+    <circle class="f-us" cx="484.3" cy="573.0" r="4.5"/>
+    <text class="t-val t-us" x="258.7" y="476.0">45°</text>
+    <text class="t-val t-us" x="495.3" y="566.0">−45°</text>
+    <circle class="f-b1" cx="539.5" cy="528.0" r="10"/>
+    <text class="t-wh t-mid" x="539.5" y="532.6">1</text>
+    <circle class="f-b2" cx="405.4" cy="438.0" r="10"/>
+    <text class="t-wh t-mid" x="405.4" y="442.6">2</text>
+    <circle class="f-b3" cx="444.9" cy="618.0" r="10"/>
+    <text class="t-wh t-mid" x="444.9" y="622.6">3</text>
+    <circle class="f-b4" cx="523.7" cy="595.5" r="10"/>
+    <text class="t-wh t-mid" x="523.7" y="600.1">4</text>
+    <text class="t-small t-mid t-us" x="206.8" y="481.5" transform="rotate(29.71 206.8 481.5)">−45°/dec</text>
+    <text class="t-small t-mid t-us" x="443.3" y="571.5" transform="rotate(29.71 443.3 571.5)">−45°/dec</text>
+  </g>
+</svg>

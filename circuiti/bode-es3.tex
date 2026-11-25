@@ -1,0 +1,17 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (10, -0) to[sinusoidal voltage source, l={$v_{in}(t)$}] (10, 4);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.6, 2.8){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9.4, 3){$+$};
+	\draw (10, 4) to[american resistor, l={$R_1$}] (13, 4);
+	\draw (10, -0) to[short] (13, -0);
+	\draw (13, 4) to[american resistor, l={$R_2$}] (13, 1.8);
+	\draw (13, 1.8) to[capacitor, l={$C$}] (13, 0);
+	\draw[-stealth] (14.4, 0.4) -- (14.4, 3.6);
+	\draw (13, 4) to[short] (14.4, 4);
+	\draw (13, -0) to[short] (14.4, -0);
+	\node[circ] at (13, 4){};
+	\node[circ] at (13, -0){};
+	\node[ocirc] at (14.4, 4){};
+	\node[ocirc] at (14.4, -0){};
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (14.6, 2.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt, rotate=90] at (13.7, 1.4){$v_{out}(t)$};
+\end{tikzpicture}
