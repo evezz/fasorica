@@ -1,0 +1,16 @@
+\begin{tikzpicture}[transform shape]
+    % Paths, nodes and wires:
+    \draw (13, 5) to[american resistor, l={$R_2$}] (13, 3);
+    \draw (13, 3) to[empty diode, l={$D_1$}, i>^=$I_{D_1}$] (13, 1);
+    \draw (13, 1) to[american resistor, l={$R_1$}] (13, -1);
+    \draw (13, 3) to[short] (13.6, 3);
+    \draw (13.6, 3) to[empty diode, l={$D_2$}, i>^=$I_{D_2}$] (15.6, 3);
+    \draw (15.6, 1) to[empty diode, l={$D_3$}, i>^=$I_{D_3}$] (15.6, 3);
+    \node[ground] at (15.6, 1.2){};
+    \draw (15.6, 5) to[american resistor, l_={$R_3$}] (15.6, 3);
+    \node[circ](N1) at (13, -1){} node[anchor=north] at (N1.south){$V_1$};
+    \node[circ](N2) at (13, 5){} node[anchor=south] at (N2.north){$V_2$};
+    \node[circ](N3) at (15.6, 5){} node[anchor=south] at (N3.north){$V_3$};
+    \node[circ] at (13, 3){};
+    \node[circ] at (15.6, 3){};
+\end{tikzpicture}

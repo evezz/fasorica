@@ -1,0 +1,14 @@
+\begin{tikzpicture}[transform shape]
+    % Paths, nodes and wires:
+    \draw (10, 4) to[american voltage source, l_=$v_i(t)$] (10, 1);
+    \draw (10, 4) to[american resistor, l_=$R$, v^<=$v_R(t)$] (12.6, 4);
+    \draw (12.6, 1) to[battery1, l_=$V_z$, i<^=$i_D(t)$] (12.6, 4);
+    \draw (12.6, 1) to[short] (10, 1);
+    \draw (12.6, 4) to[short] (13.6, 4);
+    \draw (13.6, 4) to[open, v^<=$v_o(t)$] (13.6, 1);
+    \draw (13.6, 1) to[short] (12.6, 1);
+    \node[circ] at (12.6, 4){};
+    \node[circ] at (12.6, 1){};
+    \node[circ] at (13.6, 4){};
+    \node[circ] at (13.6, 1){};
+\end{tikzpicture}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[transform shape]
+	% Paths, nodes and wires:
+	\draw (11, 5) to[american resistor, l={$R_1$}, v<=$V_{R_1}$, voltage/distance from node=0.4, voltage/bump b=0.7, voltage/shift=0.8] (11, 3);
+	\node[ground] at (11, 1.2){};
+	\draw (13.6, 3) to[american resistor, l_={$R_2$}, label distance=-0.05cm, v^<=$V_{R_2}$, voltage/distance from node=0.4, voltage/bump b=0.7, voltage/shift=0.8] (13.6, 1);
+	\node[circ](N1) at (11, 5){} node[anchor=south] at (N1.north){$V_1$};
+	\node[circ](N2) at (13.6, 1){} node[anchor=north] at (N2.south){$V_2$};
+	\node[circ] at (11, 3){};
+	\draw (11, 3) to[short] (11.6, 3);
+	\draw (11, 2.6) to[open, v<=$V_{D_1}$, voltage/distance from node=0, voltage/bump b=0.1, voltage/shift=-0.5] (11, 1.2);
+	\draw (11, 3) to[short] (11, 2.6);
+	\draw (11.6, 3) to[battery1, l={$V_\gamma$}, i>^=$I_{D_2}$] (13.6, 3);
+	\path[draw={rgb,255:red,17;green,145;blue,76}, line width=0.8pt, dash pattern={on 3.2pt off 1.6pt}, -stealth] (12.8, 1.6) -- (12.8, 2.4) -- (11.8, 2.4) -- (11.8, 1.6);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (12.2, 2.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (12, 2.4){\textcolor{rgb,255:red,17;green,145;blue,76}{A}};
+	\path[draw={rgb,255:red,195;green,67;blue,88}, line width=0.8pt, dash pattern={on 3.2pt off 1.6pt}, -stealth] (9.9, 1) -- (9.9, 5);
+	\node[shape=rectangle, minimum width=0.365cm, minimum height=0.365cm] at (9.6, 3.2){} node[anchor=north west, align=left, text width=-0.023cm, inner sep=6pt] at (9.4, 3.4){\textcolor{rgb,255:red,195;green,67;blue,88}{B}};
+\end{tikzpicture}
